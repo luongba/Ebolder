@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::middleware(['auth.shopify'])->group(function () {
     Route::get('/', 'HomeController@home')->name('home');
     Route::prefix('/campaigns')->group(function () {
         Route::get('/', 'HomeController@campaignHome')->name('campaign-home');
@@ -50,6 +49,10 @@ Route::middleware(['auth.shopify'])->group(function () {
         Route::get('/', 'HomeController@customer')->name('customer');
         Route::get('/detail', 'HomeController@customerDetail')->name('customer-detail');
     });
+    
+    Route::prefix('/admin')->name('admin.')->group(function () {
+        Route::get('/reading-level-test', 'Admin\VocabularyController@index')->name('read');
+    });
 
 
     Route::get('/report', 'HomeController@report')->name('report');
@@ -69,7 +72,6 @@ Route::middleware(['auth.shopify'])->group(function () {
 
     });
     Route::get('/logout', 'UserController@logout')->name('logout');
-});
 
 
 Route::middleware(['checkSign'])->group(function () {

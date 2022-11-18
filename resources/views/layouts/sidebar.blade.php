@@ -10,7 +10,21 @@
                     Dashboard
                 </a>
             </li>
-            <!---------------------     Start Application section     --------------------->
+            {{-- Start Testing --}}
+            <li class="app-sidebar__heading">English Level Test</li>
+            <li>
+                <a class="{{ request()->is(['admin/reading-level-test']) ? 'mm-active' : '' }}"  href="{{route('admin.read')}}">
+                    <i class="metismenu-icon lnr-bullhorn lnr"></i>
+                    Reading
+                </a>
+            </li>
+            <li>
+                <a class="{{ request()->is(['newsletters','newsletters/*']) ? 'mm-active' : '' }}" href="{{route('newsletter-home')}}">
+                    <i class="metismenu-icon pe-7s-paper-plane"></i>
+                    Listening
+                </a>
+            </li>
+            {{-- <!---------------------     Start Application section     --------------------->
             <li class="app-sidebar__heading">Applications</li>
             <li>
                 <a class="{{ request()->is(['campaigns', 'campaigns/*']) ? 'mm-active' : '' }}"  href="{{route('campaign-home')}}">
@@ -112,7 +126,7 @@
             <!---------------------     Start Business Information section           --------------------->
             <li>
                 <a class="{{ request()->is('settings/business-information') ? 'mm-active' : '' }}" href="{{route('business-information')}}">
-                    <i class="metismenu-icon lnr-store""></i>
+                    <i class="metismenu-icon lnr-store"></i>
                     Business Information
                 </a>
             </li>
@@ -123,7 +137,7 @@
                     <i class="metismenu-icon pe-7s-help2"></i>
                     Help center
                 </a>
-            </li>
+            </li> --}}
             <!---------------------     End Support settings section           --------------------->
 
         </ul>

@@ -8147,7 +8147,7 @@ button,
   padding-bottom: 60px; }
 
 .app-page-title {
-  padding: 30px;
+  padding: 12px;
   margin: -30px -30px 30px;
   position: relative; }
   .app-page-title + .body-tabs-layout {
@@ -23696,7 +23696,6 @@ span.multiselect-native-select select {
     left: 10%; }
   body .card-header {
     height: auto;
-    display: block;
     padding: 0.75rem 1.5rem;
     text-align: center; }
     body .card-header .btn-actions-pane-right {

@@ -1,3 +1,4 @@
+
 <script type="text/javascript" src="{{asset('/vendors/jquery/dist/jquery.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('vendors/smartwizard/dist/js/jquery.smartWizard.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('/vendors/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
@@ -24,6 +25,9 @@
 <script type="text/javascript" src="{{asset('/js/treeview.js')}}"></script>
 <script type="text/javascript" src="{{asset('/js/form-components/toggle-switch.js')}}"></script>
 <script type="text/javascript" src="{{asset('/js/tables.js')}}"></script>
+<script type="text/javascript" src="{{asset('/js/app-query.js')}}"></script>
 <script type="text/javascript" src="{{asset('/js/app.js')}}"></script>
+
+
 @yield("js")
 {{--<script type="text/javascript" src="{{asset('/js/form-components/form-validation.js')}}"></script>--}}

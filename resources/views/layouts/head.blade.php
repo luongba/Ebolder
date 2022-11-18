@@ -13,4 +13,5 @@
     <link rel="stylesheet" href="{{asset('/vendors/linearicons-master/dist/web-font/style.css')}}">
     <link rel="stylesheet" href="{{asset('/vendors/pixeden-stroke-7-icon-master/pe-icon-7-stroke/dist/pe-icon-7-stroke.css')}}">
     <link rel="stylesheet" href="{{asset('/styles/css/base.css')}}">
+    <link rel="stylesheet" href="{{asset('/css/app.css')}}">
 </head>
