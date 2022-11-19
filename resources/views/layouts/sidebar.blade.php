@@ -13,9 +13,9 @@
             {{-- Start Testing --}}
             <li class="app-sidebar__heading">English Level Test</li>
             <li>
-                <a class="{{ request()->is(['admin/reading-level-test']) ? 'mm-active' : '' }}"  href="{{route('admin.read')}}">
+                <a class="{{ request()->is(['admin/vocabulary-level-test']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-list')}}">
                     <i class="metismenu-icon lnr-bullhorn lnr"></i>
-                    Reading
+                    Vocabulary
                 </a>
             </li>
             <li>

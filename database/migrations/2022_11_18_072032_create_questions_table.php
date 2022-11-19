@@ -14,7 +14,7 @@ class CreateQuestionsTable extends Migration
     public function up()
     {
         Schema::create('questions_vocabulary', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('question');
             $table->timestamps();
         });

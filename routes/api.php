@@ -20,5 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::prefix('/admin')->name('admin.')->group(function () {
-    Route::post('/create-question-vocabulary', 'Admin\VocabularyController@create')->name('create-vobulary');
+    Route::post('/store-question-vocabulary', 'Admin\VocabularyController@store')->name('store-vobulary');
+    Route::get('/list-question-vocabulary', 'Admin\VocabularyController@getAllInfoQuestion')->name('list-vocabulary');
+    Route::put('/update-question-vocabulary', 'Admin\VocabularyController@update')->name('update-vocabulary');
 });

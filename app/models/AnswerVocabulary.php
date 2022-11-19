@@ -4,7 +4,8 @@ namespace App\models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Answer extends Model
+class AnswerVocabulary extends Model
 {
+    protected $table = "answers_vocabulary";
     protected $guarded = [];
 }

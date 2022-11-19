@@ -15,7 +15,8 @@ class CreateRightAnswersTable extends Migration
     {
         Schema::create('right_answers_vocabulary', function (Blueprint $table) {
             $table->id();
-            $table->string('answer_id');
+            $table->bigInteger('answer_id');
+            $table->bigInteger('question_id');
             $table->timestamps();
         });
     }

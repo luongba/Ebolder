@@ -25,7 +25,7 @@
         <!---------------------     End head content section     --------------------->
         <!---------------------     Start main  section     --------------------->
         <div class="tabs-animation">
-            <example-component />
+            <vocabulary-list />
             <!---------------------     Start content  section     --------------------->
 
         </div>

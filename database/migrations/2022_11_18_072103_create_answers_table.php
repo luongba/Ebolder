@@ -14,8 +14,8 @@ class CreateAnswersTable extends Migration
     public function up()
     {
         Schema::create('answers_vocabulary', function (Blueprint $table) {
-            $table->id();
-            $table->string('question_id');
+            $table->bigInteger('id');
+            $table->bigInteger('question_id');
             $table->string('text');
             $table->timestamps();
         });

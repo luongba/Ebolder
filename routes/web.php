@@ -49,9 +49,10 @@
         Route::get('/', 'HomeController@customer')->name('customer');
         Route::get('/detail', 'HomeController@customerDetail')->name('customer-detail');
     });
-    
+
     Route::prefix('/admin')->name('admin.')->group(function () {
-        Route::get('/reading-level-test', 'Admin\VocabularyController@index')->name('read');
+        Route::get('/volabulary-level-test', 'Admin\VocabularyController@index')->name('vocabulary-list');
+        Route::get('/volabulary-level-test/create', 'Admin\VocabularyController@create')->name('vocabulary-create');
     });
 
 

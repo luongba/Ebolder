@@ -157,7 +157,7 @@
         </div>
         <button @click="createQuestion">click</button>
     </div>
-    
+
 </template>
 
 <script>
@@ -171,7 +171,7 @@ export default {
                     question: null,
                     dataAns: [
                         {
-                            idAns: Date.now(),
+                            idAns: Date.now() + 123,
                             text: null,
                             alphabet: "A",
                         },
@@ -198,7 +198,7 @@ export default {
                 question: null,
                 dataAns: [
                     {
-                        idAns: 1,
+                        idAns: Date.now() + 123,
                         text: null,
                         alphabet: "A",
                     },
@@ -229,7 +229,7 @@ export default {
         },
         createQuestion() {
             axios.post(
-                "http://127.0.0.1:8000/api/admin/create-question-vocabulary",
+                "http://127.0.0.1:8000/api/admin/store-question-vocabulary",
                 this.dataQuestion
             );
         },
