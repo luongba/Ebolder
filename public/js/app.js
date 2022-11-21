@@ -2009,19 +2009,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       dataQuestion: [],
       alphabet: ["a", "b", "c", "d", "e", "f", "g", "h"],
-      maxAns: 4
+      maxAns: 4,
+      take: 5,
+      count: null
     };
   },
   computed: {},
+  watch: {
+    take: function take() {
+      this.getAllData();
+    }
+  },
   methods: {
+    takeMore: function takeMore(number) {
+      this.take = this.take + number;
+    },
     pushAns: function pushAns(id) {
+      console.log(id);
       var dataQues = this.dataQuestion.find(function (item) {
         return item.id == id;
       });
-      dataQues.dataAns.push({
-        idAns: Date.now(),
+      dataQues.answers.push({
+        id: Date.now(),
+        question_id: id,
         text: null,
-        alphabet: this.alphabet[dataQues.dataAns.length].toUpperCase()
+        updated_at: Date.now()
       });
     },
     pushQues: function pushQues() {
@@ -2037,56 +2049,112 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     deleteAns: function deleteAns(idQues, idAns) {
-      var dataQues = this.dataQuestion.find(function (item) {
-        return item.id == idQues;
-      });
-      dataQues.dataAns = dataQues.dataAns.filter(function (item) {
-        return item.idAns != idAns;
-      });
-      var data = dataQues.dataAns;
-      var temp = [];
-      for (var i = 0; i < data.length; i++) {
-        temp.push({
-          idAns: data[i].idAns,
-          text: data[i].text,
-          alphabet: this.alphabet[i].toUpperCase()
-        });
-      }
-      dataQues.dataAns = temp;
-    },
-    deleteQues: function deleteQues(id) {
-      this.dataQuestion = this.dataQuestion.filter(function (item) {
-        return item.id != id;
-      });
-    },
-    getAllData: function getAllData() {
       var _this = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var _yield$axios$get, data;
+        var res, data, dataQues, _dataQues;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
                 _context.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("http://127.0.0.1:8000/api/admin/list-question-vocabulary");
+                return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://127.0.0.1:8000/api/admin/delete-answer-vocabulary', {
+                  id: idAns
+                });
               case 3:
-                _yield$axios$get = _context.sent;
-                data = _yield$axios$get.data;
-                console.log(data.data);
-                _this.dataQuestion = data.data;
+                res = _context.sent;
+                data = res.data;
+                if (data.status == 200) {
+                  _this.getAllData();
+                } else {
+                  dataQues = _this.dataQuestion.find(function (item) {
+                    return item.id == idQues;
+                  });
+                  dataQues.answers = dataQues.answers.filter(function (item) {
+                    return item.id != idAns;
+                  });
+                }
                 _context.next = 12;
                 break;
-              case 9:
-                _context.prev = 9;
+              case 8:
+                _context.prev = 8;
                 _context.t0 = _context["catch"](0);
-                console.log(_context.t0);
+                _dataQues = _this.dataQuestion.find(function (item) {
+                  return item.id == idQues;
+                });
+                _dataQues.answers = _dataQues.answers.filter(function (item) {
+                  return item.id != idAns;
+                });
               case 12:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 9]]);
+        }, _callee, null, [[0, 8]]);
+      }))();
+    },
+    deleteQues: function deleteQues(id) {
+      var _this2 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var res, data;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('http://127.0.0.1:8000/api/admin/delete-question-vocabulary', {
+                  id: id
+                });
+              case 3:
+                res = _context2.sent;
+                data = res.data;
+                if (data.status == 200) {
+                  _this2.getAllData();
+                }
+                _context2.next = 11;
+                break;
+              case 8:
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[0, 8]]);
+      }))();
+    },
+    getAllData: function getAllData() {
+      var _this3 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var _yield$axios$get, data;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("http://127.0.0.1:8000/api/admin/list-question-vocabulary?take=".concat(_this3.take));
+              case 3:
+                _yield$axios$get = _context3.sent;
+                data = _yield$axios$get.data;
+                console.log(data.data);
+                _this3.count = data.count;
+                _this3.dataQuestion = data.data;
+                _context3.next = 13;
+                break;
+              case 10:
+                _context3.prev = 10;
+                _context3.t0 = _context3["catch"](0);
+                console.log(_context3.t0);
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 10]]);
       }))();
     },
     getAlphabet: function getAlphabet(data) {
@@ -2107,19 +2175,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       save.classList.add('block');
       save.classList.remove('hidden');
     },
-    SaveQuestion: function SaveQuestion(id) {
-      var _this2 = this;
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+    closeEditQuestion: function closeEditQuestion(index) {
+      console.log(this.$refs.card[index]);
+      this.$refs.card[index].children[1].classList.add('hidden');
+      this.$refs.card[index].children[1].classList.remove('block');
+      this.$refs.card[index].children[2].classList.add('block');
+      this.$refs.card[index].children[2].classList.remove('hidden');
+      var card_head = this.$refs.card[index].children[0];
+      var edit = card_head.querySelector('.edit');
+      var save = card_head.querySelector('.save');
+      edit.classList.add('block');
+      edit.classList.remove('hidden');
+      save.classList.add('hidden');
+      save.classList.remove('block');
+    },
+    SaveQuestion: function SaveQuestion(id, index) {
+      var _this4 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         var data, temp, result;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _context2.prev = 0;
-                data = _this2.dataQuestion.find(function (item) {
+                _context4.prev = 0;
+                data = _this4.dataQuestion.find(function (item) {
                   return item.id == id;
                 });
-                console.log(data);
                 temp = {
                   right_answers: data.right_answers || [],
                   id: data.id || null,
@@ -2132,22 +2213,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     };
                   })
                 };
-                _context2.next = 6;
+                _context4.next = 5;
                 return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('http://127.0.0.1:8000/api/admin/update-question-vocabulary', temp);
-              case 6:
-                result = _context2.sent;
-                _context2.next = 12;
+              case 5:
+                result = _context4.sent;
+                if (result.data.status == 200) {
+                  _this4.getAllData();
+                  _this4.closeEditQuestion(index);
+                }
+                // console.log(result);
+                _context4.next = 12;
                 break;
               case 9:
-                _context2.prev = 9;
-                _context2.t0 = _context2["catch"](0);
-                console.log(_context2.t0);
+                _context4.prev = 9;
+                _context4.t0 = _context4["catch"](0);
+                console.log(_context4.t0);
               case 12:
               case "end":
-                return _context2.stop();
+                return _context4.stop();
             }
           }
-        }, _callee2, null, [[0, 9]]);
+        }, _callee4, null, [[0, 9]]);
       }))();
     }
   },
@@ -2351,7 +2437,7 @@ var render = function render() {
       staticClass: "text-green-600 text-[14px] font-semibold cursor-pointer mr-2 save hidden",
       on: {
         click: function click($event) {
-          return _vm.SaveQuestion(data.id);
+          return _vm.SaveQuestion(data.id, index);
         }
       }
     }, [_vm._v("Lưu")]), _vm._v(" "), _vm.dataQuestion.length > 1 ? _c("span", {
@@ -2372,7 +2458,7 @@ var render = function render() {
         value: data.question,
         expression: "data.question"
       }],
-      staticClass: "border-none outline-none w-full",
+      staticClass: "border-none outline-none w-full text-[15px] font-bold",
       attrs: {
         name: "",
         id: "",
@@ -2388,7 +2474,7 @@ var render = function render() {
           _vm.$set(data, "question", $event.target.value);
         }
       }
-    }), _vm._v(" "), _vm._l(data.answers, function (item) {
+    }), _vm._v(" "), _vm._l(data.answers, function (item, index) {
       return _c("div", {
         key: item.idAns,
         staticClass: "w-full mt-2"
@@ -2404,7 +2490,7 @@ var render = function render() {
         staticClass: "h-[32px] border-2 outline-none w-full rounded-md p-[1.25rem] border-gray-400 focus:border-main-color focus:text-main-color text-[14px]",
         attrs: {
           type: "text",
-          placeholder: "C\xE2u tr\u1EA3 l\u1EDDi ".concat(item.text)
+          placeholder: "C\xE2u tr\u1EA3 l\u1EDDi ".concat(_vm.alphabet[index].toUpperCase())
         },
         domProps: {
           value: item.text
@@ -2419,7 +2505,7 @@ var render = function render() {
         staticClass: "p-2 h-[32px] bg-red-600 shadow-sm ml-2 flex items-center justify-center border border-transparent rounded-md",
         on: {
           click: function click($event) {
-            return _vm.deleteAns(data.id, item.idAns);
+            return _vm.deleteAns(data.id, item.id);
           }
         }
       }, [_c("i", {
@@ -2448,13 +2534,13 @@ var render = function render() {
           _vm.$set(data.right_answers, "answer_id", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
         }
       }
-    }, _vm._l(data.answers, function (item) {
+    }, _vm._l(data.answers, function (item, index) {
       return _c("option", {
         key: item.idAns,
         domProps: {
           value: item.id
         }
-      }, [_vm._v("\n                                " + _vm._s(item.text) + "\n                            ")]);
+      }, [_vm._v("\n                                " + _vm._s(_vm.alphabet[index].toUpperCase()) + "\n                            ")]);
     }), 0)]), _vm._v(" "), data.answers.length < _vm.maxAns ? _c("div", {
       staticClass: "w-[64px] flex items-center justify-center bg-white shadow-sm my-4 p-2 mx-auto",
       on: {
@@ -2482,22 +2568,20 @@ var render = function render() {
         staticClass: "uppercase mr-2 font-bold"
       }, [_vm._v(_vm._s(_vm.alphabet[index]) + ":")]), _vm._v(" " + _vm._s(item.text) + "\n                        ")])]);
     }), _vm._v(" "), _c("div", {
-      staticClass: "w-[180px] mt-3 ml-auto flex items-center"
+      staticClass: "justify-end mt-3 ml-auto flex items-center"
     }, [_c("span", {
       staticClass: "text-[13px] font-semibold mr-2"
     }, [_vm._v("Anwser:")]), _vm._v(" "), _c("span", {
       staticClass: "uppercase mr-2 font-bold"
-    }, [_vm._v(_vm._s(_vm.alphabet[_vm.getAlphabet(data)]))])]), _vm._v(" "), data.answers.length < _vm.maxAns ? _c("div", {
-      staticClass: "w-[64px] flex items-center justify-center bg-white shadow-sm my-4 p-2 mx-auto",
-      on: {
-        click: function click($event) {
-          return _vm.pushAns(data.id);
-        }
+    }, [_vm._v(_vm._s(_vm.alphabet[_vm.getAlphabet(data)]))])])], 2)])]);
+  }), 0), _vm._v(" "), _vm.take < _vm.count ? _c("p", {
+    staticClass: "text-[14px] text-blue-500 uppercase font-bold cursor-pointer mb-4",
+    on: {
+      click: function click($event) {
+        return _vm.takeMore(5);
       }
-    }, [_c("i", {
-      staticClass: "metismenu-icon lnr-plus-circle lnr text-[28px]"
-    })]) : _vm._e()], 2)])]);
-  }), 0)]);
+    }
+  }, [_vm._v("Xem thêm")]) : _vm._e()]);
 };
 var staticRenderFns = [];
 render._withStripped = true;

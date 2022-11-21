@@ -29,18 +29,18 @@
                             save
                             hidden
                         "
-                            @click="SaveQuestion(data.id)"
+                            @click="SaveQuestion(data.id, index)"
                         >Lưu</span>
-                         <span
-                             v-if="dataQuestion.length > 1"
-                             class="
+                        <span
+                            v-if="dataQuestion.length > 1"
+                            class="
                             text-red-600 text-[14px]
                             font-semibold
                             cursor-pointer
                         "
-                             @click="deleteQues(data.id)"
-                         >Xóa</span
-                         >
+                            @click="deleteQues(data.id)"
+                        >Xóa</span
+                        >
                     </div>
 
                 </div>
@@ -50,7 +50,7 @@
                         <textarea
                             name=""
                             id=""
-                            class="border-none outline-none w-full"
+                            class="border-none outline-none w-full text-[15px] font-bold"
                             placeholder="Nhập câu hỏi..."
                             v-model="data.question"
                             rows="3"
@@ -58,7 +58,7 @@
 
                         <div
                             class="w-full mt-2"
-                            v-for="item in data.answers"
+                            v-for="(item, index) in data.answers"
                             :key="item.idAns"
                         >
                             <div class="mt-3 flex items-center">
@@ -76,7 +76,7 @@
                                         focus:text-main-color
                                         text-[14px]
                                     "
-                                    :placeholder="`Câu trả lời ${item.text}`"
+                                    :placeholder="`Câu trả lời ${alphabet[index].toUpperCase()}`"
                                     v-model="item.text"
                                 />
                                 <button
@@ -93,7 +93,7 @@
                                         border border-transparent
                                         rounded-md
                                     "
-                                    @click="deleteAns(data.id, item.idAns)"
+                                    @click="deleteAns(data.id,item.id)"
                                 >
                                     <i
                                         class="
@@ -125,10 +125,10 @@
                             >
                                 <option
                                     :value="item.id"
-                                    v-for="item in data.answers"
+                                    v-for="(item, index) in data.answers"
                                     :key="item.idAns"
                                 >
-                                    {{ item.text }}
+                                    {{ alphabet[index].toUpperCase() }}
                                 </option>
                             </select>
                         </div>
@@ -159,7 +159,7 @@
                 </div>
                 <div class="card-body block">
                     <div class="w-full">
-                        <p class="text-[15px] font-bold">{{data.question}}</p>
+                        <p class="text-[15px] font-bold">{{ data.question }}</p>
                         <!-- <input
                             type="text"
                             class="h-[32px] border-none outline-none w-full"
@@ -174,65 +174,56 @@
                         >
                             <div class="mt-3 flex items-center">
                                 <span class="text-[15px] font-semibold"></span>
-                                <span class="uppercase mr-2 font-bold">{{alphabet[index]}}:</span> {{item.text}}
+                                <span class="uppercase mr-2 font-bold">{{ alphabet[index] }}:</span> {{ item.text }}
                             </div>
                         </div>
-                        <div class="w-[180px] mt-3 ml-auto flex items-center">
+                        <div class="justify-end mt-3 ml-auto flex items-center">
                             <span class="text-[13px] font-semibold mr-2"
                             >Anwser:</span
                             >
-                            <span class="uppercase mr-2 font-bold">{{alphabet[getAlphabet(data)]}}</span>
-                        </div>
-                        <div
-                            v-if="data.answers.length < maxAns"
-                            class="
-                                w-[64px]
-                                flex
-                                items-center
-                                justify-center
-                                bg-white
-                                shadow-sm
-                                my-4
-                                p-2
-                                mx-auto
-                            "
-                            @click="pushAns(data.id)"
-                        >
-                            <i
-                                class="
-                                    metismenu-icon
-                                    lnr-plus-circle lnr
-                                    text-[28px]
-                                "
-                            ></i>
+                            <span class="uppercase mr-2 font-bold">{{ alphabet[getAlphabet(data)] }}</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <p class="text-[14px] text-blue-500 uppercase font-bold cursor-pointer mb-4" @click="takeMore(5)" v-if="take < count">Xem thêm</p>
     </div>
 
 </template>
 
 <script>
 import axios from "axios";
+
 export default {
     data() {
         return {
             dataQuestion: [],
             alphabet: ["a", "b", "c", "d", "e", "f", "g", "h"],
             maxAns: 4,
+            take: 5,
+            count: null,
         };
     },
-    computed: {
+    computed: {},
+    watch: {
+      take(){
+          this.getAllData();
+      }
+
     },
     methods: {
+        takeMore(number){
+            this.take = this.take + number
+        },
         pushAns(id) {
+            console.log(id)
             let dataQues = this.dataQuestion.find((item) => item.id == id);
-            dataQues.dataAns.push({
-                idAns: Date.now(),
+            dataQues.answers.push({
+                id: Date.now(),
+                question_id: id,
                 text: null,
-                alphabet: this.alphabet[dataQues.dataAns.length].toUpperCase(),
+                updated_at: Date.now()
             });
         },
         pushQues() {
@@ -249,45 +240,70 @@ export default {
                 answer: null,
             });
         },
-        deleteAns(idQues, idAns) {
-            let dataQues = this.dataQuestion.find((item) => item.id == idQues);
-            dataQues.dataAns = dataQues.dataAns.filter(
-                (item) => item.idAns != idAns
-            );
-            let data = dataQues.dataAns;
-            let temp = [];
-            for (let i = 0; i < data.length; i++) {
-                temp.push({
-                    idAns: data[i].idAns,
-                    text: data[i].text,
-                    alphabet: this.alphabet[i].toUpperCase(),
-                });
+        async deleteAns(idQues,idAns) {
+            try {
+                let res = await axios.post('http://127.0.0.1:8000/api/admin/delete-answer-vocabulary', {id: idAns});
+                let {data} = res;
+                if(data.status == 200){
+                    this.getAllData();
+                }else {
+                    let dataQues = this.dataQuestion.find((item) => item.id == idQues);
+                    dataQues.answers = dataQues.answers.filter(
+                        (item) => item.id != idAns
+                    );
+                }
+            } catch (e) {
+                let dataQues = this.dataQuestion.find((item) => item.id == idQues);
+                dataQues.answers = dataQues.answers.filter(
+                    (item) => item.id != idAns
+                );
             }
-            dataQues.dataAns = temp;
+            // let dataQues = this.dataQuestion.find((item) => item.id == idQues);
+            // dataQues.dataAns = dataQues.dataAns.filter(
+            //     (item) => item.idAns != idAns
+            // );
+            // let data = dataQues.dataAns;
+            // let temp = [];
+            // for (let i = 0; i < data.length; i++) {
+            //     temp.push({
+            //         idAns: data[i].idAns,
+            //         text: data[i].text,
+            //         alphabet: this.alphabet[i].toUpperCase(),
+            //     });
+            // }
+            // dataQues.dataAns = temp;
         },
-        deleteQues(id) {
-            this.dataQuestion = this.dataQuestion.filter(
-                (item) => item.id != id
-            );
+        async deleteQues(id) {
+            try {
+                let res = await axios.post('http://127.0.0.1:8000/api/admin/delete-question-vocabulary', {id: id});
+                let {data} = res;
+                if(data.status == 200){
+                    this.getAllData();
+                }
+            } catch (e) {
+                console.log(e)
+            }
         },
         async getAllData() {
             try {
                 let {data} = await axios.get(
-                    "http://127.0.0.1:8000/api/admin/list-question-vocabulary"
+                    `http://127.0.0.1:8000/api/admin/list-question-vocabulary?take=${this.take}`,
                 );
                 console.log(data.data);
+                this.count = data.count;
                 this.dataQuestion = data.data;
 
-            }catch (error){
+
+            } catch (error) {
                 console.log(error)
             }
 
 
         },
-        getAlphabet(data){
+        getAlphabet(data) {
             return data.answers.findIndex((item) => item.id == data.right_answers.answer_id);
         },
-        EditQuestion(id){
+        EditQuestion(id) {
             this.$refs.card[id].children[1].classList.add('block');
             this.$refs.card[id].children[1].classList.remove('hidden');
             this.$refs.card[id].children[2].classList.add('hidden');
@@ -301,30 +317,48 @@ export default {
             save.classList.add('block');
             save.classList.remove('hidden');
         },
-        async SaveQuestion(id){
-            try {
-                let data = this.dataQuestion.find(item=> item.id == id);
-                console.log(data)
-                let temp = {
-                            right_answers: data.right_answers || [],
-                            id: data.id || null,
-                            question: data.question || "",
-                            dataAns: data.answers.map(itemAns => {
-                                return {
-                                    id: itemAns.id || "",
-                                    question_id: itemAns.question_id || "",
-                                    text: itemAns.text || ""
-                                }
-                            },
+        closeEditQuestion(index){
+            console.log( this.$refs.card[index]);
+            this.$refs.card[index].children[1].classList.add('hidden');
+            this.$refs.card[index].children[1].classList.remove('block');
+            this.$refs.card[index].children[2].classList.add('block');
+            this.$refs.card[index].children[2].classList.remove('hidden');
 
-                            )
-                        }
+            let card_head = this.$refs.card[index].children[0];
+            let edit = card_head.querySelector('.edit');
+            let save = card_head.querySelector('.save');
+            edit.classList.add('block');
+            edit.classList.remove('hidden');
+            save.classList.add('hidden');
+            save.classList.remove('block');
+        },
+        async SaveQuestion(id, index) {
+            try {
+                let data = this.dataQuestion.find(item => item.id == id);
+                let temp = {
+                    right_answers: data.right_answers || [],
+                    id: data.id || null,
+                    question: data.question || "",
+                    dataAns: data.answers.map(itemAns => {
+                            return {
+                                id: itemAns.id || "",
+                                question_id: itemAns.question_id || "",
+                                text: itemAns.text || ""
+                            }
+                        },
+                    )
+                }
                 let result = await axios.put('http://127.0.0.1:8000/api/admin/update-question-vocabulary', temp);
+                if(result.data.status == 200){
+                    this.getAllData();
+                    this.closeEditQuestion(index);
+
+                }
                 // console.log(result);
-            }catch (e) {
+            } catch (e) {
                 console.log(e);
             }
-        }
+        },
 
     },
 
