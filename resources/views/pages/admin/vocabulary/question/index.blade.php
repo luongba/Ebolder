@@ -25,7 +25,7 @@
         <!---------------------     End head content section     --------------------->
         <!---------------------     Start main  section     --------------------->
         <div class="tabs-animation">
-            <vocabulary-create />
+            <question-list />
             <!---------------------     Start content  section     --------------------->
 
         </div>

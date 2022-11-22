@@ -9,7 +9,7 @@
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div>
-                        ENGLISH READING LEVEL TEST
+                        ENGLISH VOCABULARY LEVEL TEST
                         {{-- <div class="page-title-subheading">
                             <ul>
                                 <li>Read the text, then try to answer the questions.</li>
@@ -25,7 +25,7 @@
         <!---------------------     End head content section     --------------------->
         <!---------------------     Start main  section     --------------------->
         <div class="tabs-animation">
-            <vocabulary-list />
+            <question-create />
             <!---------------------     Start content  section     --------------------->
 
         </div>

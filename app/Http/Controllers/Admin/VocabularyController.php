@@ -13,7 +13,11 @@ class VocabularyController extends Controller
 {
     public function index()
     {
-        return view('pages.admin.vocabulary.index');
+        return view('pages.admin.vocabulary.topic.index');
+    }
+    public function questionlist()
+    {
+        return view('pages.admin.vocabulary.question.index');
     }
 
     public function getAllInfoQuestion(Request $request)
@@ -42,7 +46,7 @@ class VocabularyController extends Controller
 
     public function create()
     {
-        return view('pages.admin.vocabulary.create');
+        return view('pages.admin.vocabulary.question.create');
     }
 
     public function store(Request $request)
@@ -52,7 +56,8 @@ class VocabularyController extends Controller
             foreach ($data as $key => $value) {
                 $res = QuestionVocabulary::create([
                     "id" => $value['id'],
-                    "question" => $value['question']
+                    "question" => $value['question'],
+                    "level" => $value['level']
                 ]);
                 $res->right_answers()->create([
                     "answer_id" => $value["answer"]
@@ -88,7 +93,8 @@ class VocabularyController extends Controller
             $res = QuestionVocabulary::where('id', $request->id)->first();
             $res->update(
                 [
-                    "question" => $request->question
+                    "question" => $request->question,
+                    "level" => $request->level
                 ]
             );
             foreach ($request->dataAns as $keyAds => $item) {

@@ -11,19 +11,25 @@
                 </a>
             </li>
             {{-- Start Testing --}}
-            <li class="app-sidebar__heading">English Level Test</li>
+            <li class="app-sidebar__heading">Vocabulary</li>
             <li>
-                <a class="{{ request()->is(['admin/vocabulary-level-test']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-list')}}">
-                    <i class="metismenu-icon lnr-bullhorn lnr"></i>
-                    Vocabulary
+                <a class="{{ request()->is(['admin/vocabulary-level-test/question-list']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-list')}}">
+                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
+                    Topic
                 </a>
             </li>
             <li>
-                <a class="{{ request()->is(['newsletters','newsletters/*']) ? 'mm-active' : '' }}" href="{{route('newsletter-home')}}">
-                    <i class="metismenu-icon pe-7s-paper-plane"></i>
-                    Listening
+                <a class="{{ request()->is(['admin/vocabulary-level-test/question-list']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-question-list')}}">
+                    <i class="metismenu-icon lnr-question-circle lnr"></i>
+                    Questions
                 </a>
             </li>
+{{--            <li>--}}
+{{--                <a class="{{ request()->is(['newsletters','newsletters/*']) ? 'mm-active' : '' }}" href="{{route('newsletter-home')}}">--}}
+{{--                    <i class="metismenu-icon pe-7s-paper-plane"></i>--}}
+{{--                    Listening--}}
+{{--                </a>--}}
+{{--            </li>--}}
             {{-- <!---------------------     Start Application section     --------------------->
             <li class="app-sidebar__heading">Applications</li>
             <li>

@@ -16,7 +16,7 @@
                             cursor-pointer
                         "
                         @click="deleteQues(data.id)"
-                        >Xóa</span
+                    >Xóa</span
                     >
                 </div>
 
