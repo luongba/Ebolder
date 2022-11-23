@@ -1,27 +1,42 @@
 <template>
-    <div class="container">
-        <div class="flex flex-col justify-center w-full items-center">
-            <div
-                class="card w-full mt-3"
-                v-for="(data, index) in dataQuestion"
-                :key="index"
-            >
-                <div class="card-header flex justify-between items-center">
-                    <span>Câu {{ index + 1 }}</span>
-                    <span
-                        v-if="dataQuestion.length > 1"
-                        class="
+    <div>
+        <div class="app-page-title flex justify-between items-center">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div class="page-title-icon">
+                        <i class="lnr-book icon-gradient bg-mean-fruit"></i>
+                    </div>
+                    <div class="flex justify-between">
+                        <p>VOCABULARY LEVEL TEST</p>
+                    </div>
+                </div>
+            </div>
+            <p href="" class="font-semibold text-[18px] text-[#3f6ad8] cursor-pointer mr-2" @click="createQuestion">SAVE</p>
+        </div>
+        <div class="container">
+
+            <div class="flex flex-col justify-center w-full items-center">
+                <div
+                    class="card w-full mt-3"
+                    v-for="(data, index) in dataQuestion"
+                    :key="index"
+                >
+                    <div class="card-header flex justify-between items-center">
+                        <span>Câu {{ index + 1 }}</span>
+                        <span
+                            v-if="dataQuestion.length > 1"
+                            class="
                             text-red-600 text-[14px]
                             font-semibold
                             cursor-pointer
                         "
-                        @click="deleteQues(data.id)"
-                    >Xóa</span
-                    >
-                </div>
+                            @click="deleteQues(data.id)"
+                        >Xóa</span
+                        >
+                    </div>
 
-                <div class="card-body">
-                    <div class="w-full">
+                    <div class="card-body">
+                        <div class="w-full">
                         <textarea
                             name=""
                             id=""
@@ -30,22 +45,22 @@
                             v-model="data.question"
                             rows="3"
                         ></textarea>
-                        <!-- <input
-                            type="text"
-                            class="h-[32px] border-none outline-none w-full"
-                            placeholder="Nhập câu hỏi..."
-                            v-model="dataQuestion[data.id - 1].question"
-                        /> -->
+                            <!-- <input
+                                type="text"
+                                class="h-[32px] border-none outline-none w-full"
+                                placeholder="Nhập câu hỏi..."
+                                v-model="dataQuestion[data.id - 1].question"
+                            /> -->
 
-                        <div
-                            class="w-full mt-2"
-                            v-for="item in data.dataAns"
-                            :key="item.idAns"
-                        >
-                            <div class="mt-3 flex items-center">
-                                <input
-                                    type="text"
-                                    class="
+                            <div
+                                class="w-full mt-2"
+                                v-for="item in data.dataAns"
+                                :key="item.idAns"
+                            >
+                                <div class="mt-3 flex items-center">
+                                    <input
+                                        type="text"
+                                        class="
                                         h-[32px]
                                         border-2
                                         outline-none
@@ -57,12 +72,12 @@
                                         focus:text-main-color
                                         text-[14px]
                                     "
-                                    :placeholder="`Câu trả lời ${item.alphabet}`"
-                                    v-model="item.text"
-                                />
-                                <button
-                                    v-if="data.dataAns.length > 1"
-                                    class="
+                                        :placeholder="`Câu trả lời ${item.alphabet}`"
+                                        v-model="item.text"
+                                    />
+                                    <button
+                                        v-if="data.dataAns.length > 1"
+                                        class="
                                         p-2
                                         h-[32px]
                                         bg-red-600
@@ -74,33 +89,33 @@
                                         border border-transparent
                                         rounded-md
                                     "
-                                    @click="deleteAns(data.id, item.idAns)"
-                                >
-                                    <i
-                                        class="
+                                        @click="deleteAns(data.id, item.idAns)"
+                                    >
+                                        <i
+                                            class="
                                             metismenu-icon
                                             lnr-trash lnr
                                             text-[20px] text-white
                                         "
-                                    ></i>
-                                </button>
+                                        ></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div>
+                            <div class="flex justify-between items-center">
+                                <div>
                                 <span class="text-[13px] font-semibold my-2"
                                 >Level: {{data.level == 1 ? 'Easy' : data.level == 2 ? 'Medium' : 'Hard'}}</span
                                 >
-                                <star-rating :star-size="20" :animate="true" v-model="data.level" :show-rating="false" :max-rating="3"/>
-                            </div>
+                                    <star-rating :star-size="20" :animate="true" v-model="data.level" :show-rating="false" :max-rating="3"/>
+                                </div>
 
-                            <div class="w-[180px] mt-3 flex items-center">
+                                <div class="w-[180px] mt-3 flex items-center">
 
                             <span class="text-[13px] font-semibold mr-2"
                             >Anwser:</span
                             >
-                                <select
-                                    class="
+                                    <select
+                                        class="
                                     h-[38px]
                                     border-2
                                     outline-none
@@ -111,23 +126,23 @@
                                     focus:text-main-color
                                     text-[14px] text-black text-center
                                 "
-                                    v-model="data.answer"
-                                >
-                                    <option
-                                        :value="item.idAns"
-                                        v-for="item in data.dataAns"
-                                        :key="item.idAns"
+                                        v-model="data.answer"
                                     >
-                                        {{ item.alphabet }}
-                                    </option>
-                                </select>
+                                        <option
+                                            :value="item.idAns"
+                                            v-for="item in data.dataAns"
+                                            :key="item.idAns"
+                                        >
+                                            {{ item.alphabet }}
+                                        </option>
+                                    </select>
+                                </div>
+
                             </div>
 
-                        </div>
-
-                        <div
-                            v-if="data.dataAns.length < maxAns"
-                            class="
+                            <div
+                                v-if="data.dataAns.length < maxAns"
+                                class="
                                 w-[64px]
                                 flex
                                 items-center
@@ -138,21 +153,21 @@
                                 p-2
                                 mx-auto
                             "
-                            @click="pushAns(data.id)"
-                        >
-                            <i
-                                class="
+                                @click="pushAns(data.id)"
+                            >
+                                <i
+                                    class="
                                     metismenu-icon
                                     lnr-plus-circle lnr
                                     text-[28px]
                                 "
-                            ></i>
+                                ></i>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div
-                class="
+                <div
+                    class="
                     w-[64px]
                     h-[64px]
                     flex
@@ -162,13 +177,14 @@
                     shadow-sm
                     mt-4
                 "
-                @click="pushQues"
-            >
-                <i class="metismenu-icon lnr-plus-circle lnr text-[32px]"></i>
+                    @click="pushQues"
+                >
+                    <i class="metismenu-icon lnr-plus-circle lnr text-[32px]"></i>
+                </div>
             </div>
         </div>
-        <button @click="createQuestion">click</button>
     </div>
+
 
 </template>
 

@@ -208,7 +208,7 @@
             </div>
         </div>
         <p class="text-[14px] text-blue-500 uppercase font-bold cursor-pointer mb-4" @click="takeMore(5)"
-           v-if="take < count">Xem thêm</p>
+           v-if="take < count">More</p>
     </div>
 
 </template>

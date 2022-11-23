@@ -20,6 +20,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::prefix('/admin')->name('admin.')->group(function () {
+    Route::post('/add-question-to-topic-vocabulary', 'Admin\VocabularyController@addQuestionToTopic')->name('add-question-to-topic-vobulary');
+    Route::post('/edit-topic-vocabulary', 'Admin\VocabularyController@editTopic')->name('edit-topic-vobulary');
+    Route::post('/remove-question-from-topic-vocabulary', 'Admin\VocabularyController@removeQuestionFromTopic')->name('remove-question-from-topic-vobulary');
+    Route::get('/detail-topic-vocabulary/{id}', 'Admin\VocabularyController@detailTopicData')->name('detail-topic-vobulary');
+    Route::get('/list-topic-vocabulary', 'Admin\VocabularyController@ListTopic')->name('list-topic-vobulary');
+    Route::post('/store-topic-vocabulary', 'Admin\VocabularyController@createTopic')->name('store-topic-vobulary');
+    Route::post('/delete-topic-vocabulary', 'Admin\VocabularyController@deleteTopic')->name('delete-topic-vobulary');
     Route::post('/store-question-vocabulary', 'Admin\VocabularyController@store')->name('store-vobulary');
     Route::get('/list-question-vocabulary', 'Admin\VocabularyController@getAllInfoQuestion')->name('list-vocabulary');
     Route::put('/update-question-vocabulary', 'Admin\VocabularyController@update')->name('update-vocabulary');

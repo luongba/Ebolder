@@ -2,14 +2,14 @@
 @section('content')
     <div class="app-main__inner">
         <!---------------------     Start head content  section     --------------------->
-        <div class="app-page-title">
+        <div class="app-page-title flex justify-between items-center">
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
-                    <div>
-                        ENGLISH VOCABULARY LEVEL TEST
+                    <div class="flex justify-between">
+                        <p>VOCABULARY LEVEL TEST</p>
                         {{-- <div class="page-title-subheading">
                             <ul>
                                 <li>Read the text, then try to answer the questions.</li>
@@ -21,6 +21,7 @@
                     </div>
                 </div>
             </div>
+            <a href="{{route('admin.vocabulary-question-create')}}" class="font-semibold text-[18px] text-[#3f6ad8] cursor-pointer mr-2">CREATE</a>
         </div>
         <!---------------------     End head content section     --------------------->
         <!---------------------     Start main  section     --------------------->

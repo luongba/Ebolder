@@ -13,13 +13,13 @@
             {{-- Start Testing --}}
             <li class="app-sidebar__heading">Vocabulary</li>
             <li>
-                <a class="{{ request()->is(['admin/vocabulary-level-test/question-list']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-list')}}">
+                <a class="{{ request()->is(['admin/volabulary-level-test']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-list')}}">
                     <i class="metismenu-icon lnr-graduation-hat lnr"></i>
                     Topic
                 </a>
             </li>
             <li>
-                <a class="{{ request()->is(['admin/vocabulary-level-test/question-list']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-question-list')}}">
+                <a class="{{ request()->is(['admin/volabulary-level-test/question-list']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-question-list')}}">
                     <i class="metismenu-icon lnr-question-circle lnr"></i>
                     Questions
                 </a>

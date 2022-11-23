@@ -17,7 +17,7 @@
         <!---------------------     End head content section     --------------------->
         <!---------------------     Start main  section     --------------------->
         <div class="tabs-animation">
-            <vocabulary-list />
+            <vocabulary-detail :param="{{  json_encode($id) }}" />
             <!---------------------     Start content  section     --------------------->
 
         </div>

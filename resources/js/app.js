@@ -21,7 +21,7 @@ window.JQuery = require('jquery')
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 Vue.component('question-create', require('./components/vocabulary/QuestionCreate.vue').default);
 Vue.component('question-list', require('./components/vocabulary/QuestionList.vue').default);
-Vue.component('vocabulary-create', require('./components/vocabulary/VocabularyCreate.vue').default);
+Vue.component('vocabulary-detail', require('./components/vocabulary/VocabularyDetail.vue').default);
 Vue.component('vocabulary-list', require('./components/vocabulary/VocabularyList.vue').default);
 
 /**

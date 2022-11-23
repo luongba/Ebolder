@@ -52,6 +52,7 @@
 
     Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/volabulary-level-test', 'Admin\VocabularyController@index')->name('vocabulary-list');
+        Route::get('/volabulary-level-test/detail/{id}', 'Admin\VocabularyController@detailTopic')->name('vocabulary-detail');
         Route::get('/volabulary-level-test/question-list', 'Admin\VocabularyController@questionlist')->name('vocabulary-question-list');
         Route::get('/volabulary-level-test/question-create', 'Admin\VocabularyController@create')->name('vocabulary-question-create');
     });

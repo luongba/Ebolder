@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVocabulariesTable extends Migration
+class CreateQuestionsVocabularysTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateVocabulariesTable extends Migration
      */
     public function up()
     {
-        Schema::create('vocabularies', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->string("description");
-            $table->timestamps();
+        Schema::create('question_vocabulary_relationship', function (Blueprint $table) {
+            $table->bigInteger('vocabulary_id');
+            $table->bigInteger('question_vocabulary_id');
         });
     }
 
@@ -28,6 +26,8 @@ class CreateVocabulariesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vocabularies');
+        Schema::table('question_vocabulary_relationship', function (Blueprint $table) {
+            //
+        });
     }
 }
