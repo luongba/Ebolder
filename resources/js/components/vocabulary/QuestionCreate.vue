@@ -11,7 +11,7 @@
                     </div>
                 </div>
             </div>
-            <p href="" class="font-semibold text-[18px] text-[#3f6ad8] cursor-pointer mr-2" @click="createQuestion">SAVE</p>
+            <p href="" class="font-semibold text-[16px] text-[#3f6ad8] cursor-pointer mr-2" @click="createQuestion">SAVE</p>
         </div>
         <div class="container">
 

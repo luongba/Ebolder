@@ -2748,7 +2748,7 @@ var render = function render() {
   return _c("div", [_c("div", {
     staticClass: "app-page-title flex justify-between items-center"
   }, [_vm._m(0), _vm._v(" "), _c("p", {
-    staticClass: "font-semibold text-[18px] text-[#3f6ad8] cursor-pointer mr-2",
+    staticClass: "font-semibold text-[16px] text-[#3f6ad8] cursor-pointer mr-2",
     attrs: {
       href: ""
     },
