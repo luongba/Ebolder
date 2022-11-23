@@ -22,7 +22,7 @@
                     :key="index"
                 >
                     <div class="card-header flex justify-between items-center">
-                        <span>Câu {{ index + 1 }}</span>
+                        <span>Question {{ index + 1 }}</span>
                         <span
                             v-if="dataQuestion.length > 1"
                             class="

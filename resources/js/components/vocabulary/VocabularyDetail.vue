@@ -46,7 +46,7 @@
         </div>
         <p class="font-semibold text-[15px] mt-4 mb-2">Statistical</p>
         <div
-            class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold flex flex-col items-start">
+            class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-4 text-[14px] font-semibold flex flex-col items-start">
             <div class="flex justify-between items-center w-full">
                 <p>{{levelEasy}}</p>
                 <star-rating :star-size="20" :animate="false" :show-rating="false"

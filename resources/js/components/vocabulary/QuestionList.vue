@@ -8,7 +8,7 @@
                 ref="card"
             >
                 <div class="card-header flex justify-between items-center">
-                    <span>Câu {{ index + 1 }}</span>
+                    <span>Question {{ index + 1 }}</span>
                     <div class="flex items-center">
                         <span
                             class="
@@ -19,7 +19,7 @@
                             edit
                         "
                             @click="EditQuestion(index)"
-                        >Sửa</span>
+                        >Edit</span>
                         <span
                             class="
                             text-green-600 text-[14px]
@@ -30,7 +30,7 @@
                             hidden
                         "
                             @click="SaveQuestion(data.id, index)"
-                        >Lưu</span>
+                        >Save</span>
                         <span
                             v-if="dataQuestion.length > 1"
                             class="
@@ -39,7 +39,7 @@
                             cursor-pointer
                         "
                             @click="deleteQues(data.id)"
-                        >Xóa</span
+                        >Delete</span
                         >
                     </div>
 

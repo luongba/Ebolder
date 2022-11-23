@@ -2765,7 +2765,7 @@ var render = function render() {
       staticClass: "card w-full mt-3"
     }, [_c("div", {
       staticClass: "card-header flex justify-between items-center"
-    }, [_c("span", [_vm._v("Câu " + _vm._s(index + 1))]), _vm._v(" "), _vm.dataQuestion.length > 1 ? _c("span", {
+    }, [_c("span", [_vm._v("Question " + _vm._s(index + 1))]), _vm._v(" "), _vm.dataQuestion.length > 1 ? _c("span", {
       staticClass: "text-red-600 text-[14px] font-semibold cursor-pointer",
       on: {
         click: function click($event) {
@@ -2949,7 +2949,7 @@ var render = function render() {
       staticClass: "card w-full mt-3 mb-3"
     }, [_c("div", {
       staticClass: "card-header flex justify-between items-center"
-    }, [_c("span", [_vm._v("Câu " + _vm._s(index + 1))]), _vm._v(" "), _c("div", {
+    }, [_c("span", [_vm._v("Question " + _vm._s(index + 1))]), _vm._v(" "), _c("div", {
       staticClass: "flex items-center"
     }, [_c("span", {
       staticClass: "text-yellow-400 text-[14px] font-semibold cursor-pointer mr-2 edit",
@@ -2958,21 +2958,21 @@ var render = function render() {
           return _vm.EditQuestion(index);
         }
       }
-    }, [_vm._v("Sửa")]), _vm._v(" "), _c("span", {
+    }, [_vm._v("Edit")]), _vm._v(" "), _c("span", {
       staticClass: "text-green-600 text-[14px] font-semibold cursor-pointer mr-2 save hidden",
       on: {
         click: function click($event) {
           return _vm.SaveQuestion(data.id, index);
         }
       }
-    }, [_vm._v("Lưu")]), _vm._v(" "), _vm.dataQuestion.length > 1 ? _c("span", {
+    }, [_vm._v("Save")]), _vm._v(" "), _vm.dataQuestion.length > 1 ? _c("span", {
       staticClass: "text-red-600 text-[14px] font-semibold cursor-pointer",
       on: {
         click: function click($event) {
           return _vm.deleteQues(data.id);
         }
       }
-    }, [_vm._v("Xóa")]) : _vm._e()])]), _vm._v(" "), _c("div", {
+    }, [_vm._v("Delete")]) : _vm._e()])]), _vm._v(" "), _c("div", {
       staticClass: "card-body hidden"
     }, [_c("div", {
       staticClass: "w-full"
@@ -3270,7 +3270,7 @@ var render = function render() {
   })]) : _vm._e()]), _vm._v(" "), _c("p", {
     staticClass: "font-semibold text-[15px] mt-4 mb-2"
   }, [_vm._v("Statistical")]), _vm._v(" "), _c("div", {
-    staticClass: "bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold flex flex-col items-start"
+    staticClass: "bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-4 text-[14px] font-semibold flex flex-col items-start"
   }, [_c("div", {
     staticClass: "flex justify-between items-center w-full"
   }, [_c("p", [_vm._v(_vm._s(_vm.levelEasy))]), _vm._v(" "), _c("star-rating", {
