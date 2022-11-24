@@ -397,9 +397,10 @@ export default {
                 let { data } = await axios.get(
                     `${$Api.baseUrlApi}/admin/list-question-vocabulary?take=${this.take}`
                 );
-                console.log(data.data);
-                this.count = data.count;
-                this.dataQuestion = data.data;
+                if (data.status == 200) {
+                    this.count = data.count;
+                    this.dataQuestion = data.data;
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -491,7 +492,7 @@ export default {
                             type: "success",
                             message: "Edit success",
                         });
-                    }else {
+                    } else {
                         this.$message({
                             type: "error",
                             message: "Edit error",
@@ -507,7 +508,6 @@ export default {
 
     created() {
         this.getAllData();
-       
     },
 };
 </script>

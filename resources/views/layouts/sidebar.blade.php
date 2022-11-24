@@ -24,6 +24,19 @@
                     Questions
                 </a>
             </li>
+            <li class="app-sidebar__heading">Listening</li>
+            <li>
+                <a class="{{ request()->is(['admin/volabulary-level-test']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-list')}}">
+                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
+                    Topic
+                </a>
+            </li>
+            <li>
+                <a class="{{ request()->is(['admin/listening-level-test/question-list']) ? 'mm-active' : '' }}"  href="{{route('admin.listening-question-list')}}">
+                    <i class="metismenu-icon lnr-question-circle lnr"></i>
+                    Audio and Question
+                </a>
+            </li>
 {{--            <li>--}}
 {{--                <a class="{{ request()->is(['newsletters','newsletters/*']) ? 'mm-active' : '' }}" href="{{route('newsletter-home')}}">--}}
 {{--                    <i class="metismenu-icon pe-7s-paper-plane"></i>--}}

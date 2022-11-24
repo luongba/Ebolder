@@ -32,4 +32,7 @@ Route::prefix('/admin')->name('admin.')->group(function () {
     Route::put('/update-question-vocabulary', 'Admin\VocabularyController@update')->name('update-vocabulary');
     Route::post('/delete-answer-vocabulary', 'Admin\VocabularyController@destroyAns')->name('delete-vocabulary');
     Route::post('/delete-question-vocabulary', 'Admin\VocabularyController@destroyQues')->name('delete-question-vocabulary');
+
+    //Listening
+    Route::post('/add-audio-and-question-listening', 'Admin\ListenController@createAudioAndQuestion')->name('add-audio-and-question-listening');
 });

@@ -28,6 +28,11 @@ Vue.component('question-create', require('./components/vocabulary/QuestionCreate
 Vue.component('question-list', require('./components/vocabulary/QuestionList.vue').default);
 Vue.component('vocabulary-detail', require('./components/vocabulary/VocabularyDetail.vue').default);
 Vue.component('vocabulary-list', require('./components/vocabulary/VocabularyList.vue').default);
+//listening
+Vue.component('question-listening-list', require('./components/listening/QuestionList.vue').default);
+Vue.component('question-listening-create', require('./components/listening/QuestionCreate.vue').default);
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
