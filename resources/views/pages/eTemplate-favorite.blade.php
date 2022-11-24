@@ -63,7 +63,7 @@
                     <div class="mb-3 profile-responsive card email-template-main">
                         <div class="template-item-thumbnail">
                             <div class="dev-template-layout">
-                                <div class="template-thumbnail"><img class="" src="http://127.0.0.1:8000/images/template/shoe-email.jpg"></div>
+                                <div class="template-thumbnail"><img class="" src=`${$Api.baseUrl}images/template/shoe-email.jpg"></div>
                             </div>
                             <div class="email-template-favorite">
                                 <button class="mr-2 btn border-0 btn-transition favorite-active" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove Favorites">
@@ -97,7 +97,7 @@
                     <div class="mb-3 profile-responsive card email-template-main">
                         <div class="template-item-thumbnail">
                             <div class="dev-template-layout">
-                                <div class="template-thumbnail"><img class="" src="http://127.0.0.1:8000/images/template/shoe-email.jpg"></div>
+                                <div class="template-thumbnail"><img class="" src=`${$Api.baseUrl}images/template/shoe-email.jpg"></div>
                             </div>
                             <div class="email-template-favorite">
                                 <button class="mr-2 btn border-0 btn-transition favorite-active" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove Favorites">
@@ -131,7 +131,7 @@
                     <div class="mb-3 profile-responsive card email-template-main">
                         <div class="template-item-thumbnail">
                             <div class="dev-template-layout">
-                                <div class="template-thumbnail"><img class="" src="http://127.0.0.1:8000/images/template/shoe-email.jpg"></div>
+                                <div class="template-thumbnail"><img class="" src=`${$Api.baseUrl}images/template/shoe-email.jpg"></div>
                             </div>
                             <div class="email-template-favorite">
                                 <button class="mr-2 btn border-0 btn-transition favorite-active" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove Favorites">
@@ -165,7 +165,7 @@
                     <div class="mb-3 profile-responsive card email-template-main">
                         <div class="template-item-thumbnail">
                             <div class="dev-template-layout">
-                                <div class="template-thumbnail"><img class="" src="http://127.0.0.1:8000/images/template/shoe-email.jpg"></div>
+                                <div class="template-thumbnail"><img class="" src=`${$Api.baseUrl}images/template/shoe-email.jpg"></div>
                             </div>
                             <div class="email-template-favorite">
                                 <button class="mr-2 btn border-0 btn-transition favorite-active" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add To Favorites">

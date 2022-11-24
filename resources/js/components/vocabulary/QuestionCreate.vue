@@ -11,10 +11,20 @@
                     </div>
                 </div>
             </div>
-            <p href="" class="font-semibold text-[16px] text-[#3f6ad8] cursor-pointer mr-2" @click="createQuestion">SAVE</p>
+            <p
+                href=""
+                class="
+                    font-semibold
+                    text-[16px] text-[#3f6ad8]
+                    cursor-pointer
+                    mr-2
+                "
+                @click="createQuestion"
+            >
+                SAVE
+            </p>
         </div>
         <div class="container">
-
             <div class="flex flex-col justify-center w-full items-center">
                 <div
                     class="card w-full mt-3"
@@ -26,174 +36,196 @@
                         <span
                             v-if="dataQuestion.length > 1"
                             class="
-                            text-red-600 text-[14px]
-                            font-semibold
-                            cursor-pointer
-                        "
+                                text-red-600 text-[14px]
+                                font-semibold
+                                cursor-pointer
+                            "
                             @click="deleteQues(data.id)"
-                        >Xóa</span
+                            >Xóa</span
                         >
                     </div>
 
                     <div class="card-body">
                         <div class="w-full">
-                        <textarea
-                            name=""
-                            id=""
-                            class="border-none outline-none w-full"
-                            placeholder="Nhập câu hỏi..."
-                            v-model="data.question"
-                            rows="3"
-                        ></textarea>
-                            <!-- <input
-                                type="text"
-                                class="h-[32px] border-none outline-none w-full"
-                                placeholder="Nhập câu hỏi..."
-                                v-model="dataQuestion[data.id - 1].question"
-                            /> -->
-
-                            <div
-                                class="w-full mt-2"
-                                v-for="item in data.dataAns"
-                                :key="item.idAns"
+                            <el-form
+                                ref="ruleFormData"
+                                :model="data"
+                                class="w-full"
                             >
-                                <div class="mt-3 flex items-center">
-                                    <input
-                                        type="text"
-                                        class="
-                                        h-[32px]
-                                        border-2
-                                        outline-none
-                                        w-full
-                                        rounded-md
-                                        p-[1.25rem]
-                                        border-gray-400
-                                        focus:border-main-color
-                                        focus:text-main-color
-                                        text-[14px]
-                                    "
-                                        :placeholder="`Câu trả lời ${item.alphabet}`"
-                                        v-model="item.text"
-                                    />
-                                    <button
-                                        v-if="data.dataAns.length > 1"
-                                        class="
-                                        p-2
-                                        h-[32px]
-                                        bg-red-600
-                                        shadow-sm
-                                        ml-2
-                                        flex
-                                        items-center
-                                        justify-center
-                                        border border-transparent
-                                        rounded-md
-                                    "
-                                        @click="deleteAns(data.id, item.idAns)"
-                                    >
-                                        <i
-                                            class="
-                                            metismenu-icon
-                                            lnr-trash lnr
-                                            text-[20px] text-white
-                                        "
-                                        ></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <div>
-                                <span class="text-[13px] font-semibold my-2"
-                                >Level: {{data.level == 1 ? 'Easy' : data.level == 2 ? 'Medium' : 'Hard'}}</span
+                                <el-form-item
+                                    prop="question"
+                                    :rules="[
+                                        {
+                                            required: true,
+                                            message:
+                                                'Please enter your question',
+                                        },
+                                    ]"
+                                    class="w-full m-0"
                                 >
-                                    <star-rating :star-size="20" :animate="true" v-model="data.level" :show-rating="false" :max-rating="3"/>
-                                </div>
+                                    <el-input
+                                        type="textarea"
+                                        placeholder="Nhập câu hỏi..."
+                                        v-model="data.question"
+                                        rows="3"
+                                    ></el-input>
+                                </el-form-item>
 
-                                <div class="w-[180px] mt-3 flex items-center">
-
-                            <span class="text-[13px] font-semibold mr-2"
-                            >Anwser:</span
-                            >
-                                    <select
-                                        class="
-                                    h-[38px]
-                                    border-2
-                                    outline-none
-                                    w-full
-                                    rounded-md
-                                    border-gray-400
-                                    focus:border-main-color
-                                    focus:text-main-color
-                                    text-[14px] text-black text-center
-                                "
-                                        v-model="data.answer"
-                                    >
-                                        <option
-                                            :value="item.idAns"
-                                            v-for="item in data.dataAns"
-                                            :key="item.idAns"
+                                <div
+                                    class="w-full mt-2"
+                                    v-for="item in data.dataAns"
+                                    :key="item.idAns"
+                                >
+                                    <div class="mt-4 flex items-start">
+                                        <el-form
+                                            ref="ruleFormItem"
+                                            :model="item"
+                                            :rules="rules"
+                                            class="w-full"
                                         >
-                                            {{ item.alphabet }}
-                                        </option>
-                                    </select>
+                                            <el-form-item
+                                                prop="text"
+                                                :rules="[
+                                                    {
+                                                        required: true,
+                                                        message:
+                                                            'Please enter your answer',
+                                                    },
+                                                ]"
+                                                class="w-full m-0"
+                                            >
+                                                <Input v-model="item.text">
+                                                    <template slot="prepend">{{
+                                                        item.alphabet
+                                                    }}</template>
+                                                </Input>
+                                            </el-form-item>
+                                        </el-form>
+
+                                        <el-button
+                                            v-if="data.dataAns.length > 1"
+                                            class="ml-2"
+                                            type="danger"
+                                            icon="el-icon-delete"
+                                            @click="
+                                                deleteAns(data.id, item.idAns)
+                                            "
+                                            plain
+                                            circle
+                                        ></el-button>
+                                    </div>
                                 </div>
-
-                            </div>
-
-                            <div
-                                v-if="data.dataAns.length < maxAns"
-                                class="
-                                w-[64px]
-                                flex
-                                items-center
-                                justify-center
-                                bg-white
-                                shadow-sm
-                                my-4
-                                p-2
-                                mx-auto
-                            "
-                                @click="pushAns(data.id)"
-                            >
-                                <i
+                                <div
                                     class="
-                                    metismenu-icon
-                                    lnr-plus-circle lnr
-                                    text-[28px]
-                                "
-                                ></i>
-                            </div>
+                                        flex
+                                        justify-between
+                                        items-start
+                                        mt-4
+                                    "
+                                >
+                                    <div class="leading-[40px]">
+                                        <span class="text-[13px] font-semibold"
+                                            >Level:
+                                            {{
+                                                data.level == 1
+                                                    ? "Easy"
+                                                    : data.level == 2
+                                                    ? "Medium"
+                                                    : "Hard"
+                                            }}</span
+                                        >
+                                        <star-rating
+                                            :star-size="20"
+                                            :animate="true"
+                                            v-model="data.level"
+                                            :show-rating="false"
+                                            :max-rating="3"
+                                        />
+                                    </div>
+
+                                    <div class="w-[180px]">
+                                        <el-form-item
+                                            :rules="[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        'Please select answer',
+                                                    trigger: 'blur',
+                                                },
+                                            ]"
+                                            prop="answer"
+                                            class="w-full m-0"
+                                        >
+                                            <span
+                                                class="
+                                                    text-[13px]
+                                                    font-semibold
+                                                    mr-2
+                                                "
+                                                >Anwser:</span
+                                            >
+                                            <el-select
+                                                v-model="data.answer"
+                                                placeholder="Select"
+                                            >
+                                                <el-option
+                                                    v-for="item in data.dataAns"
+                                                    :key="item.idAns"
+                                                    :label="item.alphabet"
+                                                    :value="item.idAns"
+                                                >
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </div>
+                                </div>
+                                <div
+                                    class="
+                                        mx-auto
+                                        my-4
+                                        lg:my-2
+                                        flex
+                                        justify-center
+                                    "
+                                >
+                                    <el-button
+                                        v-if="data.dataAns.length < maxAns"
+                                        @click="pushAns(data.id)"
+                                        icon="el-icon-plus"
+                                        plain
+                                    ></el-button>
+                                </div>
+                            </el-form>
                         </div>
                     </div>
                 </div>
-                <div
-                    class="
-                    w-[64px]
-                    h-[64px]
-                    flex
-                    items-center
-                    justify-center
-                    bg-white
-                    shadow-sm
-                    mt-4
-                "
-                    @click="pushQues"
-                >
-                    <i class="metismenu-icon lnr-plus-circle lnr text-[32px]"></i>
+
+                <div class="mx-auto my-4 flex justify-center">
+                    <el-button
+                        @click="pushQues()"
+                        type="success"
+                        icon="el-icon-circle-plus-outline"
+                        plain
+                        >More questions
+                    </el-button>
                 </div>
             </div>
         </div>
     </div>
-
-
 </template>
 
 <script>
 import axios from "axios";
-import StarRating from 'vue-star-rating'
+import StarRating from "vue-star-rating";
+import { Input, Button, Select, Form } from "element-ui";
+
 export default {
     components: {
-        StarRating
+        StarRating,
+        Input,
+        Button,
+        Select,
+        Form,
     },
     data() {
         return {
@@ -214,7 +246,17 @@ export default {
             ],
             alphabet: ["a", "b", "c", "d", "e", "f", "g", "h"],
             maxAns: 4,
-            level: "Easy"
+            level: "Easy",
+
+            rules: {
+                name: [
+                    {
+                        required: true,
+                        message: "Please input Activity question",
+                        trigger: "blur",
+                    },
+                ],
+            },
         };
     },
     methods: {
@@ -226,20 +268,47 @@ export default {
                 alphabet: this.alphabet[dataQues.dataAns.length].toUpperCase(),
             });
         },
-        pushQues() {
-            this.dataQuestion.push({
-                id: Date.now(),
-                question: null,
-                level: 1,
-                dataAns: [
-                    {
-                        idAns: Date.now() + 123,
-                        text: null,
-                        alphabet: "A",
-                    },
-                ],
-                answer: null,
+        validate(formNameItem, formNameData) {
+            let isCheck = true;
+            this.$refs[formNameItem].forEach((item) => {
+                item.validate((valid) => {
+                    if (!valid) {
+                        isCheck = false;
+                    } else {
+                        console.log("error submit!!");
+                        return false;
+                    }
+                });
             });
+            this.$refs[formNameData].forEach((item) => {
+                item.validate((valid) => {
+                    if (!valid) {
+                        isCheck = false;
+                    } else {
+                        console.log("error submit!!");
+                        return false;
+                    }
+                });
+            });
+            return isCheck;
+        },
+        pushQues() {
+            let isCheck = this.validate("ruleFormData", "ruleFormItem");
+            if (isCheck) {
+                this.dataQuestion.push({
+                    id: Date.now(),
+                    question: null,
+                    level: 1,
+                    dataAns: [
+                        {
+                            idAns: Date.now() + 123,
+                            text: null,
+                            alphabet: "A",
+                        },
+                    ],
+                    answer: null,
+                });
+            }
         },
         deleteAns(idQues, idAns) {
             let dataQues = this.dataQuestion.find((item) => item.id == idQues);
@@ -262,11 +331,36 @@ export default {
                 (item) => item.id != id
             );
         },
-        createQuestion() {
-            axios.post(
-                "http://127.0.0.1:8000/api/admin/store-question-vocabulary",
-                this.dataQuestion
-            );
+        async createQuestion() {
+            let isCheck = this.validate("ruleFormData", "ruleFormItem");
+            if (isCheck) {
+                try {
+                    let result = await axios.post(
+                        `${$Api.baseUrlApi}/admin/store-question-vocabulary`,
+                        this.dataQuestion
+                    );
+                    let { data } = result;
+                    if (data.status == 200) {
+                        this.$message({
+                            message: data.message,
+                            type: "success",
+                        });
+                        setTimeout(()=>{
+                            window.location.href = `${$Api.baseUrl}/admin/volabulary-level-test/question-list`;
+                        },1000)
+                    } else {
+                        this.$message({
+                            message: data.message,
+                            type: "error",
+                        });
+                    }
+                } catch (error) {
+                    console.log(
+                        "🚀 ~ ~ error",
+                        error
+                    );
+                }
+            }
         },
     },
 
