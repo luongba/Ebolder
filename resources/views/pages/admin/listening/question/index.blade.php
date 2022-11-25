@@ -21,7 +21,7 @@
                     </div>
                 </div>
             </div>
-            <a href="{{route('admin.vocabulary-question-create')}}" class="font-semibold text-[16px] text-[#3f6ad8] cursor-pointer mr-2">CREATE</a>
+            <a href="{{route('admin.listening-question-create')}}" class="font-semibold text-[16px] text-[#3f6ad8] cursor-pointer mr-2">CREATE</a>
         </div>
         <!---------------------     End head content section     --------------------->
         <!---------------------     Start main  section     --------------------->

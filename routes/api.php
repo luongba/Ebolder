@@ -35,4 +35,11 @@ Route::prefix('/admin')->name('admin.')->group(function () {
 
     //Listening
     Route::post('/add-audio-and-question-listening', 'Admin\ListenController@createAudioAndQuestion')->name('add-audio-and-question-listening');
+    Route::post('/add-question-to-audio-listening', 'Admin\ListenController@storeQuestion')->name('add-question-to-audio-listening');
+    Route::get('/get-audio-listening', 'Admin\ListenController@getAllAudio')->name('get-all-audio-listening');
+    Route::get('/get-detail-audio-question-listening/{id}', 'Admin\ListenController@detaiQuestion')->name('get-detail-audio-listening');
+    Route::post('/delete-answer-listening', 'Admin\ListenController@destroyAns')->name('delete-listening');
+    Route::put('/update-question-listening', 'Admin\ListenController@updateQuestion')->name('update-question-listening');
+    Route::post('/update-audio-listening/{id}', 'Admin\ListenController@updateAudio')->name('update-audio-listening');
+    Route::post('/delete-audio-listening', 'Admin\ListenController@deleteAudio')->name('delete-audio-listening');
 });

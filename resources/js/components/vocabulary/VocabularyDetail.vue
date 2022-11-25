@@ -90,14 +90,14 @@
         </transition>
         <div class="flex items-center justify-center">
             <p
-                class="font-bold text-[30px] uppercase text-center w-full"
+                class="font-bold lg:text-[30px] text-[20px] uppercase text-center w-full"
                 v-if="!isEditTitle"
             >
                 {{ detailTopic.name }}
             </p>
             <input
                 type="text"
-                class="font-bold text-[30px] uppercase text-center w-full"
+                class="font-bold lg:text-[30px] text-[20px]  uppercase text-center w-full"
                 v-model="detailTopic.name"
                 v-else
             />

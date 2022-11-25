@@ -101,7 +101,7 @@
                     v-for="item in listTopic"
                     :key="item.id"
                 >
-                    <span class="flex-1">{{ item.name }}</span>
+                    <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
                     <div class="flex items-center">
                         <el-button
                             size="small"

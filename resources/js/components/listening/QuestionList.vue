@@ -1,89 +1,6 @@
 <template>
     <div>
         <div class="container">
-            <transition name="fade">
-                <div class="w-full h-full" v-if="show">
-                    <div
-                        class="
-                            absolute
-                            inset-0
-                            bg-blur
-                            flex
-                            items-center
-                            justify-center
-                        "
-                    >
-                        <div
-                            class="
-                                w-[95%]
-                                md:w-[70%]
-                                bg-white
-                                shadow-sm
-                                px-4
-                                py-4
-                            "
-                        >
-                            <div class="py-2 relative">
-                                <h1 class="font-semibold uppercase text-[14px]">
-                                    Create new Topic
-                                </h1>
-                                <span
-                                    class="
-                                        absolute
-                                        right-[5px]
-                                        top-[5px]
-                                        text-[20px]
-                                        cursor-pointer
-                                    "
-                                    @click="show = !show"
-                                >
-                                    <i class="lnr-cross"></i>
-                                </span>
-                            </div>
-                            <el-form
-                                :model="topicData"
-                                :rules="rules"
-                                ref="ruleForm"
-                            >
-                                <div class="my-2">
-                                    <el-form-item
-                                        label="Name Topic"
-                                        prop="name"
-                                    >
-                                        <el-input
-                                            placeholder="Name Topic"
-                                            v-model="topicData.name"
-                                        ></el-input>
-                                    </el-form-item>
-                                </div>
-                                <div class="">
-                                    <el-form-item
-                                        label="Description"
-                                        prop="description"
-                                    >
-                                        <el-input
-                                            type="textarea"
-                                            placeholder="Description"
-                                            rows="3"
-                                            v-model="topicData.description"
-                                        ></el-input>
-                                    </el-form-item>
-                                </div>
-                                <div class="flex justify-end items-center mt-4">
-                                    <el-button plain @click="resetFeild"
-                                        >Cancel</el-button
-                                    >
-                                    <el-button
-                                        type="primary"
-                                        @click="createTopic('ruleForm')"
-                                        >Create</el-button
-                                    >
-                                </div>
-                            </el-form>
-                        </div>
-                    </div>
-                </div>
-            </transition>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div
                     class="
@@ -98,21 +15,40 @@
                         text-[14px]
                         font-semibold
                     "
-                    v-for="item in listTopic"
+                    v-for="(item, index) in listAudio"
                     :key="item.id"
                 >
-                    <span class="flex-1">{{ item.name }}</span>
+                    <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
                     <div class="flex items-center">
-                        <el-button
-                            size="small"
-                            type="danger"
-                            plain
-                            icon="el-icon-delete"
-                            circle
-                            @click="deleteTopic(item.id)"
-                        ></el-button>
+                        <div ref="play">
+                            <el-button
+                                size="small"
+                                type="success"
+                                plain
+                                icon="el-icon-video-play"
+                                class="text-[20px]"
+                                circle
+                                @click="
+                                    playAudio(
+                                        `${baseApi}/upload/audio/${item.audio}`,
+                                        index
+                                    )
+                                "
+                            ></el-button>
+                        </div>
+                        <div ref="pause" class="hidden">
+                            <el-button
+                                size="small"
+                                type="warning"
+                                plain
+                                icon="el-icon-video-pause"
+                                class="text-[20px]"
+                                circle
+                                @click="pauseAudio(index)"
+                            ></el-button>
+                        </div>
                         <a
-                            :href="`${ApiUrl}/admin/volabulary-level-test/detail/${item.id}`"
+                            :href="`${ApiUrl}/admin/listening-level-test/question-edit/${item.id}`"
                             class="ml-2"
                         >
                             <el-button
@@ -123,37 +59,27 @@
                                 circle
                             ></el-button>
                         </a>
+                        <el-button
+                            class="ml-2"
+                            size="small"
+                            type="danger"
+                            plain
+                            icon="el-icon-delete"
+                            circle
+                            @click="deleteAudio(item.id)"
+                        ></el-button>
                     </div>
                 </div>
-                <div
-                    class="
-                        bg-white
-                        shadow-sm
-                        flex
-                        items-center
-                        justify-center
-                        cursor-pointer
-                        py-4
-                        px-4
-                        text-[14px]
-                        font-semibold
-                    "
-                    @click="show = !show"
-                >
-                    <div class="flex items-center">
-                        <div
-                            class="
-                                w-[32px]
-                                h-[32px]
-                                flex
-                                items-center
-                                justify-center
-                            "
-                        >
-                            <i class="el-icon-plus text-[20px]"></i>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="absolute bottom-2 left-[50%] bg-white w-[500px]">
+                <audio
+                    hidden
+                    id="audio-preview"
+                    autoplay
+                    class="w-full"
+                    controls
+                    v-show="file != ''"
+                />
             </div>
         </div>
     </div>
@@ -170,7 +96,7 @@ export default {
                 name: null,
                 description: null,
             },
-            listTopic: [],
+            listAudio: [],
             ApiUrl: $Api.baseUrl,
             rules: {
                 name: [
@@ -188,17 +114,36 @@ export default {
                     },
                 ],
             },
+            file: null,
+            baseApi: $Api.baseUrl,
+            isplay: false,
         };
     },
     computed: {},
     watch: {},
     methods: {
-        resetFeild() {
-            this.show = false;
-            this.topicData = {
-                name: null,
-                description: null,
-            };
+        playAudio(audioMusic, index) {
+            let audio = document.getElementById("audio-preview");
+            audio.src = audioMusic;
+            this.$refs.play[index].classList.add("hidden");
+            this.$refs.pause[index].classList.remove("hidden");
+            this.$refs.pause[index].classList.add("block");
+            for (let i = 0; i < this.$refs.pause.length; i++) {
+                if (i != index) {
+                    this.$refs.play[i].classList.remove("hidden");
+                    this.$refs.play[i].classList.add("block");
+                    this.$refs.pause[i].classList.remove("block");
+                    this.$refs.pause[i].classList.add("hidden");
+                }
+            }
+        },
+        pauseAudio(index) {
+            let audio = document.getElementById("audio-preview");
+            audio.pause();
+            this.$refs.play[index].classList.remove("hidden");
+            this.$refs.play[index].classList.add("block");
+            this.$refs.pause[index].classList.remove("block");
+            this.$refs.pause[index].classList.add("hidden");
         },
         async createTopic(formName) {
             this.$refs[formName].validate(async (valid) => {
@@ -209,7 +154,7 @@ export default {
                             this.topicData
                         );
                         if (rs.data.status == 200) {
-                            this.getAllTopic();
+                            this.getAllAudio();
 
                             this.resetFeild();
                             this.$message({
@@ -233,19 +178,20 @@ export default {
                 }
             });
         },
-        async getAllTopic() {
+        async getAllAudio() {
             try {
                 let rs = await axios.get(
-                    `${$Api.baseUrlApi}/admin/list-topic-vocabulary`
+                    `${$Api.baseUrlApi}/admin/get-audio-listening`
                 );
                 if (rs.data.status == 200) {
-                    this.listTopic = rs.data.data;
+                    console.log(rs.data.data);
+                    this.listAudio = rs.data.data;
                 }
             } catch (e) {
                 console.log(e);
             }
         },
-        async deleteTopic(id) {
+        async deleteAudio(id) {
             this.$confirm(
                 "This will permanently delete the topic. Continue?",
                 "Warning",
@@ -258,11 +204,11 @@ export default {
                 .then(async () => {
                     try {
                         let rs = await axios.post(
-                            `${$Api.baseUrlApi}/admin/delete-topic-vocabulary`,
+                            `${$Api.baseUrlApi}/admin/delete-audio-listening`,
                             { id }
                         );
                         if (rs.data.status == 200) {
-                            this.getAllTopic();
+                            this.getAllAudio();
                             this.$message({
                                 type: "success",
                                 message: "Delete completed",
@@ -288,7 +234,7 @@ export default {
     },
 
     created() {
-        this.getAllTopic();
+        this.getAllAudio();
     },
 };
 </script>

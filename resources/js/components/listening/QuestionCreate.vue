@@ -19,12 +19,11 @@
                     cursor-pointer
                     mr-2
                 "
-                @click="createQuestion"
+                @click="submitFile"
             >
                 SAVE
             </p>
         </div>
-        <button @click="submitFile">put file</button>
         <div class="container">
             <div
                 class="
@@ -302,16 +301,39 @@ export default {
         };
     },
     methods: {
-        submitFile() {
-            const formData = new FormData();
-            formData.append("file", this.file);
-            const headers = { "Content-Type": "multipart/form-data" };
-            axios
-                .post(`${$Api.baseUrlApi}/admin/add-audio-and-question-listening`, formData, { headers })
-                .then((res) => {
-                    res.data.files; // binary representation of the file
-                    res.status; // HTTP status
+        async submitFile() {
+            if (this.file == null) {
+                this.$message({
+                    type: "error",
+                    message: "Please select file",
                 });
+                this.$refs.fileAudio.click();
+            } else {
+                let isCheck = this.validate("ruleFormData", "ruleFormItem");
+                if (isCheck) {
+                    try {
+                        const formData = new FormData();
+                        formData.append("file", this.file);
+                        const headers = {
+                            "Content-Type": "multipart/form-data",
+                        };
+                        let result = await axios.post(
+                            `${$Api.baseUrlApi}/admin/add-audio-and-question-listening`,
+                            formData,
+                            { headers }
+                        );
+                        let { data } = result;
+                        if (data.status == 200) {
+                            this.createQuestion(data.audio_id);
+                        }
+                    } catch (error) {
+                        console.log(
+                            "🚀 ~ file: QuestionCreate.vue ~ line 320 ~ submitFile ~ error",
+                            error
+                        );
+                    }
+                }
+            }
         },
         previewAudio() {
             let audio = document.getElementById("audio-preview");
@@ -408,32 +430,37 @@ export default {
                 (item) => item.id != id
             );
         },
-        async createQuestion() {
-            let isCheck = this.validate("ruleFormData", "ruleFormItem");
-            if (isCheck) {
-                try {
-                    let result = await axios.post(
-                        `${$Api.baseUrlApi}/admin/store-question-vocabulary`,
-                        this.dataQuestion
-                    );
-                    let { data } = result;
-                    if (data.status == 200) {
-                        this.$message({
-                            message: data.message,
-                            type: "success",
-                        });
-                        setTimeout(() => {
-                            window.location.href = `${$Api.baseUrl}/admin/volabulary-level-test/question-list`;
-                        }, 1000);
-                    } else {
-                        this.$message({
-                            message: data.message,
-                            type: "error",
-                        });
-                    }
-                } catch (error) {
-                    console.log("🚀 ~ ~ error", error);
+        async createQuestion(id) {
+            let dataTemp = this.dataQuestion.map((item) => ({
+                id: item.id,
+                audio_id: id,
+                question: item.question,
+                level: item.level,
+                dataAns: item.dataAns,
+                answer: item.answer,
+            }));
+            try {
+                let result = await axios.post(
+                    `${$Api.baseUrlApi}/admin/add-question-to-audio-listening`,
+                    dataTemp
+                );
+                let { data } = result;
+                if (data.status == 200) {
+                    this.$message({
+                        message: data.message,
+                        type: "success",
+                    });
+                    setTimeout(() => {
+                        window.location.href = `${$Api.baseUrl}/admin/volabulary-level-test/question-list`;
+                    }, 1000);
+                } else {
+                    this.$message({
+                        message: data.message,
+                        type: "error",
+                    });
                 }
+            } catch (error) {
+                console.log("🚀 ~ ~ error", error);
             }
         },
     },

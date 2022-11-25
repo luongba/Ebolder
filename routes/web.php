@@ -60,6 +60,7 @@
         //listening
         Route::get('/listening-level-test/question-list', 'Admin\ListenController@listQuestion')->name('listening-question-list');
         Route::get('/listening-level-test/question-create', 'Admin\ListenController@createQuestion')->name('listening-question-create');
+        Route::get('/listening-level-test/question-edit/{id}', 'Admin\ListenController@editQuestion')->name('listening-question-edit');
     });
 
 
