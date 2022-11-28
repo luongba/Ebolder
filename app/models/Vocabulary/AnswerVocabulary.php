@@ -1,6 +1,6 @@
 <?php
 
-namespace App\models;
+namespace App\models\Vocabulary;
 
 use Illuminate\Database\Eloquent\Model;
 

@@ -7,7 +7,7 @@
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div class="flex justify-between">
-                        <p>VOCABULARY LEVEL TEST</p>
+                        <p>LISTEN LEVEL TEST</p>
                     </div>
                 </div>
             </div>
@@ -451,7 +451,7 @@ export default {
                         type: "success",
                     });
                     setTimeout(() => {
-                        window.location.href = `${$Api.baseUrl}/admin/volabulary-level-test/question-list`;
+                        window.location.href = `${$Api.baseUrl}/admin/listening-level-test/question-list`;
                     }, 1000);
                 } else {
                     this.$message({

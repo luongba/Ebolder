@@ -1,6 +1,6 @@
 <?php
 
-namespace App\models;
+namespace App\models\Listen;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,9 +9,9 @@ class QuestionListening extends Model
     protected $guarded = [];
 
     public function answerListening(){
-        return $this->hasMany('App\models\AnswerListening', 'question_id');
+        return $this->hasMany('App\models\Listen\AnswerListening', 'question_id');
     }
     public function rightAnswers(){
-        return $this->hasOne('App\models\RightAnswerListening', 'question_id');
+        return $this->hasOne('App\models\Listen\RightAnswerListening', 'question_id');
     }
 }

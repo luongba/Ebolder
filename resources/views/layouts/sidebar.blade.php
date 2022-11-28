@@ -26,7 +26,7 @@
             </li>
             <li class="app-sidebar__heading">Listening</li>
             <li>
-                <a class="{{ request()->is(['admin/volabulary-level-test']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-list')}}">
+                <a class="{{ request()->is(['admin/volabulary-level-test']) ? 'mm-active' : '' }}"  href="{{route('admin.topic-listening-list')}}">
                     <i class="metismenu-icon lnr-graduation-hat lnr"></i>
                     Topic
                 </a>

@@ -42,4 +42,11 @@ Route::prefix('/admin')->name('admin.')->group(function () {
     Route::put('/update-question-listening', 'Admin\ListenController@updateQuestion')->name('update-question-listening');
     Route::post('/update-audio-listening/{id}', 'Admin\ListenController@updateAudio')->name('update-audio-listening');
     Route::post('/delete-audio-listening', 'Admin\ListenController@deleteAudio')->name('delete-audio-listening');
+    Route::get('/topic-list-listening', 'Admin\ListenController@ListTopic')->name('topic-list-listening');
+    Route::post('/create-topic-listening', 'Admin\ListenController@createTopic')->name('create-topic-listening');
+    Route::get('/detail-topic-listening/{id}', 'Admin\ListenController@detailTopicData')->name('detail-topic-listening');
+    Route::post('/add-audio-to-topic-listening', 'Admin\ListenController@addAudioToTopic')->name('add-audio-to-topic-listening');
+    Route::post('/remove-audio-from-topic-listening', 'Admin\ListenController@removeAudioFromTopic')->name('remove-audio-from-topic-listening');
+    Route::post('/edit-topic-listening', 'Admin\ListenController@editTopic')->name('edit-topic-listening');
+    Route::post('/delete-topic-listening', 'Admin\ListenController@deleteTopic')->name('delete-topic-listening');
 });

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\models;
+namespace App\models\Vocabulary;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,9 +10,9 @@ class QuestionVocabulary extends Model
         protected $guarded = [];
         public function answers()
         {
-            return $this->hasMany('App\models\AnswerVocabulary', 'question_id');
+            return $this->hasMany('App\models\Vocabulary\AnswerVocabulary', 'question_id');
         }
         public function right_answers(){
-            return $this->hasOne('App\models\RightAnswerVocabulary', 'question_id');
+            return $this->hasOne('App\models\Vocabulary\RightAnswerVocabulary', 'question_id');
         }
     }

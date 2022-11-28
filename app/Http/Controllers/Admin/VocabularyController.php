@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\models\Vocabulary\AnswerVocabulary;
+use App\models\Vocabulary\QuestionVocabulary;
+use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
-use App\models\QuestionVocabulary;
-use App\models\AnswerVocabulary;
 use mysql_xdevapi\Exception;
-use App\models\Vocabulary;
-use Psy\Util\Json;
 
 class VocabularyController extends Controller
 {
@@ -92,7 +91,7 @@ class VocabularyController extends Controller
             $query = new Vocabulary();
             $query->find($request->idTopic)->questitonVocabulary()->attach(
                 [
-                    'question_vocabulary_relationshi' => $request->idQues
+                    'question_vocabulary_id' => $request->idQues
                 ]
 
             );
@@ -115,7 +114,7 @@ class VocabularyController extends Controller
             $query = new Vocabulary();
             $query->find($request->idTopic)->questitonVocabulary()->detach(
                 [
-                    'question_vocabulary_relationshi' => $request->idQues
+                    'question_vocabulary_id' => $request->idQues
                 ]
 
             );

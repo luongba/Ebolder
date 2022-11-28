@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\models\AnswerVocabulary;
-use App\models\QuestionVocabulary;
+use App\models\Listen\AnswerListening;
+use App\models\Listen\AudioListening;
+use App\models\Listen\Listening;
+use App\models\Listen\QuestionListening;
+use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
-use App\models\AudioListening;
-use App\models\QuestionListening;
-use App\models\AnswerListening;
 use mysql_xdevapi\Exception;
 
 class ListenController extends Controller
@@ -88,6 +88,7 @@ class ListenController extends Controller
 
 
     }
+
     public function getAllAudio(Request $request)
     {
         try {
@@ -110,13 +111,17 @@ class ListenController extends Controller
         }
 
     }
-    public function editQuestion($id){
+
+    public function editQuestion($id)
+    {
         return view('pages.admin.listening.question.detail', compact('id'));
     }
-    public function detaiQuestion($id){
+
+    public function detaiQuestion($id)
+    {
         try {
             $query = new AudioListening();
-            $dataAll = $query->whereId($id)->with(['questionListening'=> function($question){
+            $dataAll = $query->whereId($id)->with(['questionListening' => function ($question) {
                 $question->with('answerListening')->with('rightAnswers');
             }])->first();
             return response()->json([
@@ -135,6 +140,7 @@ class ListenController extends Controller
             ]);
         }
     }
+
     public function destroyAns(Request $request)
     {
         try {
@@ -154,6 +160,7 @@ class ListenController extends Controller
 
 
     }
+
     public function updateQuestion(Request $request)
     {
         try {
@@ -197,7 +204,9 @@ class ListenController extends Controller
 
 
     }
-    public function updateAudio(Request $request,$id){
+
+    public function updateAudio(Request $request, $id)
+    {
         try {
             if ($request->has('file')) {
                 $file = $request->file;
@@ -224,7 +233,9 @@ class ListenController extends Controller
             ]);
         }
     }
-    public function deleteAudio(Request $request){
+
+    public function deleteAudio(Request $request)
+    {
         try {
             $audio = AudioListening::whereId($request->id)->first();
 
@@ -241,5 +252,177 @@ class ListenController extends Controller
                 "message" => "Xóa media Thất bại!"
             ]);
         }
+    }
+
+    public function topicList()
+    {
+        return view('pages.admin.listening.topic.index');
+    }
+
+    public function ListTopic()
+    {
+        try {
+            $data = Listening::all();
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "data" => $data,
+                "message" => "Lấy danh sách topic thành công !"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Lấy danh sách topic thất bại !"
+            ]);
+        }
+    }
+
+    public function createTopic(Request $request)
+    {
+
+        try {
+            Listening::create([
+                "name" => $request->name,
+                "description" => $request->description
+            ]);
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "message" => "Thêm topic thành công !"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Thêm topic thất bại !"
+            ]);
+        }
+
+
+    }
+
+    public function detailTopic(Request $request, $id)
+    {
+        return view('pages.admin.listening.topic.detail', compact('id'));
+    }
+
+    public function detailTopicData(Request $request, $id)
+    {
+        try {
+            $query = new Listening();
+            $data = $query->where('id', $id)->with(['TopicAudioListen' => function ($item) {
+                $item->with('questionListening');
+            }])->first();
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "data" => $data,
+                "message" => "Lấy chi tiết topic thành công !"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Lấy chi tiết topic thất bại !"
+            ]);
+        }
+
+//        return view('pages.admin.vocabulary.topic.detail');
+    }
+
+    public function addAudioToTopic(Request $request)
+    {
+        try {
+            $query = new Listening();
+            $query->find($request->idTopic)->TopicAudioListen()->attach(
+                [
+                    'audio_listen_id' => $request->idAudio
+                ]
+
+            );
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "message" => "Thêm câu hỏi vào topic thành công !"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Thêm câu hỏi vào topic thất bại !"
+            ]);
+        }
+    }
+
+    public function removeAudioFromTopic(Request $request)
+    {
+        try {
+            $query = new Listening();
+            $query->find($request->idTopic)->TopicAudioListen()->detach(
+                [
+                    'audio_listen_id' => $request->idAudio
+                ]
+
+            );
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "message" => "Xóa audio vào topic thành công !"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Xóa audio vào topic thất bại !"
+            ]);
+        }
+    }
+
+    public function editTopic(Request $request)
+    {
+        try {
+            $vocabulary = Listening::find($request->id);
+            $vocabulary->update(
+                [
+                    "name" => $request->name
+                ]
+            );
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "message" => "Sửa topic thành công !"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Sửa topic thất bại !"
+            ]);
+        }
+
+
+    }
+
+    public function deleteTopic(Request $request)
+    {
+        try {
+            $vocabulary = Listening::find($request->id);
+            $vocabulary->TopicAudioListen()->detach();
+            $vocabulary->delete();
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "message" => "Xóa topic thành công !"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Xóa topic thất bại !"
+            ]);
+        }
+
+
     }
 }
