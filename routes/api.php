@@ -49,4 +49,12 @@ Route::prefix('/admin')->name('admin.')->group(function () {
     Route::post('/remove-audio-from-topic-listening', 'Admin\ListenController@removeAudioFromTopic')->name('remove-audio-from-topic-listening');
     Route::post('/edit-topic-listening', 'Admin\ListenController@editTopic')->name('edit-topic-listening');
     Route::post('/delete-topic-listening', 'Admin\ListenController@deleteTopic')->name('delete-topic-listening');
+
+    //Reading
+    Route::post('/add-question-reading', 'Admin\ReadController@storeTopic')->name('add-topic-question-reading');
+    Route::get('/list-topic-reading', 'Admin\ReadController@listTopicApi')->name('add-topic-question-reading');
+    Route::post('/delete-topic-reading', 'Admin\ReadController@deleteTopicApi')->name('delete-topic-question-reading');
+    Route::get('/detail-topic-reading/{id}', 'Admin\ReadController@detailTopicData')->name('detail-topic-question-reading');
+
+
 });

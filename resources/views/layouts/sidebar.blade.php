@@ -37,6 +37,13 @@
                     Audio and Question
                 </a>
             </li>
+            <li class="app-sidebar__heading">Reading</li>
+            <li>
+                <a class="{{ request()->is(['admin/reading-level-test/topic-list']) ? 'mm-active' : '' }}"  href="{{route('admin.reading-topic-list')}}">
+                    <i class="metismenu-icon lnr-question-circle lnr"></i>
+                   Topic
+                </a>
+            </li>
 {{--            <li>--}}
 {{--                <a class="{{ request()->is(['newsletters','newsletters/*']) ? 'mm-active' : '' }}" href="{{route('newsletter-home')}}">--}}
 {{--                    <i class="metismenu-icon pe-7s-paper-plane"></i>--}}

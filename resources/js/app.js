@@ -34,6 +34,12 @@ Vue.component('question-listening-create', require('./components/listening/Quest
 Vue.component('question-listening-detail', require('./components/listening/QuestionDetail.vue').default);
 Vue.component('topic-listening-list', require('./components/listening/ListeningList.vue').default);
 Vue.component('listening-detail', require('./components/listening/ListeningDetail.vue').default);
+//Reading
+Vue.component('topic-reading-list', require('./components/reading/ReadingList.vue').default);
+Vue.component('topic-reading-create', require('./components/reading/TopicCreate.vue').default);
+Vue.component('topic-reading-detail', require('./components/reading/TopicDetail.vue').default);
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
