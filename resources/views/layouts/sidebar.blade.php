@@ -3,9 +3,10 @@
         <ul class="vertical-nav-menu">
             <!---------------------     Start Dashbroad section     --------------------->
             <li class="app-sidebar__heading">Dashboard</li>
-<!--            --><?php //dd(request()->routeIs('home'))?>
+            <!--            --><?php //dd(request()->routeIs('home'))
+            ?>
             <li>
-                <a class="{{ request()->routeIs('home') ? 'mm-active' : '' }}" href="{{route('home')}}">
+                <a class="{{ request()->routeIs('home') ? 'mm-active' : '' }}" href="{{ route('home') }}">
                     <i class="metismenu-icon pe-7s-rocket"></i>
                     Dashboard
                 </a>
@@ -13,43 +14,63 @@
             {{-- Start Testing --}}
             <li class="app-sidebar__heading">Vocabulary</li>
             <li>
-                <a class="{{ request()->is(['admin/volabulary-level-test']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-list')}}">
+                <a class="{{ request()->is(['admin/volabulary-level-test']) ? 'mm-active' : '' }}"
+                    href="{{ route('admin.vocabulary-list') }}">
                     <i class="metismenu-icon lnr-graduation-hat lnr"></i>
                     Topic
                 </a>
             </li>
             <li>
-                <a class="{{ request()->is(['admin/volabulary-level-test/question-list']) ? 'mm-active' : '' }}"  href="{{route('admin.vocabulary-question-list')}}">
+                <a class="{{ request()->is(['admin/volabulary-level-test/question-list']) ? 'mm-active' : '' }}"
+                    href="{{ route('admin.vocabulary-question-list') }}">
                     <i class="metismenu-icon lnr-question-circle lnr"></i>
                     Questions
                 </a>
             </li>
             <li class="app-sidebar__heading">Listening</li>
             <li>
-                <a class="{{ request()->is(['admin/volabulary-level-test']) ? 'mm-active' : '' }}"  href="{{route('admin.topic-listening-list')}}">
+                <a class="{{ request()->is(['admin/topic-listening-level-test']) ? 'mm-active' : '' }}"
+                    href="{{ route('admin.topic-listening-list') }}">
                     <i class="metismenu-icon lnr-graduation-hat lnr"></i>
                     Topic
                 </a>
             </li>
             <li>
-                <a class="{{ request()->is(['admin/listening-level-test/question-list']) ? 'mm-active' : '' }}"  href="{{route('admin.listening-question-list')}}">
+                <a class="{{ request()->is(['admin/listening-level-test/question-list']) ? 'mm-active' : '' }}"
+                    href="{{ route('admin.listening-question-list') }}">
                     <i class="metismenu-icon lnr-question-circle lnr"></i>
                     Audio and Question
                 </a>
             </li>
             <li class="app-sidebar__heading">Reading</li>
             <li>
-                <a class="{{ request()->is(['admin/reading-level-test/topic-list']) ? 'mm-active' : '' }}"  href="{{route('admin.reading-topic-list')}}">
-                    <i class="metismenu-icon lnr-question-circle lnr"></i>
-                   Topic
+                <a class="{{ request()->is(['admin/reading-level-test/topic-list']) ? 'mm-active' : '' }}"
+                    href="{{ route('admin.reading-topic-list') }}">
+                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
+                    Topic
                 </a>
             </li>
-{{--            <li>--}}
-{{--                <a class="{{ request()->is(['newsletters','newsletters/*']) ? 'mm-active' : '' }}" href="{{route('newsletter-home')}}">--}}
-{{--                    <i class="metismenu-icon pe-7s-paper-plane"></i>--}}
-{{--                    Listening--}}
-{{--                </a>--}}
-{{--            </li>--}}
+            <li class="app-sidebar__heading">Grammar</li>
+            <li>
+                <a class="{{ request()->is(['admin/grammar-level-test']) ? 'mm-active' : '' }}"
+                    href="{{ route('admin.grammar-list') }}">
+                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
+                    Topic
+                </a>
+            </li>
+            <li>
+                <a class="{{ request()->is(['admin/grammar-level-test/question-list']) ? 'mm-active' : '' }}"
+                    href="{{ route('admin.grammar-question-list') }}">
+                    <i class="metismenu-icon lnr-question-circle lnr"></i>
+                    Questions
+                </a>
+            </li>
+            {{--            <li> --}}
+            {{--                <a class="{{ request()->is(['newsletters','newsletters/*']) ? 'mm-active' : '' }}" href="{{route('newsletter-home')}}"> --}}
+            {{--                    <i class="metismenu-icon pe-7s-paper-plane"></i> --}}
+            {{--                    Listening --}}
+            {{--                </a> --}}
+            {{--            </li> --}}
             {{-- <!---------------------     Start Application section     --------------------->
             <li class="app-sidebar__heading">Applications</li>
             <li>

@@ -7,7 +7,7 @@
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div class="flex justify-between">
-                        <p>LISTEN LEVEL TEST</p>
+                        <p>LISTENING LEVEL TEST</p>
                     </div>
                 </div>
             </div>

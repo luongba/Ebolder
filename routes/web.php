@@ -67,6 +67,11 @@
         Route::get('/reading-level-test/topic-list', 'Admin\ReadController@listTopic')->name('reading-topic-list');
         Route::get('/reading-level-test/topic-create', 'Admin\ReadController@createTopic')->name('reading-topic-create');
         Route::get('/reading-level-test/topic-detai/{id}', 'Admin\ReadController@detailTopic')->name('reading-topic-detail');
+        //grammar
+        Route::get('/grammar-level-test', 'Admin\GrammarController@index')->name('grammar-list');
+        Route::get('/grammar-level-test/detail/{id}', 'Admin\GrammarController@detailTopic')->name('grammar-detail');
+        Route::get('/grammar-level-test/question-list', 'Admin\GrammarController@questionlist')->name('grammar-question-list');
+        Route::get('/grammar-level-test/question-create', 'Admin\GrammarController@create')->name('grammar-question-create');
     });
 
 

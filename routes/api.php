@@ -55,6 +55,23 @@ Route::prefix('/admin')->name('admin.')->group(function () {
     Route::get('/list-topic-reading', 'Admin\ReadController@listTopicApi')->name('add-topic-question-reading');
     Route::post('/delete-topic-reading', 'Admin\ReadController@deleteTopicApi')->name('delete-topic-question-reading');
     Route::get('/detail-topic-reading/{id}', 'Admin\ReadController@detailTopicData')->name('detail-topic-question-reading');
-
+    Route::post('/delete-question-reading', 'Admin\ReadController@deleteQuestionData')->name('delete-question-reading');
+    Route::post('/delete-question-reading', 'Admin\ReadController@deleteQuestionData')->name('delete-question-reading');
+    Route::post('/delete-answer-reading', 'Admin\ReadController@deleteAnswerData')->name('delete-answer-reading');
+    Route::post('/add-or-update-question-reading', 'Admin\ReadController@addQuestionSingle')->name('add-or-update-question-reading');
+    Route::post('/update-question-reading', 'Admin\ReadController@addQuestionMultiple')->name('update-question-reading');
+    //Grammar
+    Route::post('/add-question-to-topic-grammar', 'Admin\GrammarController@addQuestionToTopic')->name('add-question-to-topic-grammar');
+    Route::post('/edit-topic-grammar', 'Admin\GrammarController@editTopic')->name('edit-topic-grammar');
+    Route::post('/remove-question-from-topic-grammar', 'Admin\GrammarController@removeQuestionFromTopic')->name('remove-question-from-topic-grammar');
+    Route::get('/detail-topic-grammar/{id}', 'Admin\GrammarController@detailTopicData')->name('detail-topic-grammar');
+    Route::get('/list-topic-grammar', 'Admin\GrammarController@ListTopic')->name('list-topic-grammar');
+    Route::post('/store-topic-grammar', 'Admin\GrammarController@createTopic')->name('store-topic-grammar');
+    Route::post('/delete-topic-grammar', 'Admin\GrammarController@deleteTopic')->name('delete-topic-grammar');
+    Route::post('/store-question-grammar', 'Admin\GrammarController@store')->name('store-grammar');
+    Route::get('/list-question-grammar', 'Admin\GrammarController@getAllInfoQuestion')->name('list-grammar');
+    Route::put('/update-question-grammar', 'Admin\GrammarController@update')->name('update-grammar');
+    Route::post('/delete-answer-grammar', 'Admin\GrammarController@destroyAns')->name('delete-grammar');
+    Route::post('/delete-question-grammar', 'Admin\GrammarController@destroyQues')->name('delete-question-grammar');
 
 });

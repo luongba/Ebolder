@@ -7,7 +7,7 @@
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div class="flex justify-between">
-                        <p>LISTEN LEVEL TEST</p>
+                        <p>READING LEVEL TEST</p>
                     </div>
                 </div>
             </div>
@@ -269,10 +269,9 @@ export default {
     },
     data() {
         return {
-            content: null,
             dataTopic: {
                 name: null,
-                content: null,
+                content: "hello",
             },
 
             dataQuestion: [

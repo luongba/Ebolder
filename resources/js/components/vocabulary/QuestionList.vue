@@ -2,7 +2,7 @@
     <div class="container">
         <div class="flex flex-col justify-center w-full items-center">
             <div
-                class="card w-full mt-3 mb-3"
+                class="card w-full mt-3 mb-2"
                 v-for="(data, index) in dataQuestion"
                 :key="index"
                 ref="card"

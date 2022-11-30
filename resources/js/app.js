@@ -38,6 +38,11 @@ Vue.component('listening-detail', require('./components/listening/ListeningDetai
 Vue.component('topic-reading-list', require('./components/reading/ReadingList.vue').default);
 Vue.component('topic-reading-create', require('./components/reading/TopicCreate.vue').default);
 Vue.component('topic-reading-detail', require('./components/reading/TopicDetail.vue').default);
+//grammar
+Vue.component('question-grammar-create', require('./components/grammar/QuestionCreate.vue').default);
+Vue.component('question-grammar-list', require('./components/grammar/QuestionList.vue').default);
+Vue.component('grammar-detail', require('./components/grammar/GrammarDetail.vue').default);
+Vue.component('grammar-list', require('./components/grammar/GrammarList.vue').default);
 
 
 /**
