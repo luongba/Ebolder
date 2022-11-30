@@ -2,13 +2,13 @@
 @section('content')
     <div class="app-main__inner">
         <!---------------------     Start head content  section     --------------------->
-        <div class="app-page-title flex justify-between items-center">
+        <div class="app-page-title">
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
-                    <div class="flex justify-between">
+                    <div>
                         <p>LISTENING LEVEL TEST</p>
                         {{-- <div class="page-title-subheading">
                             <ul>
@@ -20,8 +20,14 @@
                         </div> --}}
                     </div>
                 </div>
+                <div class="page-title-actions">
+                                    <span class="btn-icon-wrapper pr-2">
+                                        <a class="btn-icon btn dev-button btn-primary" href="{{route('admin.listening-question-create')}}" style="padding: 10px 15px;">
+                                            <i class="pe-7s-plus dev-icon btn-icon-wrapper " style="margin-top: -3px;"></i>Create New Audio And Qusstion
+                                        </a>
+                                    </span>
+                </div>
             </div>
-            <a href="{{route('admin.listening-question-create')}}" class="font-semibold text-[16px] text-[#3f6ad8] cursor-pointer mr-2">CREATE</a>
         </div>
         <!---------------------     End head content section     --------------------->
         <!---------------------     Start main  section     --------------------->
