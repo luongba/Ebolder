@@ -13,7 +13,7 @@ $(document).ready(() => {
         required: true,
         minlength: 8,
       },
-      confirm_password: {
+        password_confirmation: {
         required: true,
         minlength: 8,
         equalTo: "#password",
@@ -35,7 +35,7 @@ $(document).ready(() => {
         required: "Please provide a password",
         minlength: "Your password must be at least 5 characters long",
       },
-      confirm_password: {
+        password_confirmation: {
         required: "Please provide a password",
         minlength: "Your password must be at least 5 characters long",
         equalTo: "Please enter the same password as above",

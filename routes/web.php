@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-    Route::get('/', 'HomeController@home')->name('home');
+
     Route::prefix('/campaigns')->group(function () {
         Route::get('/', 'HomeController@campaignHome')->name('campaign-home');
         Route::get('/create', 'HomeController@campaignCreate')->name('campaign-create');
@@ -49,8 +49,14 @@
         Route::get('/', 'HomeController@customer')->name('customer');
         Route::get('/detail', 'HomeController@customerDetail')->name('customer-detail');
     });
-
+Route::get('/chinh-sach-rieng-tu', function (){
+    return '<h1>Chinh Sach Rieng Tu</h1>';
+});
+Route::get('/auth/facebook', 'SocialAuthController@redirectToProvider')->name('auth.facebook');
+Route::get('/auth/facebook/callback', 'SocialAuthController@handleProviderCallback');
+Route::middleware(['checkLogin'])->group(function () {
     Route::prefix('/admin')->name('admin.')->group(function () {
+        Route::get('/', 'HomeController@home')->name('home');
         //vocabulary
         Route::get('/volabulary-level-test', 'Admin\VocabularyController@index')->name('vocabulary-list');
         Route::get('/volabulary-level-test/detail/{id}', 'Admin\VocabularyController@detailTopic')->name('vocabulary-detail');
@@ -73,6 +79,8 @@
         Route::get('/grammar-level-test/question-list', 'Admin\GrammarController@questionlist')->name('grammar-question-list');
         Route::get('/grammar-level-test/question-create', 'Admin\GrammarController@create')->name('grammar-question-create');
     });
+});
+
 
 
     Route::get('/report', 'HomeController@report')->name('report');
@@ -94,15 +102,12 @@
     Route::get('/logout', 'UserController@logout')->name('logout');
 
 
-Route::middleware(['checkSign'])->group(function () {
     Route::get('/sign-in', 'HomeController@signIn')->name('sign-in');
     Route::get('/sign-up', 'HomeController@signUp')->name('sign-up');
     Route::get('/sign-up-email', 'HomeController@signUpEmail')->name('sign-up-email');
-    Route::post('/register', 'UserController@register')->name('register');
-    Route::post('/login', 'UserController@login')->name('login');
     Route::get('/recover-password', 'HomeController@recoverPassword')->name('recover-password');
-});
 
-
+Route::post('/auth/register', 'AuthController@register')->name('auth.register');
+Route::post('/auth/login', 'AuthController@login')->name('auth.login');
 
 

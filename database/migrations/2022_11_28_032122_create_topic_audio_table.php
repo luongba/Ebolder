@@ -26,8 +26,6 @@ class CreateTopicAudioTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('topic_audio_relationship', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('topic_audio_listen_relationship');
     }
 }

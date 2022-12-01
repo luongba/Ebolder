@@ -6,7 +6,7 @@
             <!--            --><?php //dd(request()->routeIs('home'))
             ?>
             <li>
-                <a class="{{ request()->routeIs('home') ? 'mm-active' : '' }}" href="{{ route('home') }}">
+                <a class="{{ request()->routeIs('admin/home') ? 'mm-active' : '' }}" href="{{ route('admin.home') }}">
                     <i class="metismenu-icon pe-7s-rocket"></i>
                     Dashboard
                 </a>

@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import baseRequest from "../../utils/baseRequest";
 import Editor from "@tinymce/tinymce-vue";
 export default {
     components: {
@@ -109,8 +109,8 @@ export default {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
                     try {
-                        let rs = await axios.post(
-                            `${$Api.baseUrlApi}/admin/store-topic-vocabulary`,
+                        let rs = await baseRequest.post(
+                            `/admin/store-topic-vocabulary`,
                             this.topicData
                         );
                         if (rs.data.status == 200) {
@@ -140,8 +140,8 @@ export default {
         },
         async getAllTopic() {
             try {
-                let rs = await axios.get(
-                    `${$Api.baseUrlApi}/admin/list-topic-reading`
+                let rs = await baseRequest.get(
+                    `/admin/list-topic-reading`
                 );
                 if (rs.data.status == 200) {
                     console.log(rs.data.data);
@@ -166,8 +166,8 @@ export default {
             )
                 .then(async () => {
                     try {
-                        let rs = await axios.post(
-                            `${$Api.baseUrlApi}/admin/delete-topic-reading`,
+                        let rs = await baseRequest.post(
+                            `/admin/delete-topic-reading`,
                             { id }
                         );
                         if (rs.data.status == 200) {

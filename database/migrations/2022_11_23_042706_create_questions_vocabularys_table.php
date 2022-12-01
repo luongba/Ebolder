@@ -26,7 +26,7 @@ class CreateQuestionsVocabularysTable extends Migration
      */
     public function down()
     {
-        Schema::table('question_vocabulary_relationship', function (Blueprint $table) {
+        Schema::dropIfExists('question_vocabulary_relationship', function (Blueprint $table) {
             //
         });
     }

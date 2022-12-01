@@ -29,7 +29,16 @@
                             <span class="text-dark">Join our best marketing platform to grow their sales with pop ups, email marketing.</span>
                         </h4>
                         <div>
-                            <form class="" id="signupForm" method="post" action="{{route('register')}}">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                            <form class="" id="signupForm" method="post" action="{{route('auth.register')}}">
                                 @csrf
                                 <div class="form-row">
                                     <div class="col-md-6">
@@ -42,25 +51,35 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
+                                            <label for="phone" class=""><span class="text-danger">*</span>Phone number</label>
+                                            <input name="phone" id="phone" type="text" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <label for="password" class="">
+                                                <span class="text-danger">*</span> Password
+                                            </label>
+                                            <input name="password" id="password" type="password" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <label for="password_confirmation" class="">
+                                                <span class="text-danger">*</span> Password Confirm
+                                            </label>
+                                            <input name="password_confirmation" id="password_confirmation" type="password" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="position-relative form-group">
                                             <label for="businessname" class=""><span class="text-danger">*</span>Business name</label>
-                                            <input name="businessname" id="businessname" type="text" class="form-control">
+                                            <input name="name" id="businessname" type="text" class="form-control">
 
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="examplePassword" class="">
-                                                <span class="text-danger">*</span> Password
-                                            </label>
-                                            <input name="password" id="examplePassword" type="password" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="phone" class=""><span class="text-danger">*</span>Phone number</label>
-                                            <input name="phonenumber" id="phone" type="text" class="form-control">
-                                        </div>
-                                    </div>
+
                                 </div>
                                 <div class="mt-3 position-relative form-check" style="padding-left: 0em;">
 
@@ -73,7 +92,7 @@
                                         <a href="sign-in.html" class="text-primary">Sign in</a>
                                     </h5>
                                     <div class="ml-auto">
-                                        <button type="submit" class="btn-wide btn-pill btn-shadow btn-hover-shine btn btn-primary btn-lg">START FREE TRIAL</button>
+                                        <button type="submit" class="btn-wide btn-pill btn-shadow btn-hover-shine btn btn-primary btn-lg">SIGN UP</button>
                                     </div>
                                 </div>
                             </form>

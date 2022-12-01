@@ -1,6 +1,9 @@
 @extends('welcome')
 @section('content')
     <div class="app-main__inner">
+        @if (session('token'))
+            <input type="text" id="section" value="{{ session('token') }}" hidden>
+        @endif
         <!---------------------     Start head content  section     --------------------->
         <div class="app-page-title">
             <div class="page-title-wrapper">
@@ -213,4 +216,12 @@
         </div>
         <!---------------------     End main  content  section      --------------------->
     </div>
+@endsection
+
+@section('js')
+    <script>
+        let section = document.getElementById('section');
+        localStorage.setItem('token', section.value);
+    </script>
+
 @endsection

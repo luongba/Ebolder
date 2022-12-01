@@ -3,42 +3,17 @@
         <transition name="fade">
             <div class="w-full h-full" v-if="show">
                 <div
-                    class="
-                        md:absolute
-                        fixed
-                        inset-0
-                        bg-blur
-                        flex
-                        items-center
-                        justify-center
-                    "
+                    class="md:absolute fixed inset-0 bg-blur flex items-center justify-center"
                 >
                     <div
-                        class="
-                            w-[95%]
-                            md:w-[70%]
-                            bg-white
-                            shadow-sm
-                            px-4
-                            py-4
-                            max-h-[540px]
-                            overflow-y-scroll
-                        "
+                        class="w-[95%] md:w-[70%] bg-white shadow-sm px-4 py-4 max-h-[540px] overflow-y-scroll"
                     >
                         <div class="py-2 relative">
-                            <h1
-                                class="font-semibold uppercase text-[14px] mb-4"
-                            >
+                            <h1 class="font-semibold uppercase text-[14px] mb-4">
                                 Add Question
                             </h1>
                             <span
-                                class="
-                                    absolute
-                                    right-[5px]
-                                    top-[5px]
-                                    text-[20px]
-                                    cursor-pointer
-                                "
+                                class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer"
                                 @click="show = !show"
                             >
                                 <i class="lnr-cross"></i>
@@ -46,25 +21,11 @@
                         </div>
                         <div class="my-2">
                             <div
-                                class="
-                                    bg-white
-                                    shadow-sm
-                                    flex
-                                    items-center
-                                    justify-between
-                                    cursor-pointer
-                                    py-2
-                                    px-2
-                                    text-[14px]
-                                    font-semibold
-                                    mb-4
-                                "
+                                class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-2 text-[14px] font-semibold mb-4"
                                 v-for="itemQues in dataQuestion"
                                 :key="itemQues.id"
                             >
-                                <span class="flex-1">{{
-                                    itemQues.question
-                                }}</span>
+                                <span class="flex-1">{{ itemQues.question }}</span>
                                 <div class="flex items-center">
                                     <star-rating
                                         :star-size="20"
@@ -97,7 +58,7 @@
             </p>
             <input
                 type="text"
-                class="font-bold lg:text-[30px] text-[20px]  uppercase text-center w-full"
+                class="font-bold lg:text-[30px] text-[20px] uppercase text-center w-full"
                 v-model="detailTopic.name"
                 v-else
             />
@@ -125,20 +86,7 @@
         </div>
         <p class="font-semibold text-[15px] mt-4 mb-2">Statistical</p>
         <div
-            class="
-                bg-white
-                shadow-sm
-                flex
-                items-center
-                justify-between
-                cursor-pointer
-                py-2
-                px-4
-                text-[14px]
-                font-semibold
-                flex flex-col
-                items-start
-            "
+            class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-4 text-[14px] font-semibold flex flex-col items-start"
         >
             <div class="flex justify-between items-center w-full">
                 <p>{{ levelEasy }}</p>
@@ -175,9 +123,7 @@
             </div>
 
             <div class="flex justify-between items-center w-full border-t my-2">
-                <p class="mt-2">
-                    Total: {{ levelhard + levelMedium + levelEasy }}
-                </p>
+                <p class="mt-2">Total: {{ levelhard + levelMedium + levelEasy }}</p>
             </div>
         </div>
 
@@ -185,18 +131,7 @@
         <p class="font-semibold text-[15px] mt-4 mb-2">Questions of Topic</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div
-                class="
-                    bg-white
-                    shadow-sm
-                    flex
-                    items-center
-                    justify-between
-                    cursor-pointer
-                    py-4
-                    px-4
-                    text-[14px]
-                    font-semibold
-                "
+                class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
                 v-for="item in detailTopic.question"
                 :key="item.idQues"
             >
@@ -222,30 +157,11 @@
                 </div>
             </div>
             <div
-                class="
-                    bg-white
-                    shadow-sm
-                    flex
-                    items-center
-                    justify-center
-                    cursor-pointer
-                    py-4
-                    px-4
-                    text-[14px]
-                    font-semibold
-                "
+                class="bg-white shadow-sm flex items-center justify-center cursor-pointer py-4 px-4 text-[14px] font-semibold"
                 @click="show = !show"
             >
                 <div class="flex items-center">
-                    <div
-                        class="
-                            w-[32px]
-                            h-[32px]
-                            flex
-                            items-center
-                            justify-center
-                        "
-                    >
+                    <div class="w-[32px] h-[32px] flex items-center justify-center">
                         <i class="el-icon-plus text-[20px]"></i>
                     </div>
                 </div>
@@ -255,7 +171,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import baseRequest from "../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 
 export default {
@@ -318,8 +234,8 @@ export default {
         },
         async createTopic() {
             try {
-                let rs = await axios.post(
-                    `${$Api.baseUrlApi}/admin/store-topic-vocabulary`,
+                let rs = await baseRequest.post(
+                    `/admin/store-topic-vocabulary`,
                     this.topicData
                 );
                 if (rs.data.status == 200) {
@@ -333,8 +249,8 @@ export default {
         },
         async getDetailTopic() {
             try {
-                let rs = await axios.get(
-                    `${$Api.baseUrlApi}/admin/detail-topic-vocabulary/${this.param}`
+                let rs = await baseRequest.get(
+                    `/admin/detail-topic-vocabulary/${this.param}`
                 );
                 if (rs.data.status == 200) {
                     let data = rs.data.data;
@@ -357,10 +273,7 @@ export default {
         },
         async deleteTopic(id) {
             try {
-                let rs = await axios.post(
-                    `${$Api.baseUrlApi}/admin/delete-topic-vocabulary`,
-                    { id }
-                );
+                let rs = await baseRequest.post(`/admin/delete-topic-vocabulary`, { id });
                 if (rs.data.status == 200) {
                     this.getAllTopic();
                 }
@@ -370,9 +283,7 @@ export default {
         },
         async getAllQuestion() {
             try {
-                let { data } = await axios.get(
-                    `${$Api.baseUrlApi}/admin/list-question-vocabulary`
-                );
+                let { data } = await baseRequest.get(`/admin/list-question-vocabulary`);
                 this.dataQuestion = data.data.filter(
                     (elem) =>
                         !this.detailTopic.question.find(
@@ -385,8 +296,8 @@ export default {
         },
         async addTopic(id) {
             try {
-                let { data } = await axios.post(
-                    `${$Api.baseUrlApi}/admin/add-question-to-topic-vocabulary`,
+                let { data } = await baseRequest.post(
+                    `/admin/add-question-to-topic-vocabulary`,
                     {
                         idTopic: this.detailTopic.id,
                         idQues: id,
@@ -394,9 +305,7 @@ export default {
                 );
                 if (data.status == 200) {
                     this.getDetailTopic();
-                    this.dataQuestion = this.dataQuestion.filter(
-                        (item) => item.id != id
-                    );
+                    this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
                 }
             } catch (error) {
                 console.log(error);
@@ -404,8 +313,8 @@ export default {
         },
         async removeTopic(id) {
             try {
-                let { data } = await axios.post(
-                    `${$Api.baseUrlApi}/admin/remove-question-from-topic-vocabulary`,
+                let { data } = await baseRequest.post(
+                    `/admin/remove-question-from-topic-vocabulary`,
                     {
                         idTopic: this.detailTopic.id,
                         idQues: id,
@@ -421,13 +330,10 @@ export default {
         },
         async saveChangeTitle(id) {
             try {
-                let { data } = await axios.post(
-                    `${$Api.baseUrlApi}/admin/edit-topic-vocabulary`,
-                    {
-                        id,
-                        name: this.detailTopic.name,
-                    }
-                );
+                let { data } = await baseRequest.post(`/admin/edit-topic-vocabulary`, {
+                    id,
+                    name: this.detailTopic.name,
+                });
                 if (data.status == 200) {
                     this.isEditTitle = false;
                     this.getDetailTopic();

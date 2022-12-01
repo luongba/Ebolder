@@ -42,11 +42,7 @@
 
                 <div class="card-body hidden">
                     <div class="w-full">
-                        <el-form
-                            ref="ruleFormData"
-                            :model="data"
-                            class="w-full"
-                        >
+                        <el-form ref="ruleFormData" :model="data" class="w-full">
                             <el-form-item
                                 prop="question"
                                 :rules="[
@@ -81,17 +77,14 @@
                                             :rules="[
                                                 {
                                                     required: true,
-                                                    message:
-                                                        'Please enter your answer',
+                                                    message: 'Please enter your answer',
                                                 },
                                             ]"
                                             class="w-full m-0"
                                         >
                                             <el-input v-model="item.text">
                                                 <template slot="prepend">{{
-                                                    alphabet[
-                                                        index
-                                                    ].toUpperCase()
+                                                    alphabet[index].toUpperCase()
                                                 }}</template>
                                             </el-input>
                                         </el-form-item>
@@ -139,30 +132,17 @@
                                         prop="right_answers.answer_id"
                                         class="w-full m-0"
                                     >
-                                        <span
-                                            class="
-                                                text-[13px]
-                                                font-semibold
-                                                mr-2
-                                            "
+                                        <span class="text-[13px] font-semibold mr-2"
                                             >Anwser:</span
                                         >
                                         <el-select
-                                            v-model="
-                                                data.right_answers.answer_id
-                                            "
+                                            v-model="data.right_answers.answer_id"
                                             placeholder="Select"
                                         >
                                             <el-option
-                                                v-for="(
-                                                    item, index
-                                                ) in data.answers"
+                                                v-for="(item, index) in data.answers"
                                                 :key="item.id"
-                                                :label="
-                                                    alphabet[
-                                                        index
-                                                    ].toUpperCase()
-                                                "
+                                                :label="alphabet[index].toUpperCase()"
                                                 :value="item.id"
                                             >
                                             </el-option>
@@ -171,9 +151,7 @@
                                 </div>
                             </div>
 
-                            <div
-                                class="mx-auto my-4 lg:my-2 flex justify-center"
-                            >
+                            <div class="mx-auto my-4 lg:my-2 flex justify-center">
                                 <el-button
                                     v-if="data.answers.length < maxAns"
                                     @click="pushAns(data.id)"
@@ -228,15 +206,7 @@
                                     :read-only="true"
                                 />
                             </div>
-                            <div
-                                class="
-                                    justify-end
-                                    mt-3
-                                    ml-auto
-                                    flex
-                                    items-center
-                                "
-                            >
+                            <div class="justify-end mt-3 ml-auto flex items-center">
                                 <span class="text-[13px] font-semibold mr-2"
                                     >Anwser:</span
                                 >
@@ -250,13 +220,7 @@
             </div>
         </div>
         <p
-            class="
-                text-[14px] text-blue-500
-                uppercase
-                font-bold
-                cursor-pointer
-                mb-4
-            "
+            class="text-[14px] text-blue-500 uppercase font-bold cursor-pointer mb-4"
             @click="takeMore(5)"
             v-if="take < count"
         >
@@ -266,7 +230,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import baseRequest from "../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 
 export default {
@@ -319,28 +283,21 @@ export default {
         },
         async deleteAns(idQues, idAns) {
             try {
-                let res = await axios.post(
-                    `${$Api.baseUrlApi}/admin/delete-answer-vocabulary`,
-                    { id: idAns }
-                );
+                let res = await baseRequest.post(`/admin/delete-answer-vocabulary`, {
+                    id: idAns,
+                });
                 let { data } = res;
                 if (data.status == 200) {
                     this.getAllData();
                 } else {
-                    let dataQues = this.dataQuestion.find(
-                        (item) => item.id == idQues
-                    );
+                    let dataQues = this.dataQuestion.find((item) => item.id == idQues);
                     dataQues.answers = dataQues.answers.filter(
                         (item) => item.id != idAns
                     );
                 }
             } catch (e) {
-                let dataQues = this.dataQuestion.find(
-                    (item) => item.id == idQues
-                );
-                dataQues.answers = dataQues.answers.filter(
-                    (item) => item.id != idAns
-                );
+                let dataQues = this.dataQuestion.find((item) => item.id == idQues);
+                dataQues.answers = dataQues.answers.filter((item) => item.id != idAns);
             }
             // let dataQues = this.dataQuestion.find((item) => item.id == idQues);
             // dataQues.dataAns = dataQues.dataAns.filter(
@@ -369,8 +326,8 @@ export default {
             )
                 .then(async () => {
                     try {
-                        let res = await axios.post(
-                            `${$Api.baseUrlApi}/admin/delete-question-vocabulary`,
+                        let res = await baseRequest.post(
+                            `/admin/delete-question-vocabulary`,
                             { id: id }
                         );
                         let { data } = res;
@@ -394,8 +351,8 @@ export default {
         },
         async getAllData() {
             try {
-                let { data } = await axios.get(
-                    `${$Api.baseUrlApi}/admin/list-question-vocabulary?take=${this.take}`
+                let { data } = await baseRequest.get(
+                    `/admin/list-question-vocabulary?take=${this.take}`
                 );
                 if (data.status == 200) {
                     this.count = data.count;
@@ -481,8 +438,8 @@ export default {
                             };
                         }),
                     };
-                    let result = await axios.put(
-                        `${$Api.baseUrlApi}/admin/update-question-vocabulary`,
+                    let result = await baseRequest.put(
+                        `/admin/update-question-vocabulary`,
                         temp
                     );
                     if (result.data.status == 200) {

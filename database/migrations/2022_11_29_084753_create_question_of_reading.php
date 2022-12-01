@@ -29,8 +29,6 @@ class CreateQuestionOfReading extends Migration
      */
     public function dropIfExists()
     {
-        Schema::table('questions_reading', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('questions_reading');
     }
 }

@@ -251,7 +251,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import baseRequest from "../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 import {Input, Button, Select, Form} from "element-ui";
 
@@ -313,8 +313,8 @@ export default {
                         const headers = {
                             "Content-Type": "multipart/form-data",
                         };
-                        let result = await axios.post(
-                            `${$Api.baseUrlApi}/admin/add-audio-and-question-listening`,
+                        let result = await baseRequest.post(
+                            `/admin/add-audio-and-question-listening`,
                             formData,
                             {headers}
                         );
@@ -436,8 +436,8 @@ export default {
                 answer: item.answer,
             }));
             try {
-                let result = await axios.post(
-                    `${$Api.baseUrlApi}/admin/add-question-to-audio-listening`,
+                let result = await baseRequest.post(
+                    `/admin/add-question-to-audio-listening`,
                     dataTemp
                 );
                 let {data} = result;

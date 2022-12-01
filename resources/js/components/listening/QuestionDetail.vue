@@ -631,7 +631,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import baseRequest from "../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 
 export default {
@@ -790,8 +790,8 @@ export default {
                             };
                         }),
                     };
-                    let result = await axios.put(
-                        `${$Api.baseUrlApi}/admin/update-question-listening`,
+                    let result = await baseRequest.put(
+                        `/admin/update-question-listening`,
                         temp
                     );
                     if (result.data.status == 200) {
@@ -830,8 +830,8 @@ export default {
         },
         async deleteAns(idQues, idAns) {
             try {
-                let res = await axios.post(
-                    `${$Api.baseUrlApi}/admin/delete-answer-listening`,
+                let res = await baseRequest.post(
+                    `/admin/delete-answer-listening`,
                     { id: idAns }
                 );
                 let { data } = res;
@@ -894,8 +894,8 @@ export default {
         },
         async createTopic() {
             try {
-                let rs = await axios.post(
-                    `${$Api.baseUrlApi}/admin/store-topic-vocabulary`,
+                let rs = await baseRequest.post(
+                    `/admin/store-topic-vocabulary`,
                     this.topicData
                 );
                 if (rs.data.status == 200) {
@@ -909,8 +909,8 @@ export default {
         },
         async getDetailAudio() {
             try {
-                let rs = await axios.get(
-                    `${$Api.baseUrlApi}/admin/get-detail-audio-question-listening/${this.param}`
+                let rs = await baseRequest.get(
+                    `/admin/get-detail-audio-question-listening/${this.param}`
                 );
                 if (rs.data.status == 200) {
                     let data = rs.data.data;
@@ -943,8 +943,8 @@ export default {
         },
         async deleteTopic(id) {
             try {
-                let rs = await axios.post(
-                    `${$Api.baseUrlApi}/admin/delete-topic-vocabulary`,
+                let rs = await baseRequest.post(
+                    `/admin/delete-topic-vocabulary`,
                     { id }
                 );
                 if (rs.data.status == 200) {
@@ -956,8 +956,8 @@ export default {
         },
         async addTopic(id) {
             try {
-                let { data } = await axios.post(
-                    `${$Api.baseUrlApi}/admin/add-question-to-topic-vocabulary`,
+                let { data } = await baseRequest.post(
+                    `/admin/add-question-to-topic-vocabulary`,
                     {
                         idTopic: this.dataQuestion.id,
                         idQues: id,
@@ -975,8 +975,8 @@ export default {
         },
         async removeTopic(id) {
             try {
-                let { data } = await axios.post(
-                    `${$Api.baseUrlApi}/admin/remove-question-from-topic-vocabulary`,
+                let { data } = await baseRequest.post(
+                    `/admin/remove-question-from-topic-vocabulary`,
                     {
                         idTopic: this.dataQuestion.id,
                         idQues: id,
@@ -991,8 +991,8 @@ export default {
         },
         async saveChangeTitle(id) {
             try {
-                let { data } = await axios.post(
-                    `${$Api.baseUrlApi}/admin/edit-topic-vocabulary`,
+                let { data } = await baseRequest.post(
+                    `/admin/edit-topic-vocabulary`,
                     {
                         id,
                         name: this.dataQuestion.name,
@@ -1067,8 +1067,8 @@ export default {
                 answer: item.answer,
             }));
             try {
-                let result = await axios.post(
-                    `${$Api.baseUrlApi}/admin/add-question-to-audio-listening`,
+                let result = await baseRequest.post(
+                    `/admin/add-question-to-audio-listening`,
                     dataTemp
                 );
                 let { data } = result;
@@ -1096,8 +1096,8 @@ export default {
                     const formData = new FormData();
                     formData.append("file", this.file);
                     const headers = { "Content-Type": "multipart/form-data" };
-                    let result = await axios.post(
-                        `${$Api.baseUrlApi}/admin/update-audio-listening/${this.param}`,
+                    let result = await baseRequest.post(
+                        `/admin/update-audio-listening/${this.param}`,
                         formData,
                         { headers }
                     );

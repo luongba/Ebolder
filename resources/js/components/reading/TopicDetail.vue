@@ -93,18 +93,13 @@
 
                     <div class="card-body hidden">
                         <div class="w-full">
-                            <el-form
-                                ref="ruleFormData"
-                                :model="data"
-                                class="w-full"
-                            >
+                            <el-form ref="ruleFormData" :model="data" class="w-full">
                                 <el-form-item
                                     prop="question"
                                     :rules="[
                                         {
                                             required: true,
-                                            message:
-                                                'Please enter your question',
+                                            message: 'Please enter your question',
                                         },
                                     ]"
                                     class="w-full m-0"
@@ -142,9 +137,7 @@
                                             >
                                                 <Input v-model="item.text">
                                                     <template slot="prepend">{{
-                                                        alphabet[
-                                                            indexAms
-                                                        ].toUpperCase()
+                                                        alphabet[indexAms].toUpperCase()
                                                     }}</template>
                                                 </Input>
                                             </el-form-item>
@@ -161,14 +154,7 @@
                                         ></el-button>
                                     </div>
                                 </div>
-                                <div
-                                    class="
-                                        flex
-                                        justify-between
-                                        items-start
-                                        mt-4
-                                    "
-                                >
+                                <div class="flex justify-between items-start mt-4">
                                     <div class="leading-[40px]">
                                         <span class="text-[13px] font-semibold"
                                             >Level:
@@ -194,20 +180,14 @@
                                             :rules="[
                                                 {
                                                     required: true,
-                                                    message:
-                                                        'Please select answer',
+                                                    message: 'Please select answer',
                                                     trigger: 'blur',
                                                 },
                                             ]"
                                             prop="answer_id"
                                             class="w-full m-0"
                                         >
-                                            <span
-                                                class="
-                                                    text-[13px]
-                                                    font-semibold
-                                                    mr-2
-                                                "
+                                            <span class="text-[13px] font-semibold mr-2"
                                                 >Anwser:</span
                                             >
                                             <el-select
@@ -215,15 +195,9 @@
                                                 placeholder="Select"
                                             >
                                                 <el-option
-                                                    v-for="(
-                                                        item, ind
-                                                    ) in data.dataAns"
+                                                    v-for="(item, ind) in data.dataAns"
                                                     :key="item.idAns"
-                                                    :label="
-                                                        alphabet[
-                                                            ind
-                                                        ].toUpperCase()
-                                                    "
+                                                    :label="alphabet[ind].toUpperCase()"
                                                     :value="item.idAns"
                                                 >
                                                 </el-option>
@@ -231,15 +205,7 @@
                                         </el-form-item>
                                     </div>
                                 </div>
-                                <div
-                                    class="
-                                        mx-auto
-                                        my-4
-                                        lg:my-2
-                                        flex
-                                        justify-center
-                                    "
-                                >
+                                <div class="mx-auto my-4 lg:my-2 flex justify-center">
                                     <el-button
                                         v-if="data.dataAns.length < maxAns"
                                         @click="pushAns(data.id)"
@@ -268,9 +234,7 @@
                                 :key="item.idAns"
                             >
                                 <div class="mt-3 flex items-center">
-                                    <span
-                                        class="text-[15px] font-semibold"
-                                    ></span>
+                                    <span class="text-[15px] font-semibold"></span>
                                     <span class="uppercase mr-2 font-bold"
                                         >{{ alphabet[index] }}:</span
                                     >
@@ -298,24 +262,13 @@
                                         :read-only="true"
                                     />
                                 </div>
-                                <div
-                                    class="
-                                        justify-end
-                                        mt-3
-                                        ml-auto
-                                        flex
-                                        items-center
-                                    "
-                                >
+                                <div class="justify-end mt-3 ml-auto flex items-center">
                                     <span class="text-[13px] font-semibold mr-2"
                                         >Anwser:</span
                                     >
                                     <span class="uppercase mr-2 font-bold">{{
                                         alphabet[
-                                            getAlphabet(
-                                                data.dataAns,
-                                                data.answer_id
-                                            )
+                                            getAlphabet(data.dataAns, data.answer_id)
                                         ]
                                     }}</span>
                                 </div>
@@ -342,7 +295,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import baseRequest from "../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 import { Input, Button, Select, Form } from "element-ui";
 import Editor from "@tinymce/tinymce-vue";
@@ -398,8 +351,8 @@ export default {
     methods: {
         async getDetailTopic() {
             try {
-                let rs = await axios.get(
-                    `${$Api.baseUrlApi}/admin/detail-topic-reading/${this.param}`
+                let rs = await baseRequest.get(
+                    `/admin/detail-topic-reading/${this.param}`
                 );
                 if (rs.data.status == 200) {
                     let data = rs.data.data;
@@ -434,8 +387,8 @@ export default {
                     contentReading: this.dataTopic.content,
                     dataQuestion: this.dataQuestion,
                 };
-                let result = await axios.post(
-                    `${$Api.baseUrlApi}/admin/update-question-reading`,
+                let result = await baseRequest.post(
+                    `/admin/update-question-reading`,
                     dataTemp
                 );
                 let { data } = result;
@@ -445,9 +398,9 @@ export default {
                         message: data.message,
                         type: "success",
                     });
-                    setTimeout(()=>{
-                            window.location.href = `${$Api.baseUrl}/admin/reading-level-test/topic-detai/${this.param}`;
-                        },1000)
+                    setTimeout(() => {
+                        window.location.href = `${$Api.baseUrl}/admin/reading-level-test/topic-detai/${this.param}`;
+                    }, 1000);
                 } else {
                     this.$message({
                         message: data.message,
@@ -521,8 +474,8 @@ export default {
                 });
             } else {
                 try {
-                    let result = await axios.post(
-                        `${$Api.baseUrlApi}/admin/delete-answer-reading`,
+                    let result = await baseRequest.post(
+                        `/admin/delete-answer-reading`,
                         { id: idAns }
                     );
                     let { data } = result;
@@ -534,9 +487,7 @@ export default {
                             type: "success",
                         });
                     } else if (data.status == 100) {
-                        let dataQues = this.dataQuestion.find(
-                            (item) => item.id == id
-                        );
+                        let dataQues = this.dataQuestion.find((item) => item.id == id);
                         dataQues.dataAns = dataQues.dataAns.filter(
                             (item) => item.idAns != idAns
                         );
@@ -566,8 +517,8 @@ export default {
             //     (item) => item.id != id
             // );
             try {
-                let result = await axios.post(
-                    `${$Api.baseUrlApi}/admin/delete-question-reading`,
+                let result = await baseRequest.post(
+                    `/admin/delete-question-reading`,
                     { id }
                 );
                 let { data } = result;
@@ -579,9 +530,7 @@ export default {
                         type: "success",
                     });
                 } else if (data.status == 100) {
-                    this.dataQuestion = this.dataQuestion.filter(
-                        (item) => item.id != id
-                    );
+                    this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
                 } else {
                     this.$message({
                         message: data.message,
@@ -602,8 +551,8 @@ export default {
                 answer: item.answer,
             }));
             try {
-                let result = await axios.post(
-                    `${$Api.baseUrlApi}/admin/add-question-to-audio-listening`,
+                let result = await baseRequest.post(
+                    `/admin/add-question-to-audio-listening`,
                     dataTemp
                 );
                 let { data } = result;
@@ -686,8 +635,8 @@ export default {
                             };
                         }),
                     };
-                    let result = await axios.post(
-                        `${$Api.baseUrlApi}/admin/add-or-update-question-reading`,
+                    let result = await baseRequest.post(
+                        `/admin/add-or-update-question-reading`,
                         temp
                     );
                     console.log(

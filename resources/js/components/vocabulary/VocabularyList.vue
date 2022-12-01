@@ -4,52 +4,23 @@
             <transition name="fade">
                 <div class="w-full h-full" v-if="show">
                     <div
-                        class="
-                            absolute
-                            inset-0
-                            bg-blur
-                            flex
-                            items-center
-                            justify-center
-                        "
+                        class="absolute inset-0 bg-blur flex items-center justify-center"
                     >
-                        <div
-                            class="
-                                w-[95%]
-                                md:w-[70%]
-                                bg-white
-                                shadow-sm
-                                px-4
-                                py-4
-                            "
-                        >
+                        <div class="w-[95%] md:w-[70%] bg-white shadow-sm px-4 py-4">
                             <div class="py-2 relative">
                                 <h1 class="font-semibold uppercase text-[14px]">
                                     Create new Topic
                                 </h1>
                                 <span
-                                    class="
-                                        absolute
-                                        right-[5px]
-                                        top-[5px]
-                                        text-[20px]
-                                        cursor-pointer
-                                    "
+                                    class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer"
                                     @click="show = !show"
                                 >
                                     <i class="lnr-cross"></i>
                                 </span>
                             </div>
-                            <el-form
-                                :model="topicData"
-                                :rules="rules"
-                                ref="ruleForm"
-                            >
+                            <el-form :model="topicData" :rules="rules" ref="ruleForm">
                                 <div class="my-2">
-                                    <el-form-item
-                                        label="Name Topic"
-                                        prop="name"
-                                    >
+                                    <el-form-item label="Name Topic" prop="name">
                                         <el-input
                                             placeholder="Name Topic"
                                             v-model="topicData.name"
@@ -57,10 +28,7 @@
                                     </el-form-item>
                                 </div>
                                 <div class="">
-                                    <el-form-item
-                                        label="Description"
-                                        prop="description"
-                                    >
+                                    <el-form-item label="Description" prop="description">
                                         <el-input
                                             type="textarea"
                                             placeholder="Description"
@@ -86,18 +54,7 @@
             </transition>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div
-                    class="
-                        bg-white
-                        shadow-sm
-                        flex
-                        items-center
-                        justify-between
-                        cursor-pointer
-                        py-4
-                        px-4
-                        text-[14px]
-                        font-semibold
-                    "
+                    class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
                     v-for="item in listTopic"
                     :key="item.id"
                 >
@@ -126,30 +83,11 @@
                     </div>
                 </div>
                 <div
-                    class="
-                        bg-white
-                        shadow-sm
-                        flex
-                        items-center
-                        justify-center
-                        cursor-pointer
-                        py-4
-                        px-4
-                        text-[14px]
-                        font-semibold
-                    "
+                    class="bg-white shadow-sm flex items-center justify-center cursor-pointer py-4 px-4 text-[14px] font-semibold"
                     @click="show = !show"
                 >
                     <div class="flex items-center">
-                        <div
-                            class="
-                                w-[32px]
-                                h-[32px]
-                                flex
-                                items-center
-                                justify-center
-                            "
-                        >
+                        <div class="w-[32px] h-[32px] flex items-center justify-center">
                             <i class="el-icon-plus text-[20px]"></i>
                         </div>
                     </div>
@@ -160,7 +98,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import baseRequest from "../../utils/baseRequest";
 
 export default {
     data() {
@@ -204,8 +142,8 @@ export default {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
                     try {
-                        let rs = await axios.post(
-                            `${$Api.baseUrlApi}/admin/store-topic-vocabulary`,
+                        let rs = await baseRequest.post(
+                            `/admin/store-topic-vocabulary`,
                             this.topicData
                         );
                         if (rs.data.status == 200) {
@@ -235,9 +173,13 @@ export default {
         },
         async getAllTopic() {
             try {
-                let rs = await axios.get(
-                    `${$Api.baseUrlApi}/admin/list-topic-vocabulary`
-                );
+                let rs = await baseRequest.get(`/admin/list-topic-vocabulary`, {
+                    headers: {
+                        Authorization:
+                            "Bearer " +
+                            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZWEwMTFmOTQwNDhlODQ1MjUwNDgyNDdkZmU2ZWJkOWY0MDYwMDk5NTdlOTk3ZjY0NmJiYzNkNDA3YmZhYzM1ZGU1ZmZkNTc1NjQzMzIxMGMiLCJpYXQiOjE2Njk4NzcyOTAuODc0NTYsIm5iZiI6MTY2OTg3NzI5MC44NzQ1NjMsImV4cCI6MTcwMTQxMzI5MC44NzAxNDksInN1YiI6IjEiLCJzY29wZXMiOltdfQ.kQZH1zGzHTNGBkkYy_fwggBOL7cRb4rXV14l4yRU4JKFtPBfupcWxMgsn-Bh5BhRsO6gGul80hWnWYfXtqg5nd7ByCGqSWhGQGCVztgA4Rh89ZhGjNl3DQTEWSiAsT2JavaZaDPY8k8uiJ26PNSDHRsHm3yJJaWMVjvTV5MyrbkQw2NC1eIfoVKneGUhyRg9zZqHX0y-KPu19dNiQET__9t6jfsRYoyjQFR4M_aAIqqlxw3NIyGykLHBU3MYVgBjSjdYsyNQr8Zlv1vBiqU4UpDy9bIphtXwXWXba2onFvYgwT8U-ZkPs16oVUqSnYHlF_kIglaQePt76igEGVfOZI6KNdqsF5l8FBEz0McKT9_l3V-vPkAY88dcIgvFnJlseK46SZlJkUwRPRXzulcH3ylIXzx3WH3dYUcldTeiUfvWU6JjNdYcoKFMu2CisYcmKnni7Pw0qd68qDd-nHBPn3E9IX1MfpSokvyxmQGBomFjA32SVnO4uRg_Cb9EiXeJAliHUvms6aR9IfDVnNfvYu8DOcoytIHkp2o2WXaWmgr_UVLx0rTBP807LOUUXsatNu80hZXW1AFyDeKNpPqbij4AEklKruh4y3yxz4Eas-voJzmmw7TmIYVOiE_iBtMW0XIeytEC9IS1VItDlGlyRppPO-T2PQf2XqhaahpqApA",
+                    },
+                });
                 if (rs.data.status == 200) {
                     this.listTopic = rs.data.data;
                 }
@@ -257,8 +199,9 @@ export default {
             )
                 .then(async () => {
                     try {
-                        let rs = await axios.post(
-                            `${$Api.baseUrlApi}/admin/delete-topic-vocabulary`,
+                        let rs = await baseRequest.post(
+                            `/admin/delete-topic-vocabulary`,
+
                             { id }
                         );
                         if (rs.data.status == 200) {

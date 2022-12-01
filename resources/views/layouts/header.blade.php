@@ -1,6 +1,6 @@
 <div class="app-header header-shadow">
     <div class="app-header__logo">
-        <a href="{{ route('home') }}">
+        <a href="{{ route('admin.home') }}">
             <div class="logo-src"></div>
         </a>
         <div class="header__pane ml-auto">

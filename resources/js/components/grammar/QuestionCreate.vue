@@ -13,12 +13,7 @@
             </div>
             <p
                 href=""
-                class="
-                    font-semibold
-                    text-[16px] text-[#3f6ad8]
-                    cursor-pointer
-                    mr-2
-                "
+                class="font-semibold text-[16px] text-[#3f6ad8] cursor-pointer mr-2"
                 @click="createQuestion"
             >
                 SAVE
@@ -35,11 +30,7 @@
                         <span>Question {{ index + 1 }}</span>
                         <span
                             v-if="dataQuestion.length > 1"
-                            class="
-                                text-red-600 text-[14px]
-                                font-semibold
-                                cursor-pointer
-                            "
+                            class="text-red-600 text-[14px] font-semibold cursor-pointer"
                             @click="deleteQues(data.id)"
                             >Xóa</span
                         >
@@ -47,18 +38,13 @@
 
                     <div class="card-body">
                         <div class="w-full">
-                            <el-form
-                                ref="ruleFormData"
-                                :model="data"
-                                class="w-full"
-                            >
+                            <el-form ref="ruleFormData" :model="data" class="w-full">
                                 <el-form-item
                                     prop="question"
                                     :rules="[
                                         {
                                             required: true,
-                                            message:
-                                                'Please enter your question',
+                                            message: 'Please enter your question',
                                         },
                                     ]"
                                     class="w-full m-0"
@@ -107,22 +93,13 @@
                                             class="ml-2"
                                             type="danger"
                                             icon="el-icon-delete"
-                                            @click="
-                                                deleteAns(data.id, item.idAns)
-                                            "
+                                            @click="deleteAns(data.id, item.idAns)"
                                             plain
                                             circle
                                         ></el-button>
                                     </div>
                                 </div>
-                                <div
-                                    class="
-                                        flex
-                                        justify-between
-                                        items-start
-                                        mt-4
-                                    "
-                                >
+                                <div class="flex justify-between items-start mt-4">
                                     <div class="leading-[40px]">
                                         <span class="text-[13px] font-semibold"
                                             >Level:
@@ -148,20 +125,14 @@
                                             :rules="[
                                                 {
                                                     required: true,
-                                                    message:
-                                                        'Please select answer',
+                                                    message: 'Please select answer',
                                                     trigger: 'blur',
                                                 },
                                             ]"
                                             prop="answer"
                                             class="w-full m-0"
                                         >
-                                            <span
-                                                class="
-                                                    text-[13px]
-                                                    font-semibold
-                                                    mr-2
-                                                "
+                                            <span class="text-[13px] font-semibold mr-2"
                                                 >Anwser:</span
                                             >
                                             <el-select
@@ -179,15 +150,7 @@
                                         </el-form-item>
                                     </div>
                                 </div>
-                                <div
-                                    class="
-                                        mx-auto
-                                        my-4
-                                        lg:my-2
-                                        flex
-                                        justify-center
-                                    "
-                                >
+                                <div class="mx-auto my-4 lg:my-2 flex justify-center">
                                     <el-button
                                         v-if="data.dataAns.length < maxAns"
                                         @click="pushAns(data.id)"
@@ -215,7 +178,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import baseRequest from "../../utils/baseRequest";
+
 import StarRating from "vue-star-rating";
 import { Input, Button, Select, Form } from "element-ui";
 
@@ -312,9 +276,7 @@ export default {
         },
         deleteAns(idQues, idAns) {
             let dataQues = this.dataQuestion.find((item) => item.id == idQues);
-            dataQues.dataAns = dataQues.dataAns.filter(
-                (item) => item.idAns != idAns
-            );
+            dataQues.dataAns = dataQues.dataAns.filter((item) => item.idAns != idAns);
             let data = dataQues.dataAns;
             let temp = [];
             for (let i = 0; i < data.length; i++) {
@@ -327,16 +289,14 @@ export default {
             dataQues.dataAns = temp;
         },
         deleteQues(id) {
-            this.dataQuestion = this.dataQuestion.filter(
-                (item) => item.id != id
-            );
+            this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
         },
         async createQuestion() {
             let isCheck = this.validate("ruleFormData", "ruleFormItem");
             if (isCheck) {
                 try {
-                    let result = await axios.post(
-                        `${$Api.baseUrlApi}/admin/store-question-grammar`,
+                    let result = await baseRequest.post(
+                        `/admin/store-question-grammar`,
                         this.dataQuestion
                     );
                     let { data } = result;
@@ -345,9 +305,9 @@ export default {
                             message: data.message,
                             type: "success",
                         });
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             window.location.href = `${$Api.baseUrl}/admin/grammar-level-test/question-list`;
-                        },1000)
+                        }, 1000);
                     } else {
                         this.$message({
                             message: data.message,
@@ -355,10 +315,7 @@ export default {
                         });
                     }
                 } catch (error) {
-                    console.log(
-                        "🚀 ~ ~ error",
-                        error
-                    );
+                    console.log("🚀 ~ ~ error", error);
                 }
             }
         },

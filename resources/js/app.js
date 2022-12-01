@@ -44,7 +44,6 @@ Vue.component('question-grammar-list', require('./components/grammar/QuestionLis
 Vue.component('grammar-detail', require('./components/grammar/GrammarDetail.vue').default);
 Vue.component('grammar-list', require('./components/grammar/GrammarList.vue').default);
 
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

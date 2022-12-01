@@ -255,7 +255,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import baseRequest from "../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 
 export default {
@@ -327,8 +327,8 @@ export default {
         },
         async createTopic() {
             try {
-                let rs = await axios.post(
-                    `${$Api.baseUrlApi}/admin/store-topic-vocabulary`,
+                let rs = await baseRequest.post(
+                    `/admin/store-topic-vocabulary`,
                     this.topicData
                 );
                 if (rs.data.status == 200) {
@@ -342,8 +342,8 @@ export default {
         },
         async getDetailTopic() {
             try {
-                let rs = await axios.get(
-                    `${$Api.baseUrlApi}/admin/detail-topic-listening/${this.param}`
+                let rs = await baseRequest.get(
+                    `/admin/detail-topic-listening/${this.param}`
                 );
                 if (rs.data.status == 200) {
                     let data = rs.data.data;
@@ -368,8 +368,8 @@ export default {
         },
         async deleteTopic(id) {
             try {
-                let rs = await axios.post(
-                    `${$Api.baseUrlApi}/admin/delete-topic-vocabulary`,
+                let rs = await baseRequest.post(
+                    `/admin/delete-topic-vocabulary`,
                     { id }
                 );
                 if (rs.data.status == 200) {
@@ -381,8 +381,8 @@ export default {
         },
         async getAllAudio() {
             try {
-                let { data } = await axios.get(
-                    `${$Api.baseUrlApi}/admin/get-audio-listening`
+                let { data } = await baseRequest.get(
+                    `/admin/get-audio-listening`
                 );
                 console.log(data);
                 this.dataAudio = data.data.filter(
@@ -397,8 +397,8 @@ export default {
         },
         async addTopic(id) {
             try {
-                let { data } = await axios.post(
-                    `${$Api.baseUrlApi}/admin/add-audio-to-topic-listening`,
+                let { data } = await baseRequest.post(
+                    `/admin/add-audio-to-topic-listening`,
                     {
                         idTopic: this.detailTopic.id,
                         idAudio: id,
@@ -416,8 +416,8 @@ export default {
         },
         async removeTopic(id) {
             try {
-                let { data } = await axios.post(
-                    `${$Api.baseUrlApi}/admin/remove-audio-from-topic-listening`,
+                let { data } = await baseRequest.post(
+                    `/admin/remove-audio-from-topic-listening`,
                     {
                         idTopic: this.detailTopic.id,
                         idAudio: id,
@@ -433,8 +433,8 @@ export default {
         },
         async saveChangeTitle(id) {
             try {
-                let { data } = await axios.post(
-                    `${$Api.baseUrlApi}/admin/edit-topic-listening`,
+                let { data } = await baseRequest.post(
+                    `/admin/edit-topic-listening`,
                     {
                         id,
                         name: this.detailTopic.name,

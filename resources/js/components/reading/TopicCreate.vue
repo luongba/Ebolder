@@ -253,7 +253,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import baseRequest from "../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 import { Input, Button, Select, Form } from "element-ui";
 import Editor from "@tinymce/tinymce-vue";
@@ -313,8 +313,8 @@ export default {
                     contentReading: this.dataTopic.content,
                     dataQuestion: this.dataQuestion,
                 };
-                let result = await axios.post(
-                    `${$Api.baseUrlApi}/admin/add-question-reading`,
+                let result = await baseRequest.post(
+                    `/admin/add-question-reading`,
                     dataTemp
                 );
                 let { data } = result;
@@ -418,8 +418,8 @@ export default {
                 answer: item.answer,
             }));
             try {
-                let result = await axios.post(
-                    `${$Api.baseUrlApi}/admin/add-question-to-audio-listening`,
+                let result = await baseRequest.post(
+                    `/admin/add-question-to-audio-listening`,
                     dataTemp
                 );
                 let { data } = result;
