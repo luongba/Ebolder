@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('reset-password', 'ResetPasswordController@sendMail');
-Route::put('reset-password/{token}', 'ResetPasswordController@reset');
+Route::post('reset-password/{token}', 'ResetPasswordController@reset');
 Route::post('/auth/loginApi', 'AuthController@loginApi')->name('auth.login-api');
 Route::middleware('auth:api')->group(function (){
     Route::get('/auth/user', 'AuthController@getUser')->name('auth.user');
