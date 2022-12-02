@@ -43,6 +43,14 @@ Vue.component('question-grammar-create', require('./components/grammar/QuestionC
 Vue.component('question-grammar-list', require('./components/grammar/QuestionList.vue').default);
 Vue.component('grammar-detail', require('./components/grammar/GrammarDetail.vue').default);
 Vue.component('grammar-list', require('./components/grammar/GrammarList.vue').default);
+//user
+Vue.component('user-list', require('./components/user/UserList.vue').default);
+Vue.component('user-create', require('./components/user/UserCreate.vue').default);
+Vue.component('user-edit', require('./components/user/UserEdit.vue').default);
+//role
+Vue.component('role-list', require('./components/role/RoleList.vue').default);
+Vue.component('role-create', require('./components/role/RoleCreate.vue').default);
+Vue.component('role-edit', require('./components/role/RoleEdit.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

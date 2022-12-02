@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('reset-password', 'ResetPasswordController@sendMail');
-Route::post('reset-password/{token}', 'ResetPasswordController@reset');
+
 Route::post('/auth/loginApi', 'AuthController@loginApi')->name('auth.login-api');
 Route::middleware('auth:api')->group(function (){
     Route::get('/auth/user', 'AuthController@getUser')->name('auth.user');
@@ -73,6 +72,19 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-answer-grammar', 'Admin\GrammarController@destroyAns')->name('delete-grammar');
         Route::post('/delete-question-grammar', 'Admin\GrammarController@destroyQues')->name('delete-question-grammar');
         //user
+        Route::get('/list-user', 'Admin\UserController@getAllUser')->name('get-all-user');
+        Route::post('/create-user', 'Admin\UserController@registerUserApi')->name('create-user');
+        Route::get('/detail-user/{id}', 'Admin\UserController@getDetailUser')->name('detail-user');
+        Route::post('/update-user/{id}', 'Admin\UserController@updateUserApi')->name('update-user');
+        Route::post('/delete-user/{id}', 'Admin\UserController@deleteUserApi')->name('delete-user');
+
+        //roles
+        Route::get('/get-all-role', 'Admin\RoleController@getAllRole')->name('get-all-role');
+        Route::get('/all-permision', 'Admin\RoleController@getAllPermision')->name('all-permision');
+        Route::post('/create-role-permision', 'Admin\RoleController@createRolePermision')->name('create-role-permision');
+        Route::get('/get-detail-role/{id}', 'Admin\RoleController@getDetailRole')->name('get-detail-role');
+        Route::post('/update-role-permision/{id}', 'Admin\RoleController@updateRolePermision')->name('update-role-permision');
+
 
 
 

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use Illuminate\Support\Str;
-use App\User;
-use Illuminate\Http\Request;
 use App\models\PasswordReset;
+use App\models\User\User;
 use App\Notifications\ResetPasswordRequest;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ResetPasswordController extends Controller
 {
@@ -29,9 +29,7 @@ class ResetPasswordController extends Controller
             $user->notify(new ResetPasswordRequest($passwordReset->token));
         }
 
-        return response()->json([
-            'message' => 'We have e-mailed your password reset link!'
-        ]);
+        return redirect(route('reset-password-pending'));
     }
 
     public function reset(Request $request, $token)
@@ -50,8 +48,6 @@ class ResetPasswordController extends Controller
         ]);
         $passwordReset->delete();
 
-        return response()->json([
-            'success' => "success",
-        ]);
+        return redirect(route('sign-in'));
     }
 }

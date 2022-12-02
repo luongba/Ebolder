@@ -67,7 +67,8 @@
                             <span>Use the form below to recover it.</span>
                         </h4>
                         <div>
-                            <div class="">
+                            <form class="" action="{{route('reset-password')}}" method="post">
+                                @csrf
                                 <div class="form-row">
                                     <div class="col-md-12">
                                         <div class="position-relative form-group">
@@ -85,7 +86,7 @@
                                         <button class="btn btn-primary btn-lg dev-submit-button">Recover Password</button>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>

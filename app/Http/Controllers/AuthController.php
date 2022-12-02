@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use Illuminate\Http\Request;
-use App\Http\Requests\UserRegister;
 use App\Http\Requests\UserLogin;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Session;
+use App\Http\Requests\UserRegister;
+use App\models\User\User;
 
 
 class AuthController extends Controller

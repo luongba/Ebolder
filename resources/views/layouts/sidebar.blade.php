@@ -65,6 +65,22 @@
                     Questions
                 </a>
             </li>
+            <li class="app-sidebar__heading">Users</li>
+            <li>
+                <a class="{{ request()->is(['admin/users']) ? 'mm-active' : '' }}"
+                   href="{{ route('admin.user-list') }}">
+                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
+                    User
+                </a>
+            </li>
+            <li>
+                <a class="{{ request()->is(['admin/roles']) ? 'mm-active' : '' }}"
+                   href="{{ route('admin.role-list') }}">
+                    <i class="metismenu-icon lnr-question-circle lnr"></i>
+                    Roles
+                </a>
+            </li>
+            <li>
             <li>
                 {{--                <a class="{{ request()->is(['newsletters','newsletters/*']) ? 'mm-active' : '' }}" href="{{route('newsletter-home')}}"> --}}
                 {{--                    <i class="metismenu-icon pe-7s-paper-plane"></i> --}}

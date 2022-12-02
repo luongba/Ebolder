@@ -9,13 +9,19 @@ use App\models\Listen\Listening;
 use App\models\Listen\QuestionListening;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use mysql_xdevapi\Exception;
 
 class ListenController extends Controller
 {
     public function listQuestion()
     {
-        return view('pages.admin.listening.question.index');
+        if (Gate::allows('is-admin')){
+            return view('pages.admin.listening.question.index');
+        }else {
+            abort(401);
+        }
+
     }
 
     public function createQuestion()
