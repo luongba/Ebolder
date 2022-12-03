@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','phone'
+        'name', 'email', 'password', 'phone'
     ];
 
     /**
@@ -38,7 +38,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function roles(){
+    public function roles()
+    {
         return $this->belongsToMany('App\models\User\Role', 'user_role');
+    }
+
+    public function checkPermisionAccess($permisionCheck)
+    {
+        $roles = auth()->user()->roles;
+        foreach ($roles as $role) {
+            $permision = $role->permisions;
+            if ($permision->contains('key_code', $permisionCheck)) {
+                return true;
+            }
+
+        }
+        return false;
+
     }
 }

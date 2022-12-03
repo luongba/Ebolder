@@ -16,11 +16,7 @@ class ListenController extends Controller
 {
     public function listQuestion()
     {
-        if (Gate::allows('is-admin')){
             return view('pages.admin.listening.question.index');
-        }else {
-            abort(401);
-        }
 
     }
 

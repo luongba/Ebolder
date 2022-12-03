@@ -58,35 +58,35 @@ Route::middleware(['checkLogin'])->group(function () {
     Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/', 'HomeController@home')->name('home');
         //vocabulary
-        Route::get('/volabulary-level-test', 'Admin\VocabularyController@index')->name('vocabulary-list');
-        Route::get('/volabulary-level-test/detail/{id}', 'Admin\VocabularyController@detailTopic')->name('vocabulary-detail');
-        Route::get('/volabulary-level-test/question-list', 'Admin\VocabularyController@questionlist')->name('vocabulary-question-list');
-        Route::get('/volabulary-level-test/question-create', 'Admin\VocabularyController@create')->name('vocabulary-question-create');
+        Route::get('/volabulary-level-test', 'Admin\VocabularyController@index')->middleware('can:Vocabulary_List')->name('vocabulary-list');
+        Route::get('/volabulary-level-test/detail/{id}', 'Admin\VocabularyController@detailTopic')->name('vocabulary-detail')->middleware('can:Vocabulary_Detail');
+        Route::get('/volabulary-level-test/question-list', 'Admin\VocabularyController@questionlist')->name('vocabulary-question-list')->middleware('can:Question_Vocabulary_List');
+        Route::get('/volabulary-level-test/question-create', 'Admin\VocabularyController@create')->name('vocabulary-question-create')->middleware('can:Question_Vocabulary_Create');
 
         //listening
-        Route::get('/listening-level-test/question-list', 'Admin\ListenController@listQuestion')->name('listening-question-list');
-        Route::get('/listening-level-test/question-create', 'Admin\ListenController@createQuestion')->name('listening-question-create');
-        Route::get('/listening-level-test/question-edit/{id}', 'Admin\ListenController@editQuestion')->name('listening-question-edit');
-        Route::get('/topic-listening-level-test', 'Admin\ListenController@topicList')->name('topic-listening-list');
-        Route::get('/detail-topic-listening/{id}', 'Admin\ListenController@detailTopic')->name('detail-topic-listening');
+        Route::get('/listening-level-test/question-list', 'Admin\ListenController@listQuestion')->name('listening-question-list')->middleware('can:Question_Listening_List');
+        Route::get('/listening-level-test/question-create', 'Admin\ListenController@createQuestion')->name('listening-question-create')->middleware('can:Question_Listening_Create');
+        Route::get('/listening-level-test/question-edit/{id}', 'Admin\ListenController@editQuestion')->name('listening-question-edit')->middleware('can:Question_Listening_Edit');
+        Route::get('/topic-listening-level-test', 'Admin\ListenController@topicList')->name('topic-listening-list')->middleware('can:Listening_List');
+        Route::get('/detail-topic-listening/{id}', 'Admin\ListenController@detailTopic')->name('detail-topic-listening')->middleware('can:Listening_Detail');
         //reading
-        Route::get('/reading-level-test/topic-list', 'Admin\ReadController@listTopic')->name('reading-topic-list');
-        Route::get('/reading-level-test/topic-create', 'Admin\ReadController@createTopic')->name('reading-topic-create');
-        Route::get('/reading-level-test/topic-detai/{id}', 'Admin\ReadController@detailTopic')->name('reading-topic-detail');
+        Route::get('/reading-level-test/topic-list', 'Admin\ReadController@listTopic')->name('reading-topic-list')->middleware('can:Reading_List');
+        Route::get('/reading-level-test/topic-create', 'Admin\ReadController@createTopic')->name('reading-topic-create')->middleware('can:Reading_Create');
+        Route::get('/reading-level-test/topic-detai/{id}', 'Admin\ReadController@detailTopic')->name('reading-topic-detail')->middleware('can:Reading_Detail');
         //grammar
-        Route::get('/grammar-level-test', 'Admin\GrammarController@index')->name('grammar-list');
-        Route::get('/grammar-level-test/detail/{id}', 'Admin\GrammarController@detailTopic')->name('grammar-detail');
-        Route::get('/grammar-level-test/question-list', 'Admin\GrammarController@questionlist')->name('grammar-question-list');
-        Route::get('/grammar-level-test/question-create', 'Admin\GrammarController@create')->name('grammar-question-create');
+        Route::get('/grammar-level-test', 'Admin\GrammarController@index')->name('grammar-list')->middleware('can:Grammar_List');
+        Route::get('/grammar-level-test/detail/{id}', 'Admin\GrammarController@detailTopic')->name('grammar-detail')->middleware('can:Grammar_Detail');
+        Route::get('/grammar-level-test/question-list', 'Admin\GrammarController@questionlist')->name('grammar-question-list')->middleware('can:Question_Grammar_List');
+        Route::get('/grammar-level-test/question-create', 'Admin\GrammarController@create')->name('grammar-question-create')->middleware('can:Question_Grammar_Create');
 
         //user
-        Route::get('/users', 'Admin\UserController@index')->name('user-list');
-        Route::get('/user/create', 'Admin\UserController@create')->name('user-create');
-        Route::get('/user/edit/{id}', 'Admin\UserController@edit')->name('user-edit');
+        Route::get('/users', 'Admin\UserController@index')->name('user-list')->middleware('can:User_List');
+        Route::get('/user/create', 'Admin\UserController@create')->name('user-create')->middleware('can:User_Create');
+        Route::get('/user/edit/{id}', 'Admin\UserController@edit')->name('user-edit')->middleware('can:User_Edit');
         //role
-        Route::get('/roles', 'Admin\RoleController@index')->name('role-list');
-        Route::get('/role/create', 'Admin\RoleController@create')->name('role-create');
-        Route::get('/role/edit/{id}', 'Admin\RoleController@edit')->name('role-edit');
+        Route::get('/roles', 'Admin\RoleController@index')->name('role-list')->middleware('can:Role_List');
+        Route::get('/role/create', 'Admin\RoleController@create')->name('role-create')->middleware('can:Role_Create');
+        Route::get('/role/edit/{id}', 'Admin\RoleController@edit')->name('role-edit')->middleware('can:Role_Edit');
     });
 });
 

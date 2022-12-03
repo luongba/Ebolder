@@ -84,6 +84,7 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/create-role-permision', 'Admin\RoleController@createRolePermision')->name('create-role-permision');
         Route::get('/get-detail-role/{id}', 'Admin\RoleController@getDetailRole')->name('get-detail-role');
         Route::post('/update-role-permision/{id}', 'Admin\RoleController@updateRolePermision')->name('update-role-permision');
+        Route::post('/delete-role-permision/{id}', 'Admin\RoleController@deleteRolePermision')->name('delete-role-permision');
 
 
 

@@ -63,10 +63,10 @@ export default {
                 type: 'warning'
             }).then(async () => {
                 try {
-                    let result = await baseRequest.post(`/admin/delete-role/${row.id}`);
+                    let result = await baseRequest.post(`/admin/delete-role-permision/${row.id}`);
                     let {data} = result;
                     if (data.status == 200) {
-                        this.getAllUser();
+                        this.getAllRole();
                         this.$message({
                             type: 'success',
                             message: 'Delete completed'

@@ -74,8 +74,8 @@ class RoleController extends Controller
             DB::beginTransaction();
             $role = Role::create([
 
-                "name"=>$request->name,
-                "display_name"=>$request->display_name,
+                "name" => $request->name,
+                "display_name" => $request->display_name,
             ]);
             $role->permisions()->attach($request->permisions);
             DB::commit();
@@ -94,6 +94,7 @@ class RoleController extends Controller
             ]);
         }
     }
+
     public function getDetailRole($id)
     {
 
@@ -114,6 +115,7 @@ class RoleController extends Controller
             ]);
         }
     }
+
     public function updateRolePermision(Request $request, $id)
     {
 
@@ -122,8 +124,8 @@ class RoleController extends Controller
             DB::beginTransaction();
             Role::whereId($id)->first()->update([
 
-                "name"=>$request->name,
-                "display_name"=>$request->display_name,
+                "name" => $request->name,
+                "display_name" => $request->display_name,
             ]);
             Role::whereId($id)->first()->permisions()->sync($request->permisions);
             DB::commit();
@@ -141,4 +143,29 @@ class RoleController extends Controller
             ]);
         }
     }
+
+    public function deleteRolePermision($id)
+    {
+
+
+        try {
+            DB::beginTransaction();
+            Role::whereId($id)->first()->permisions()->detach();
+            Role::whereId($id)->first()->delete();
+            DB::commit();
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "message" => "Xóa role Thành công!"
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                "status" => 500,
+                "errorCode" => 500,
+                "message" => "Lỗi máy chủ!"
+            ]);
+        }
+    }
+
 }
