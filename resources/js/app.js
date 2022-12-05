@@ -24,33 +24,40 @@ Vue.use(ElementUI);
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-Vue.component('question-create', require('./components/vocabulary/QuestionCreate.vue').default);
-Vue.component('question-list', require('./components/vocabulary/QuestionList.vue').default);
-Vue.component('vocabulary-detail', require('./components/vocabulary/VocabularyDetail.vue').default);
-Vue.component('vocabulary-list', require('./components/vocabulary/VocabularyList.vue').default);
+Vue.component('question-create', require('./components/admin/vocabulary/QuestionCreate.vue').default);
+Vue.component('question-list', require('./components/admin/vocabulary/QuestionList.vue').default);
+Vue.component('vocabulary-detail', require('./components/admin/vocabulary/VocabularyDetail.vue').default);
+Vue.component('vocabulary-list', require('./components/admin/vocabulary/VocabularyList.vue').default);
 //listening
-Vue.component('question-listening-list', require('./components/listening/QuestionList.vue').default);
-Vue.component('question-listening-create', require('./components/listening/QuestionCreate.vue').default);
-Vue.component('question-listening-detail', require('./components/listening/QuestionDetail.vue').default);
-Vue.component('topic-listening-list', require('./components/listening/ListeningList.vue').default);
-Vue.component('listening-detail', require('./components/listening/ListeningDetail.vue').default);
+Vue.component('question-listening-list', require('./components/admin/listening/QuestionList.vue').default);
+Vue.component('question-listening-create', require('./components/admin/listening/QuestionCreate.vue').default);
+Vue.component('question-listening-detail', require('./components/admin/listening/QuestionDetail.vue').default);
+Vue.component('topic-listening-list', require('./components/admin/listening/ListeningList.vue').default);
+Vue.component('listening-detail', require('./components/admin/listening/ListeningDetail.vue').default);
 //Reading
-Vue.component('topic-reading-list', require('./components/reading/ReadingList.vue').default);
-Vue.component('topic-reading-create', require('./components/reading/TopicCreate.vue').default);
-Vue.component('topic-reading-detail', require('./components/reading/TopicDetail.vue').default);
+Vue.component('topic-reading-list', require('./components/admin/reading/ReadingList.vue').default);
+Vue.component('topic-reading-create', require('./components/admin/reading/TopicCreate.vue').default);
+Vue.component('topic-reading-detail', require('./components/admin/reading/TopicDetail.vue').default);
 //grammar
-Vue.component('question-grammar-create', require('./components/grammar/QuestionCreate.vue').default);
-Vue.component('question-grammar-list', require('./components/grammar/QuestionList.vue').default);
-Vue.component('grammar-detail', require('./components/grammar/GrammarDetail.vue').default);
-Vue.component('grammar-list', require('./components/grammar/GrammarList.vue').default);
+Vue.component('question-grammar-create', require('./components/admin/grammar/QuestionCreate.vue').default);
+Vue.component('question-grammar-list', require('./components/admin/grammar/QuestionList.vue').default);
+Vue.component('grammar-detail', require('./components/admin/grammar/GrammarDetail.vue').default);
+Vue.component('grammar-list', require('./components/admin/grammar/GrammarList.vue').default);
 //user
-Vue.component('user-list', require('./components/user/UserList.vue').default);
-Vue.component('user-create', require('./components/user/UserCreate.vue').default);
-Vue.component('user-edit', require('./components/user/UserEdit.vue').default);
+Vue.component('user-list', require('./components/admin/user/UserList.vue').default);
+Vue.component('user-create', require('./components/admin/user/UserCreate.vue').default);
+Vue.component('user-edit', require('./components/admin/user/UserEdit.vue').default);
 //role
-Vue.component('role-list', require('./components/role/RoleList.vue').default);
-Vue.component('role-create', require('./components/role/RoleCreate.vue').default);
-Vue.component('role-edit', require('./components/role/RoleEdit.vue').default);
+Vue.component('role-list', require('./components/admin/role/RoleList.vue').default);
+Vue.component('role-create', require('./components/admin/role/RoleCreate.vue').default);
+Vue.component('role-edit', require('./components/admin/role/RoleEdit.vue').default);
+
+//frontend
+//header
+
+Vue.component('header-component', require('./components/frontend/header.vue').default);
+//home
+Vue.component('home-page-component', require('./components/frontend/homePage/Home.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
