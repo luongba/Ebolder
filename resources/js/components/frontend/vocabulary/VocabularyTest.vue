@@ -188,10 +188,7 @@
                             </div>
                             <div>
                                 <el-button
-                                    v-if="
-                                        item.id == answerData[index].right_answer &&
-                                        item.id == answerData[index].radioValue
-                                    "
+                                    v-if="item.id == answerData[index].right_answer"
                                     type="success"
                                     icon="el-icon-check"
                                     circle
