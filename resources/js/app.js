@@ -54,10 +54,15 @@ Vue.component('role-edit', require('./components/admin/role/RoleEdit.vue').defau
 
 //frontend
 //header
-
 Vue.component('header-component', require('./components/frontend/header.vue').default);
+//footer
+Vue.component('footer-component', require('./components/frontend/Footer.vue').default);
 //home
 Vue.component('home-page-component', require('./components/frontend/homePage/Home.vue').default);
+//testPage
+Vue.component('test-page-component', require('./components/frontend/testPage/TestPage.vue').default);
+//vocabulary test
+Vue.component('vocabulary-test', require('./components/frontend/vocabulary/VocabularyTest.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

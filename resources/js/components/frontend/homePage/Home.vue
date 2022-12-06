@@ -1,12 +1,6 @@
 <template>
     <div class="w-full">
-        <div class="flex items-center py-[27px] px-[40px]">
-            <img src="/images/logo/logo.svg" alt="" />
-            <dir class="p-0 text-[16px] font-bold uppercase">
-                <p>If You Don’t Walk Today</p>
-                <p>You’ll Have To Run Tomorrow.</p>
-            </dir>
-        </div>
+        <header-component />
         <h2 class="text-[42px] font-semibold leading-[120%] text-center">
             <p>
                 Giải pháp tối ưu dành cho người học
@@ -24,6 +18,7 @@
             </p>
         </div>
         <button
+            @click="openLink"
             class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white mx-auto hover:opacity-80"
         >
             Thử sức ngay
@@ -300,6 +295,7 @@
                             <p>Cách dễ nhất để học tiếng anh!</p>
                         </h2>
                         <button
+                            @click="openLink"
                             class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80 mt-4"
                         >
                             Thử sức ngay
@@ -316,63 +312,19 @@
                     <p>You’ll Have To Run Tomorrow.</p>
                 </dir>
             </div>
-            <div class="w-full grid grid-cols-4 gap-4">
-                <ul>
-                    <li class="text-[20px] mb-2">
-                        <span><i class="el-icon-phone"></i></span>
-                        <span class="text-[16px]">01234.567.89</span>
-                    </li>
-                    <li class="text-[20px] mb-2">
-                        <span><i class="el-icon-message"></i></span>
-                        <span class="text-[16px]">contact@english.edu.vn</span>
-                    </li>
-                    <li class="text-[20px] mb-2">
-                        <span><i class="el-icon-place"></i></span>
-                        <span class="text-[16px]"
-                            >Quyết Thắng, Thành phố Thái Nguyên</span
-                        >
-                    </li>
-                </ul>
-                <ul>
-                    <li class="text-[20px] mb-2 uppercase strong">Hỗ trợ</li>
-                    <li class="text-[20px] mb-2">
-                        <span class="text-[16px]">Liên hệ</span>
-                    </li>
-                    <li class="text-[20px] mb-2">
-                        <span class="text-[16px]">Bảo mật</span>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="text-[20px] mb-2 uppercase strong">VỀ chúng tôi</li>
-                    <li class="text-[20px] mb-2">
-                        <span class="text-[16px]">Liên hệ</span>
-                    </li>
-                    <li class="text-[20px] mb-2">
-                        <span class="text-[16px]">Bảo mật</span>
-                    </li>
-                </ul>
-                <ul>
-                    <li class="text-[20px] mb-2 uppercase strong">Hỗ trợ</li>
-                    <li class="text-[20px] mb-2">
-                        <span class="text-[16px]">Liên hệ</span>
-                    </li>
-                    <li class="text-[20px] mb-2">
-                        <span class="text-[16px]">Bảo mật</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="py-4">
-                <p class="text-center">
-                    © 2022. Nền tảng học tiếng anh hàng đầu Việt Nam
-                </p>
-            </div>
         </div>
+        <footer-component />
     </div>
 </template>
 <script>
 export default {
     data() {
         return {};
+    },
+    methods: {
+        openLink() {
+            window.location.href = `${$Api.baseUrl}/english-level-test`;
+        },
     },
 };
 </script>

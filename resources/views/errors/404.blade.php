@@ -1,4 +1,4 @@
-@extends('welcome')
+@extends('pages.frontend.master')
 @section('content')
     <div class="app-main__inner bg-white h-full">
         <!---------------------     Start head content  section     --------------------->

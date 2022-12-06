@@ -12,7 +12,7 @@
 */
 use Illuminate\Http\Request;
 //frontEnd
-Route::prefix('/')->name('admin.')->group(function () {
+Route::prefix('/')->group(function () {
     Route::get('/chinh-sach-rieng-tu', function () {
         return '<h1>Chinh Sach Rieng Tu</h1>';
     });
@@ -44,7 +44,12 @@ Route::prefix('/')->name('admin.')->group(function () {
     Route::get('/auth/facebook/callback', 'SocialAuthController@handleProviderCallback');
 
     //trang-chu
-    Route::get('/', 'HomeController@index');
+    Route::get('/', 'HomeController@index')->name('home-page');
+    Route::prefix('/english-level-test')->group(function () {
+        Route::get('/', 'HomeController@testPage')->name('test-page');
+        Route::get('/Vocabulary', 'HomeController@vocabularyTest')->name('vocabulary-test-page');
+    });
+    
 
 
 });
