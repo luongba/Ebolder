@@ -159,6 +159,10 @@
                                 item.id == answerData[index].right_answer
                                     ? `right_wait`
                                     : '',
+                                item.id == answerData[index].right_answer &&
+                                item.id == answerData[index].radioValue
+                                    ? 'bgright'
+                                    : '',
                             ]"
                         >
                             <div
@@ -174,13 +178,20 @@
                                     item.id == answerData[index].right_answer
                                         ? `right_wait`
                                         : '',
+                                    item.id == answerData[index].right_answer &&
+                                    item.id == answerData[index].radioValue
+                                        ? 'bgright'
+                                        : '',
                                 ]"
                             >
                                 {{ item.text }}
                             </div>
                             <div>
                                 <el-button
-                                    v-if="item.id == answerData[index].right_answer"
+                                    v-if="
+                                        item.id == answerData[index].right_answer &&
+                                        item.id == answerData[index].radioValue
+                                    "
                                     type="success"
                                     icon="el-icon-check"
                                     circle
@@ -428,6 +439,9 @@ export default {
     border-color: #009b77;
     border-width: 3px;
 }
+.border-answer.active.right_wait.bgright {
+    background-color: #009b77;
+}
 .border-answer.active.wrong {
     border-color: #dd4124;
     border-width: 3px;
@@ -446,5 +460,8 @@ export default {
 }
 .text-answer.active.wrong {
     color: #dd4124;
+}
+.text-answer.active.right_wait.bgright {
+    color: #fff;
 }
 </style>
