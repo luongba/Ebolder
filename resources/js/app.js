@@ -9,8 +9,10 @@ require('./bootstrap');
 window.Vue = require('vue');
 window.$ = require('jquery')
 window.JQuery = require('jquery')
-import {Api} from "./utils/Api"
+import {Api, timeWork} from "./utils/Api"
 window.$Api = Api;
+window.$TimeWork = timeWork;
+console.log(timeWork);
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
@@ -63,7 +65,14 @@ Vue.component('home-page-component', require('./components/frontend/homePage/Hom
 Vue.component('test-page-component', require('./components/frontend/testPage/TestPage.vue').default);
 //vocabulary test
 Vue.component('vocabulary-test', require('./components/frontend/vocabulary/VocabularyTest.vue').default);
-
+//grammar
+Vue.component('grammar-test', require('./components/frontend/grammar/GrammarTest.vue').default);
+//reading
+Vue.component('reading-test', require('./components/frontend/reading/ReadingTest.vue').default);
+//listening
+Vue.component('listening-test', require('./components/frontend/listening/ListeningTest.vue').default);
+//error page
+Vue.component('error-page', require('./components/frontend/error/ErrorPage.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

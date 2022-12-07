@@ -18,6 +18,17 @@ class HomeController extends Controller
     public function vocabularyTest(){
         return view('pages.frontend.vocabulary');
     }
+    public function grammarTest(){
+        return view('pages.frontend.grammar');
+    }
+    public function readingTest(){
+        return view('pages.frontend.read');
+    }
+    public function listeningTest(){
+        return view('pages.frontend.listening');
+    }
+    
+    
     public function signIn(){
         return view('pages.sign-in');
     }

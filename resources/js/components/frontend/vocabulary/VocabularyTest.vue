@@ -3,7 +3,15 @@
         <header-component />
         <div class="w-full max-w-[1206px] mx-auto p-4">
             <div class="bg-blur px-[48px] py-[48px]" v-show="isShowLabel">
-                <h2 class="text-[36px] font-semibold leading-[120%] text-center mb-4">
+                <h2
+                    class="
+                        text-[36px]
+                        font-semibold
+                        leading-[120%]
+                        text-center
+                        mb-4
+                    "
+                >
                     <p>ENGLISH VOCABULARY LEVEL TEST</p>
                 </h2>
                 <ul>
@@ -11,18 +19,52 @@
                         There are 40 questions in this vocabulary test.
                     </li>
                     <li class="list-disc text-[16px] mb-2">
-                        They cover all levels from elementary (A1) to advanced (C1) in a
-                        random order. You will get your score at the end
+                        They cover all levels from elementary (A1) to advanced
+                        (C1) in a random order. You will get your score at the
+                        end
                     </li>
 
                     <li class="list-disc text-[16px]">
-                        Don’t use a dictionary – the idea is to find your natural level
+                        Don’t use a dictionary – the idea is to find your
+                        natural level
                     </li>
                 </ul>
+                <h2
+                    class="
+                        text-[24px]
+                        font-semibold
+                        leading-[120%]
+                        text-center
+                        mt-4
+                    "
+                >
+                    <VueCountdown
+                        :time="timeWork"
+                        @progress="handleCountdownProgress"
+                        ref="countdown"
+                    >
+                        <template slot-scope="props"
+                            >Time Remaining： {{ props.minutes }} minutes,
+                            {{ props.seconds }} seconds.</template
+                        >
+                    </VueCountdown>
+                </h2>
             </div>
+
             <transition name="el-zoom-in-top">
-                <div class="bg-blur px-[48px] py-[48px] mt-4" v-show="!isShowLabel">
-                    <h2 class="text-[36px] font-semibold leading-[120%] text-center mb-4">
+                <div
+                    class="bg-blur px-[48px] py-[48px] mt-4"
+                    v-show="!isShowLabel"
+                >
+                    <h2
+                        class="
+                            text-[36px]
+                            font-semibold
+                            leading-[120%]
+                            text-center
+                            mb-4
+                        "
+                    >
                         <p>
                             You have reached {{ arrRightAns.length }} of
                             {{ questions.length }} point(s),
@@ -31,9 +73,31 @@
                     <div class="flex items-center justify-center">
                         <el-progress
                             type="circle"
-                            :percentage="(arrRightAns.length / questions.length) * 100"
+                            :percentage="
+                                (arrRightAns.length / questions.length) * 100
+                            "
                         ></el-progress>
                     </div>
+                    <h2
+                        class="
+                            text-[24px]
+                            font-semibold
+                            leading-[120%]
+                            text-center
+                            mt-4
+                        "
+                    >
+                        <VueCountdown
+                            :auto-start="false"
+                            :time="timerun"
+                            @progress="handleCountdownProgress"
+                        >
+                            <template slot-scope="props"
+                                >Your time： {{ props.minutes }} minutes,
+                                {{ props.seconds }} seconds.</template
+                            >
+                        </VueCountdown>
+                    </h2>
                 </div>
             </transition>
 
@@ -66,9 +130,21 @@
                         />
                         <label
                             :for="`test${item.id}`"
-                            class="flex justify-between items-center w-full py-2 px-4 border-2 rounded-lg border-answer"
+                            class="
+                                flex
+                                justify-between
+                                items-center
+                                w-full
+                                py-2
+                                px-4
+                                border-2
+                                rounded-lg
+                                border-answer
+                            "
                             :class="[
-                                answerData[index].radioValue == item.id ? `active` : '',
+                                answerData[index].radioValue == item.id
+                                    ? `active`
+                                    : '',
                             ]"
                         >
                             <div
@@ -127,7 +203,7 @@
                 :key="question.id"
             >
                 <p class="text-[16px]">
-                    Question sadsdaasd <strong>{{ index + 1 }}</strong> of
+                    Question <strong>{{ index + 1 }}</strong> of
                     <strong>{{ questions.length }}</strong>
                 </p>
                 <p class="mt-2 mb-4 text-[16px]">{{ question.question }}</p>
@@ -149,9 +225,22 @@
                         />
                         <label
                             :for="`test${item.id}`"
-                            class="flex justify-between items-center w-full py-2 px-4 border-2 rounded-lg border-answer min-h-[70px]"
+                            class="
+                                flex
+                                justify-between
+                                items-center
+                                w-full
+                                py-2
+                                px-4
+                                border-2
+                                rounded-lg
+                                border-answer
+                                min-h-[70px]
+                            "
                             :class="[
-                                answerData[index].radioValue == item.id ? `active` : '',
+                                answerData[index].radioValue == item.id
+                                    ? `active`
+                                    : '',
                                 answerData[index].radioValue ==
                                 answerData[index].right_answer
                                     ? `right`
@@ -188,7 +277,10 @@
                             </div>
                             <div>
                                 <el-button
-                                    v-if="item.id == answerData[index].right_answer"
+                                    v-if="
+                                        item.id ==
+                                        answerData[index].right_answer
+                                    "
                                     type="success"
                                     icon="el-icon-check"
                                     circle
@@ -197,7 +289,8 @@
                                 <div v-else>
                                     <AVue
                                         :isActive="
-                                            answerData[index].radioValue == item.id
+                                            answerData[index].radioValue ==
+                                            item.id
                                                 ? true
                                                 : false
                                         "
@@ -205,7 +298,8 @@
                                     />
                                     <BVue
                                         :isActive="
-                                            answerData[index].radioValue == item.id
+                                            answerData[index].radioValue ==
+                                            item.id
                                                 ? true
                                                 : false
                                         "
@@ -213,7 +307,8 @@
                                     />
                                     <CVue
                                         :isActive="
-                                            answerData[index].radioValue == item.id
+                                            answerData[index].radioValue ==
+                                            item.id
                                                 ? true
                                                 : false
                                         "
@@ -221,7 +316,8 @@
                                     />
                                     <DVue
                                         :isActive="
-                                            answerData[index].radioValue == item.id
+                                            answerData[index].radioValue ==
+                                            item.id
                                                 ? true
                                                 : false
                                         "
@@ -236,9 +332,26 @@
             <button
                 v-show="isShowLabel"
                 @click="submit"
-                class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80 mt-4 ml-auto"
+                class="
+                    cursor-pointer
+                    px-4
+                    py-2
+                    text-center
+                    uppercase
+                    leading-[28px]
+                    flex
+                    items-center
+                    justify-center
+                    font-light
+                    rounded-md
+                    bg-button
+                    text-[19px] text-white
+                    hover:opacity-80
+                    mt-4
+                    ml-auto
+                "
             >
-                Nộp bài
+                Finish
             </button>
         </div>
 
@@ -250,6 +363,7 @@ import AVue from "../alphabet/A.vue";
 import BVue from "../alphabet/B.vue";
 import CVue from "../alphabet/C.vue";
 import DVue from "../alphabet/D.vue";
+import VueCountdown from "@chenfengyuan/vue-countdown";
 export default {
     data() {
         return {
@@ -385,6 +499,8 @@ export default {
             arrWrongAns: [],
             total: 0,
             isShowLabel: true,
+            timeWork: 20 * 60 * 1000,
+            timerun: 0,
         };
     },
     components: {
@@ -392,9 +508,11 @@ export default {
         BVue,
         CVue,
         DVue,
+        VueCountdown,
     },
     methods: {
         submit() {
+            this.$refs.countdown.abort();
             this.questions.forEach((item, index) => {
                 this.answerData[index].right_answer = item.right_answer;
             });
@@ -408,6 +526,12 @@ export default {
                     this.arrRightAns.push(item);
                 }
             });
+        },
+        handleCountdownProgress(data) {
+            this.timerun = this.timeWork - data.totalMilliseconds + 1000;
+            if (this.timerun === this.timeWork) {
+                this.submit();
+            }
         },
     },
     created() {

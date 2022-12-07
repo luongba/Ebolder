@@ -48,6 +48,9 @@ Route::prefix('/')->group(function () {
     Route::prefix('/english-level-test')->group(function () {
         Route::get('/', 'HomeController@testPage')->name('test-page');
         Route::get('/Vocabulary', 'HomeController@vocabularyTest')->name('vocabulary-test-page');
+        Route::get('/Grammar', 'HomeController@grammarTest')->name('grammar-test-page');
+        Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page');
+        Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page');
     });
     
 
