@@ -11,13 +11,13 @@
                     </div>
                 </div>
             </div>
-            <p
-                href=""
-                class="font-semibold text-[16px] text-[#3f6ad8] cursor-pointer mr-2"
-                @click="createQuestion"
-            >
-                SAVE
-            </p>
+            <div class="page-title-actions"  @click="createQuestion">
+                                    <span class="btn-icon-wrapper pr-2">
+                                        <p class="btn-icon btn dev-button btn-primary" style="padding: 10px 15px;">
+                                           Save
+                                        </p>
+                                    </span>
+            </div>
         </div>
         <div class="container">
             <div class="flex flex-col justify-center w-full items-center">

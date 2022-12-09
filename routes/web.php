@@ -46,13 +46,13 @@ Route::prefix('/')->group(function () {
     //trang-chu
     Route::get('/', 'HomeController@index')->name('home-page');
     Route::prefix('/english-level-test')->group(function () {
-        Route::get('/', 'HomeController@testPage')->name('test-page');
-        Route::get('/Vocabulary', 'HomeController@vocabularyTest')->name('vocabulary-test-page');
-        Route::get('/Grammar', 'HomeController@grammarTest')->name('grammar-test-page');
-        Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page');
-        Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page');
+        Route::get('/', 'HomeController@testPage')->name('test-page')->middleware('checkLogin');
+        Route::get('/Vocabulary', 'HomeController@vocabularyTest')->name('vocabulary-test-page')->middleware('checkLogin');
+        Route::get('/Grammar', 'HomeController@grammarTest')->name('grammar-test-page')->middleware('checkLogin');
+        Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page')->middleware('checkLogin');
+        Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page')->middleware('checkLogin');
     });
-    
+
 
 
 });

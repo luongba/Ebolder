@@ -2,7 +2,7 @@
     <div class="w-full">
         <header-component />
         <div class="w-full max-w-[1206px] mx-auto p-4">
-            <div class="bg-blur px-[48px] py-[48px]" v-show="isShowLabel">
+            <div class="bg-blur-f px-[48px] py-[48px]" v-show="isShowLabel">
                 <h2
                     class="
                         text-[36px]
@@ -34,7 +34,13 @@
                     </li>
                 </ul>
                 <h2
-                    class="text-[24px] font-semibold leading-[120%] text-center mt-4"
+                    class="
+                        text-[24px]
+                        font-semibold
+                        leading-[120%]
+                        text-center
+                        mt-4
+                    "
                 >
                     <VueCountdown
                         :time="timeWork"
@@ -50,7 +56,7 @@
             </div>
             <transition name="el-zoom-in-top">
                 <div
-                    class="bg-blur px-[48px] py-[48px] mt-4"
+                    class="bg-blur-f px-[48px] py-[48px] mt-4"
                     v-show="!isShowLabel"
                 >
                     <h2
@@ -71,24 +77,36 @@
                         <el-progress
                             type="circle"
                             :percentage="
-                                (arrRightAns.length / questions.length) * 100
+                                Number(
+                                    (
+                                        (arrRightAns.length /
+                                            questions.length) *
+                                        100
+                                    ).toFixed(2)
+                                )
                             "
                         ></el-progress>
                     </div>
                     <h2
-                    class="text-[24px] font-semibold leading-[120%] text-center mt-4"
-                >
-                    <VueCountdown
-                        :auto-start="false"
-                        :time="timerun"
-                        @progress="handleCountdownProgress"
+                        class="
+                            text-[24px]
+                            font-semibold
+                            leading-[120%]
+                            text-center
+                            mt-4
+                        "
                     >
-                        <template slot-scope="props"
-                            >Your time： {{ props.minutes }} minutes,
-                            {{ props.seconds }} seconds.</template
+                        <VueCountdown
+                            :auto-start="false"
+                            :time="timerun"
+                            @progress="handleCountdownProgress"
                         >
-                    </VueCountdown>
-                </h2>
+                            <template slot-scope="props"
+                                >Your time： {{ props.minutes }} minutes,
+                                {{ props.seconds }} seconds.</template
+                            >
+                        </VueCountdown>
+                    </h2>
                 </div>
             </transition>
 
@@ -356,136 +374,11 @@ import CVue from "../alphabet/C.vue";
 import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 export default {
+    props: ["data"],
     data() {
         return {
             answerData: [],
-            questions: [
-                {
-                    id: 1,
-                    question:
-                        "If I were you, I’d leave earlier, so you can avoid the _________.",
-                    dataAns: [
-                        {
-                            id: 121212,
-                            text: "hello",
-                        },
-                        {
-                            id: 121213,
-                            text: "hi",
-                        },
-                        {
-                            id: 121214,
-                            text: "my name ba",
-                        },
-                        {
-                            id: 121215,
-                            text: "wow",
-                        },
-                    ],
-
-                    right_answer: 121212,
-                },
-                {
-                    id: 2,
-                    question:
-                        "If I were you, I’d leave earlier, so you can avoid the _________.",
-                    dataAns: [
-                        {
-                            id: 221212,
-                            text: "hello",
-                        },
-                        {
-                            id: 221213,
-                            text: "hi",
-                        },
-                        {
-                            id: 221214,
-                            text: "my name ba",
-                        },
-                        {
-                            id: 221215,
-                            text: "wow",
-                        },
-                    ],
-
-                    right_answer: 221212,
-                },
-                {
-                    id: 3,
-                    question:
-                        "If I were you, I’d leave earlier, so you can avoid the _________.",
-                    dataAns: [
-                        {
-                            id: 321212,
-                            text: "hello",
-                        },
-                        {
-                            id: 321213,
-                            text: "hi",
-                        },
-                        {
-                            id: 321214,
-                            text: "my name ba",
-                        },
-                        {
-                            id: 321215,
-                            text: "wow",
-                        },
-                    ],
-
-                    right_answer: 321212,
-                },
-                {
-                    id: 4,
-                    question:
-                        "If I were you, I’d leave earlier, so you can avoid the _________.",
-                    dataAns: [
-                        {
-                            id: 421212,
-                            text: "hello",
-                        },
-                        {
-                            id: 421213,
-                            text: "hi",
-                        },
-                        {
-                            id: 421214,
-                            text: "my name ba",
-                        },
-                        {
-                            id: 421215,
-                            text: "wow",
-                        },
-                    ],
-
-                    right_answer: 421212,
-                },
-                {
-                    id: 5,
-                    question:
-                        "If I were you, I’d leave earlier, so you can avoid the _________.",
-                    dataAns: [
-                        {
-                            id: 521212,
-                            text: "hello",
-                        },
-                        {
-                            id: 521213,
-                            text: "hi",
-                        },
-                        {
-                            id: 521214,
-                            text: "my name ba",
-                        },
-                        {
-                            id: 521215,
-                            text: "wow",
-                        },
-                    ],
-
-                    right_answer: 521212,
-                },
-            ],
+            questions: [],
             arrRightAns: [],
             arrWrongAns: [],
             total: 0,
@@ -520,12 +413,23 @@ export default {
         },
         handleCountdownProgress(data) {
             this.timerun = this.timeWork - data.totalMilliseconds + 1000;
-            if(this.timerun === this.timeWork){
+            if (this.timerun === this.timeWork) {
                 this.submit();
             }
         },
     },
     created() {
+        this.questions = this.data.questiton_grammar.map((grammar) => ({
+            id: grammar.id,
+            question: grammar.question,
+            dataAns: $Helper.random(
+                grammar.answers.map((item) => ({
+                    id: item.id,
+                    text: item.text,
+                }))
+            ),
+            right_answer: grammar.right_answers.answer_id,
+        }));
         this.questions.forEach((item) => {
             this.answerData.push({
                 radioValue: null,

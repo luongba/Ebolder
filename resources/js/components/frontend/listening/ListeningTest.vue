@@ -2,7 +2,7 @@
     <div class="w-full">
         <header-component />
         <div class="w-full max-w-[1206px] mx-auto p-4">
-            <div class="bg-blur px-[48px] py-[48px]" v-show="isShowLabel">
+            <div class="bg-blur-f px-[48px] py-[48px]" v-show="isShowLabel">
                 <h2
                     class="
                         text-[36px]
@@ -57,7 +57,7 @@
 
             <transition name="el-zoom-in-top">
                 <div
-                    class="bg-blur px-[48px] py-[48px] mt-4"
+                    class="bg-blur-f px-[48px] py-[48px] mt-4"
                     v-show="!isShowLabel"
                 >
                     <h2
@@ -78,8 +78,7 @@
                         <el-progress
                             type="circle"
                             :percentage="
-                                (arrRightAns.length / answerData.length) *
-                                100
+                                Number(((arrRightAns.length / answerData.length) * 100).toFixed(2))
                             "
                         ></el-progress>
                     </div>
@@ -105,15 +104,19 @@
                     </h2>
                 </div>
             </transition>
-            <div v-for="(topicItem, indexAudio) in topic" :key="topicItem.id">
+            <div
+                v-for="(topicItem, indexAudio) in topic"
+                :key="topicItem.id"
+                v-if="indexAudio == indexPage"
+            >
                 <p class="text-[16px] mt-4">
                     Audio: <strong>{{ indexAudio + 1 }}</strong> of
                     <strong>{{ topic.length }}</strong>
                 </p>
-                <div class="bg-blur px-[48px] py-[16px] mt-4">
+                <div class="bg-blur-f px-[48px] py-[16px] mt-4">
                     <audio id="audio-preview" class="w-full" controls disabled>
                         <source
-                            src="http://127.0.0.1:8000/upload/audio/1669346083_MotNamMoiBinhAn-SonTungMTP-4315569.mp3"
+                            :src="`${baseURl}/upload/audio/${topicItem.audio}`"
                             type="audio/mpeg"
                         />
                     </audio>
@@ -141,7 +144,11 @@
                                 :id="`test${item.id}`"
                                 :name="`radio-group${index}`"
                                 checked
-                                v-model="answerData.find(itemi => itemi.id == question.id).radioValue"
+                                v-model="
+                                    answerData.find(
+                                        (itemi) => itemi.id == question.id
+                                    ).radioValue
+                                "
                                 :value="item.id"
                                 hidden
                                 :disabled="isShowLabel == false"
@@ -160,7 +167,9 @@
                                     border-answer
                                 "
                                 :class="[
-                                    answerData.find(itemi => itemi.id == question.id).radioValue == item.id
+                                    answerData.find(
+                                        (itemi) => itemi.id == question.id
+                                    ).radioValue == item.id
                                         ? `active`
                                         : '',
                                 ]"
@@ -168,7 +177,9 @@
                                 <div
                                     class="text-[16px] font-semibold"
                                     :style="
-                                        answerData.find(itemi => itemi.id == question.id).radioValue == item.id
+                                        answerData.find(
+                                            (itemi) => itemi.id == question.id
+                                        ).radioValue == item.id
                                             ? `color: #5B5EA6`
                                             : 'color: #999'
                                     "
@@ -178,8 +189,10 @@
                                 <div>
                                     <AVue
                                         :isActive="
-                                            answerData.find(itemi => itemi.id == question.id).radioValue ==
-                                            item.id
+                                            answerData.find(
+                                                (itemi) =>
+                                                    itemi.id == question.id
+                                            ).radioValue == item.id
                                                 ? true
                                                 : false
                                         "
@@ -187,8 +200,10 @@
                                     />
                                     <BVue
                                         :isActive="
-                                            answerData.find(itemi => itemi.id == question.id).radioValue ==
-                                            item.id
+                                            answerData.find(
+                                                (itemi) =>
+                                                    itemi.id == question.id
+                                            ).radioValue == item.id
                                                 ? true
                                                 : false
                                         "
@@ -196,8 +211,10 @@
                                     />
                                     <CVue
                                         :isActive="
-                                            answerData.find(itemi => itemi.id == question.id).radioValue ==
-                                            item.id
+                                            answerData.find(
+                                                (itemi) =>
+                                                    itemi.id == question.id
+                                            ).radioValue == item.id
                                                 ? true
                                                 : false
                                         "
@@ -205,8 +222,10 @@
                                     />
                                     <DVue
                                         :isActive="
-                                            answerData.find(itemi => itemi.id == question.id).radioValue ==
-                                            item.id
+                                            answerData.find(
+                                                (itemi) =>
+                                                    itemi.id == question.id
+                                            ).radioValue == item.id
                                                 ? true
                                                 : false
                                         "
@@ -221,12 +240,12 @@
                 <div
                     v-if="!isShowLabel"
                     class="w-full mt-4"
-                    v-for="(question, index) in topic.questions"
+                    v-for="(question, index) in topicItem.questions"
                     :key="question.id"
                 >
                     <p class="text-[16px]">
                         Question <strong>{{ index + 1 }}</strong> of
-                        <strong>{{ topic.questions.length }}</strong>
+                        <strong>{{ topicItem.questions.length }}</strong>
                     </p>
                     <p class="mt-2 mb-4 text-[16px]">{{ question.question }}</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -240,7 +259,11 @@
                                 :id="`test${item.id}`"
                                 :name="`radio-group${index}`"
                                 checked
-                                v-model="answerData.find(itemi => itemi.id == question.id).radioValue"
+                                v-model="
+                                    answerData.find(
+                                        (itemi) => itemi.id == question.id
+                                    ).radioValue
+                                "
                                 :value="item.id"
                                 hidden
                                 :disabled="isShowLabel == false"
@@ -260,18 +283,33 @@
                                     min-h-[70px]
                                 "
                                 :class="[
-                                    answerData.find(itemi => itemi.id == question.id).radioValue == item.id
+                                    answerData.find(
+                                        (itemi) => itemi.id == question.id
+                                    ).radioValue == item.id
                                         ? `active`
                                         : '',
-                                    answerData.find(itemi => itemi.id == question.id).radioValue ==
-                                    answerData[index].right_answer
+                                    answerData.find(
+                                        (itemi) => itemi.id == question.id
+                                    ).radioValue ==
+                                    answerData.find(
+                                        (itemi) => itemi.id == question.id
+                                    ).right_answer
                                         ? `right`
                                         : 'wrong',
-                                    item.id == answerData[index].right_answer
+                                    item.id ==
+                                    answerData.find(
+                                        (itemi) => itemi.id == question.id
+                                    ).right_answer
                                         ? `right_wait`
                                         : '',
-                                    item.id == answerData[index].right_answer &&
-                                    item.id == answerData.find(itemi => itemi.id == question.id).radioValue
+                                    item.id ==
+                                        answerData.find(
+                                            (itemi) => itemi.id == question.id
+                                        ).right_answer &&
+                                    item.id ==
+                                        answerData.find(
+                                            (itemi) => itemi.id == question.id
+                                        ).radioValue
                                         ? 'bgright'
                                         : '',
                                 ]"
@@ -283,20 +321,35 @@
                                         text-answer
                                     "
                                     :class="[
-                                        answerData.find(itemi => itemi.id == question.id).radioValue == item.id
+                                        answerData.find(
+                                            (itemi) => itemi.id == question.id
+                                        ).radioValue == item.id
                                             ? `active`
                                             : '',
-                                        answerData.find(itemi => itemi.id == question.id).radioValue ==
-                                        answerData[index].right_answer
+                                        answerData.find(
+                                            (itemi) => itemi.id == question.id
+                                        ).radioValue ==
+                                        answerData.find(
+                                            (itemi) => itemi.id == question.id
+                                        ).right_answer
                                             ? `right`
                                             : 'wrong',
                                         item.id ==
-                                        answerData[index].right_answer
+                                        answerData.find(
+                                            (itemi) => itemi.id == question.id
+                                        ).right_answer
                                             ? `right_wait`
                                             : '',
                                         item.id ==
-                                            answerData[index].right_answer &&
-                                        item.id == answerData.find(itemi => itemi.id == question.id).radioValue
+                                            answerData.find(
+                                                (itemi) =>
+                                                    itemi.id == question.id
+                                            ).right_answer &&
+                                        item.id ==
+                                            answerData.find(
+                                                (itemi) =>
+                                                    itemi.id == question.id
+                                            ).radioValue
                                             ? 'bgright'
                                             : '',
                                     ]"
@@ -307,7 +360,10 @@
                                     <el-button
                                         v-if="
                                             item.id ==
-                                            answerData[index].right_answer
+                                            answerData.find(
+                                                (itemi) =>
+                                                    itemi.id == question.id
+                                            ).right_answer
                                         "
                                         type="success"
                                         icon="el-icon-check"
@@ -317,8 +373,10 @@
                                     <div v-else>
                                         <AVue
                                             :isActive="
-                                                answerData.find(itemi => itemi.id == question.id).radioValue ==
-                                                item.id
+                                                answerData.find(
+                                                    (itemi) =>
+                                                        itemi.id == question.id
+                                                ).radioValue == item.id
                                                     ? true
                                                     : false
                                             "
@@ -326,8 +384,10 @@
                                         />
                                         <BVue
                                             :isActive="
-                                                answerData.find(itemi => itemi.id == question.id).radioValue ==
-                                                item.id
+                                                answerData.find(
+                                                    (itemi) =>
+                                                        itemi.id == question.id
+                                                ).radioValue == item.id
                                                     ? true
                                                     : false
                                             "
@@ -335,8 +395,10 @@
                                         />
                                         <CVue
                                             :isActive="
-                                                answerData.find(itemi => itemi.id == question.id).radioValue ==
-                                                item.id
+                                                answerData.find(
+                                                    (itemi) =>
+                                                        itemi.id == question.id
+                                                ).radioValue == item.id
                                                     ? true
                                                     : false
                                             "
@@ -344,8 +406,10 @@
                                         />
                                         <DVue
                                             :isActive="
-                                                answerData.find(itemi => itemi.id == question.id).radioValue ==
-                                                item.id
+                                                answerData.find(
+                                                    (itemi) =>
+                                                        itemi.id == question.id
+                                                ).radioValue == item.id
                                                     ? true
                                                     : false
                                             "
@@ -357,7 +421,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="flex items-center justify-between mt-4">
+            </div>
+            <div class="flex items-center justify-between mt-4">
                 <div v-if="indexPage == 0"></div>
                 <button
                     v-if="indexPage > 0"
@@ -382,7 +447,7 @@
                     Prev
                 </button>
                 <button
-                    v-show="indexPage != topic.questions.length - 1"
+                    v-show="indexPage != topic.length - 1"
                     @click="movePage(1)"
                     class="
                         cursor-pointer
@@ -404,10 +469,7 @@
                     Next
                 </button>
                 <button
-                    v-show="
-                        indexPage == topic.questions.length - 1 &&
-                        isShowLabel == true
-                    "
+                    v-if="isShowLabel == true && indexPage == topic.length - 1"
                     @click="submit"
                     class="
                         cursor-pointer
@@ -428,31 +490,7 @@
                 >
                     Finish
                 </button>
-            </div> -->
             </div>
-            <button
-                @click="submit"
-                class="
-                    cursor-pointer
-                    px-4
-                    py-2
-                    text-center
-                    uppercase
-                    leading-[28px]
-                    flex
-                    items-center
-                    justify-center
-                    font-light
-                    rounded-md
-                    bg-button
-                    text-[19px] text-white
-                    hover:opacity-80
-                    ml-auto
-                    mt-4
-                "
-            >
-                Finish
-            </button>
         </div>
 
         <!-- <footer-component /> -->
@@ -465,122 +503,11 @@ import CVue from "../alphabet/C.vue";
 import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 export default {
+    props: ["data"],
     data() {
         return {
             answerData: [],
             topic: [
-                {
-                    id: 1,
-                    audio: "http://127.0.0.1:8000/upload/audio/1669346083_MotNamMoiBinhAn-SonTungMTP-4315569.mp3",
-                    questions: [
-                        {
-                            id: 1,
-                            question:
-                                "If I were you, I’d leave earlier, so you can avoid the _________.",
-                            dataAns: [
-                                {
-                                    id: 121212,
-                                    text: "hello",
-                                },
-                                {
-                                    id: 121213,
-                                    text: "hi",
-                                },
-                                {
-                                    id: 121214,
-                                    text: "my name ba",
-                                },
-                                {
-                                    id: 121215,
-                                    text: "wow",
-                                },
-                            ],
-
-                            right_answer: 121212,
-                        },
-                        {
-                            id: 2,
-                            question:
-                                "If I were you, I’d leave earlier, so you can avoid the win _________.",
-                            dataAns: [
-                                {
-                                    id: 221212,
-                                    text: "hello",
-                                },
-                                {
-                                    id: 221213,
-                                    text: "hi",
-                                },
-                                {
-                                    id: 221214,
-                                    text: "my name ba",
-                                },
-                                {
-                                    id: 221215,
-                                    text: "wow",
-                                },
-                            ],
-
-                            right_answer: 221212,
-                        },
-                    ],
-                },
-                {
-                    id: 12,
-                    audio: "http://127.0.0.1:8000/upload/audio/1669346083_MotNamMoiBinhAn-SonTungMTP-4315569.mp3",
-                    questions: [
-                        {
-                            id: 12,
-                            question:
-                                "If I were you, I’d leave earlier, so you can avoid the _________.",
-                            dataAns: [
-                                {
-                                    id: 22121211,
-                                    text: "hello",
-                                },
-                                {
-                                    id: 22121311,
-                                    text: "hi",
-                                },
-                                {
-                                    id: 22121411,
-                                    text: "my name ba",
-                                },
-                                {
-                                    id: 22121511,
-                                    text: "wow",
-                                },
-                            ],
-
-                            right_answer: 221212,
-                        },
-                        {
-                            id: 13,
-                            question:
-                                "If I were you, I’d leave earlier, so you can avoid the win _________.",
-                            dataAns: [
-                                {
-                                    id: 22121212,
-                                    text: "hello",
-                                },
-                                {
-                                    id: 22121312,
-                                    text: "hi",
-                                },
-                                {
-                                    id: 22121412,
-                                    text: "my name ba",
-                                },
-                                {
-                                    id: 22121512,
-                                    text: "wow",
-                                },
-                            ],
-
-                            right_answer: 22121212,
-                        },
-                    ],
-                },
             ],
 
             arrRightAns: [],
@@ -590,6 +517,7 @@ export default {
             timeWork: 20 * 60 * 1000,
             timerun: 0,
             indexPage: 0,
+            baseURl: $Api.baseUrl
         };
     },
     components: {
@@ -604,9 +532,10 @@ export default {
             this.$refs.countdown.abort();
             this.topic.forEach((itemTopic) => {
                 itemTopic.questions.forEach((item) => {
-                    this.answerData.find(itemAns => itemAns.id == item.id).right_answer = item.right_answer
+                    this.answerData.find(
+                        (itemAns) => itemAns.id == item.id
+                    ).right_answer = item.right_answer;
                 });
-                
             });
             window.scrollTo({ top: 0, behavior: "smooth" });
             setTimeout(() => {
@@ -625,24 +554,37 @@ export default {
                 this.submit();
             }
         },
-        // movePage(number) {
-        //     switch (number) {
-        //         case -1: {
-        //             if (this.indexPage > 0) {
-        //                 this.indexPage += number;
-        //             }
-        //             return;
-        //         }
-        //         case 1: {
-        //             if (this.indexPage < this.topic.questions.length - 1) {
-        //                 this.indexPage += number;
-        //             }
-        //             return;
-        //         }
-        //     }
-        // },
+        movePage(number) {
+            switch (number) {
+                case -1: {
+                    if (this.indexPage > 0) {
+                        this.indexPage += number;
+                    }
+                    return;
+                }
+                case 1: {
+                    if (this.indexPage < this.topic.length - 1) {
+                        this.indexPage += number;
+                    }
+                    return;
+                }
+            }
+        },
     },
     created() {
+        this.topic = this.data.topic_audio_listen.map((audio) => ({
+            id: audio.id,
+            audio: audio.audio,
+            questions: audio.question_listening.map((question) => ({
+                id: question.id,
+                question: question.question,
+                dataAns:  $Helper.random(question.answer_listening.map((answer) => ({
+                    id: answer.id,
+                    text: answer.text,
+                }))),
+                right_answer: question.right_answers.answer_id,
+            })),
+        }));
         this.topic.forEach((itemTopic) => {
             itemTopic.questions.forEach((item) => {
                 this.answerData.push({
@@ -652,12 +594,6 @@ export default {
                 });
             });
         });
-        // this.topic.questions.forEach((item) => {
-        //     this.answerData.push({
-        //         radioValue: null,
-        //         right_answer: "",
-        //     });
-        // });
     },
 };
 </script>

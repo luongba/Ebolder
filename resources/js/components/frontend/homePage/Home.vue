@@ -28,7 +28,7 @@
                 <img src="/images/bg/landing_page_background_item1.png" alt="" />
             </div>
             <div
-                class="py-[134px] px-[134px] max-w-[1206px] bg-blur mx-auto mt-4 relative"
+                class="py-[134px] px-[134px] max-w-[1206px] bg-blur-f mx-auto mt-4 relative"
             >
                 <div class="grid grid-cols-5 gap-4">
                     <h2 class="text-[32px] font-semibold leading-[120%] col-span-3">
@@ -201,7 +201,7 @@
                 <p>Tại sao nên học ở đây ?</p>
             </h2>
             <div class="w-full grid grid-cols-3 gap-4 w-[1124px] mt-[64px] mx-auto">
-                <div class="p-[32px] bg-blur mx-auto relative">
+                <div class="p-[32px] bg-blur-f mx-auto relative">
                     <span class="text-[40px] color-gadient">
                         <i class="el-icon-s-management"></i>
                     </span>
@@ -227,7 +227,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="p-[32px] bg-blur mx-auto relative">
+                <div class="p-[32px] bg-blur-f mx-auto relative">
                     <span class="text-[40px] color-gadient">
                         <i class="el-icon-s-management"></i>
                     </span>
@@ -253,7 +253,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="p-[32px] bg-blur mx-auto relative">
+                <div class="p-[32px] bg-blur-f mx-auto relative">
                     <span class="text-[40px] color-gadient">
                         <i class="el-icon-s-management"></i>
                     </span>
@@ -285,7 +285,7 @@
             <div class="absolute left-0 top-0">
                 <img src="/images/bg/landing_page_background_item3.png" alt="" />
             </div>
-            <div class="py-[134px] px-[134px] max-w-[1124px] bg-blur mx-auto relative">
+            <div class="py-[134px] px-[134px] max-w-[1124px] bg-blur-f mx-auto relative">
                 <div class="absolute right-[-35px] top-[-12px]">
                     <img src="/images/bg/landing-bottom-bg.png" alt="" />
                 </div>
@@ -342,7 +342,7 @@ export default {
 .color-gadient {
     color: linear-gradient(177.34deg, #21a2ff, #8951ff 73.36%);
 }
-.bg-blur {
+.bg-blur-f {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     background: linear-gradient(

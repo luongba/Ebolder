@@ -49,8 +49,13 @@ class AuthController extends Controller
                 $authCtrl = new AuthController();
                 $token = $user->createToken("hoctienganh")->accessToken;
                 $cookie = cookie('token', $token);
+                if($user->is_admin == 1){
+                    return redirect(route('admin.home'))->with('token', $token);
 
-            return redirect(route('admin.home'))->with('token', $token);
+                }
+
+
+                return redirect(route('home-page'));
             }else {
                 return redirect()->back()->with('status', 'Email hoặc Password không chính xác');
             }

@@ -10,8 +10,10 @@ window.Vue = require('vue');
 window.$ = require('jquery')
 window.JQuery = require('jquery')
 import {Api, timeWork} from "./utils/Api"
+import {Helper} from "./utils/Helper"
 window.$Api = Api;
 window.$TimeWork = timeWork;
+window.$Helper = Helper
 console.log(timeWork);
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';

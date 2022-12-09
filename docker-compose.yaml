@@ -1,0 +1,13 @@
+version: "3.4"
+
+services:
+  ebolder:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8001:80
+
+  ebolder_bash:
+    extends: ebolder
+    entrypoint: bash

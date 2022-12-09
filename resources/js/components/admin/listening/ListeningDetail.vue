@@ -45,6 +45,9 @@
                             </span>
                         </div>
                         <div class="my-2">
+                            <div v-if="(dataAudio.length == 0)">
+                                <el-empty description="No question"></el-empty>
+                            </div>
                             <div
                                 class="
                                     bg-white
@@ -61,6 +64,7 @@
                                 "
                                 v-for="(itemAudio, index) in dataAudio"
                                 :key="itemAudio.id"
+                                v-else
                             >
                                 <span class="flex-1">{{ itemAudio.name }}</span>
                                 <div class="flex items-center">

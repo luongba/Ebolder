@@ -20,10 +20,14 @@
                             </span>
                         </div>
                         <div class="my-2">
+                            <div v-if="(dataQuestion.length == 0)">
+                                <el-empty description="No question"></el-empty>
+                            </div>
                             <div
                                 class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-2 text-[14px] font-semibold mb-4"
                                 v-for="itemQues in dataQuestion"
                                 :key="itemQues.id"
+                                v-else
                             >
                                 <span class="flex-1">{{ itemQues.question }}</span>
                                 <div class="flex items-center">

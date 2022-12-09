@@ -5,25 +5,25 @@
             <div class="grid grid-cols-2 gap-4">
                 <div
                     @click="openLink('Listening')"
-                    class="bg-blur flex items-center justify-center h-[260px] cursor-pointer hover:shadow-md"
+                    class="bg-blur-f flex items-center justify-center h-[260px] cursor-pointer hover:shadow-md"
                 >
                     <span class="text-[38px] strong font-semibold"> Listening </span>
                 </div>
                 <div
                     @click="openLink('Vocabulary')"
-                    class="bg-blur flex items-center justify-center h-[260px] cursor-pointer hover:shadow-md"
+                    class="bg-blur-f flex items-center justify-center h-[260px] cursor-pointer hover:shadow-md"
                 >
                     <span class="text-[38px] strong font-semibold"> Vocabulary </span>
                 </div>
                 <div
                     @click="openLink('Reading')"
-                    class="bg-blur flex items-center justify-center h-[260px] cursor-pointer hover:shadow-md"
+                    class="bg-blur-f flex items-center justify-center h-[260px] cursor-pointer hover:shadow-md"
                 >
                     <span class="text-[38px] strong font-semibold"> Reading </span>
                 </div>
                 <div
                     @click="openLink('Grammar')"
-                    class="bg-blur flex items-center justify-center h-[260px] cursor-pointer hover:shadow-md"
+                    class="bg-blur-f flex items-center justify-center h-[260px] cursor-pointer hover:shadow-md"
                 >
                     <span class="text-[38px] strong font-semibold"> Grammar </span>
                 </div>

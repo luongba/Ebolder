@@ -12,7 +12,10 @@
                 </a>
             </li>
             {{-- Start Testing --}}
+            @if(Gate::check('Vocabulary_List') || Gate::check('Question_Vocabulary_List'))
             <li class="app-sidebar__heading">Vocabulary</li>
+            @endif
+            @can('Vocabulary_List')
             <li>
                 <a class="{{ request()->is(['admin/volabulary-level-test']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.vocabulary-list') }}">
@@ -20,6 +23,8 @@
                     Topic
                 </a>
             </li>
+            @endcan
+            @can('Question_Vocabulary_List')
             <li>
                 <a class="{{ request()->is(['admin/volabulary-level-test/question-list']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.vocabulary-question-list') }}">
@@ -27,7 +32,11 @@
                     Questions
                 </a>
             </li>
+            @endcan
+            @if(Gate::check('Listening_List') || Gate::check('Question_Listening_List'))
             <li class="app-sidebar__heading">Listening</li>
+            @endif
+            @can('Listening_List')
             <li>
                 <a class="{{ request()->is(['admin/topic-listening-level-test']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.topic-listening-list') }}">
@@ -35,6 +44,8 @@
                     Topic
                 </a>
             </li>
+            @endcan
+            @can('Question_Listening_List')
             <li>
                 <a class="{{ request()->is(['admin/listening-level-test/question-list']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.listening-question-list') }}">
@@ -42,7 +53,11 @@
                     Audio and Question
                 </a>
             </li>
+            @endcan
+            @if(Gate::check('Reading_List'))
             <li class="app-sidebar__heading">Reading</li>
+            @endif
+            @can('Reading_List')
             <li>
                 <a class="{{ request()->is(['admin/reading-level-test/topic-list']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.reading-topic-list') }}">
@@ -50,7 +65,12 @@
                     Topic
                 </a>
             </li>
+            @endcan
+            @if(Gate::check('Grammar_List') || Gate::check('Question_Grammar_List'))
             <li class="app-sidebar__heading">Grammar</li>
+            @endif
+            @can('Grammar_List')
+
             <li>
                 <a class="{{ request()->is(['admin/grammar-level-test']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.grammar-list') }}">
@@ -58,6 +78,8 @@
                     Topic
                 </a>
             </li>
+            @endcan
+            @can('Question_Grammar_List')
             <li>
                 <a class="{{ request()->is(['admin/grammar-level-test/question-list']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.grammar-question-list') }}">
@@ -65,7 +87,11 @@
                     Questions
                 </a>
             </li>
+            @endcan
+            @if(Gate::check('User_List') || Gate::check('Role_List'))
             <li class="app-sidebar__heading">Users</li>
+            @endif
+            @can('User_List')
             <li>
                 <a class="{{ request()->is(['admin/users']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.user-list') }}">
@@ -73,6 +99,8 @@
                     User
                 </a>
             </li>
+            @endcan
+            @can('Role_List')
             <li>
                 <a class="{{ request()->is(['admin/roles']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.role-list') }}">
@@ -80,6 +108,7 @@
                     Roles
                 </a>
             </li>
+            @endcan
             <li>
             <li>
                 {{--                <a class="{{ request()->is(['newsletters','newsletters/*']) ? 'mm-active' : '' }}" href="{{route('newsletter-home')}}"> --}}
