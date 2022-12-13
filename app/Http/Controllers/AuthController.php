@@ -55,7 +55,7 @@ class AuthController extends Controller
                 }
 
 
-                return redirect(route('home-page'));
+                return redirect(route('home-page'))->with('token', $token);
             }else {
                 return redirect()->back()->with('status', 'Email hoặc Password không chính xác');
             }

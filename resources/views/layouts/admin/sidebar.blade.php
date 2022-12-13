@@ -95,8 +95,8 @@
             <li>
                 <a class="{{ request()->is(['admin/users']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.user-list') }}">
-                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
-                    User
+                    <i class="metismenu-icon lnr-user lnr"></i>
+                    Users
                 </a>
             </li>
             @endcan
@@ -104,7 +104,7 @@
             <li>
                 <a class="{{ request()->is(['admin/roles']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.role-list') }}">
-                    <i class="metismenu-icon lnr-question-circle lnr"></i>
+                    <i class="metismenu-icon lnr-users lnr"></i>
                     Roles
                 </a>
             </li>

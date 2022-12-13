@@ -78,6 +78,9 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/update-user/{id}', 'Admin\UserController@updateUserApi')->name('update-user');
         Route::post('/delete-user/{id}', 'Admin\UserController@deleteUserApi')->name('delete-user');
 
+        //Home
+        Route::post('/save-history', 'HomeController@saveHistory')->name('save-hítory');
+
         //roles
         Route::get('/get-all-role', 'Admin\RoleController@getAllRole')->name('get-all-role');
         Route::get('/all-permision', 'Admin\RoleController@getAllPermision')->name('all-permision');

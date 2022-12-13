@@ -51,6 +51,8 @@ Vue.component('grammar-list', require('./components/admin/grammar/GrammarList.vu
 Vue.component('user-list', require('./components/admin/user/UserList.vue').default);
 Vue.component('user-create', require('./components/admin/user/UserCreate.vue').default);
 Vue.component('user-edit', require('./components/admin/user/UserEdit.vue').default);
+Vue.component('history-exam', require('./components/admin/user/History.vue').default);
+
 //role
 Vue.component('role-list', require('./components/admin/role/RoleList.vue').default);
 Vue.component('role-create', require('./components/admin/role/RoleCreate.vue').default);

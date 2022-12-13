@@ -425,6 +425,7 @@ import BVue from "../alphabet/B.vue";
 import CVue from "../alphabet/C.vue";
 import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
+import baseRequest from "../../../utils/baseRequest";
 export default {
     props: ["data"],
     data() {
@@ -449,21 +450,31 @@ export default {
         VueCountdown,
     },
     methods: {
-        submit() {
+        async submit() {
             this.$refs.countdown.abort();
             this.topic.questions.forEach((item, index) => {
                 this.answerData[index].right_answer = item.right_answer;
             });
-            window.scrollTo({ top: 0, behavior: "smooth" });
-            setTimeout(() => {
-                this.isShowLabel = false;
-            }, 800);
-
             this.answerData.forEach((item) => {
                 if (item.radioValue == item.right_answer) {
                     this.arrRightAns.push(item);
                 }
             });
+            let dataHistory = {
+                test_type: "Reading",
+                topic_name: this.data.name,
+                scores: `${this.arrRightAns.length}/${this.answerData.length}`,
+                completion_time: this.timerun,
+            };
+            try {
+                let result = await baseRequest.post('/admin/save-history', dataHistory);
+            } catch (e) {
+                console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            setTimeout(() => {
+                this.isShowLabel = false;
+            }, 800);
         },
         handleCountdownProgress(data) {
             this.timerun = this.timeWork - data.totalMilliseconds + 1000;
@@ -489,7 +500,6 @@ export default {
         },
     },
     created() {
-        console.log(this.data);
         this.topic = {
             content: this.data.content,
             questions: this.data.question_reading.map((reading) => ({

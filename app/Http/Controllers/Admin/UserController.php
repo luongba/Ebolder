@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRegister;
 use App\Http\Requests\UserUpdate;
+use App\models\User\HistoryExam;
 use App\models\User\User;
 use Illuminate\Support\Facades\DB;
 
@@ -144,5 +145,19 @@ class UserController extends Controller
             ]);
         }
 
+
+
+    }
+    public function history($id){
+        try {
+            $history = HistoryExam::where('user_id', $id)->orderBy('created_at', 'desc')->get();
+            return view('pages.admin.user.history', compact('history'));
+        }catch (\Exception $e){
+            return response()->json([
+                "status" => 500,
+                "errorCode" => 500,
+                "message" => "Lỗi máy chủ!"
+            ]);
+        }
     }
 }

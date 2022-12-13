@@ -11,11 +11,14 @@
                     </div>
                 </div>
                 <div class="page-title-actions" @click="submitFile">
-                                    <span class="btn-icon-wrapper pr-2">
-                                        <p class="btn-icon btn dev-button btn-primary" style="padding: 10px 15px;">
-                                            SAVE
-                                        </p>
-                                    </span>
+                    <span class="btn-icon-wrapper pr-2">
+                        <p
+                            class="btn-icon btn dev-button btn-primary"
+                            style="padding: 10px 15px"
+                        >
+                            SAVE
+                        </p>
+                    </span>
                 </div>
             </div>
         </div>
@@ -44,7 +47,7 @@
                         class="mt-2 text-[15px] font-bold text-center"
                         v-if="file != null"
                     >
-                        Audio Name: {{ file?.name }}
+                        Audio Name: {{ file.name }}
                     </p>
                 </div>
             </div>
@@ -76,7 +79,7 @@
                                 cursor-pointer
                             "
                             @click="deleteQues(data.id)"
-                        >Xóa</span
+                            >Xóa</span
                         >
                     </div>
 
@@ -130,9 +133,8 @@
                                                 class="w-full m-0"
                                             >
                                                 <Input v-model="item.text">
-                                                    <template slot="prepend">{{
-                                                            item.alphabet
-                                                        }}
+                                                    <template slot="prepend"
+                                                        >{{ item.alphabet }}
                                                     </template>
                                                 </Input>
                                             </el-form-item>
@@ -161,13 +163,13 @@
                                 >
                                     <div class="leading-[40px]">
                                         <span class="text-[13px] font-semibold"
-                                        >Level:
+                                            >Level:
                                             {{
                                                 data.level == 1
                                                     ? "Easy"
                                                     : data.level == 2
-                                                        ? "Medium"
-                                                        : "Hard"
+                                                    ? "Medium"
+                                                    : "Hard"
                                             }}</span
                                         >
                                         <star-rating
@@ -198,7 +200,7 @@
                                                     font-semibold
                                                     mr-2
                                                 "
-                                            >Anwser:</span
+                                                >Anwser:</span
                                             >
                                             <el-select
                                                 v-model="data.answer"
@@ -242,7 +244,7 @@
                         type="success"
                         icon="el-icon-circle-plus-outline"
                         plain
-                    >More questions
+                        >More questions
                     </el-button>
                 </div>
             </div>
@@ -253,7 +255,7 @@
 <script>
 import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
-import {Input, Button, Select, Form} from "element-ui";
+import { Input, Button, Select, Form } from "element-ui";
 
 export default {
     components: {
@@ -316,9 +318,9 @@ export default {
                         let result = await baseRequest.post(
                             `/admin/add-audio-and-question-listening`,
                             formData,
-                            {headers}
+                            { headers }
                         );
-                        let {data} = result;
+                        let { data } = result;
                         if (data.status == 200) {
                             this.createQuestion(data.audio_id);
                         }
@@ -440,7 +442,7 @@ export default {
                     `/admin/add-question-to-audio-listening`,
                     dataTemp
                 );
-                let {data} = result;
+                let { data } = result;
                 if (data.status == 200) {
                     this.$message({
                         message: data.message,

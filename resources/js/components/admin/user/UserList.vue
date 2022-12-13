@@ -26,6 +26,13 @@
                 <template slot-scope="scope">
                     <el-button
                         size="mini"
+                        type="info" plain
+                        @click="handleHistory(scope.$index, scope.row)">History
+                    </el-button>
+                    <el-button
+                        size="mini"
+                        type="warning"
+                        plain
                         @click="handleEdit(scope.$index, scope.row)">Edit
                     </el-button>
                     <el-button
@@ -60,6 +67,9 @@ export default {
     methods: {
         handleEdit(index, row) {
             window.location.href = `${$Api.baseUrl}/admin/user/edit/`+row.id;
+        },
+        handleHistory(index, row) {
+            window.location.href = `${$Api.baseUrl}/admin/user/exam-history/`+row.id;
         },
         handleDelete(index, row) {
             this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
