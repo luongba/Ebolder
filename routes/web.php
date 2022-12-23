@@ -45,6 +45,7 @@ Route::prefix('/')->group(function () {
 
     //trang-chu
     Route::get('/', 'HomeController@index')->name('home-page');
+    Route::get('/learn', 'HomeController@learnPage')->name('learn-page');
     Route::prefix('/english-level-test')->group(function () {
         Route::get('/', 'HomeController@testPage')->name('test-page')->middleware('checkLogin');
         Route::get('/Vocabulary', 'HomeController@vocabularyTest')->name('vocabulary-test-page')->middleware('checkLogin');

@@ -77,6 +77,9 @@ Vue.component('reading-test', require('./components/frontend/reading/ReadingTest
 Vue.component('listening-test', require('./components/frontend/listening/ListeningTest.vue').default);
 //error page
 Vue.component('error-page', require('./components/frontend/error/ErrorPage.vue').default);
+
+//learn page 
+Vue.component('learn-page', require('./components/frontend/learn/LearnPage.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

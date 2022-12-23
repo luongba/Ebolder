@@ -82,6 +82,10 @@ class HomeController extends Controller
         }
     }
 
+    public function learnPage(){
+        return view('pages.frontend.learnpage');
+    }
+
 
     public function signIn()
     {

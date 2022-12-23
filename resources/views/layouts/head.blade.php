@@ -17,11 +17,16 @@
     <link rel="stylesheet" href="{{ asset('/styles/css/base.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('/fonts/lexend/Lexend-VariableFont_wght.ttf') }}">
+    <link rel="stylesheet" href="{{ asset('/fonts/Ponny/ponny.ttf') }}">
 </head>
 <style>
     @font-face {
         font-family: lexend;
         src: url('/fonts/lexend/Lexend-VariableFont_wght.ttf');
+    }
+    @font-face {
+        font-family: ponny;
+        src: url('/fonts/Ponny/ponny.ttf');
     }
     
 </style>
