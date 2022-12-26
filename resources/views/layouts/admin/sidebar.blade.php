@@ -11,6 +11,14 @@
                     Dashboard
                 </a>
             </li>
+            <li class="app-sidebar__heading">Lesson</li>
+            <li>
+                <a class="{{ request()->is(['admin/lesson']) ? 'mm-active' : '' }}"
+                   href="{{ route('admin.lesson-list') }}">
+                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
+                    Topic
+                </a>
+            </li>
             {{-- Start Testing --}}
             @if(Gate::check('Vocabulary_List') || Gate::check('Question_Vocabulary_List'))
             <li class="app-sidebar__heading">Vocabulary</li>

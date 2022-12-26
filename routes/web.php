@@ -94,5 +94,10 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/roles', 'Admin\RoleController@index')->name('role-list')->middleware('can:Role_List');
         Route::get('/role/create', 'Admin\RoleController@create')->name('role-create')->middleware('can:Role_Create');
         Route::get('/role/edit/{id}', 'Admin\RoleController@edit')->name('role-edit')->middleware('can:Role_Edit');
+
+        //learn
+        Route::get('/lesson', 'Admin\LearnController@index')->name('lesson-list');
+        Route::get('/lesson/topic-create', 'Admin\LearnController@createTopic')->name('lesson-topic-create');
+        Route::get('/lesson/topic-detai/{id}', 'Admin\LearnController@detailTopic')->name('lesson-topic-detail');
     });
 });

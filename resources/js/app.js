@@ -13,8 +13,7 @@ import {Api, timeWork} from "./utils/Api"
 import {Helper} from "./utils/Helper"
 window.$Api = Api;
 window.$TimeWork = timeWork;
-window.$Helper = Helper
-console.log(timeWork);
+window.$Helper = Helper;
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
@@ -78,8 +77,13 @@ Vue.component('listening-test', require('./components/frontend/listening/Listeni
 //error page
 Vue.component('error-page', require('./components/frontend/error/ErrorPage.vue').default);
 
-//learn page 
+//learn page
 Vue.component('learn-page', require('./components/frontend/learn/LearnPage.vue').default);
+//learn admin page
+Vue.component('learn-list', require('./components/admin/learn/LearnList.vue').default);
+Vue.component('lesson-topic-create', require('./components/admin/learn/TopicCreate.vue').default);
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

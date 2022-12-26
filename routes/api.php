@@ -89,7 +89,11 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/update-role-permision/{id}', 'Admin\RoleController@updateRolePermision')->name('update-role-permision');
         Route::post('/delete-role-permision/{id}', 'Admin\RoleController@deleteRolePermision')->name('delete-role-permision');
 
-
+        //learn admin
+        Route::post('/store-topic-lesson', 'Admin\LearnController@createTopic')->name('store-topic-learn');
+        Route::get('/list-topic-lesson', 'Admin\LearnController@ListTopic')->name('list-topic-lesson');
+        Route::post('/delete-topic-lesson', 'Admin\LearnController@deleteTopic')->name('delete-topic-lesson');
+        Route::post('/create-media-lesson', 'Admin\LearnController@createMedia')->name('create-media-lesson');
 
 
     });
