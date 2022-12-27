@@ -167,7 +167,7 @@ export default {
                 .then(async () => {
                     try {
                         let rs = await baseRequest.post(
-                            `/admin/delete-topic-reading`,
+                            `/admin/delete-topic-lesson`,
                             { id }
                         );
                         if (rs.data.status == 200) {

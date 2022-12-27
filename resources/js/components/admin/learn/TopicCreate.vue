@@ -63,6 +63,12 @@
            bullist numlist outdent indent | removeformat | help',
                 }"
             />
+            <el-button type="primary" class="mt-4" @click="chooseType(1)">
+                Upload Video
+            </el-button>
+            <el-button type="primary" class="mt-4" @click="chooseType(2)">
+                Link Media
+            </el-button>
             <div
                 class="
                     w-full
@@ -78,6 +84,7 @@
                 "
                 style="border-width: 2px"
                 @click="uploadAudio"
+                v-if="typeUpload == 1"
             >
                 <div class="flex flex-col items-center">
                     <i class="el-icon-upload text-[50px]"></i>
@@ -92,9 +99,17 @@
                     </p>
                 </div>
             </div>
+            <div class="mt-4" v-if="typeUpload == 2">
+                <el-input
+                    placeholder="Please enter link..."
+                    v-model="linkMedia"
+                >
+                    <template slot="prepend">Http://</template>
+                </el-input>
+            </div>
 
             <el-button
-                v-if="file != null"
+                v-if="file != null && typeUpload == 1"
                 type="primary"
                 class="mt-4"
                 @click="logicPreviewVideo"
@@ -463,6 +478,9 @@ export default {
             },
             file: null,
             isVideo: false,
+            tempid: null,
+            typeUpload: 0,
+            linkMedia: "",
         };
     },
     methods: {
@@ -472,7 +490,15 @@ export default {
         getChangeAudio(event) {
             console.log(event.target.files[0]);
             let file = event.target.files[0];
-
+            if (
+                parseFloat((file.size * 0.00000095367431640625).toFixed(2)) > 10
+            ) {
+                this.$message({
+                    message: "Vui lòng chọn video dưới 10mb!",
+                    type: "warning",
+                });
+                return;
+            }
             if (event.target.files[0].type == "video/mp4") {
                 this.file = event.target.files[0];
                 let blobURL = URL.createObjectURL(file);
@@ -512,26 +538,55 @@ export default {
             }
             return;
         },
+        chooseType(type) {
+            if (type == 1) {
+                this.typeUpload = 1;
+                this.linkMedia = "";
+            } else {
+                this.typeUpload = 2;
+                document.querySelector("video").pause();
+                this.isVideo = false;
+            }
+        },
         async createTopic() {
             try {
+                let formData = new FormData();
+
                 let dataTemp = {
                     name: this.dataTopic.name,
                     contentReading: this.dataTopic.content,
                     dataQuestion: this.dataQuestion,
+                    linkMedia: this.linkMedia,
                 };
-                let result = await baseRequest.post(
-                    `/admin/add-question-reading`,
-                    dataTemp
-                );
+                let result;
+                if (this.typeUpload == 1) {
+                    formData.append("file", this.file);
+                    formData.append("name", dataTemp.name);
+                    formData.append("contentReading", dataTemp.contentReading);
+                    formData.append("dataQuestion", JSON.stringify(dataTemp.dataQuestion));
+                    const headers = {
+                        "Content-Type": "multipart/form-data",
+                    };
+                    result = await baseRequest.post(
+                        `/admin/create-topic-lesson`,
+                        formData,
+                        { headers }
+                    );
+                } else {
+                    result = await baseRequest.post(
+                        `/admin/create-topic-lesson`,
+                        dataTemp
+                    );
+                }
                 let { data } = result;
                 if (data.status == 200) {
                     this.$message({
                         message: data.message,
                         type: "success",
                     });
-                    setTimeout(() => {
-                        window.location.href = `${$Api.baseUrl}/admin/reading-level-test/topic-list`;
-                    }, 1000);
+                    // setTimeout(() => {
+                    //     window.location.href = `${$Api.baseUrl}/admin/lesson`;
+                    // }, 1000);
                 } else {
                     this.$message({
                         message: data.message,
@@ -565,7 +620,12 @@ export default {
                         }
                     });
                 });
-                if (this.$refs[formNameData]) {
+                if (
+                    this.dataQuestion[0].type == 2 &&
+                    this.dataQuestion.length == 1
+                ) {
+                    return true;
+                } else {
                     this.$refs[formNameData].forEach((item) => {
                         item.validate((valid) => {
                             if (!valid) {
@@ -584,16 +644,15 @@ export default {
         },
         pushQues(type) {
             let isCheck = this.validate("ruleFormData", "ruleFormItem");
-            console.log(isCheck);
             if (isCheck) {
                 if (type == 1) {
                     this.dataQuestion.push({
-                        id: Date.now(),
+                        id: $Helper.randomId(),
                         question: null,
                         level: 1,
                         dataAns: [
                             {
-                                idAns: Date.now() + 123,
+                                idAns: $Helper.randomId(),
                                 text: null,
                                 alphabet: "A",
                             },
@@ -603,7 +662,7 @@ export default {
                     });
                 } else if (type == 2) {
                     this.dataQuestion.push({
-                        id: Date.now(),
+                        id: $Helper.randomId(),
                         question: null,
                         level: 1,
                         dataAns: [],

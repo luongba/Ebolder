@@ -38,7 +38,7 @@ class ReadController extends Controller
                     "answer_id" => $value["answer"]
                 ]);
 
-                foreach ($request->dataQuestion[$key]['dataAns'] as $keyAds => $item) {
+                foreach ( $request->dataQuestion[$key]['dataAns'] as $keyAds => $item) {
                     QuestionReading::find($value['id'])->AnswerReading()->create([
                         "id" => $item['idAns'],
                         "text" => $item['text']
