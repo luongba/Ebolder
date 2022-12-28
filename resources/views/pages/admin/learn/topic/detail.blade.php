@@ -6,7 +6,7 @@
         <!---------------------     End head content section     --------------------->
         <!---------------------     Start main  section     --------------------->
         <div class="tabs-animation">
-            <topic-reading-detail :param="{{  json_encode($id) }}" />
+            <lesson-topic-detail :param="{{  json_encode($id) }}" />
             <!---------------------     Start content  section     --------------------->
 
         </div>

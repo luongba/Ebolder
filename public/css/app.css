@@ -726,6 +726,9 @@ video {
 .w-\[180px\] {
   width: 180px;
 }
+.w-\[20px\] {
+  width: 20px;
+}
 .w-\[500px\] {
   width: 500px;
 }
@@ -852,6 +855,10 @@ video {
 .bg-yellow-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(253 224 71 / var(--tw-bg-opacity));
+}
+.bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 .p-0 {
   padding: 0px;

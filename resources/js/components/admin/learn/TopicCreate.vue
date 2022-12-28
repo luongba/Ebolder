@@ -50,7 +50,7 @@
                 v-model="dataTopic.content"
                 api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
                 :init="{
-                    height: 500,
+                    height: 200,
                     menubar: false,
                     plugins: [
                         'advlist autolink lists link image charmap print preview anchor',

@@ -98,6 +98,6 @@ Route::middleware(['checkLogin'])->group(function () {
         //learn
         Route::get('/lesson', 'Admin\LearnController@index')->name('lesson-list');
         Route::get('/lesson/topic-create', 'Admin\LearnController@createTopic')->name('lesson-topic-create');
-        Route::get('/lesson/topic-detai/{id}', 'Admin\LearnController@detailTopic')->name('lesson-topic-detail');
+        Route::get('/lesson/topic-detail/{id}', 'Admin\LearnController@detailTopic')->name('lesson-topic-detail');
     });
 });

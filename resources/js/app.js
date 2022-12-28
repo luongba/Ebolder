@@ -82,6 +82,8 @@ Vue.component('learn-page', require('./components/frontend/learn/LearnPage.vue')
 //learn admin page
 Vue.component('learn-list', require('./components/admin/learn/LearnList.vue').default);
 Vue.component('lesson-topic-create', require('./components/admin/learn/TopicCreate.vue').default);
+Vue.component('lesson-topic-detail', require('./components/admin/learn/TopicDetail.vue').default);
+
 
 
 /**

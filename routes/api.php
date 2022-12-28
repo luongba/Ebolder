@@ -54,7 +54,6 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-topic-reading', 'Admin\ReadController@deleteTopicApi')->name('delete-topic-question-reading');
         Route::get('/detail-topic-reading/{id}', 'Admin\ReadController@detailTopicData')->name('detail-topic-question-reading');
         Route::post('/delete-question-reading', 'Admin\ReadController@deleteQuestionData')->name('delete-question-reading');
-        Route::post('/delete-question-reading', 'Admin\ReadController@deleteQuestionData')->name('delete-question-reading');
         Route::post('/delete-answer-reading', 'Admin\ReadController@deleteAnswerData')->name('delete-answer-reading');
         Route::post('/add-or-update-question-reading', 'Admin\ReadController@addQuestionSingle')->name('add-or-update-question-reading');
         Route::post('/update-question-reading', 'Admin\ReadController@addQuestionMultiple')->name('update-question-reading');
@@ -93,6 +92,11 @@ Route::middleware('auth:api')->group(function (){
         Route::get('/list-topic-lesson', 'Admin\LearnController@ListTopic')->name('list-topic-lesson');
         Route::post('/delete-topic-lesson', 'Admin\LearnController@deleteTopic')->name('delete-topic-lesson');
         Route::post('/create-topic-lesson', 'Admin\LearnController@createTopicApi')->name('create-topic-lesson');
+        Route::get('/detail-topic-lesson/{id}', 'Admin\LearnController@detailTopicApi')->name('detail-topic-lesson');
+        Route::post('/add-or-update-question-lesson', 'Admin\LearnController@addQuestionSingle')->name('add-or-update-question-lesson');
+        Route::post('/delete-question-lesson', 'Admin\LearnController@deleteQuestionData')->name('delete-question-lesson');
+        Route::post('/update-question-lesson', 'Admin\LearnController@addQuestionMultiple')->name('update-question-lesson');
+
 
 
     });
