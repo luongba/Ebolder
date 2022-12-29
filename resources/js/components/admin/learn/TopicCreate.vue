@@ -563,7 +563,10 @@ export default {
                     formData.append("file", this.file);
                     formData.append("name", dataTemp.name);
                     formData.append("contentReading", dataTemp.contentReading);
-                    formData.append("dataQuestion", JSON.stringify(dataTemp.dataQuestion));
+                    formData.append(
+                        "dataQuestion",
+                        JSON.stringify(dataTemp.dataQuestion)
+                    );
                     const headers = {
                         "Content-Type": "multipart/form-data",
                     };
@@ -584,9 +587,9 @@ export default {
                         message: data.message,
                         type: "success",
                     });
-                    // setTimeout(() => {
-                    //     window.location.href = `${$Api.baseUrl}/admin/lesson`;
-                    // }, 1000);
+                    setTimeout(() => {
+                        window.location.href = `${$Api.baseUrl}/admin/lesson`;
+                    }, 1000);
                 } else {
                     this.$message({
                         message: data.message,
@@ -647,7 +650,7 @@ export default {
             if (isCheck) {
                 if (type == 1) {
                     this.dataQuestion.push({
-                        id: $Helper.randomId(),
+                        id: Date.now() + 1,
                         question: null,
                         level: 1,
                         dataAns: [
@@ -662,7 +665,7 @@ export default {
                     });
                 } else if (type == 2) {
                     this.dataQuestion.push({
-                        id: $Helper.randomId(),
+                        id: Date.now() + 1,
                         question: null,
                         level: 1,
                         dataAns: [],

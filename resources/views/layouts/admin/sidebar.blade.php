@@ -11,6 +11,14 @@
                     Dashboard
                 </a>
             </li>
+            <li class="app-sidebar__heading">Level</li>
+            <li>
+                <a class="{{ request()->is(['admin/level']) ? 'mm-active' : '' }}"
+                   href="{{ route('admin.level-list') }}">
+                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
+                    Level
+                </a>
+            </li>
             <li class="app-sidebar__heading">Lesson</li>
             <li>
                 <a class="{{ request()->is(['admin/lesson']) ? 'mm-active' : '' }}"

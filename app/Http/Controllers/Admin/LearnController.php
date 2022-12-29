@@ -106,8 +106,6 @@ class LearnController extends Controller
 
     public function createTopicApi(Request $request)
     {
-
-
         try {
             DB::beginTransaction();
             $lesson = null;
@@ -130,6 +128,7 @@ class LearnController extends Controller
                         'type' => $value->type
                     ]);
                     foreach ($value->dataAns as $keyAns => $valueAns) {
+
                         $question->AnswerLesson()->create([
                             'id' => $valueAns->idAns,
                             'id_answer' => $valueAns->idAns,
@@ -161,7 +160,8 @@ class LearnController extends Controller
                     foreach ($value['dataAns'] as $keyAns => $valueAns) {
                         $question->AnswerLesson()->create([
                             'id' => $valueAns['idAns'],
-                            'text' => $valueAns['text']
+                            'text' => $valueAns['text'],
+                            'id_answer' =>$valueAns['idAns'],
                         ]);
                     }
                     if ($value['answer']) {
@@ -429,6 +429,6 @@ class LearnController extends Controller
         }
 
     }
-    
+
 
 }

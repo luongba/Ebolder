@@ -96,8 +96,12 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/add-or-update-question-lesson', 'Admin\LearnController@addQuestionSingle')->name('add-or-update-question-lesson');
         Route::post('/delete-question-lesson', 'Admin\LearnController@deleteQuestionData')->name('delete-question-lesson');
         Route::post('/update-question-lesson', 'Admin\LearnController@addQuestionMultiple')->name('update-question-lesson');
-
-
+        //level admin
+        Route::post('/create-level', 'Admin\LevelController@createLevel')->name('create-level');
+        Route::get('/get-all-level', 'Admin\LevelController@getAllLevel')->name('get-all-level');
+        Route::post('/detail-level', 'Admin\LevelController@detailLevel')->name('detail-level');
+        Route::post('/delete-level', 'Admin\LevelController@deleteLevel')->name('delete-level');
+        Route::post('/update-level', 'Admin\LevelController@updateLevel')->name('update-level');
 
     });
 });

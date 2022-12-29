@@ -68,8 +68,6 @@ class RoleController extends Controller
 
     public function createRolePermision(Request $request)
     {
-
-
         try {
             DB::beginTransaction();
             $role = Role::create([

@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div id="background-wrap">
-            <div class="x1">
+            <!-- <div class="x1">
                 <div class="cloud"></div>
             </div>
 
@@ -19,7 +19,7 @@
 
             <div class="x5">
                 <div class="cloud"></div>
-            </div>
+            </div> -->
             <div class="cloud-box" id="cloud-box">
                 <div class="box" id="cloud-1">
                     <div class="box-inner">
@@ -176,7 +176,7 @@ export default {
     position: relative;
     padding: 40px;
     z-index: 6;
-    background: rgba(240, 128, 0, 0.6);
+    background: linear-gradient(96.6deg,rgba(0,115,121,.112) 11.23%,rgba(0,95,100,0) 115.9%);
 
     box-sizing: border-box;
 }

@@ -8,7 +8,7 @@ class Level extends Model
 {
     protected $guarded = [];
 
-//    public function QuestitonGrammar(){
-//        return $this->belongsToMany('App\models\Grammar\QuestionGrammar','question_grammar_relationship' );
-//    }
+    public function Learn(){
+        return $this->belongsToMany('App\models\Learn\Learn','learn_levels');
+    }
 }

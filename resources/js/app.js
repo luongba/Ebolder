@@ -84,6 +84,9 @@ Vue.component('learn-list', require('./components/admin/learn/LearnList.vue').de
 Vue.component('lesson-topic-create', require('./components/admin/learn/TopicCreate.vue').default);
 Vue.component('lesson-topic-detail', require('./components/admin/learn/TopicDetail.vue').default);
 
+//level page
+Vue.component('level-list', require('./components/admin/level/LevelList.vue').default);
+
 
 
 /**

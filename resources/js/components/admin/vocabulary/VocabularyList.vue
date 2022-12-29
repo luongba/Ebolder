@@ -173,13 +173,7 @@ export default {
         },
         async getAllTopic() {
             try {
-                let rs = await baseRequest.get(`/admin/list-topic-vocabulary`, {
-                    headers: {
-                        Authorization:
-                            "Bearer " +
-                            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZWEwMTFmOTQwNDhlODQ1MjUwNDgyNDdkZmU2ZWJkOWY0MDYwMDk5NTdlOTk3ZjY0NmJiYzNkNDA3YmZhYzM1ZGU1ZmZkNTc1NjQzMzIxMGMiLCJpYXQiOjE2Njk4NzcyOTAuODc0NTYsIm5iZiI6MTY2OTg3NzI5MC44NzQ1NjMsImV4cCI6MTcwMTQxMzI5MC44NzAxNDksInN1YiI6IjEiLCJzY29wZXMiOltdfQ.kQZH1zGzHTNGBkkYy_fwggBOL7cRb4rXV14l4yRU4JKFtPBfupcWxMgsn-Bh5BhRsO6gGul80hWnWYfXtqg5nd7ByCGqSWhGQGCVztgA4Rh89ZhGjNl3DQTEWSiAsT2JavaZaDPY8k8uiJ26PNSDHRsHm3yJJaWMVjvTV5MyrbkQw2NC1eIfoVKneGUhyRg9zZqHX0y-KPu19dNiQET__9t6jfsRYoyjQFR4M_aAIqqlxw3NIyGykLHBU3MYVgBjSjdYsyNQr8Zlv1vBiqU4UpDy9bIphtXwXWXba2onFvYgwT8U-ZkPs16oVUqSnYHlF_kIglaQePt76igEGVfOZI6KNdqsF5l8FBEz0McKT9_l3V-vPkAY88dcIgvFnJlseK46SZlJkUwRPRXzulcH3ylIXzx3WH3dYUcldTeiUfvWU6JjNdYcoKFMu2CisYcmKnni7Pw0qd68qDd-nHBPn3E9IX1MfpSokvyxmQGBomFjA32SVnO4uRg_Cb9EiXeJAliHUvms6aR9IfDVnNfvYu8DOcoytIHkp2o2WXaWmgr_UVLx0rTBP807LOUUXsatNu80hZXW1AFyDeKNpPqbij4AEklKruh4y3yxz4Eas-voJzmmw7TmIYVOiE_iBtMW0XIeytEC9IS1VItDlGlyRppPO-T2PQf2XqhaahpqApA",
-                    },
-                });
+                let rs = await baseRequest.get(`/admin/list-topic-vocabulary`);
                 if (rs.data.status == 200) {
                     this.listTopic = rs.data.data;
                 }

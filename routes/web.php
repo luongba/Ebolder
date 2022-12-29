@@ -99,5 +99,8 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/lesson', 'Admin\LearnController@index')->name('lesson-list');
         Route::get('/lesson/topic-create', 'Admin\LearnController@createTopic')->name('lesson-topic-create');
         Route::get('/lesson/topic-detail/{id}', 'Admin\LearnController@detailTopic')->name('lesson-topic-detail');
+
+        //Admin level
+        Route::get('/level', 'Admin\LevelController@index')->name('level-list');
     });
 });
