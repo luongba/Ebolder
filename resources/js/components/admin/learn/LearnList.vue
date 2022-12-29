@@ -23,7 +23,7 @@
                         }}</span>
                     <div class="flex items-center">
                         <a
-                            :href="`${ApiUrl}/admin/reading-level-test/topic-detai/${item.id}`"
+                            :href="`${ApiUrl}/admin/lesson/topic-detail/${item.id}`"
                             class="ml-2"
                         >
                             <el-button

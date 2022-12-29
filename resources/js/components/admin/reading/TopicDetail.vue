@@ -399,7 +399,7 @@ export default {
                         type: "success",
                     });
                     setTimeout(() => {
-                        window.location.href = `${$Api.baseUrl}/admin/reading-level-test/topic-detai/${this.param}`;
+                        window.location.href = `${$Api.baseUrl}/admin/reading-level-test/topic-detail/${this.param}`;
                     }, 1000);
                 } else {
                     this.$message({
