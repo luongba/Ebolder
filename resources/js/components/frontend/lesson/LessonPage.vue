@@ -633,8 +633,8 @@ export default {
                         item.dataChoose.length === item.dataRight.length &&
                         item.dataChoose.every(
                             (value, index) =>
-                                value.radioValue.trim() ===
-                                item.dataRight[index].right_answer.trim()
+                                value.radioValue ===
+                                item.dataRight[index].right_answer
                         );
                     if (sameArray) {
                         this.arrRightAns.push(item);
