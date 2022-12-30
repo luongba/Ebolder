@@ -1,5 +1,60 @@
 <template>
     <div class="wrapper">
+        <transition name="fade">
+            <div class="w-full h-full relative z-10" v-show="show">
+                <div class="absolute w-[70%] bg-box-lesson rounded-md p-4">
+                    <span
+                        class="
+                            absolute
+                            right-[5px]
+                            top-[5px]
+                            text-[20px]
+                            cursor-pointer
+                            text-[#fff]
+                        "
+                        @click="dongMoPopup()"
+                    >
+                        <i class="lnr-cross"></i>
+                    </span>
+                    <div
+                        class="grid grid-cols-2 sm:grid-cols-4 mt-4"
+                        v-if="listLesson.length > 0"
+                    >
+                        <div
+                            class="
+                                p-3
+                                border
+                                text-[#fff] text-[18px]
+                                leading-[1]
+                                hover:bg-white hover:text-[#000]
+                                rounded-sm
+                                mx-2
+                                text-center
+                                font-thin
+                                cursor-pointer
+                            "
+                            v-for="itemLesson in listLesson"
+                            :key="itemLesson.id"
+                        >
+                            {{ itemLesson.name }}
+                        </div>
+                    </div>
+                    <div
+                        v-else
+                        class="
+                            p-3
+                            text-[#fff] text-[18px]
+                            leading-[1]
+                            mx-2
+                            text-center
+                            font-thin
+                        "
+                    >
+                        Không có bài học nào
+                    </div>
+                </div>
+            </div>
+        </transition>
         <div id="background-wrap">
             <!-- <div class="x1">
                 <div class="cloud"></div>
@@ -20,15 +75,29 @@
             <div class="x5">
                 <div class="cloud"></div>
             </div> -->
-            <div class="cloud-box" id="cloud-box">
-                <div class="box" id="cloud-1">
+            <div class="cloud-box" id="cloud-box" v-show="!show">
+                <div
+                    class="box"
+                    :id="`cloud-${listLevel.length - index}`"
+                    v-for="(item, index) in listLevel"
+                    :key="index"
+                >
                     <div class="box-inner">
                         <div class="box-filter"></div>
                         <div class="box-content">
-                            <h2 class="title">Level 1</h2>
+                            <h2 class="title">{{ item.name }}</h2>
                             <div>
-                                <div class="w-full border relative mt-2 mb-4"></div>
-                                <div class="flex justify-center flex-col items-center">
+                                <div
+                                    class="w-full border relative mt-2 mb-4"
+                                ></div>
+                                <div
+                                    class="
+                                        flex
+                                        justify-center
+                                        flex-col
+                                        items-center
+                                    "
+                                >
                                     <div class="mt-2">
                                         <el-tooltip
                                             class="item"
@@ -37,9 +106,23 @@
                                             placement="right"
                                         >
                                             <div
-                                                class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm"
+                                                class="
+                                                    p-3
+                                                    border
+                                                    text-[#fff] text-[20px]
+                                                    leading-[1]
+                                                    hover:bg-white
+                                                    hover:text-[#000]
+                                                    rounded-sm
+                                                "
+                                                @click="openListLesson(item.id)"
                                             >
-                                                <i class="fa-solid fa-graduation-cap"></i>
+                                                <i
+                                                    class="
+                                                        fa-solid
+                                                        fa-graduation-cap
+                                                    "
+                                                ></i>
                                             </div>
                                         </el-tooltip>
                                     </div>
@@ -51,9 +134,24 @@
                                             placement="bottom"
                                         >
                                             <div
-                                                class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 box-disable"
+                                                v-if="item.listening_id != null"
+                                                class="
+                                                    p-3
+                                                    border
+                                                    text-[#fff] text-[20px]
+                                                    leading-[1]
+                                                    hover:bg-white
+                                                    hover:text-[#000]
+                                                    rounded-sm
+                                                    mx-2
+                                                "
+                                                @click="openExamPage('listening',item.listening_id)"
                                             >
-                                                <i class="fa-solid fa-ear-listen"></i>
+                                                <i
+                                                    class="
+                                                        fa-solid fa-ear-listen
+                                                    "
+                                                ></i>
                                             </div>
                                         </el-tooltip>
                                         <el-tooltip
@@ -63,10 +161,26 @@
                                             placement="bottom"
                                         >
                                             <div
-                                                class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                                                v-if="
+                                                    item.reading_id != null
+                                                "
+                                                class="
+                                                    p-3
+                                                    border
+                                                    text-[#fff] text-[20px]
+                                                    leading-[1]
+                                                    hover:bg-white
+                                                    hover:text-[#000]
+                                                    rounded-sm
+                                                    mx-2
+                                                "
+                                                @click="openExamPage('reading',item.reading_id)"
                                             >
                                                 <i
-                                                    class="fa-solid fa-book-open-reader"
+                                                    class="
+                                                        fa-solid
+                                                        fa-book-open-reader
+                                                    "
                                                 ></i>
                                             </div>
                                         </el-tooltip>
@@ -77,9 +191,26 @@
                                             placement="bottom"
                                         >
                                             <div
-                                                class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                                                v-if="
+                                                    item.vocabulary_id != null
+                                                "
+                                                class="
+                                                    p-3
+                                                    border
+                                                    text-[#fff] text-[20px]
+                                                    leading-[1]
+                                                    hover:bg-white
+                                                    hover:text-[#000]
+                                                    rounded-sm
+                                                    mx-2
+                                                "
+                                                @click="openExamPage('vocabulary',item.vocabulary_id)"
                                             >
-                                                <i class="fa-solid fa-spell-check"></i>
+                                                <i
+                                                    class="
+                                                        fa-solid fa-spell-check
+                                                    "
+                                                ></i>
                                             </div>
                                         </el-tooltip>
                                         <el-tooltip
@@ -89,9 +220,22 @@
                                             placement="bottom"
                                         >
                                             <div
-                                                class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                                                v-if="item.grammar_id != null"
+                                                class="
+                                                    p-3
+                                                    border
+                                                    text-[#fff] text-[20px]
+                                                    leading-[1]
+                                                    hover:bg-white
+                                                    hover:text-[#000]
+                                                    rounded-sm
+                                                    mx-2
+                                                "
+                                                @click="openExamPage('grammar',item.grammar_id)"
                                             >
-                                                <i class="fa-solid fa-gears"></i>
+                                                <i
+                                                    class="fa-solid fa-gears"
+                                                ></i>
                                             </div>
                                         </el-tooltip>
                                     </div>
@@ -114,12 +258,18 @@
                 </div> -->
             </div>
         </div>
-        <div class="absolute bottom-[10%] right-[5%] z-10">
+        <div class="absolute bottom-[10%] right-[5%] z-10" v-show="!show">
             <div class="mb-4">
-                <el-button icon="el-icon-arrow-up" circle @click="cloudUp"></el-button>
+                <el-button
+                    :disabled="!(level < listLevel.length)"
+                    icon="el-icon-arrow-up"
+                    circle
+                    @click="cloudUp"
+                ></el-button>
             </div>
             <div>
                 <el-button
+                    :disabled="!(level > 1)"
                     icon="el-icon-arrow-down"
                     circle
                     @click="cloudDown"
@@ -129,21 +279,31 @@
     </div>
 </template>
 <script>
+import baseRequest from "../../../utils/baseRequest";
 import "./learn.css";
 export default {
     data() {
         return {
             level: 1,
+            show: false,
+            listLevel: [],
+            listLesson: [],
         };
     },
     methods: {
         cloudUp() {
-            this.level++;
-            this.scrollToCloud();
+            if (this.level < this.listLevel.length) {
+                this.level++;
+                this.scrollToCloud();
+            }
+            return;
         },
         cloudDown() {
-            this.level--;
-            this.scrollToCloud();
+            if (this.level > 1) {
+                this.level--;
+                this.scrollToCloud();
+            }
+            return;
         },
         scrollToCloud() {
             let cloud = document.getElementById(`cloud-${this.level}`);
@@ -153,6 +313,56 @@ export default {
                 inline: "center",
             });
         },
+        dongMoPopup() {
+            this.show = !this.show;
+        },
+        openListLesson(id) {
+            this.show = true;
+            this.listLesson = this.listLevel.find(
+                (item) => item.id === id
+            ).lessons;
+        },
+        async getAllLevel() {
+            try {
+                let rs = await baseRequest.get(`/admin/get-all-level`);
+                if (rs.data.status == 200) {
+                    this.listLevel = rs.data.data
+                        .map((item) => ({
+                            id: item.id,
+                            name: item.name,
+                            listening_id: item.listening_id,
+                            reading_id: item.reading_id,
+                            vocabulary_id: item.vocabulary_id,
+                            grammar_id: item.grammar_id,
+                            lessons: item.learn || [],
+                        }))
+                        .reverse();
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        openExamPage(type, id){
+            switch(type){
+                case 'reading': 
+                    window.location.href = `${$Api.baseUrl}/english-level-test/Reading?testId=${id}`;
+                    break;
+                case 'listening':
+                    window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${id}`;
+                    break;
+                case 'vocabulary':
+                    window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${id}`;
+                    break;
+                case 'grammar':
+                    window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${id}`;
+                    break;
+                default: return;
+            }
+            
+        }
+    },
+    created() {
+        this.getAllLevel();
     },
     mounted() {
         setTimeout(() => {
@@ -176,7 +386,11 @@ export default {
     position: relative;
     padding: 40px;
     z-index: 6;
-    background: linear-gradient(96.6deg,rgba(0,115,121,.112) 11.23%,rgba(0,95,100,0) 115.9%);
+    background: linear-gradient(
+        96.6deg,
+        rgba(0, 115, 121, 0.112) 11.23%,
+        rgba(0, 95, 100, 0) 115.9%
+    );
 
     box-sizing: border-box;
 }
@@ -215,5 +429,29 @@ export default {
 .box-disable:hover {
     background: transparent;
     color: #fff;
+}
+
+.bg-box-lesson {
+    width: 80%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* z-index: 6; */
+    background: linear-gradient(
+        96.6deg,
+        rgba(0, 115, 121, 0.112) 11.23%,
+        rgba(0, 95, 100, 0) 115.9%
+    );
+    box-sizing: border-box;
+}
+.bg-blur {
+    background: rgba(0, 0, 0, 0.3);
+}
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
 }
 </style>

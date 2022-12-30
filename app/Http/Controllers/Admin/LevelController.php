@@ -43,7 +43,7 @@ class LevelController extends Controller
     public function getAllLevel(Request $request){
         try {
             DB::beginTransaction();
-            $level = Level::all();
+            $level = Level::with('Learn')->get();
             DB::commit();
             return response()->json([
                 "status" => 200,

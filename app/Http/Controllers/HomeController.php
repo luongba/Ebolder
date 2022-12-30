@@ -27,44 +27,83 @@ class HomeController extends Controller
         return view('pages.frontend.testpage');
     }
 
-    public function vocabularyTest()
+    public function vocabularyTest(Request $request)
     {
-        $randomVocabulary = Vocabulary::all()->random(1)->first();
-        $vocabulary = $randomVocabulary->with(['QuestitonVocabulary' => function ($question) {
-            $question->with('answers');
-            $question->with('right_answers');
-        }])->inRandomOrder()->first();
-//        dd($vocabulary);
-        return view('pages.frontend.vocabulary', compact('vocabulary'));
+
+        if (isset($request->id)) {
+            $randomVocabulary = Vocabulary::whereId($request->id)->first();
+            $vocabulary = $randomVocabulary->with(['QuestitonVocabulary' => function ($question) {
+                $question->with('answers');
+                $question->with('right_answers');
+            }])->inRandomOrder()->first();
+            return view('pages.frontend.vocabulary', compact('vocabulary'));
+        } else {
+
+            $randomVocabulary = Vocabulary::all()->random(1)->first();
+            $vocabulary = $randomVocabulary->with(['QuestitonVocabulary' => function ($question) {
+                $question->with('answers');
+                $question->with('right_answers');
+            }])->inRandomOrder()->first();
+            return view('pages.frontend.vocabulary', compact('vocabulary'));
+        }
     }
 
-    public function grammarTest()
+    public function grammarTest(Request $request)
     {
-        $randomGrammar = Grammar::all()->random(1)->first();
-        $grammar = $randomGrammar->with(['QuestitonGrammar' => function ($question) {
-            $question->with('answers')->with('right_answers')->get();
-        }])->inRandomOrder()->first();
-        return view('pages.frontend.grammar', compact('grammar'));
+        if (isset($request->id)) {
+            $randomGrammar = Grammar::whereId($request->id)->first();
+            $grammar = $randomGrammar->with(['QuestitonGrammar' => function ($question) {
+                $question->with('answers')->with('right_answers')->get();
+            }])->inRandomOrder()->first();
+            return view('pages.frontend.grammar', compact('grammar'));
+        } else {
+
+            $randomGrammar = Grammar::all()->random(1)->first();
+            $grammar = $randomGrammar->with(['QuestitonGrammar' => function ($question) {
+                $question->with('answers')->with('right_answers')->get();
+            }])->inRandomOrder()->first();
+            return view('pages.frontend.grammar', compact('grammar'));
+        }
     }
 
-    public function readingTest()
+    public function readingTest(Request $request)
     {
-        $randomReading = Reading::all()->random(1)->first();
-        $reading = $randomReading->with(['QuestionReading' => function ($question) {
-            $question->with('AnswerReading')->with('RightAnswerReading')->get();
-        }])->inRandomOrder()->first();
-        return view('pages.frontend.read', compact('reading'));
+        if (isset($request->id)) {
+            $randomReading = Reading::whereId($request->id)->first();
+            $reading = $randomReading->with(['QuestionReading' => function ($question) {
+                $question->with('AnswerReading')->with('RightAnswerReading')->get();
+            }])->inRandomOrder()->first();
+            return view('pages.frontend.read', compact('reading'));
+        } else {
+            $randomReading = Reading::all()->random(1)->first();
+            $reading = $randomReading->with(['QuestionReading' => function ($question) {
+                $question->with('AnswerReading')->with('RightAnswerReading')->get();
+            }])->inRandomOrder()->first();
+            return view('pages.frontend.read', compact('reading'));
+        }
+
     }
 
-    public function listeningTest()
+    public function listeningTest(Request $request)
     {
-        $listening = Listening::all()->random(1)->first();;
-        $listening = $listening::with(['TopicAudioListen' => function ($audio) {
-            $audio->with(['questionListening' => function ($question) {
-                $question->with('answerListening')->with('rightAnswers');
-            }]);
-        }])->inRandomOrder()->first();
-        return view('pages.frontend.listening', compact('listening'));
+        if (isset($request->id)) {
+            $listening = Listening::whereId($request->id)->first();;
+            $listening = $listening::with(['TopicAudioListen' => function ($audio) {
+                $audio->with(['questionListening' => function ($question) {
+                    $question->with('answerListening')->with('rightAnswers');
+                }]);
+            }])->inRandomOrder()->first();
+            return view('pages.frontend.listening', compact('listening'));
+        } else {
+            $listening = Listening::all()->random(1)->first();;
+            $listening = $listening::with(['TopicAudioListen' => function ($audio) {
+                $audio->with(['questionListening' => function ($question) {
+                    $question->with('answerListening')->with('rightAnswers');
+                }]);
+            }])->inRandomOrder()->first();
+            return view('pages.frontend.listening', compact('listening'));
+        }
+
     }
 
     public function saveHistory(Request $request)
@@ -82,7 +121,8 @@ class HomeController extends Controller
         }
     }
 
-    public function learnPage(){
+    public function learnPage()
+    {
         return view('pages.frontend.learnpage');
     }
 

@@ -183,19 +183,6 @@
     cursor: pointer;
 }
 
-.box:before,
-.box:after {
-    content: "•";
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    font-size: 14px;
-    color: #fff ;
-    border: 3px solid #fff ;
-    line-height: 12px;
-    top: 5px;
-    text-align: center;
-}
 .box:before {
     left: 5px;
 }

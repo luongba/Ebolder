@@ -165,7 +165,7 @@
                                 :style="
                                     answerData[index].radioValue == item.id
                                         ? `color: #5B5EA6`
-                                        : 'color: #999'
+                                        : 'color: #eee'
                                 "
                             >
                                 {{ item.text }}
@@ -525,7 +525,7 @@ export default {
 </script>
 <style>
 .border-answer {
-    border-color: #999;
+    border-color: #eee;
 }
 .border-answer.active {
     border-color: #5b5ea6;
@@ -547,7 +547,7 @@ export default {
     border-width: 3px;
 }
 .text-answer {
-    color: #999;
+    color: #eee;
 }
 .text-answer.active {
     color: #5b5ea6;

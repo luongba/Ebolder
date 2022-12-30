@@ -93,9 +93,9 @@ export default {
 <style scoped></style>
 <style scoped>
 .change-my-color path {
-    fill: #666;
+    fill: #eee;
 }
 .change-my-color.active path {
-    fill: #5b5ea6;
+    fill: #eee;
 }
 </style>
