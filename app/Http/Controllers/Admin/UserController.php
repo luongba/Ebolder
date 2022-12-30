@@ -150,7 +150,7 @@ class UserController extends Controller
     }
     public function history($id){
         try {
-            $history = HistoryExam::where('user_id', $id)->orderBy('created_at', 'desc')->get();
+            $history = HistoryExam::where('user_id', $id)->orderBy('created_at', 'desc')->take(20)->get();
             return view('pages.admin.user.history', compact('history'));
         }catch (\Exception $e){
             return response()->json([

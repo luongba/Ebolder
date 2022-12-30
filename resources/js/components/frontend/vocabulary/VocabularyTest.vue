@@ -5,7 +5,7 @@
             <div class="bg-blur-f px-[48px] py-[48px]" v-show="isShowLabel">
                 <h2
                     class="
-                        text-[36px]
+                        text-[28px]
                         font-semibold
                         leading-[120%]
                         text-center
@@ -58,7 +58,7 @@
                 >
                     <h2
                         class="
-                            text-[36px]
+                            text-[28px]
                             font-semibold
                             leading-[120%]
                             text-center

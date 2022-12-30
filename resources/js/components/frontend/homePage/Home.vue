@@ -31,7 +31,7 @@
                 class="py-[134px] px-[134px] max-w-[1206px] bg-blur-f mx-auto mt-4 relative"
             >
                 <div class="grid grid-cols-5 gap-4">
-                    <h2 class="text-[32px] font-semibold leading-[120%] col-span-3">
+                    <h2 class="text-[28px] font-semibold leading-[120%] col-span-3">
                         <p>Học tiếng anh bước khởi đầu để bước chân ra ngoài thế giới</p>
                     </h2>
                     <ul class="col-span-2">

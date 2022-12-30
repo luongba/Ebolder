@@ -16,6 +16,8 @@
                     >
                         <i class="lnr-cross"></i>
                     </span>
+                    <h2 class="text-[26px] text-center text-white uppercase">Danh sách bài học</h2>
+                    <div data-v-61751496="" class="w-full border relative mt-2 mb-4"></div>
                     <div
                         class="grid grid-cols-2 sm:grid-cols-4 mt-4"
                         v-if="listLesson.length > 0"
@@ -32,7 +34,9 @@
                                 text-center
                                 font-thin
                                 cursor-pointer
+                                
                             "
+                            @click="openLesson(itemLesson.id)"
                             v-for="itemLesson in listLesson"
                             :key="itemLesson.id"
                         >
@@ -359,6 +363,9 @@ export default {
                 default: return;
             }
             
+        },
+        openLesson(id){
+            window.location.href = `${$Api.baseUrl}/lesson/${id}`;
         }
     },
     created() {

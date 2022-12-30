@@ -53,6 +53,7 @@ Route::prefix('/')->group(function () {
         Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page')->middleware('checkLogin');
         Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page')->middleware('checkLogin');
     });
+    Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page');
 
 
 
@@ -102,5 +103,6 @@ Route::middleware(['checkLogin'])->group(function () {
 
         //Admin level
         Route::get('/level', 'Admin\LevelController@index')->name('level-list');
+
     });
 });

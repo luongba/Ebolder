@@ -738,6 +738,9 @@ video {
 .w-\[70\%\] {
   width: 70%;
 }
+.w-\[100px\] {
+  width: 100px;
+}
 .max-w-\[1206px\] {
   max-width: 1206px;
 }
@@ -925,6 +928,10 @@ video {
   padding-left: 128px;
   padding-right: 128px;
 }
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
 .py-\[16px\] {
   padding-top: 16px;
   padding-bottom: 16px;
@@ -986,8 +993,8 @@ video {
 .text-\[50px\] {
   font-size: 50px;
 }
-.text-\[36px\] {
-  font-size: 36px;
+.text-\[28px\] {
+  font-size: 28px;
 }
 .text-\[24px\] {
   font-size: 24px;
@@ -998,11 +1005,11 @@ video {
 .text-\[42px\] {
   font-size: 42px;
 }
-.text-\[32px\] {
-  font-size: 32px;
-}
 .text-\[40px\] {
   font-size: 40px;
+}
+.text-\[26px\] {
+  font-size: 26px;
 }
 .text-\[18px\] {
   font-size: 18px;

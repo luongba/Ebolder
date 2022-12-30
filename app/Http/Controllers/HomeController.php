@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\models\Grammar\Grammar;
+use App\models\Learn\Learn;
 use App\models\Listen\Listening;
 use App\models\Read\Reading;
 use App\models\User\HistoryExam;
@@ -31,11 +32,10 @@ class HomeController extends Controller
     {
 
         if (isset($request->id)) {
-            $randomVocabulary = Vocabulary::whereId($request->id)->first();
-            $vocabulary = $randomVocabulary->with(['QuestitonVocabulary' => function ($question) {
+            $vocabulary = Vocabulary::whereId($request->id)->with(['QuestitonVocabulary' => function ($question) {
                 $question->with('answers');
                 $question->with('right_answers');
-            }])->inRandomOrder()->first();
+            }])->first();
             return view('pages.frontend.vocabulary', compact('vocabulary'));
         } else {
 
@@ -51,10 +51,9 @@ class HomeController extends Controller
     public function grammarTest(Request $request)
     {
         if (isset($request->id)) {
-            $randomGrammar = Grammar::whereId($request->id)->first();
-            $grammar = $randomGrammar->with(['QuestitonGrammar' => function ($question) {
+            $grammar = Grammar::whereId($request->id)->with(['QuestitonGrammar' => function ($question) {
                 $question->with('answers')->with('right_answers')->get();
-            }])->inRandomOrder()->first();
+            }])->first();
             return view('pages.frontend.grammar', compact('grammar'));
         } else {
 
@@ -69,10 +68,9 @@ class HomeController extends Controller
     public function readingTest(Request $request)
     {
         if (isset($request->id)) {
-            $randomReading = Reading::whereId($request->id)->first();
-            $reading = $randomReading->with(['QuestionReading' => function ($question) {
+            $reading = Reading::whereId($request->id)->with(['QuestionReading' => function ($question) {
                 $question->with('AnswerReading')->with('RightAnswerReading')->get();
-            }])->inRandomOrder()->first();
+            }])->first();
             return view('pages.frontend.read', compact('reading'));
         } else {
             $randomReading = Reading::all()->random(1)->first();
@@ -87,12 +85,11 @@ class HomeController extends Controller
     public function listeningTest(Request $request)
     {
         if (isset($request->id)) {
-            $listening = Listening::whereId($request->id)->first();;
-            $listening = $listening::with(['TopicAudioListen' => function ($audio) {
+            $listening = Listening::whereId($request->id)->with(['TopicAudioListen' => function ($audio) {
                 $audio->with(['questionListening' => function ($question) {
                     $question->with('answerListening')->with('rightAnswers');
                 }]);
-            }])->inRandomOrder()->first();
+            }])->first();
             return view('pages.frontend.listening', compact('listening'));
         } else {
             $listening = Listening::all()->random(1)->first();;
@@ -145,6 +142,14 @@ class HomeController extends Controller
     public function recoverPassword()
     {
         return view('pages.recover-password');
+    }
+
+    public function lessonPage($id){
+        
+        $lesson = Learn::whereId($id)->with(['QuestionLesson' => function ($question) {
+            $question->with('AnswerLesson')->with('RightAnswerLesson')->get();
+        }])->first();
+        return view('pages.frontend.lessonpage', compact('lesson'));
     }
 
 
