@@ -1,6 +1,6 @@
 @extends('welcome')
 @section('content')
-    <div class="app-main__inner">
+    <div class="app-main__inner static lg:relative">
         <!---------------------     Start head content  section     --------------------->
 
         <!---------------------     End head content section     --------------------->

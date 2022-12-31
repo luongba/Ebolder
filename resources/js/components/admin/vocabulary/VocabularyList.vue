@@ -52,6 +52,8 @@
                     </div>
                 </div>
             </transition>
+            <LoadingVue v-if="isLoading" />
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div
                     class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
@@ -99,8 +101,12 @@
 
 <script>
 import baseRequest from "../../../utils/baseRequest";
+import LoadingVue from "../loading/Loading.vue";
 
 export default {
+    components: {
+        LoadingVue
+    },
     data() {
         return {
             show: false,
@@ -126,6 +132,8 @@ export default {
                     },
                 ],
             },
+            isLoading: false,
+            
         };
     },
     computed: {},
@@ -173,11 +181,18 @@ export default {
         },
         async getAllTopic() {
             try {
+                this.isLoading = true;
                 let rs = await baseRequest.get(`/admin/list-topic-vocabulary`);
                 if (rs.data.status == 200) {
+                    setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                     this.listTopic = rs.data.data;
                 }
             } catch (e) {
+                setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                 console.log(e);
             }
         },

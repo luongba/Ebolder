@@ -1,6 +1,6 @@
 @extends('welcome')
 @section('content')
-    <div class="app-main__inner">
+    <div class="app-main__inner static lg:relative">
 {{--        <a href="{{route('admin.vocabulary-question-create')}}" class="font-semibold text-[16px] text-[#3f6ad8] cursor-pointer mr-2">CREATE</a>--}}
         <!---------------------     Start head content  section     --------------------->
         <div class="app-page-title">

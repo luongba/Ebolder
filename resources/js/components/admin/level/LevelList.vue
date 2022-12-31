@@ -175,6 +175,7 @@
                     </div>
                 </div>
             </transition>
+            <LoadingVue v-if="isLoading" />
             <div class="flex items-center justify-center mb-4">
                 <el-button
                     icon="el-icon-plus"
@@ -257,9 +258,11 @@
 <script>
 import baseRequest from "../../../utils/baseRequest";
 import Editor from "@tinymce/tinymce-vue";
+import LoadingVue from "../loading/Loading.vue";
 export default {
     components: {
         Editor,
+        LoadingVue,
     },
     data() {
         return {
@@ -327,6 +330,7 @@ export default {
             listTopicLesson: [],
             state: "create",
             idTemp: null,
+            isLoading: false,
         };
     },
     computed: {},
@@ -414,8 +418,12 @@ export default {
         },
         async getAllLevel() {
             try {
+                this.isLoading = true;
                 let rs = await baseRequest.get(`/admin/get-all-level`);
                 if (rs.data.status == 200) {
+                    setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                     this.listLevel = rs.data.data
                         .map((item) => ({
                             id: item.id,
@@ -424,6 +432,9 @@ export default {
                         .reverse();
                 }
             } catch (e) {
+                setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                 console.log(e);
             }
         },

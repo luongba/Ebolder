@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <LoadingVue v-if="isLoading" />
         <div class="flex flex-col justify-center w-full items-center">
             <div
                 class="card w-full mt-3 mb-2"
@@ -42,7 +43,11 @@
 
                 <div class="card-body hidden">
                     <div class="w-full">
-                        <el-form ref="ruleFormData" :model="data" class="w-full">
+                        <el-form
+                            ref="ruleFormData"
+                            :model="data"
+                            class="w-full"
+                        >
                             <el-form-item
                                 prop="question"
                                 :rules="[
@@ -77,14 +82,17 @@
                                             :rules="[
                                                 {
                                                     required: true,
-                                                    message: 'Please enter your answer',
+                                                    message:
+                                                        'Please enter your answer',
                                                 },
                                             ]"
                                             class="w-full m-0"
                                         >
                                             <el-input v-model="item.text">
                                                 <template slot="prepend">{{
-                                                    alphabet[index].toUpperCase()
+                                                    alphabet[
+                                                        index
+                                                    ].toUpperCase()
                                                 }}</template>
                                             </el-input>
                                         </el-form-item>
@@ -132,17 +140,30 @@
                                         prop="right_answers.answer_id"
                                         class="w-full m-0"
                                     >
-                                        <span class="text-[13px] font-semibold mr-2"
+                                        <span
+                                            class="
+                                                text-[13px]
+                                                font-semibold
+                                                mr-2
+                                            "
                                             >Anwser:</span
                                         >
                                         <el-select
-                                            v-model="data.right_answers.answer_id"
+                                            v-model="
+                                                data.right_answers.answer_id
+                                            "
                                             placeholder="Select"
                                         >
                                             <el-option
-                                                v-for="(item, index) in data.answers"
+                                                v-for="(
+                                                    item, index
+                                                ) in data.answers"
                                                 :key="item.id"
-                                                :label="alphabet[index].toUpperCase()"
+                                                :label="
+                                                    alphabet[
+                                                        index
+                                                    ].toUpperCase()
+                                                "
                                                 :value="item.id"
                                             >
                                             </el-option>
@@ -151,7 +172,9 @@
                                 </div>
                             </div>
 
-                            <div class="mx-auto my-4 lg:my-2 flex justify-center">
+                            <div
+                                class="mx-auto my-4 lg:my-2 flex justify-center"
+                            >
                                 <el-button
                                     v-if="data.answers.length < maxAns"
                                     @click="pushAns(data.id)"
@@ -206,7 +229,15 @@
                                     :read-only="true"
                                 />
                             </div>
-                            <div class="justify-end mt-3 ml-auto flex items-center">
+                            <div
+                                class="
+                                    justify-end
+                                    mt-3
+                                    ml-auto
+                                    flex
+                                    items-center
+                                "
+                            >
                                 <span class="text-[13px] font-semibold mr-2"
                                     >Anwser:</span
                                 >
@@ -220,7 +251,13 @@
             </div>
         </div>
         <p
-            class="text-[14px] text-blue-500 uppercase font-bold cursor-pointer mb-4"
+            class="
+                text-[14px] text-blue-500
+                uppercase
+                font-bold
+                cursor-pointer
+                mb-4
+            "
             @click="takeMore(5)"
             v-if="take < count"
         >
@@ -232,10 +269,12 @@
 <script>
 import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
+import LoadingVue from "../loading/Loading.vue";
 
 export default {
     components: {
         StarRating,
+        LoadingVue,
     },
     data() {
         return {
@@ -244,6 +283,7 @@ export default {
             maxAns: 4,
             take: 5,
             count: null,
+            isLoading: false,
         };
     },
     computed: {},
@@ -283,21 +323,30 @@ export default {
         },
         async deleteAns(idQues, idAns) {
             try {
-                let res = await baseRequest.post(`/admin/delete-answer-vocabulary`, {
-                    id: idAns,
-                });
+                let res = await baseRequest.post(
+                    `/admin/delete-answer-vocabulary`,
+                    {
+                        id: idAns,
+                    }
+                );
                 let { data } = res;
                 if (data.status == 200) {
                     this.getAllData();
                 } else {
-                    let dataQues = this.dataQuestion.find((item) => item.id == idQues);
+                    let dataQues = this.dataQuestion.find(
+                        (item) => item.id == idQues
+                    );
                     dataQues.answers = dataQues.answers.filter(
                         (item) => item.id != idAns
                     );
                 }
             } catch (e) {
-                let dataQues = this.dataQuestion.find((item) => item.id == idQues);
-                dataQues.answers = dataQues.answers.filter((item) => item.id != idAns);
+                let dataQues = this.dataQuestion.find(
+                    (item) => item.id == idQues
+                );
+                dataQues.answers = dataQues.answers.filter(
+                    (item) => item.id != idAns
+                );
             }
             // let dataQues = this.dataQuestion.find((item) => item.id == idQues);
             // dataQues.dataAns = dataQues.dataAns.filter(
@@ -351,14 +400,21 @@ export default {
         },
         async getAllData() {
             try {
+                this.isLoading = true;
                 let { data } = await baseRequest.get(
                     `/admin/list-question-vocabulary?take=${this.take}`
                 );
                 if (data.status == 200) {
+                    setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                     this.count = data.count;
                     this.dataQuestion = data.data;
                 }
             } catch (error) {
+                setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                 console.log(error);
             }
         },

@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="container">
+            <LoadingVue v-if="isLoading" />
             <transition name="fade">
                 <div class="w-full h-full" v-if="show">
                     <div
@@ -101,7 +102,9 @@
                     v-for="item in listTopic"
                     :key="item.id"
                 >
-                    <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
+                    <span class="w-[60%] overflow-hidden mr-2">{{
+                        item.name
+                    }}</span>
                     <div class="flex items-center">
                         <el-button
                             size="small"
@@ -161,8 +164,12 @@
 
 <script>
 import baseRequest from "../../../utils/baseRequest";
+import LoadingVue from "../loading/Loading.vue";
 
 export default {
+    components: {
+        LoadingVue,
+    },
     data() {
         return {
             show: false,
@@ -188,6 +195,7 @@ export default {
                     },
                 ],
             },
+            isLoading: false,
         };
     },
     computed: {},
@@ -235,13 +243,18 @@ export default {
         },
         async getAllTopic() {
             try {
-                let rs = await baseRequest.get(
-                    `/admin/topic-list-listening`
-                );
+                this.isLoading = true;
+                let rs = await baseRequest.get(`/admin/topic-list-listening`);
                 if (rs.data.status == 200) {
+                    setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                     this.listTopic = rs.data.data;
                 }
             } catch (e) {
+                setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                 console.log(e);
             }
         },

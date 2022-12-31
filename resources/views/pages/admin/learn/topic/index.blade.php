@@ -1,6 +1,6 @@
 @extends('welcome')
 @section('content')
-    <div class="app-main__inner">
+    <div class="app-main__inner static lg:relative">
         <!---------------------     Start head content  section     --------------------->
         <div class="app-page-title">
             <div class="page-title-wrapper">

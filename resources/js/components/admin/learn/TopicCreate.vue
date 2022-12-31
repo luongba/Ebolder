@@ -1,5 +1,6 @@
 <template>
     <div>
+        <LoadingVue v-if="isLoading" />
         <div class="app-page-title flex justify-between items-center">
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
@@ -11,18 +12,16 @@
                     </div>
                 </div>
             </div>
-            <p
-                href=""
-                class="
-                    font-semibold
-                    text-[16px] text-[#3f6ad8]
-                    cursor-pointer
-                    mr-2
-                "
-                @click="createTopic"
-            >
-                SAVE
-            </p>
+            <div class="page-title-actions" @click="createTopic">
+                <span class="btn-icon-wrapper pr-2">
+                    <p
+                        class="btn-icon btn dev-button btn-primary"
+                        style="padding: 10px 15px"
+                    >
+                        SAVE
+                    </p>
+                </span>
+            </div>
         </div>
         <div class="container">
             <div class="mb-4">
@@ -445,6 +444,7 @@ import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 import { Input, Button, Select, Form } from "element-ui";
 import Editor from "@tinymce/tinymce-vue";
+import LoadingVue from "../loading/Loading.vue";
 
 export default {
     components: {
@@ -454,6 +454,7 @@ export default {
         Select,
         Form,
         Editor,
+        LoadingVue,
     },
     data() {
         return {
@@ -481,6 +482,7 @@ export default {
             tempid: null,
             typeUpload: 0,
             linkMedia: "",
+            isLoading: false,
         };
     },
     methods: {
@@ -549,55 +551,61 @@ export default {
             }
         },
         async createTopic() {
-            try {
-                let formData = new FormData();
+            let isCheck = this.validate("ruleFormData", "ruleFormItem");
+            if (isCheck) {
+                try {
+                    let formData = new FormData();
 
-                let dataTemp = {
-                    name: this.dataTopic.name,
-                    contentReading: this.dataTopic.content,
-                    dataQuestion: this.dataQuestion,
-                    linkMedia: this.linkMedia,
-                };
-                let result;
-                if (this.typeUpload == 1) {
-                    formData.append("file", this.file);
-                    formData.append("name", dataTemp.name);
-                    formData.append("contentReading", dataTemp.contentReading);
-                    formData.append(
-                        "dataQuestion",
-                        JSON.stringify(dataTemp.dataQuestion)
-                    );
-                    const headers = {
-                        "Content-Type": "multipart/form-data",
+                    let dataTemp = {
+                        name: this.dataTopic.name,
+                        contentReading: this.dataTopic.content,
+                        dataQuestion: this.dataQuestion,
+                        linkMedia: this.linkMedia,
                     };
-                    result = await baseRequest.post(
-                        `/admin/create-topic-lesson`,
-                        formData,
-                        { headers }
-                    );
-                } else {
-                    result = await baseRequest.post(
-                        `/admin/create-topic-lesson`,
-                        dataTemp
-                    );
+                    let result;
+                    if (this.typeUpload == 1) {
+                        formData.append("file", this.file);
+                        formData.append("name", dataTemp.name);
+                        formData.append(
+                            "contentReading",
+                            dataTemp.contentReading
+                        );
+                        formData.append(
+                            "dataQuestion",
+                            JSON.stringify(dataTemp.dataQuestion)
+                        );
+                        const headers = {
+                            "Content-Type": "multipart/form-data",
+                        };
+                        result = await baseRequest.post(
+                            `/admin/create-topic-lesson`,
+                            formData,
+                            { headers }
+                        );
+                    } else {
+                        result = await baseRequest.post(
+                            `/admin/create-topic-lesson`,
+                            dataTemp
+                        );
+                    }
+                    let { data } = result;
+                    if (data.status == 200) {
+                        this.$message({
+                            message: data.message,
+                            type: "success",
+                        });
+                        setTimeout(() => {
+                            window.location.href = `${$Api.baseUrl}/admin/lesson`;
+                        }, 1000);
+                    } else {
+                        this.$message({
+                            message: data.message,
+                            type: "error",
+                        });
+                    }
+                } catch (error) {
+                    console.log("🚀 ~ ~ error", error);
                 }
-                let { data } = result;
-                if (data.status == 200) {
-                    this.$message({
-                        message: data.message,
-                        type: "success",
-                    });
-                    setTimeout(() => {
-                        window.location.href = `${$Api.baseUrl}/admin/lesson`;
-                    }, 1000);
-                } else {
-                    this.$message({
-                        message: data.message,
-                        type: "error",
-                    });
-                }
-            } catch (error) {
-                console.log("🚀 ~ ~ error", error);
             }
         },
 
@@ -755,10 +763,11 @@ export default {
         },
     },
 
-    // created() {
-    //     setTimeout(() => {
-    //         this.isLoading = false;
-    //     }, 3000);
-    // },
+    created() {
+        this.isLoading = true;
+        setTimeout(() => {
+            this.isLoading = false;
+        }, 1500);
+    },
 };
 </script>

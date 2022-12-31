@@ -4,23 +4,52 @@
             <transition name="fade">
                 <div class="w-full h-full" v-if="show">
                     <div
-                        class="absolute inset-0 bg-blur flex items-center justify-center"
+                        class="
+                            absolute
+                            inset-0
+                            bg-blur
+                            flex
+                            items-center
+                            justify-center
+                        "
                     >
-                        <div class="w-[95%] md:w-[70%] bg-white shadow-sm px-4 py-4">
+                        <div
+                            class="
+                                w-[95%]
+                                md:w-[70%]
+                                bg-white
+                                shadow-sm
+                                px-4
+                                py-4
+                            "
+                        >
                             <div class="py-2 relative">
                                 <h1 class="font-semibold uppercase text-[14px]">
                                     Create new Topic
                                 </h1>
                                 <span
-                                    class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer"
+                                    class="
+                                        absolute
+                                        right-[5px]
+                                        top-[5px]
+                                        text-[20px]
+                                        cursor-pointer
+                                    "
                                     @click="show = !show"
                                 >
                                     <i class="lnr-cross"></i>
                                 </span>
                             </div>
-                            <el-form :model="topicData" :rules="rules" ref="ruleForm">
+                            <el-form
+                                :model="topicData"
+                                :rules="rules"
+                                ref="ruleForm"
+                            >
                                 <div class="my-2">
-                                    <el-form-item label="Name Topic" prop="name">
+                                    <el-form-item
+                                        label="Name Topic"
+                                        prop="name"
+                                    >
                                         <el-input
                                             placeholder="Name Topic"
                                             v-model="topicData.name"
@@ -28,7 +57,10 @@
                                     </el-form-item>
                                 </div>
                                 <div class="">
-                                    <el-form-item label="Description" prop="description">
+                                    <el-form-item
+                                        label="Description"
+                                        prop="description"
+                                    >
                                         <el-input
                                             type="textarea"
                                             placeholder="Description"
@@ -52,13 +84,27 @@
                     </div>
                 </div>
             </transition>
+            <LoadingVue v-if="isLoading" />
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div
-                    class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
+                    class="
+                        bg-white
+                        shadow-sm
+                        flex
+                        items-center
+                        justify-between
+                        cursor-pointer
+                        py-4
+                        px-4
+                        text-[14px]
+                        font-semibold
+                    "
                     v-for="item in listTopic"
                     :key="item.id"
                 >
-                    <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
+                    <span class="w-[60%] overflow-hidden mr-2">{{
+                        item.name
+                    }}</span>
                     <div class="flex items-center">
                         <el-button
                             size="small"
@@ -83,11 +129,30 @@
                     </div>
                 </div>
                 <div
-                    class="bg-white shadow-sm flex items-center justify-center cursor-pointer py-4 px-4 text-[14px] font-semibold"
+                    class="
+                        bg-white
+                        shadow-sm
+                        flex
+                        items-center
+                        justify-center
+                        cursor-pointer
+                        py-4
+                        px-4
+                        text-[14px]
+                        font-semibold
+                    "
                     @click="show = !show"
                 >
                     <div class="flex items-center">
-                        <div class="w-[32px] h-[32px] flex items-center justify-center">
+                        <div
+                            class="
+                                w-[32px]
+                                h-[32px]
+                                flex
+                                items-center
+                                justify-center
+                            "
+                        >
                             <i class="el-icon-plus text-[20px]"></i>
                         </div>
                     </div>
@@ -98,9 +163,13 @@
 </template>
 
 <script>
+import LoadingVue from "../loading/Loading.vue";
 import baseRequest from "../../../utils/baseRequest";
 
 export default {
+    components: {
+        LoadingVue,
+    },
     data() {
         return {
             show: false,
@@ -126,6 +195,7 @@ export default {
                     },
                 ],
             },
+            isLoading: false,
         };
     },
     computed: {},
@@ -173,13 +243,19 @@ export default {
         },
         async getAllTopic() {
             try {
-                let rs = await baseRequest.get(
-                    `/admin/list-topic-grammar`
-                );
+                this.isLoading = true;
+                let rs = await baseRequest.get(`/admin/list-topic-grammar`);
                 if (rs.data.status == 200) {
+                    setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
+
                     this.listTopic = rs.data.data;
                 }
             } catch (e) {
+                setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                 console.log(e);
             }
         },
@@ -197,7 +273,9 @@ export default {
                     try {
                         let rs = await baseRequest.post(
                             `/admin/delete-topic-grammar`,
-                            { id }
+                            {
+                                id,
+                            }
                         );
                         if (rs.data.status == 200) {
                             this.getAllTopic();

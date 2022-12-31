@@ -1,6 +1,6 @@
 @extends('welcome')
 @section('content')
-    <div class="app-main__inner">
+    <div class="app-main__inner static lg:relative">
         @if (session('token'))
             <input type="text" id="section" value="{{ session('token') }}" hidden>
         @endif

@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div class="w-full h-full">
         <div class="container">
+            <LoadingVue v-if="isLoading" />
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div
                     class="
@@ -19,8 +20,8 @@
                     :key="item.id"
                 >
                     <span class="w-[60%] overflow-hidden mr-2">{{
-                            item.name
-                        }}</span>
+                        item.name
+                    }}</span>
                     <div class="flex items-center">
                         <a
                             :href="`${ApiUrl}/admin/lesson/topic-detail/${item.id}`"
@@ -68,10 +69,13 @@
 
 <script>
 import baseRequest from "../../../utils/baseRequest";
+import LoadingVue from "../loading/Loading.vue";
+
 import Editor from "@tinymce/tinymce-vue";
 export default {
     components: {
         Editor,
+        LoadingVue,
     },
     data() {
         return {
@@ -100,6 +104,7 @@ export default {
             },
             baseApi: $Api.baseUrl,
             isplay: false,
+            isLoading: false,
         };
     },
     computed: {},
@@ -140,17 +145,21 @@ export default {
         },
         async getAllTopic() {
             try {
-                let rs = await baseRequest.get(
-                    `/admin/list-topic-lesson`
-                );
+                this.isLoading = true;
+                let rs = await baseRequest.get(`/admin/list-topic-lesson`);
                 if (rs.data.status == 200) {
-                    console.log(rs.data.data);
+                    setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                     this.listTopic = rs.data.data.map((item) => ({
                         id: item.id,
                         name: item.name,
                     }));
                 }
             } catch (e) {
+                setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                 console.log(e);
             }
         },

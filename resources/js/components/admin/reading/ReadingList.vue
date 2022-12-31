@@ -1,6 +1,8 @@
 <template>
     <div>
         <div class="container">
+            <LoadingVue v-if="isLoading" />
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div
                     class="
@@ -69,9 +71,12 @@
 <script>
 import baseRequest from "../../../utils/baseRequest";
 import Editor from "@tinymce/tinymce-vue";
+import LoadingVue from "../loading/Loading.vue";
+
 export default {
     components: {
         Editor,
+        LoadingVue
     },
     data() {
         return {
@@ -100,6 +105,7 @@ export default {
             },
             baseApi: $Api.baseUrl,
             isplay: false,
+            isLoading: false,
         };
     },
     computed: {},
@@ -140,10 +146,12 @@ export default {
         },
         async getAllTopic() {
             try {
-                let rs = await baseRequest.get(
-                    `/admin/list-topic-reading`
-                );
+                this.isLoading = true;
+                let rs = await baseRequest.get(`/admin/list-topic-reading`);
                 if (rs.data.status == 200) {
+                    setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                     console.log(rs.data.data);
                     this.listTopic = rs.data.data.map((item) => ({
                         id: item.id,
@@ -151,6 +159,9 @@ export default {
                     }));
                 }
             } catch (e) {
+                setTimeout(() => {
+                    this.isLoading = false;
+                }, 1000);
                 console.log(e);
             }
         },
