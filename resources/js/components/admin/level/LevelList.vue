@@ -358,6 +358,7 @@ export default {
                                 type: "success",
                                 message: "Add successful topics",
                             });
+                            this.getAllLevel();
                         } else {
                             this.$message({
                                 type: "error",
