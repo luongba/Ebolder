@@ -7,6 +7,7 @@ use App\models\Read\AnswerReading;
 use Illuminate\Http\Request;
 use App\models\Read\Reading;
 use App\models\Read\QuestionReading;
+use Illuminate\Support\Facades\DB;
 
 class ReadController extends Controller
 {
@@ -22,35 +23,42 @@ class ReadController extends Controller
 
     public function storeTopic(Request $request)
     {
+
         try {
+            DB::beginTransaction();
             $read = Reading::create([
                 "name" => $request->name,
                 "content" => $request->contentReading,
             ]);
             foreach ($request->dataQuestion as $key => $value) {
-                $res = QuestionReading::create([
-                    "id" => $value['id'],
-                    "reading_id" => $read->id,
+                $res = $read->QuestionReading()->create([
                     "question" => $value['question'],
-                    "level" => $value['level']
+                    "level" => $value['level'],
+                    'type' => $value['type']
                 ]);
-                $res->RightAnswerReading()->create([
-                    "answer_id" => $value["answer"]
-                ]);
+                if ($value['answer']) {
+                    $res->RightAnswerReading()->create([
+                        "answer_id" => $value["answer"]
+                    ]);
+                }
 
-                foreach ( $request->dataQuestion[$key]['dataAns'] as $keyAds => $item) {
-                    QuestionReading::find($value['id'])->AnswerReading()->create([
+
+                foreach ($value['dataAns'] as $keyAds => $item) {
+                    $res->AnswerReading()->create([
                         "id" => $item['idAns'],
+                        'answer_id' => $item['idAns'],
                         "text" => $item['text']
                     ]);
                 }
             }
+            DB::commit();
             return [
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Thêm topic thành công !"
             ];
         } catch (\Exception $e) {
+            DB::rollBack();
             return [
                 "status" => 400,
                 "errorCode" => 400,
@@ -202,56 +210,79 @@ class ReadController extends Controller
                 $question->update(
                     [
                         "question" => $request->question,
-                        "level" => $request->level
+                        "level" => $request->level,
+                        'type' => $request->type,
                     ]
                 );
-                foreach ($request->dataAns as $keyAds => $item) {
-                    $ans = $question->AnswerReading()->find($item['id']);
-                    if (isset($ans)) {
-                        $ans->update([
-                            "text" => $item['text']
-                        ]);
-                    } else {
-                        $question->AnswerReading()->create([
-                            "id" => $item['id'],
-                            "text" => $item['text']
-                        ]);
+                if ($request->type == 1) {
+                    foreach ($request->dataAns as $keyAds => $item) {
+                        $ans = $question->AnswerReading()->find($item['id']);
+                        if (isset($ans)) {
+                            $ans->update([
+                                "text" => $item['text']
+                            ]);
+                        } else {
+                            $question->AnswerReading()->create([
+                                "id" => $item['id'],
+                                "text" => $item['text'],
+                                "answer_id" => $request->right_answers
+                            ]);
+                        }
+
+
                     }
 
+                    $question->RightAnswerReading()->update([
+                        "answer_id" => $request->right_answers
+                    ]);
+                } else {
+                    $question->AnswerReading()->delete();
+                    foreach ($request->dataAns as $keyAds => $item) {
+                        $question->AnswerReading()->create([
+                            "id" => $item['id'],
+                            "answer_id" => $item['id'],
+                            "text" => $item['text']
+                        ]);
 
+
+                    }
                 }
-                $question->RightAnswerReading()->update([
-                    "answer_id" => $request->right_answers
-                ]);
                 return response()->json([
                     "status" => 200,
                     "errorCode" => 0,
                     "message" => "Sửa question thành công !"
                 ]);
+
             } else {
                 $questionCreate = QuestionReading::create([
                     'id' => $request->id,
                     'reading_id' => $request->reading_id,
                     'question' => $request->question,
-                    'level' => $request->level
+                    'level' => $request->level,
+                    'type' => $request->type,
                 ]);
                 foreach ($request->dataAns as $keyAds => $item) {
                     $questionCreate->AnswerReading()->create([
                         "id" => $item['id'],
+                        "answer_id" => $item['id'],
                         "text" => $item['text']
                     ]);
 
 
                 }
-                $questionCreate->RightAnswerReading()->create([
-                    "answer_id" => $request->right_answers
-                ]);
+                if ($request->type == 1) {
+                    $questionCreate->RightAnswerReading()->create([
+                        "answer_id" => $request->right_answers
+                    ]);
+                }
                 return response()->json([
                     "status" => 200,
                     "errorCode" => 0,
                     "message" => "Thêm question thành công !"
                 ]);
             }
+
+
         } catch (\Exception $e) {
             return response()->json([
                 "status" => 400,
@@ -259,35 +290,38 @@ class ReadController extends Controller
                 "message" => "Thao tác thất bại !"
             ]);
         }
-
-
     }
+
 
     public function addQuestionMultiple(Request $request)
     {
 
+
         try {
             $read = Reading::whereId($request->id)->first();
+            $dataQuestion = ($request->dataQuestion);
             $read->update([
                 "name" => $request->name,
                 "content" => $request->contentReading,
             ]);
-            foreach ($request->dataQuestion as $key => $value) {
+            foreach ($dataQuestion as $key => $value) {
                 $check = QuestionReading::whereId($value['id'])->exists();
                 if (!$check) {
-                    $res = QuestionReading::create([
-                        "id" => $value['id'],
-                        "reading_id" => $read->id,
+                    $res = $read->QuestionReading()->create([
                         "question" => $value['question'],
-                        "level" => $value['level']
+                        "level" => $value['level'],
+                        'type' => $value['type']
                     ]);
-                    $res->RightAnswerReading()->create([
-                        "answer_id" => $value["answer_id"]
-                    ]);
-                    foreach ($request->dataQuestion[$key]['dataAns'] as $keyAds => $item) {
+                    if ($value['answer']) {
+                        $res->RightAnswerReading()->create([
+                            "answer_id" => $value["answer"]
+                        ]);
+                    }
+                    foreach ($value['dataAns'] as $keyAds => $item) {
                         QuestionReading::whereId($value['id'])->first()->AnswerReading()->create([
                             "id" => $item['idAns'],
-                            "text" => $item['text']
+                            "text" => $item['text'],
+                            'answer_id' => $item['idAns'],
                         ]);
                     }
                 } else {
@@ -295,24 +329,30 @@ class ReadController extends Controller
                         "id" => $value['id'],
                         "reading_id" => $read->id,
                         "question" => $value['question'],
-                        "level" => $value['level']
+                        "level" => $value['level'],
+                        "type" => $value['type']
                     ]);
+
                     QuestionReading::whereId($value['id'])->first()->RightAnswerReading()->update([
-                        "answer_id" => $value["answer_id"]
+                        "answer_id" => $value["answer"]
                     ]);
-                    foreach ($request->dataQuestion[$key]['dataAns'] as $keyAds => $item) {
-                        QuestionReading::whereId($value['id'])->first()->AnswerReading()->find($item['idAns'])->update([
-                            "text" => $item['text']
-                        ]);
+                    QuestionReading::whereId($value['id'])->first()->AnswerReading()->delete();
+                    foreach ($dataQuestion[$key]['dataAns'] as $keyAds => $item) {
+                        QuestionReading::whereId($value['id'])->first()->AnswerReading()
+                            ->create([
+                                'id' => $item['idAns'],
+                                'answer_id' => $item['idAns'],
+                                'text' => $item['text']
+                            ]);
                     }
                 }
             }
 
-                return response()->json([
-                    "status" => 200,
-                    "errorCode" => 0,
-                    "message" => "thao tác thành công !"
-                ]);
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "message" => "thao tác thành công !"
+            ]);
 
         } catch (\Exception $e) {
             return response()->json([

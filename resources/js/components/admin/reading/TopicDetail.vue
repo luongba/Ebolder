@@ -91,15 +91,20 @@
                         </div>
                     </div>
 
-                    <div class="card-body hidden">
+                    <div class="card-body hidden" v-if="data.type == 1">
                         <div class="w-full">
-                            <el-form ref="ruleFormData" :model="data" class="w-full">
+                            <el-form
+                                ref="ruleFormData"
+                                :model="data"
+                                class="w-full"
+                            >
                                 <el-form-item
                                     prop="question"
                                     :rules="[
                                         {
                                             required: true,
-                                            message: 'Please enter your question',
+                                            message:
+                                                'Please enter your question',
                                         },
                                     ]"
                                     class="w-full m-0"
@@ -114,7 +119,7 @@
 
                                 <div
                                     class="w-full mt-2"
-                                    v-for="(item, indexAms) in data.dataAns"
+                                    v-for="item in data.dataAns"
                                     :key="item.idAns"
                                 >
                                     <div class="mt-4 flex items-start">
@@ -136,9 +141,9 @@
                                                 class="w-full m-0"
                                             >
                                                 <Input v-model="item.text">
-                                                    <template slot="prepend">{{
-                                                        alphabet[indexAms].toUpperCase()
-                                                    }}</template>
+                                                    <template slot="prepend"
+                                                    >{{ item.alphabet }}
+                                                    </template>
                                                 </Input>
                                             </el-form-item>
                                         </el-form>
@@ -148,22 +153,31 @@
                                             class="ml-2"
                                             type="danger"
                                             icon="el-icon-delete"
-                                            @click="deleteAns(data, item.idAns)"
+                                            @click="
+                                                deleteAns(data.id, item.idAns)
+                                            "
                                             plain
                                             circle
                                         ></el-button>
                                     </div>
                                 </div>
-                                <div class="flex justify-between items-start mt-4">
+                                <div
+                                    class="
+                                        flex
+                                        justify-between
+                                        items-start
+                                        mt-4
+                                    "
+                                >
                                     <div class="leading-[40px]">
                                         <span class="text-[13px] font-semibold"
-                                            >Level:
+                                        >Level:
                                             {{
                                                 data.level == 1
                                                     ? "Easy"
                                                     : data.level == 2
-                                                    ? "Medium"
-                                                    : "Hard"
+                                                        ? "Medium"
+                                                        : "Hard"
                                             }}</span
                                         >
                                         <star-rating
@@ -180,24 +194,30 @@
                                             :rules="[
                                                 {
                                                     required: true,
-                                                    message: 'Please select answer',
+                                                    message:
+                                                        'Please select answer',
                                                     trigger: 'blur',
                                                 },
                                             ]"
-                                            prop="answer_id"
+                                            prop="answer"
                                             class="w-full m-0"
                                         >
-                                            <span class="text-[13px] font-semibold mr-2"
-                                                >Anwser:</span
+                                            <span
+                                                class="
+                                                    text-[13px]
+                                                    font-semibold
+                                                    mr-2
+                                                "
+                                            >Anwser:</span
                                             >
                                             <el-select
-                                                v-model="data.answer_id"
+                                                v-model="data.answer"
                                                 placeholder="Select"
                                             >
                                                 <el-option
-                                                    v-for="(item, ind) in data.dataAns"
+                                                    v-for="item in data.dataAns"
                                                     :key="item.idAns"
-                                                    :label="alphabet[ind].toUpperCase()"
+                                                    :label="item.alphabet"
                                                     :value="item.idAns"
                                                 >
                                                 </el-option>
@@ -205,7 +225,15 @@
                                         </el-form-item>
                                     </div>
                                 </div>
-                                <div class="mx-auto my-4 lg:my-2 flex justify-center">
+                                <div
+                                    class="
+                                        mx-auto
+                                        my-4
+                                        lg:my-2
+                                        flex
+                                        justify-center
+                                    "
+                                >
                                     <el-button
                                         v-if="data.dataAns.length < maxAns"
                                         @click="pushAns(data.id)"
@@ -216,17 +244,11 @@
                             </el-form>
                         </div>
                     </div>
-                    <div class="card-body block">
+                    <div class="card-body block" v-if="data.type == 1">
                         <div class="w-full">
                             <p class="text-[15px] font-bold">
                                 {{ data.question }}
                             </p>
-                            <!-- <input
-                            type="text"
-                            class="h-[32px] border-none outline-none w-full"
-                            placeholder="Nhập câu hỏi..."
-                            v-model="dataQuestion[data.id - 1].question"
-                        /> -->
 
                             <div
                                 class="w-full mt-2"
@@ -234,9 +256,11 @@
                                 :key="item.idAns"
                             >
                                 <div class="mt-3 flex items-center">
-                                    <span class="text-[15px] font-semibold"></span>
+                                    <span
+                                        class="text-[15px] font-semibold"
+                                    ></span>
                                     <span class="uppercase mr-2 font-bold"
-                                        >{{ alphabet[index] }}:</span
+                                    >{{ alphabet[index] }}:</span
                                     >
                                     {{ item.text }}
                                 </div>
@@ -244,13 +268,13 @@
                             <div class="flex justify-between items-center mt-4">
                                 <div>
                                     <span class="text-[13px] font-semibold my-2"
-                                        >Level:
+                                    >Level:
                                         {{
                                             data.level == 1
                                                 ? "Easy"
                                                 : data.level == 2
-                                                ? "Medium"
-                                                : "Hard"
+                                                    ? "Medium"
+                                                    : "Hard"
                                         }}</span
                                     >
                                     <star-rating
@@ -262,31 +286,197 @@
                                         :read-only="true"
                                     />
                                 </div>
-                                <div class="justify-end mt-3 ml-auto flex items-center">
+                                <div
+                                    class="
+                                        justify-end
+                                        mt-3
+                                        ml-auto
+                                        flex
+                                        items-center
+                                    "
+                                >
                                     <span class="text-[13px] font-semibold mr-2"
-                                        >Anwser:</span
+                                    >Anwser:</span
                                     >
                                     <span class="uppercase mr-2 font-bold">{{
-                                        alphabet[
-                                            getAlphabet(data.dataAns, data.answer_id)
-                                        ]
-                                    }}</span>
+                                            alphabet[
+                                                getAlphabet(
+                                                    data.dataAns,
+                                                    data.answer
+                                                )
+                                                ]
+                                        }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body hidden" v-if="data.type == 2">
+                        <div class="w-full">
+                            <el-form
+                                ref="ruleFormData"
+                                :model="data"
+                                class="w-full"
+                            >
+                                <el-form-item
+                                    prop="question"
+                                    :rules="[
+                                        {
+                                            required: true,
+                                            message:
+                                                'Please enter your question',
+                                        },
+                                    ]"
+                                    class="w-full m-0"
+                                >
+                                    <el-input
+                                        type="textarea"
+                                        placeholder="Nhập câu hỏi..."
+                                        v-model="data.question"
+                                        rows="3"
+                                    ></el-input>
+                                </el-form-item>
+                                <div class="mt-4">
+                                    <el-button
+                                        icon="el-icon-search"
+                                        type="primary"
+                                        plain
+                                        @click="renderAnswer(data, index)"
+                                    >
+                                        Xuất câu trả lời
+                                    </el-button>
+                                </div>
+
+                                <div
+                                    class="w-full mt-2"
+                                    v-for="(item, indexAns) in data.dataAns"
+                                    :key="item.idAns"
+                                >
+                                    <div class="mt-4 flex items-start">
+                                        <el-form
+                                            ref="ruleFormItem"
+                                            :model="item"
+                                            :rules="rules"
+                                            class="w-full"
+                                        >
+                                            <el-form-item
+                                                prop="text"
+                                                :rules="[
+                                                    {
+                                                        required: true,
+                                                        message:
+                                                            'Please enter your answer',
+                                                    },
+                                                ]"
+                                                class="w-full m-0"
+                                            >
+                                                <Input v-model="item.text">
+                                                    <template slot="prepend"
+                                                    >{{ indexAns + 1 }}
+                                                    </template>
+                                                </Input>
+                                            </el-form-item>
+                                        </el-form>
+
+                                    </div>
+                                </div>
+                                <div
+                                    class="
+                                        flex
+                                        justify-between
+                                        items-start
+                                        mt-4
+                                    "
+                                >
+                                    <div class="leading-[40px]">
+                                        <span class="text-[13px] font-semibold"
+                                        >Level:
+                                            {{
+                                                data.level == 1
+                                                    ? "Easy"
+                                                    : data.level == 2
+                                                        ? "Medium"
+                                                        : "Hard"
+                                            }}</span
+                                        >
+                                        <star-rating
+                                            :star-size="20"
+                                            :animate="true"
+                                            v-model="data.level"
+                                            :show-rating="false"
+                                            :max-rating="3"
+                                        />
+                                    </div>
+                                </div>
+                            </el-form>
+                        </div>
+                    </div>
+                    <div class="card-body block" v-if="data.type == 2">
+                        <div class="w-full">
+                            <p
+                                class="text-[15px] font-bold flex"
+                                v-html="customQuestion(data.question)"
+                            ></p>
+
+                            <div
+                                class="w-full mt-2"
+                                v-for="(item, index) in data.dataAns"
+                                :key="item.idAns"
+                            >
+                                <div class="mt-3 flex items-center">
+                                    <span
+                                        class="text-[15px] font-semibold"
+                                    ></span>
+                                    <span class="uppercase mr-2 font-bold"
+                                    >{{ index + 1 }}:</span
+                                    >
+                                    {{ item.text }}
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-4">
+                                <div>
+                                    <span class="text-[13px] font-semibold my-2"
+                                    >Level:
+                                        {{
+                                            data.level == 1
+                                                ? "Easy"
+                                                : data.level == 2
+                                                    ? "Medium"
+                                                    : "Hard"
+                                        }}</span
+                                    >
+                                    <star-rating
+                                        :star-size="20"
+                                        :animate="false"
+                                        v-model="data.level"
+                                        :show-rating="false"
+                                        :max-rating="3"
+                                        :read-only="true"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="w-full my-4 flex justify-between">
-                    <el-button
-                        @click="pushQues()"
-                        type="success"
-                        icon="el-icon-circle-plus-outline"
-                        plain
+                <div class="my-4 w-full flex justify-between">
+                    <el-popover placement="right" width="400" trigger="click">
+                        <p class="mb-2 text-[14px] text-bold">Dạng câu hỏi:</p>
+                        <el-button type="primary" @click="pushQues(1)" round
+                        >Chọn đáp án</el-button
+                        >
+                        <el-button type="primary" @click="pushQues(2)" round
+                        >Điền vào chỗ trống</el-button
+                        >
+                        <el-button
+                            type="success"
+                            icon="el-icon-circle-plus-outline"
+                            plain
+                            slot="reference"
                         >More questions
-                    </el-button>
+                        </el-button>
+                    </el-popover>
                     <el-button @click="saveChangeTopic" type="primary" plain
-                        >Save
+                    >Save
                     </el-button>
                 </div>
             </div>
@@ -318,19 +508,6 @@ export default {
             },
 
             dataQuestion: [
-                {
-                    id: Date.now(),
-                    question: null,
-                    level: 1,
-                    dataAns: [
-                        {
-                            idAns: Date.now() + 123,
-                            text: null,
-                            alphabet: "A",
-                        },
-                    ],
-                    answer: null,
-                },
             ],
             alphabet: ["a", "b", "c", "d", "e", "f", "g", "h"],
             maxAns: 4,
@@ -360,24 +537,72 @@ export default {
                         name: data.name,
                         content: data.content,
                     };
-                    this.dataQuestion = data.question_reading?.map((item) => {
+                    console.log(data)
+                    let temp = data.question_reading?.map((item) => {
                         return {
                             id: item.id,
                             question: item.question,
                             level: item.level,
-                            dataAns: item.answer_reading.map((itemAns) => {
+                            type: item.type,
+                            answers: item.answer_reading.map((itemAns) => {
                                 return {
-                                    idAns: itemAns.id,
+                                    id: itemAns.answer_id,
                                     text: itemAns.text,
+                                    question_id: itemAns.question_id,
                                 };
                             }),
-                            answer_id: item.right_answer_reading.answer_id,
+                            right_answer: item.right_answer_reading
+                                ? item.right_answer_reading.answer_id
+                                : null,
                         };
                     });
+                    console.log("temp",temp);
+                    this.dataQuestion = temp.map((question) => ({
+                        id: question.id,
+                        question: question.question,
+                        level: question.level,
+                        dataAns: question.answers.map((ans, index) => ({
+                            idAns: ans.id,
+                            text: ans.text,
+                            question_id: ans.question_id,
+                            alphabet: this.alphabet[index].toLocaleUpperCase(),
+                        })),
+                        answer: question.right_answer,
+                        type: question.type,
+                    }));
                 }
             } catch (e) {
                 console.log(e);
             }
+        },
+        customQuestion(text) {
+            if (text) {
+                text = text.replaceAll(
+                    "#",
+                    '<span class="bg-gray-200 w-[20px] px-4 py-2 block mx-2"></span>'
+                );
+            }
+            return text;
+        },
+        renderAnswer(data, index) {
+            let question = data.question;
+            if (question != null) {
+                let sum = 0;
+                this.dataQuestion[index].dataAns = [];
+                if (question.length > 0) {
+                    for (let i = 0; i < question.length; i++) {
+                        if (question[i] === "#") {
+                            sum++;
+                            this.dataQuestion[index].dataAns.push({
+                                alphabet: sum,
+                                idAns: $Helper.randomId(),
+                                text: null,
+                            });
+                        }
+                    }
+                }
+            }
+            return;
         },
         async saveChangeTopic() {
             try {
@@ -421,45 +646,69 @@ export default {
             });
         },
         validate(formNameItem, formNameData) {
-            let isCheck = true;
-            this.$refs[formNameItem].forEach((item) => {
-                item.validate((valid) => {
-                    if (!valid) {
-                        isCheck = false;
-                    } else {
-                        console.log("error submit!!");
-                        return false;
-                    }
+            if (this.$refs[formNameItem] && this.$refs[formNameData]) {
+                let isCheck = true;
+
+                this.$refs[formNameItem].forEach((item) => {
+                    item.validate((valid) => {
+                        if (!valid) {
+                            isCheck = false;
+                        } else {
+                            console.log("error submit!!");
+                            return false;
+                        }
+                    });
                 });
-            });
-            this.$refs[formNameData].forEach((item) => {
-                item.validate((valid) => {
-                    if (!valid) {
-                        isCheck = false;
-                    } else {
-                        console.log("error submit!!");
-                        return false;
-                    }
-                });
-            });
-            return isCheck;
+                if (
+                    this.dataQuestion[0].type == 2 &&
+                    this.dataQuestion.length == 1
+                ) {
+                    return true;
+                } else {
+                    this.$refs[formNameData].forEach((item) => {
+                        item.validate((valid) => {
+                            if (!valid) {
+                                isCheck = false;
+                            } else {
+                                console.log("error submit!!");
+                                return false;
+                            }
+                        });
+                    });
+                }
+                return isCheck;
+            } else {
+                return true;
+            }
         },
-        pushQues() {
+        pushQues(type) {
             let isCheck = this.validate("ruleFormData", "ruleFormItem");
             if (isCheck) {
-                this.dataQuestion.push({
-                    id: Date.now(),
-                    question: null,
-                    level: 1,
-                    dataAns: [
-                        {
-                            idAns: Date.now() + 123,
-                            text: null,
-                            alphabet: "A",
-                        },
-                    ],
-                    answer: null,
-                });
+                if (type == 1) {
+                    this.dataQuestion.push({
+                        id: Date.now() + 1,
+                        question: null,
+                        level: 1,
+                        dataAns: [
+                            {
+                                idAns: $Helper.randomId(),
+                                text: null,
+                                alphabet: "A",
+                            },
+                        ],
+                        answer: null,
+                        type: type,
+                    });
+                } else if (type == 2) {
+                    this.dataQuestion.push({
+                        id: Date.now() + 1,
+                        question: null,
+                        level: 1,
+                        dataAns: [],
+                        answer: null,
+                        type: type,
+                    });
+                }
                 setTimeout(() => {
                     this.EditQuestion(this.dataQuestion.length - 1);
                 }, 100);
@@ -491,16 +740,30 @@ export default {
                         dataQues.dataAns = dataQues.dataAns.filter(
                             (item) => item.idAns != idAns
                         );
-                        let data = dataQues.dataAns;
-                        let temp = [];
-                        for (let i = 0; i < data.length; i++) {
-                            temp.push({
-                                idAns: data[i].idAns,
-                                text: data[i].text,
-                                alphabet: this.alphabet[i].toUpperCase(),
-                            });
+                        if (dataQues.type == 1) {
+                            let data = dataQues.dataAns;
+                            let temp = [];
+                            for (let i = 0; i < data.length; i++) {
+                                temp.push({
+                                    idAns: data[i].idAns,
+                                    text: data[i].text,
+                                    alphabet: this.alphabet[i].toUpperCase(),
+                                });
+                            }
+                            dataQues.dataAns = temp;
+                        }else if (dataQues.type == 2) {
+                            let data = dataQues.dataAns;
+                            let temp = [];
+                            for (let i = 0; i < data.length; i++) {
+                                temp.push({
+                                    idAns: data[i].idAns,
+                                    text: data[i].text,
+                                    alphabet: i + 1,
+                                });
+                            }
+                            dataQues.dataAns = temp;
                         }
-                        dataQues.dataAns = temp;
+
                     } else {
                         this.$message({
                             message: data.message,
@@ -616,17 +879,15 @@ export default {
                     let data = this.dataQuestion.find((item) => {
                         return item.id == id;
                     });
-                    console.log(
-                        "🚀 ~ file: TopicDetail.vue ~ line 676 ~ SaveQuestion ~ data",
-                        data
-                    );
+
 
                     let temp = {
                         reading_id: this.param,
-                        right_answers: data.answer_id || "",
+                        right_answers: data.answer || "",
                         id: data.id || null,
                         question: data.question || "",
                         level: data.level,
+                        type: data.type,
                         dataAns: data.dataAns.map((itemAns) => {
                             return {
                                 id: itemAns.idAns || "",

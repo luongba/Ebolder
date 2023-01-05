@@ -1,6 +1,6 @@
 <template>
     <div>
-        <LoadingVue v-if="isLoading" />
+        <LoadingVue v-if="isLoading"/>
         <div class="app-page-title flex justify-between items-center">
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
@@ -146,7 +146,7 @@
                                 cursor-pointer
                             "
                             @click="deleteQues(data.id)"
-                            >Xóa</span
+                        >Xóa</span
                         >
                     </div>
 
@@ -201,7 +201,7 @@
                                             >
                                                 <Input v-model="item.text">
                                                     <template slot="prepend"
-                                                        >{{ item.alphabet }}
+                                                    >{{ item.alphabet }}
                                                     </template>
                                                 </Input>
                                             </el-form-item>
@@ -230,13 +230,13 @@
                                 >
                                     <div class="leading-[40px]">
                                         <span class="text-[13px] font-semibold"
-                                            >Level:
+                                        >Level:
                                             {{
                                                 data.level == 1
                                                     ? "Easy"
                                                     : data.level == 2
-                                                    ? "Medium"
-                                                    : "Hard"
+                                                        ? "Medium"
+                                                        : "Hard"
                                             }}</span
                                         >
                                         <star-rating
@@ -267,7 +267,7 @@
                                                     font-semibold
                                                     mr-2
                                                 "
-                                                >Anwser:</span
+                                            >Anwser:</span
                                             >
                                             <el-select
                                                 v-model="data.answer"
@@ -364,23 +364,13 @@
                                             >
                                                 <Input v-model="item.text">
                                                     <template slot="prepend"
-                                                        >{{ item.alphabet }}
+                                                    >{{ item.alphabet }}
                                                     </template>
                                                 </Input>
                                             </el-form-item>
                                         </el-form>
 
-                                        <el-button
-                                            v-if="data.dataAns.length > 1"
-                                            class="ml-2"
-                                            type="danger"
-                                            icon="el-icon-delete"
-                                            @click="
-                                                deleteAns(data.id, item.idAns)
-                                            "
-                                            plain
-                                            circle
-                                        ></el-button>
+
                                     </div>
                                 </div>
                                 <div
@@ -393,13 +383,13 @@
                                 >
                                     <div class="leading-[40px]">
                                         <span class="text-[13px] font-semibold"
-                                            >Level:
+                                        >Level:
                                             {{
                                                 data.level == 1
                                                     ? "Easy"
                                                     : data.level == 2
-                                                    ? "Medium"
-                                                    : "Hard"
+                                                        ? "Medium"
+                                                        : "Hard"
                                             }}</span
                                         >
                                         <star-rating
@@ -420,17 +410,19 @@
                     <el-popover placement="right" width="400" trigger="click">
                         <p class="mb-2 text-[14px] text-bold">Dạng câu hỏi:</p>
                         <el-button type="primary" @click="pushQues(1)" round
-                            >Chọn đáp án</el-button
+                        >Chọn đáp án
+                        </el-button
                         >
                         <el-button type="primary" @click="pushQues(2)" round
-                            >Điền vào chỗ trống</el-button
+                        >Điền vào chỗ trống
+                        </el-button
                         >
                         <el-button
                             type="success"
                             icon="el-icon-circle-plus-outline"
                             plain
                             slot="reference"
-                            >More questions
+                        >More questions
                         </el-button>
                     </el-popover>
                 </div>
@@ -442,7 +434,7 @@
 <script>
 import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
-import { Input, Button, Select, Form } from "element-ui";
+import {Input, Button, Select, Form} from "element-ui";
 import Editor from "@tinymce/tinymce-vue";
 import LoadingVue from "../loading/Loading.vue";
 
@@ -580,7 +572,7 @@ export default {
                         result = await baseRequest.post(
                             `/admin/create-topic-lesson`,
                             formData,
-                            { headers }
+                            {headers}
                         );
                     } else {
                         result = await baseRequest.post(
@@ -588,7 +580,7 @@ export default {
                             dataTemp
                         );
                     }
-                    let { data } = result;
+                    let {data} = result;
                     if (data.status == 200) {
                         this.$message({
                             message: data.message,
@@ -742,7 +734,7 @@ export default {
                     `/admin/add-question-to-audio-listening`,
                     dataTemp
                 );
-                let { data } = result;
+                let {data} = result;
                 if (data.status == 200) {
                     this.$message({
                         message: data.message,
