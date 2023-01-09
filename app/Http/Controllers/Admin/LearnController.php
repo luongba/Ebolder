@@ -161,7 +161,7 @@ class LearnController extends Controller
                         $question->AnswerLesson()->create([
                             'id' => $valueAns['idAns'],
                             'text' => $valueAns['text'],
-                            'id_answer' =>$valueAns['idAns'],
+                            'id_answer' => $valueAns['idAns'],
                         ]);
                     }
                     if ($value['answer']) {
@@ -222,6 +222,7 @@ class LearnController extends Controller
     public function addQuestionSingle(Request $request)
     {
         try {
+            DB::beginTransaction();
             $check = QuestionLesson::where('id', $request->id)->exists();
             if ($check) {
                 $question = QuestionLesson::where('id', $request->id)->first();
@@ -293,6 +294,7 @@ class LearnController extends Controller
                     ]);
                 }
 
+                DB::commit();
                 return response()->json([
                     "status" => 200,
                     "errorCode" => 0,
@@ -301,6 +303,7 @@ class LearnController extends Controller
             }
 
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -314,6 +317,7 @@ class LearnController extends Controller
     public function deleteQuestionData(Request $request)
     {
         try {
+            DB::beginTransaction();
             $query = new QuestionLesson();
             $question = $query->where('id', $request->id)->first();
             if (isset($question)) {
@@ -325,6 +329,7 @@ class LearnController extends Controller
                     "message" => "Xóa Question thành công !"
                 ]);
             } else {
+                DB::commit();
                 return response()->json([
                     "status" => 100,
                     "errorCode" => 0,
@@ -333,6 +338,7 @@ class LearnController extends Controller
             }
 
         } catch (\Exception $e) {
+             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,

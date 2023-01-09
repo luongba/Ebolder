@@ -7,6 +7,7 @@ use App\models\Vocabulary\AnswerVocabulary;
 use App\models\Vocabulary\QuestionVocabulary;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Exception;
 
 class VocabularyController extends Controller
@@ -43,8 +44,10 @@ class VocabularyController extends Controller
     public function detailTopicData(Request $request, $id)
     {
         try {
+            DB::beginTransaction();
             $query = new Vocabulary();
             $data = $query->where('id', $id)->with('questitonVocabulary')->first();
+            DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -52,6 +55,7 @@ class VocabularyController extends Controller
                 "message" => "Lấy chi tiết topic thành công !"
             ]);
         } catch (\Exception $e) {
+             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -65,16 +69,19 @@ class VocabularyController extends Controller
     public function createTopic(Request $request)
     {
         try {
+            DB::beginTransaction();
             Vocabulary::create([
                 "name" => $request->name,
                 "description" => $request->description
             ]);
+            DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Thêm topic thành công !"
             ]);
         } catch (\Exception $e) {
+             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -88,6 +95,7 @@ class VocabularyController extends Controller
     public function addQuestionToTopic(Request $request)
     {
         try {
+            DB::beginTransaction();
             $query = new Vocabulary();
             $query->find($request->idTopic)->questitonVocabulary()->attach(
                 [
@@ -95,12 +103,14 @@ class VocabularyController extends Controller
                 ]
 
             );
+            DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Thêm câu hỏi vào topic thành công !"
             ]);
         } catch (\Exception $e) {
+             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -108,9 +118,11 @@ class VocabularyController extends Controller
             ]);
         }
     }
+
     public function removeQuestionFromTopic(Request $request)
     {
         try {
+            DB::beginTransaction();
             $query = new Vocabulary();
             $query->find($request->idTopic)->questitonVocabulary()->detach(
                 [
@@ -118,12 +130,14 @@ class VocabularyController extends Controller
                 ]
 
             );
+            DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Xóa câu hỏi vào topic thành công !"
             ]);
         } catch (\Exception $e) {
+             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -135,15 +149,18 @@ class VocabularyController extends Controller
     public function deleteTopic(Request $request)
     {
         try {
+            DB::beginTransaction();
             $vocabulary = Vocabulary::find($request->id);
             $vocabulary->questitonVocabulary()->detach();
             $vocabulary->delete();
+            DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Xóa topic thành công !"
             ]);
         } catch (\Exception $e) {
+             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -153,21 +170,25 @@ class VocabularyController extends Controller
 
 
     }
+
     public function editTopic(Request $request)
     {
         try {
+            DB::beginTransaction();
             $vocabulary = Vocabulary::find($request->id);
             $vocabulary->update(
                 [
                     "name" => $request->name
                 ]
             );
+            DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Sửa topic thành công !"
             ]);
         } catch (\Exception $e) {
+             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -215,31 +236,40 @@ class VocabularyController extends Controller
 
     public function store(Request $request)
     {
+
         try {
+            DB::beginTransaction();
             $data = $request->all();
             foreach ($data as $key => $value) {
                 $res = QuestionVocabulary::create([
                     "id" => $value['id'],
                     "question" => $value['question'],
-                    "level" => $value['level']
+                    "level" => $value['level'],
+                    "type" => $value['type']
                 ]);
-                $res->right_answers()->create([
-                    "answer_id" => $value["answer"]
-                ]);
+                if ($res->type == 1) {
+                    $res->right_answers()->create([
+                        "answer_id" => $value["answer"]
+                    ]);
+                }
+
 
                 foreach ($data[$key]['dataAns'] as $keyAds => $item) {
                     QuestionVocabulary::find($value['id'])->answers()->create([
                         "id" => $item['idAns'],
-                        "text" => $item['text']
+                        "text" => $item['text'],
+                        "answer_id" => $item['idAns'],
                     ]);
                 }
             }
+            DB::commit();
             return [
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Thêm câu hỏi thành công !"
             ];
         } catch (\Exception $e) {
+            DB::rollBack();
             return [
                 "status" => 400,
                 "errorCode" => 400,
@@ -252,38 +282,60 @@ class VocabularyController extends Controller
 
     public function update(Request $request)
     {
+
         try {
+            DB::beginTransaction();
             $res = QuestionVocabulary::where('id', $request->id)->first();
             $res->update(
                 [
                     "question" => $request->question,
-                    "level" => $request->level
+                    "level" => $request->level,
+
                 ]
             );
-            foreach ($request->dataAns as $keyAds => $item) {
-                $ans = $res->answers()->find($item['id']);
-                if (isset($ans)) {
-                    $ans->update([
-                        "text" => $item['text']
-                    ]);
-                } else {
+            if ($request->type == 1) {
+                foreach ($request->dataAns as $keyAds => $item) {
+                    $ans = $res->answers()->find($item['id']);
+                    if (isset($ans)) {
+
+                        $ans->update([
+                            "text" => $item['text']
+                        ]);
+                    } else {
+                        $res->answers()->create([
+                            "id" => $item['id'],
+                            "answer_id" => $item['id'],
+                            "text" => $item['text']
+                        ]);
+                    }
+
+
+                }
+            } else {
+                $res->answers()->delete();
+                foreach ($request->dataAns as $keyAds => $item) {
                     $res->answers()->create([
                         "id" => $item['id'],
+                        "answer_id" => $item['id'],
                         "text" => $item['text']
                     ]);
+
+
                 }
-
-
             }
-            $res->right_answers()->find($request->right_answers["id"])->update([
-                "answer_id" => $request->right_answers["answer_id"]
-            ]);
+            if ($request->type == 1) {
+                $res->right_answers()->find($request->right_answers["id"])->update([
+                    "answer_id" => $request->right_answers["answer_id"]
+                ]);
+            }
+            DB::commit();
             return [
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Sửa câu hỏi thành công !"
             ];
         } catch (\Exception $e) {
+            DB::rollBack();
             return [
                 "status" => 400,
                 "errorCode" => 400,
@@ -297,13 +349,16 @@ class VocabularyController extends Controller
     public function destroyAns(Request $request)
     {
         try {
+            DB::beginTransaction();
             AnswerVocabulary::find($request->id)->delete();
+            DB::commit();
             return [
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Xóa câu trả lời thành công !"
             ];
         } catch (Exception $e) {
+            DB::rollBack();
             return [
                 "status" => 400,
                 "errorCode" => 400,

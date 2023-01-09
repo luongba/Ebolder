@@ -407,7 +407,7 @@
                 </div>
 
                 <div class="mx-auto my-4 flex justify-center">
-                    <el-popover placement="right" width="400" trigger="click">
+                    <el-popover placement="right" trigger="click">
                         <p class="mb-2 text-[14px] text-bold">Dạng câu hỏi:</p>
                         <el-button type="primary" @click="pushQues(1)" round
                         >Chọn đáp án
