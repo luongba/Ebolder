@@ -244,6 +244,7 @@
                                 <span class="uppercase mr-2 font-bold">{{
                                     alphabet[getAlphabet(data)]
                                 }}</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -437,14 +438,12 @@ export default {
             this.take = this.take + number;
         },
         pushAns(id) {
-            console.log(id);
             let dataQues = this.dataQuestion.find((item) => item.id == id);
             dataQues.answers.push({
                 id: Date.now(),
                 question_id: id,
                 text: null,
                 answer_id: $Helper.randomId(),
-                updated_at: Date.now(),
             });
         },
         pushQues() {
@@ -560,8 +559,9 @@ export default {
             }
         },
         getAlphabet(data) {
+            console.log(data);
             return data.answers.findIndex(
-                (item) => item.id == data.right_answers.answer_id
+                (item) => item.answer_id == data.right_answers.answer_id
             );
         },
         EditQuestion(id) {

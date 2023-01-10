@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <LoadingVue v-if="isLoading" />
-
         <div class="flex flex-col justify-center w-full items-center">
             <div
                 class="card w-full mt-3 mb-2"
@@ -42,7 +41,7 @@
                     </div>
                 </div>
 
-                <div class="card-body hidden">
+                <div class="card-body hidden" v-if="data.type == 1">
                     <div class="w-full">
                         <el-form
                             ref="ruleFormData"
@@ -165,7 +164,7 @@
                                                         index
                                                     ].toUpperCase()
                                                 "
-                                                :value="item.id"
+                                                :value="item.answer_id"
                                             >
                                             </el-option>
                                         </el-select>
@@ -186,7 +185,7 @@
                         </el-form>
                     </div>
                 </div>
-                <div class="card-body block">
+                <div class="card-body block" v-if="data.type == 1">
                     <div class="w-full">
                         <p class="text-[15px] font-bold">{{ data.question }}</p>
                         <!-- <input
@@ -249,21 +248,152 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-body hidden" v-if="data.type == 2">
+                    <div class="w-full">
+                        <el-form
+                            ref="ruleFormData"
+                            :model="data"
+                            class="w-full"
+                        >
+                            <el-form-item
+                                prop="question"
+                                :rules="[
+                                    {
+                                        required: true,
+                                        message: 'Please enter your question',
+                                    },
+                                ]"
+                                class="w-full m-0"
+                            >
+                                <el-input
+                                    type="textarea"
+                                    placeholder="Nhập câu hỏi..."
+                                    v-model="data.question"
+                                    rows="3"
+                                ></el-input>
+                            </el-form-item>
+                            <div class="mt-4">
+                                <el-button
+                                    icon="el-icon-search"
+                                    type="primary"
+                                    plain
+                                    @click="renderAnswer(data, index)"
+                                >
+                                    Xuất câu trả lời
+                                </el-button>
+                            </div>
+
+                            <div
+                                class="w-full mt-2"
+                                v-for="(item, indexAns) in data.answers"
+                                :key="item.id"
+                            >
+                                <div class="mt-4 flex items-start">
+                                    <el-form
+                                        ref="ruleFormItem"
+                                        :model="item"
+                                        :rules="rules"
+                                        class="w-full"
+                                    >
+                                        <el-form-item
+                                            prop="text"
+                                            :rules="[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        'Please enter your answer',
+                                                },
+                                            ]"
+                                            class="w-full m-0"
+                                        >
+                                            <el-input v-model="item.text">
+                                                <template slot="prepend"
+                                                    >{{ indexAns + 1 }}
+                                                </template>
+                                            </el-input>
+                                        </el-form-item>
+                                    </el-form>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-start mt-4">
+                                <div class="leading-[40px]">
+                                    <span class="text-[13px] font-semibold"
+                                        >Level:
+                                        {{
+                                            data.level == 1
+                                                ? "Easy"
+                                                : data.level == 2
+                                                ? "Medium"
+                                                : "Hard"
+                                        }}</span
+                                    >
+                                    <star-rating
+                                        :star-size="20"
+                                        :animate="true"
+                                        v-model="data.level"
+                                        :show-rating="false"
+                                        :max-rating="3"
+                                    />
+                                </div>
+                            </div>
+                        </el-form>
+                    </div>
+                </div>
+                <div class="card-body block" v-if="data.type == 2">
+                    <div class="w-full">
+                        <p
+                            class="text-[15px] font-bold flex"
+                            v-html="customQuestion(data.question)"
+                        ></p>
+
+                        <div
+                            class="w-full mt-2"
+                            v-for="(item, index) in data.answers"
+                            :key="item.id"
+                        >
+                            <div class="mt-3 flex items-center">
+                                <span class="text-[15px] font-semibold"></span>
+                                <span class="uppercase mr-2 font-bold"
+                                    >{{ index + 1 }}:</span
+                                >
+                                {{ item.text }}
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <div>
+                                <span class="text-[13px] font-semibold my-2"
+                                    >Level:
+                                    {{
+                                        data.level == 1
+                                            ? "Easy"
+                                            : data.level == 2
+                                            ? "Medium"
+                                            : "Hard"
+                                    }}</span
+                                >
+                                <star-rating
+                                    :star-size="20"
+                                    :animate="false"
+                                    v-model="data.level"
+                                    :show-rating="false"
+                                    :max-rating="3"
+                                    :read-only="true"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <p
-            class="
-                text-[14px] text-blue-500
-                uppercase
-                font-bold
-                cursor-pointer
-                mb-4
-            "
+        <el-button
+            type="primary"
+            plain
+            class="mx-auto mt-4"
+            slot="reference"
             @click="takeMore(5)"
             v-if="take < count"
-        >
-            More
-        </p>
+            >More
+        </el-button>
     </div>
 </template>
 
@@ -305,6 +435,7 @@ export default {
                 id: Date.now(),
                 question_id: id,
                 text: null,
+                answer_id: $Helper.randomId(),
                 updated_at: Date.now(),
             });
         },
@@ -406,8 +537,8 @@ export default {
                 );
                 if (data.status == 200) {
                     setTimeout(() => {
-                    this.isLoading = false;
-                }, 1000);
+                        this.isLoading = false;
+                    }, 1000);
                     this.count = data.count;
                     this.dataQuestion = data.data;
                 }
@@ -420,7 +551,7 @@ export default {
         },
         getAlphabet(data) {
             return data.answers.findIndex(
-                (item) => item.id == data.right_answers.answer_id
+                (item) => item.answer_id == data.right_answers.answer_id
             );
         },
         EditQuestion(id) {
@@ -486,9 +617,10 @@ export default {
                         id: data.id || null,
                         question: data.question || "",
                         level: data.level,
+                        type: data.type,
                         dataAns: data.answers.map((itemAns) => {
                             return {
-                                id: itemAns.id || "",
+                                id: itemAns.answer_id || "",
                                 question_id: itemAns.question_id || "",
                                 text: itemAns.text || "",
                             };
@@ -516,6 +648,37 @@ export default {
                     console.log(e);
                 }
             }
+        },
+        customQuestion(text) {
+            if (text) {
+                text = text.replaceAll(
+                    "#",
+                    '<span class="bg-gray-200 w-[20px] px-4 py-2 block mx-2"></span>'
+                );
+            }
+            return text;
+        },
+        renderAnswer(data, index) {
+            if (data.question != null) {
+                let sum = 0;
+                this.dataQuestion[index].answers = [];
+                if (data.question.length > 0) {
+                    for (let i = 0; i < data.question.length; i++) {
+                        if (data.question[i] === "#") {
+                            sum++;
+                            console.log(this.dataQuestion[index].answers);
+                            let idTemp = $Helper.randomId();
+                            this.dataQuestion[index].answers.push({
+                                id: Date.now() + i,
+                                answer_id: idTemp,
+                                text: null,
+                                question_id: data.id,
+                            });
+                        }
+                    }
+                }
+            }
+            return;
         },
     },
 

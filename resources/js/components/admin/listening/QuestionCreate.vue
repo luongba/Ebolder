@@ -83,7 +83,7 @@
                         >
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body" v-if="data.type == 1">
                         <div class="w-full">
                             <el-form
                                 ref="ruleFormData"
@@ -236,16 +236,124 @@
                             </el-form>
                         </div>
                     </div>
+                    <div class="card-body" v-if="data.type == 2">
+                        <div class="w-full">
+                            <el-form
+                                ref="ruleFormData"
+                                :model="data"
+                                class="w-full"
+                            >
+                                <el-form-item
+                                    prop="question"
+                                    :rules="[
+                                        {
+                                            required: true,
+                                            message:
+                                                'Please enter your question',
+                                        },
+                                    ]"
+                                    class="w-full m-0"
+                                >
+                                    <el-input
+                                        type="textarea"
+                                        placeholder="Nhập câu hỏi..."
+                                        v-model="data.question"
+                                        rows="3"
+                                    ></el-input>
+                                </el-form-item>
+                                <div class="mt-4">
+                                    <el-button
+                                        icon="el-icon-search"
+                                        type="primary"
+                                        plain
+                                        @click="renderAnswer(data, index)"
+                                    >
+                                        Xuất câu trả lời
+                                    </el-button>
+                                </div>
+
+                                <div
+                                    class="w-full mt-2"
+                                    v-for="item in data.dataAns"
+                                    :key="item.idAns"
+                                >
+                                    <div class="mt-4 flex items-start">
+                                        <el-form
+                                            ref="ruleFormItem"
+                                            :model="item"
+                                            :rules="rules"
+                                            class="w-full"
+                                        >
+                                            <el-form-item
+                                                prop="text"
+                                                :rules="[
+                                                    {
+                                                        required: true,
+                                                        message:
+                                                            'Please enter your answer',
+                                                    },
+                                                ]"
+                                                class="w-full m-0"
+                                            >
+                                                <Input v-model="item.text">
+                                                    <template slot="prepend"
+                                                        >{{ item.alphabet }}
+                                                    </template>
+                                                </Input>
+                                            </el-form-item>
+                                        </el-form>
+                                    </div>
+                                </div>
+                                <div
+                                    class="
+                                        flex
+                                        justify-between
+                                        items-start
+                                        mt-4
+                                    "
+                                >
+                                    <div class="leading-[40px]">
+                                        <span class="text-[13px] font-semibold"
+                                            >Level:
+                                            {{
+                                                data.level == 1
+                                                    ? "Easy"
+                                                    : data.level == 2
+                                                    ? "Medium"
+                                                    : "Hard"
+                                            }}</span
+                                        >
+                                        <star-rating
+                                            :star-size="20"
+                                            :animate="true"
+                                            v-model="data.level"
+                                            :show-rating="false"
+                                            :max-rating="3"
+                                        />
+                                    </div>
+                                </div>
+                            </el-form>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mx-auto my-4 flex justify-center">
-                    <el-button
-                        @click="pushQues()"
-                        type="success"
-                        icon="el-icon-circle-plus-outline"
-                        plain
-                        >More questions
-                    </el-button>
+                    <el-popover placement="right" trigger="click">
+                        <p class="mb-2 text-[14px] text-bold">Dạng câu hỏi:</p>
+                        <el-button type="primary" @click="pushQues(1)" round
+                            >Chọn đáp án
+                        </el-button>
+                        <el-button type="primary" @click="pushQues(2)" round
+                            >Điền vào chỗ trống
+                        </el-button>
+                        <el-button
+                            type="success"
+                            icon="el-icon-circle-plus-outline"
+                            plain
+                            slot="reference"
+                            >More questions
+                        </el-button>
+                    </el-popover>
                 </div>
             </div>
         </div>
@@ -267,21 +375,7 @@ export default {
     },
     data() {
         return {
-            dataQuestion: [
-                {
-                    id: Date.now(),
-                    question: null,
-                    level: 1,
-                    dataAns: [
-                        {
-                            idAns: Date.now() + 123,
-                            text: null,
-                            alphabet: "A",
-                        },
-                    ],
-                    answer: null,
-                },
-            ],
+            dataQuestion: [],
             alphabet: ["a", "b", "c", "d", "e", "f", "g", "h"],
             maxAns: 4,
             level: "Easy",
@@ -366,45 +460,69 @@ export default {
             });
         },
         validate(formNameItem, formNameData) {
-            let isCheck = true;
-            this.$refs[formNameItem].forEach((item) => {
-                item.validate((valid) => {
-                    if (!valid) {
-                        isCheck = false;
-                    } else {
-                        console.log("error submit!!");
-                        return false;
-                    }
+            if (this.$refs[formNameItem] || this.$refs[formNameData]) {
+                let isCheck = true;
+
+                this.$refs[formNameItem].forEach((item) => {
+                    item.validate((valid) => {
+                        if (!valid) {
+                            isCheck = false;
+                        } else {
+                            console.log("error submit!!");
+                            return false;
+                        }
+                    });
                 });
-            });
-            this.$refs[formNameData].forEach((item) => {
-                item.validate((valid) => {
-                    if (!valid) {
-                        isCheck = false;
-                    } else {
-                        console.log("error submit!!");
-                        return false;
-                    }
-                });
-            });
-            return isCheck;
+                if (
+                    this.dataQuestion[0].type == 2 &&
+                    this.dataQuestion.length == 1
+                ) {
+                    return true;
+                } else {
+                    this.$refs[formNameData].forEach((item) => {
+                        item.validate((valid) => {
+                            if (!valid) {
+                                isCheck = false;
+                            } else {
+                                console.log("error submit!!");
+                                return false;
+                            }
+                        });
+                    });
+                }
+                return isCheck;
+            } else {
+                return true;
+            }
         },
-        pushQues() {
+        pushQues(type) {
             let isCheck = this.validate("ruleFormData", "ruleFormItem");
             if (isCheck) {
-                this.dataQuestion.push({
-                    id: Date.now(),
-                    question: null,
-                    level: 1,
-                    dataAns: [
-                        {
-                            idAns: Date.now() + 123,
-                            text: null,
-                            alphabet: "A",
-                        },
-                    ],
-                    answer: null,
-                });
+                if (type == 1) {
+                    this.dataQuestion.push({
+                        id: Date.now(),
+                        question: null,
+                        level: 1,
+                        type: 1,
+                        dataAns: [
+                            {
+                                idAns: $Helper.randomId(),
+                                text: null,
+                                alphabet: "A",
+                            },
+                        ],
+                        answer: null,
+                    });
+                } else if (type == 2) {
+                    this.dataQuestion.push({
+                        id: Date.now() + 1,
+                        question: null,
+                        level: 1,
+                        dataAns: [],
+                        answer: null,
+                        type: type,
+                    });
+                }
             }
         },
         deleteAns(idQues, idAns) {
@@ -434,9 +552,11 @@ export default {
                 audio_id: id,
                 question: item.question,
                 level: item.level,
+                type: item.type,
                 dataAns: item.dataAns,
                 answer: item.answer,
             }));
+            console.log("🚀 ~ file: QuestionCreate.vue:559 ~ dataTemp ~ dataTemp", dataTemp)
             try {
                 let result = await baseRequest.post(
                     `/admin/add-question-to-audio-listening`,
@@ -460,6 +580,26 @@ export default {
             } catch (error) {
                 console.log("🚀 ~ ~ error", error);
             }
+        },
+        renderAnswer(data, index) {
+            let question = data.question;
+            if (question != null) {
+                let sum = 0;
+                this.dataQuestion[index].dataAns = [];
+                if (question.length > 0) {
+                    for (let i = 0; i < question.length; i++) {
+                        if (question[i] === "#") {
+                            sum++;
+                            this.dataQuestion[index].dataAns.push({
+                                alphabet: sum,
+                                idAns: $Helper.randomId(),
+                                text: null,
+                            });
+                        }
+                    }
+                }
+            }
+            return;
         },
     },
 

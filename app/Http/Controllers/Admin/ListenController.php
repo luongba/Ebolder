@@ -16,7 +16,7 @@ class ListenController extends Controller
 {
     public function listQuestion()
     {
-            return view('pages.admin.listening.question.index');
+        return view('pages.admin.listening.question.index');
 
     }
 
@@ -62,15 +62,20 @@ class ListenController extends Controller
                     "id" => $value['id'],
                     "audio_listening_id" => $value['audio_id'],
                     "question" => $value['question'],
-                    "level" => $value['level']
+                    "level" => $value['level'],
+                    "type" => $value['type']
                 ]);
-                $res->rightAnswers()->create([
-                    "answer_id" => $value["answer"]
-                ]);
+                if ($res->type == 1) {
+                    $res->rightAnswers()->create([
+                        "answer_id" => $value["answer"]
+                    ]);
+                }
+
 
                 foreach ($data[$key]['dataAns'] as $keyAds => $item) {
                     QuestionListening::find($value['id'])->answerListening()->create([
                         "id" => $item['idAns'],
+                        "answer_id" => $item['idAns'],
                         "text" => $item['text']
                     ]);
                 }
@@ -170,27 +175,43 @@ class ListenController extends Controller
             $res->update(
                 [
                     "question" => $request->question,
-                    "level" => $request->level
+                    "level" => $request->level,
+                    "type" => $request->type
                 ]
             );
-            foreach ($request->dataAns as $keyAds => $item) {
-                $ans = $res->answerListening()->find($item['id']);
-                if (isset($ans)) {
-                    $ans->update([
-                        "text" => $item['text']
-                    ]);
-                } else {
+            if ($res->type == 1) {
+                foreach ($request->dataAns as $keyAds => $item) {
+                    $ans = $res->answerListening()->find($item['id']);
+                    if (isset($ans)) {
+                        $ans->update([
+                            "text" => $item['text']
+                        ]);
+                    } else {
+                        $res->answerListening()->create([
+                            "id" => $item['id'],
+                            "answer_id" => $item['id'],
+                            "text" => $item['text']
+                        ]);
+                    }
+
+
+                }
+                $res->rightAnswers()->find($request->right_answers["id"])->update([
+                    "answer_id" => $request->right_answers["answer_id"]
+                ]);
+            } else {
+                $res->answerListening()->delete();
+                foreach ($request->dataAns as $keyAds => $item) {
                     $res->answerListening()->create([
                         "id" => $item['id'],
+                        "answer_id" => $item['answer_id'],
                         "text" => $item['text']
                     ]);
+
+
                 }
-
-
             }
-            $res->rightAnswers()->find($request->right_answers["id"])->update([
-                "answer_id" => $request->right_answers["answer_id"]
-            ]);
+
             return [
                 "status" => 200,
                 "errorCode" => 0,
@@ -205,6 +226,24 @@ class ListenController extends Controller
         }
 
 
+
+    }
+    public function deleteQuestion(Request $request){
+
+        try {
+            QuestionListening::find($request->id)->delete();
+            return [
+                "status" => 200,
+                "errorCode" => 0,
+                "message" => "Xóa câu hỏi thành công !"
+            ];
+        } catch (Exception $e) {
+            return [
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Xóa câu hỏi thất bại !"
+            ];
+        }
     }
 
     public function updateAudio(Request $request, $id)

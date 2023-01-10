@@ -32,6 +32,7 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-question-vocabulary', 'Admin\VocabularyController@destroyQues')->name('delete-question-vocabulary');
 
         //Listening
+
         Route::post('/add-audio-and-question-listening', 'Admin\ListenController@createAudioAndQuestion')->name('add-audio-and-question-listening');
         Route::post('/add-question-to-audio-listening', 'Admin\ListenController@storeQuestion')->name('add-question-to-audio-listening');
         Route::get('/get-audio-listening', 'Admin\ListenController@getAllAudio')->name('get-all-audio-listening');
@@ -47,6 +48,8 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/remove-audio-from-topic-listening', 'Admin\ListenController@removeAudioFromTopic')->name('remove-audio-from-topic-listening');
         Route::post('/edit-topic-listening', 'Admin\ListenController@editTopic')->name('edit-topic-listening');
         Route::post('/delete-topic-listening', 'Admin\ListenController@deleteTopic')->name('delete-topic-listening');
+        Route::post('/delete-question-listening ', 'Admin\ListenController@deleteQuestion')->name('delete-question-listening');
+
 
         //Reading
         Route::post('/add-question-reading', 'Admin\ReadController@storeTopic')->name('add-topic-question-reading');

@@ -1080,10 +1080,6 @@ video {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
 }
-.text-blue-500 {
-  --tw-text-opacity: 1;
-  color: rgb(59 130 246 / var(--tw-text-opacity));
-}
 .text-\[\#3f6ad8\] {
   --tw-text-opacity: 1;
   color: rgb(63 106 216 / var(--tw-text-opacity));
@@ -1188,10 +1184,6 @@ video {
 }
 @media (min-width: 1024px) {
 
-  .lg\:absolute {
-    position: absolute;
-  }
-
   .lg\:relative {
     position: relative;
   }
@@ -1211,5 +1203,11 @@ video {
 
   .lg\:text-\[30px\] {
     font-size: 30px;
+  }
+}
+@media (min-width: 1280px) {
+
+  .xl\:w-\[50\%\] {
+    width: 50%;
   }
 }

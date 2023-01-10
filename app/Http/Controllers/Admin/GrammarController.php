@@ -10,6 +10,7 @@ use App\models\Vocabulary\AnswerVocabulary;
 use App\models\Vocabulary\QuestionVocabulary;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Exception;
 
 class GrammarController extends Controller
@@ -219,30 +220,38 @@ class GrammarController extends Controller
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
             $data = $request->all();
             foreach ($data as $key => $value) {
                 $res = QuestionGrammar::create([
                     "id" => $value['id'],
                     "question" => $value['question'],
-                    "level" => $value['level']
+                    "level" => $value['level'],
+                    "type" => $value['type']
                 ]);
-                $res->right_answers()->create([
-                    "answer_id" => $value["answer"]
-                ]);
+                if ($res->type == 1) {
+                    $res->right_answers()->create([
+                        "answer_id" => $value["answer"]
+                    ]);
+                }
+
 
                 foreach ($data[$key]['dataAns'] as $keyAds => $item) {
                     QuestionGrammar::find($value['id'])->answers()->create([
                         "id" => $item['idAns'],
-                        "text" => $item['text']
+                        "text" => $item['text'],
+                        "answer_id" => $item['idAns'],
                     ]);
                 }
             }
+            DB::commit();
             return [
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Thêm câu hỏi thành công !"
             ];
         } catch (\Exception $e) {
+            DB::rollBack();
             return [
                 "status" => 400,
                 "errorCode" => 400,
@@ -256,37 +265,58 @@ class GrammarController extends Controller
     public function update(Request $request)
     {
         try {
+            DB::beginTransaction();
             $res = QuestionGrammar::where('id', $request->id)->first();
             $res->update(
                 [
                     "question" => $request->question,
-                    "level" => $request->level
+                    "level" => $request->level,
+
                 ]
             );
-            foreach ($request->dataAns as $keyAds => $item) {
-                $ans = $res->answers()->find($item['id']);
-                if (isset($ans)) {
-                    $ans->update([
-                        "text" => $item['text']
-                    ]);
-                } else {
+            if ($request->type == 1) {
+                foreach ($request->dataAns as $keyAds => $item) {
+                    $ans = $res->answers()->find($item['id']);
+                    if (isset($ans)) {
+
+                        $ans->update([
+                            "text" => $item['text']
+                        ]);
+                    } else {
+                        $res->answers()->create([
+                            "id" => $item['id'],
+                            "answer_id" => $item['id'],
+                            "text" => $item['text']
+                        ]);
+                    }
+
+
+                }
+            } else {
+                $res->answers()->delete();
+                foreach ($request->dataAns as $keyAds => $item) {
                     $res->answers()->create([
                         "id" => $item['id'],
+                        "answer_id" => $item['id'],
                         "text" => $item['text']
                     ]);
+
+
                 }
-
-
             }
-            $res->right_answers()->find($request->right_answers["id"])->update([
-                "answer_id" => $request->right_answers["answer_id"]
-            ]);
+            if ($request->type == 1) {
+                $res->right_answers()->find($request->right_answers["id"])->update([
+                    "answer_id" => $request->right_answers["answer_id"]
+                ]);
+            }
+            DB::commit();
             return [
                 "status" => 200,
                 "errorCode" => 0,
                 "message" => "Sửa câu hỏi thành công !"
             ];
         } catch (\Exception $e) {
+            DB::rollBack();
             return [
                 "status" => 400,
                 "errorCode" => 400,

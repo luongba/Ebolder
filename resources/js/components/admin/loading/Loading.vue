@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-full absolute inset-0 bg-blur z-[999]">
+    <div class="w-full h-full fixed inset-0 bg-blur z-[999]">
         <div
             id="animationWindow"
             class="
