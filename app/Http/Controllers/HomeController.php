@@ -31,14 +31,13 @@ class HomeController extends Controller
     public function vocabularyTest(Request $request)
     {
 
-        if (isset($request->id)) {
-            $vocabulary = Vocabulary::whereId($request->id)->with(['QuestitonVocabulary' => function ($question) {
+        if (isset($request->testId)) {
+            $vocabulary = Vocabulary::whereId($request->testId)->with(['QuestitonVocabulary' => function ($question) {
                 $question->with('answers');
                 $question->with('right_answers');
             }])->first();
             return view('pages.frontend.vocabulary', compact('vocabulary'));
         } else {
-
             $randomVocabulary = Vocabulary::all()->random(1)->first();
             $vocabulary = $randomVocabulary->with(['QuestitonVocabulary' => function ($question) {
                 $question->with('answers');
@@ -50,8 +49,8 @@ class HomeController extends Controller
 
     public function grammarTest(Request $request)
     {
-        if (isset($request->id)) {
-            $grammar = Grammar::whereId($request->id)->with(['QuestitonGrammar' => function ($question) {
+        if (isset($request->testId)) {
+            $grammar = Grammar::whereId($request->testId)->with(['QuestitonGrammar' => function ($question) {
                 $question->with('answers')->with('right_answers')->get();
             }])->first();
             return view('pages.frontend.grammar', compact('grammar'));
@@ -67,8 +66,8 @@ class HomeController extends Controller
 
     public function readingTest(Request $request)
     {
-        if (isset($request->id)) {
-            $reading = Reading::whereId($request->id)->with(['QuestionReading' => function ($question) {
+        if (isset($request->testId)) {
+            $reading = Reading::whereId($request->testId)->with(['QuestionReading' => function ($question) {
                 $question->with('AnswerReading')->with('RightAnswerReading')->get();
             }])->first();
             return view('pages.frontend.read', compact('reading'));
@@ -84,8 +83,8 @@ class HomeController extends Controller
 
     public function listeningTest(Request $request)
     {
-        if (isset($request->id)) {
-            $listening = Listening::whereId($request->id)->with(['TopicAudioListen' => function ($audio) {
+        if (isset($request->testId)) {
+            $listening = Listening::whereId($request->testId)->with(['TopicAudioListen' => function ($audio) {
                 $audio->with(['questionListening' => function ($question) {
                     $question->with('answerListening')->with('rightAnswers');
                 }]);

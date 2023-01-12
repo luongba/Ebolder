@@ -115,7 +115,7 @@
             </div>
 
             <div
-                v-if="isShowLabel && index == indexPage"
+                v-if="isShowLabel && index == indexPage && question.type == 1"
                 class="w-full mt-4"
                 v-for="(question, index) in topic.questions"
                 :key="question.id"
@@ -208,9 +208,53 @@
                     </div>
                 </div>
             </div>
-
             <div
-                v-if="!isShowLabel && index == indexPage"
+                v-if="isShowLabel && index == indexPage && question.type == 2"
+                class="w-full mt-4"
+                v-for="(question, index) in topic.questions"
+                :key="question.id"
+            >
+                <p class="text-[16px]">
+                    Question <strong>{{ index + 1 }}</strong> of
+                    <strong>{{ topic.questions.length }}</strong>
+                </p>
+                <!-- <p
+                    class="mt-2 mb-4 text-[16px] mt-4"
+                    
+                > -->
+                <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center">
+                    <div
+                        v-for="(item, indexAns) in arrQuestion(question)"
+                        :key="indexAns"
+                    >
+                        <input
+                            type="text"
+                            class="
+                                mx-2
+                                text-black
+                                border-none
+                                outline-none
+                                rounded-md
+                                w-[150px]
+                                px-2
+                                py-1
+                            "
+                            v-model="
+                                answerData[index].dataChoose[
+                                    getIndexSharp(question, indexAns)
+                                ].radioValue
+                            "
+                            v-if="item == '#'"
+                        />
+                        <span v-else>{{ item }}</span>
+                    </div>
+                </div>
+
+                <!-- </p> -->
+                <!-- v-html="renderInput(question, index)" -->
+            </div>
+            <div
+                v-if="!isShowLabel && index == indexPage && question.type == 1"
                 class="w-full mt-4"
                 v-for="(question, index) in topic.questions"
                 :key="question.id"
@@ -342,6 +386,176 @@
                     </div>
                 </div>
             </div>
+            <div
+                v-if="!isShowLabel && index == indexPage && question.type == 2"
+                class="w-full mt-4"
+                v-for="(question, index) in topic.questions"
+                :key="question.id"
+            >
+                <p class="text-[16px]">
+                    Question <strong>{{ index + 1 }}</strong> of
+                    <strong>{{ topic.questions.length }}</strong>
+                </p>
+                <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center">
+                    <div
+                        v-for="(item, indexAns) in arrQuestion(question)"
+                        :key="indexAns"
+                    >
+                        <input
+                            type="text"
+                            class="
+                                mx-2
+                                text-white
+                                border-none
+                                outline-none
+                                rounded-md
+                                w-[150px]
+                                px-2
+                                py-1
+                            "
+                            v-model="
+                                answerData[index].dataChoose[
+                                    getIndexSharp(question, indexAns)
+                                ].radioValue
+                            "
+                            :class="[
+                                answerData[index].dataChoose[
+                                    getIndexSharp(question, indexAns)
+                                ].radioValue ==
+                                answerData[index].dataRight[
+                                    getIndexSharp(question, indexAns)
+                                ].right_answer
+                                    ? 'right-ans'
+                                    : 'wrong-ans',
+                            ]"
+                            v-if="item == '#'"
+                            disabled
+                        />
+                        <span v-else>{{ item }}</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div
+                        class="w-full"
+                        v-for="(item, indexItem) in question.dataAns"
+                        :key="item.id"
+                    >
+                        <!-- <input
+                            type="radio"
+                            :id="`test${item.id}`"
+                            :name="`radio-group${index}`"
+                            checked
+                            v-model="answerData[index].radioValue"
+                            :value="item.id"
+                            hidden
+                            :disabled="isShowLabel == false"
+                        />
+                        <label
+                            :for="`test${item.id}`"
+                            class="
+                                flex
+                                justify-between
+                                items-center
+                                w-full
+                                py-2
+                                px-4
+                                border-2
+                                rounded-lg
+                                border-answer
+                                min-h-[70px]
+                            "
+                            :class="[
+                                answerData[index].radioValue == item.id
+                                    ? `active`
+                                    : '',
+                                answerData[index].radioValue ==
+                                answerData[index].right_answer
+                                    ? `right`
+                                    : 'wrong',
+                                item.id == answerData[index].right_answer
+                                    ? `right_wait`
+                                    : '',
+                                item.id == answerData[index].right_answer &&
+                                item.id == answerData[index].radioValue
+                                    ? 'bgright'
+                                    : '',
+                            ]"
+                        >
+                            <div
+                                class="text-[16px] font-semibold text-answer"
+                                :class="[
+                                    answerData[index].radioValue == item.id
+                                        ? `active`
+                                        : '',
+                                    answerData[index].radioValue ==
+                                    answerData[index].right_answer
+                                        ? `right`
+                                        : 'wrong',
+                                    item.id == answerData[index].right_answer
+                                        ? `right_wait`
+                                        : '',
+                                    item.id == answerData[index].right_answer &&
+                                    item.id == answerData[index].radioValue
+                                        ? 'bgright'
+                                        : '',
+                                ]"
+                            >
+                                {{ item.text }}
+                            </div>
+                            <div>
+                                <el-button
+                                    v-if="
+                                        item.id ==
+                                        answerData[index].right_answer
+                                    "
+                                    type="success"
+                                    icon="el-icon-check"
+                                    circle
+                                    size="mini"
+                                ></el-button>
+                                <div v-else>
+                                    <AVue
+                                        :isActive="
+                                            answerData[index].radioValue ==
+                                            item.id
+                                                ? true
+                                                : false
+                                        "
+                                        v-if="indexItem == 0"
+                                    />
+                                    <BVue
+                                        :isActive="
+                                            answerData[index].radioValue ==
+                                            item.id
+                                                ? true
+                                                : false
+                                        "
+                                        v-if="indexItem == 1"
+                                    />
+                                    <CVue
+                                        :isActive="
+                                            answerData[index].radioValue ==
+                                            item.id
+                                                ? true
+                                                : false
+                                        "
+                                        v-if="indexItem == 2"
+                                    />
+                                    <DVue
+                                        :isActive="
+                                            answerData[index].radioValue ==
+                                            item.id
+                                                ? true
+                                                : false
+                                        "
+                                        v-if="indexItem == 3"
+                                    />
+                                </div>
+                            </div>
+                        </label> -->
+                    </div>
+                </div>
+            </div>
             <div class="flex items-center justify-between mt-4">
                 <div v-if="indexPage == 0"></div>
                 <button
@@ -456,8 +670,21 @@ export default {
                 this.answerData[index].right_answer = item.right_answer;
             });
             this.answerData.forEach((item) => {
-                if (item.radioValue == item.right_answer) {
-                    this.arrRightAns.push(item);
+                if (item.type == 1) {
+                    if (item.radioValue == item.right_answer) {
+                        this.arrRightAns.push(item);
+                    }
+                } else {
+                    const sameArray =
+                        item.dataChoose.length === item.dataRight.length &&
+                        item.dataChoose.every(
+                            (value, index) =>
+                                value.radioValue ===
+                                item.dataRight[index].right_answer
+                        );
+                    if (sameArray) {
+                        this.arrRightAns.push(item);
+                    }
                 }
             });
             let dataHistory = {
@@ -467,7 +694,10 @@ export default {
                 completion_time: this.timerun,
             };
             try {
-                let result = await baseRequest.post('/admin/save-history', dataHistory);
+                let result = await baseRequest.post(
+                    "/admin/save-history",
+                    dataHistory
+                );
             } catch (e) {
                 console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
             }
@@ -498,6 +728,36 @@ export default {
                 }
             }
         },
+        arrQuestion(question) {
+            return question.question.split(" ");
+        },
+        getIndexSharp(question, index) {
+            let arr = question.question.split(" ").splice(0, index + 1);
+            return arr.filter((e) => e == "#").length - 1;
+        },
+        renderInput(question, index) {
+            let sum = 0;
+            let arrQuestion = question.question.split(" ");
+            for (let i = 0; i < arrQuestion.length; i++) {
+                if (arrQuestion[i] == "#") {
+                    sum++;
+                    arrQuestion[i] = `<input 
+                            style="color:black;
+                                border: none;
+                                outline:none;
+                                border-radius:
+                                5px; padding: 2px .5em;
+                                background: #e2e7ed;
+                                display: inline-block;
+                                width: 100px" 
+                                v-model='${
+                                    this.answerData[index].dataChoose[sum - 1]
+                                        .radioValue
+                                }'>`;
+                }
+            }
+            return arrQuestion.join(" ");
+        },
     },
     created() {
         this.topic = {
@@ -505,20 +765,35 @@ export default {
             questions: this.data.question_reading.map((reading) => ({
                 id: reading.id,
                 question: reading.question,
-                dataAns: $Helper.random(
-                    reading.answer_reading.map((item) => ({
-                        id: item.id,
-                        text: item.text,
-                    }))
-                ),
-                right_answer: reading.right_answer_reading.answer_id,
+                type: reading.type,
+                dataAns: reading.answer_reading.map((item) => ({
+                    id: item.answer_id,
+                    text: item.text,
+                })),
+
+                right_answer: reading.right_answer_reading
+                    ? reading.right_answer_reading.answer_id
+                    : "",
             })),
         };
         this.topic.questions.forEach((item) => {
-            this.answerData.push({
-                radioValue: null,
-                right_answer: "",
-            });
+            if (item.type == 1) {
+                this.answerData.push({
+                    radioValue: null,
+                    right_answer: "",
+                    type: 1,
+                });
+            } else {
+                this.answerData.push({
+                    dataChoose: item.dataAns.map((item, index) => ({
+                        radioValue: null,
+                    })),
+                    dataRight: item.dataAns.map((item, index) => ({
+                        right_answer: item.text,
+                    })),
+                    type: 2,
+                });
+            }
         });
     },
 };
