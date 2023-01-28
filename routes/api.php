@@ -82,6 +82,7 @@ Route::middleware('auth:api')->group(function (){
 
         //Home
         Route::post('/save-history', 'HomeController@saveHistory')->name('save-hítory');
+        Route::post('/save-exam-result', 'HomeController@saveExamResult')->name('save-examResult');
 
         //roles
         Route::get('/get-all-role', 'Admin\RoleController@getAllRole')->name('get-all-role');
@@ -105,6 +106,7 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/detail-level', 'Admin\LevelController@detailLevel')->name('detail-level');
         Route::post('/delete-level', 'Admin\LevelController@deleteLevel')->name('delete-level');
         Route::post('/update-level', 'Admin\LevelController@updateLevel')->name('update-level');
+        Route::get('/check-passed-level', 'Admin\LevelController@checkLevelPassed')->name('check-passed-level');
 
     });
 });

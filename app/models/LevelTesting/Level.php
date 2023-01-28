@@ -11,4 +11,8 @@ class Level extends Model
     public function Learn(){
         return $this->belongsToMany('App\models\Learn\Learn','learn_levels');
     }
+
+    public function ExamResult(){
+        return $this->hasOne('App\models\Learn\ExamResult');
+    }
 }

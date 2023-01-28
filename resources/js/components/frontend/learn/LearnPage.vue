@@ -16,8 +16,13 @@
                     >
                         <i class="lnr-cross"></i>
                     </span>
-                    <h2 class="text-[26px] text-center text-white uppercase">Danh sách bài học</h2>
-                    <div data-v-61751496="" class="w-full border relative mt-2 mb-4"></div>
+                    <h2 class="text-[26px] text-center text-white uppercase">
+                        Danh sách bài học
+                    </h2>
+                    <div
+                        data-v-61751496=""
+                        class="w-full border relative mt-2 mb-4"
+                    ></div>
                     <div
                         class="grid grid-cols-2 sm:grid-cols-4 mt-4"
                         v-if="listLesson.length > 0"
@@ -34,7 +39,6 @@
                                 text-center
                                 font-thin
                                 cursor-pointer
-                                
                             "
                             @click="openLesson(itemLesson.id)"
                             v-for="itemLesson in listLesson"
@@ -149,7 +153,12 @@
                                                     rounded-sm
                                                     mx-2
                                                 "
-                                                @click="openExamPage('listening',item.listening_id)"
+                                                @click="
+                                                    openExamPage(
+                                                        'listening',
+                                                        item
+                                                    )
+                                                "
                                             >
                                                 <i
                                                     class="
@@ -165,9 +174,7 @@
                                             placement="bottom"
                                         >
                                             <div
-                                                v-if="
-                                                    item.reading_id != null
-                                                "
+                                                v-if="item.reading_id != null"
                                                 class="
                                                     p-3
                                                     border
@@ -178,7 +185,12 @@
                                                     rounded-sm
                                                     mx-2
                                                 "
-                                                @click="openExamPage('reading',item.reading_id)"
+                                                @click="
+                                                    openExamPage(
+                                                        'reading',
+                                                        item
+                                                    )
+                                                "
                                             >
                                                 <i
                                                     class="
@@ -208,7 +220,12 @@
                                                     rounded-sm
                                                     mx-2
                                                 "
-                                                @click="openExamPage('vocabulary',item.vocabulary_id)"
+                                                @click="
+                                                    openExamPage(
+                                                        'vocabulary',
+                                                        item
+                                                    )
+                                                "
                                             >
                                                 <i
                                                     class="
@@ -235,7 +252,12 @@
                                                     rounded-sm
                                                     mx-2
                                                 "
-                                                @click="openExamPage('grammar',item.grammar_id)"
+                                                @click="
+                                                    openExamPage(
+                                                        'grammar',
+                                                        item
+                                                    )
+                                                "
                                             >
                                                 <i
                                                     class="fa-solid fa-gears"
@@ -292,6 +314,7 @@ export default {
             show: false,
             listLevel: [],
             listLesson: [],
+            levelCountPassed: 1,
         };
     },
     methods: {
@@ -340,35 +363,52 @@ export default {
                             grammar_id: item.grammar_id,
                             lessons: item.learn || [],
                         }))
-                        .reverse();
+                        
+                    console.log("🚀 ~ file: LearnPage.vue:367 ~ getAllLevel ~ listLevel", this.listLevel)
+                    this.listLevel = this.listLevel.filter(
+                        (item, index) => index < this.levelCountPassed
+                    ).reverse();
+                    
                 }
             } catch (e) {
                 console.log(e);
             }
         },
-        openExamPage(type, id){
-            switch(type){
-                case 'reading': 
-                    window.location.href = `${$Api.baseUrl}/english-level-test/Reading?testId=${id}`;
-                    break;
-                case 'listening':
-                    window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${id}`;
-                    break;
-                case 'vocabulary':
-                    window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${id}`;
-                    break;
-                case 'grammar':
-                    window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${id}`;
-                    break;
-                default: return;
+        async checkPassedLevel() {
+            try {
+                let rs = await baseRequest.get(`/admin/check-passed-level`);
+                if (rs.data.status == 200) {
+                    this.levelCountPassed = rs.data.data;
+                    this.level = rs.data.data
+                }
+            } catch (e) {
+                console.log(e);
             }
-            
         },
-        openLesson(id){
+        openExamPage(type, item) {
+            switch (type) {
+                case "reading":
+                    window.location.href = `${$Api.baseUrl}/english-level-test/Reading?testId=${item.reading_id}?levelId=${item.id}`;
+                    break;
+                case "listening":
+                    window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${item.listening_id}?levelId=${item.id}`;
+                    break;
+                case "vocabulary":
+                    window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${item.vocabulary_id}?levelId=${item.id}`;
+                    break;
+                case "grammar":
+                    window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${item.grammar_id}?levelId=${item.id}`;
+                    break;
+                default:
+                    return;
+            }
+        },
+        openLesson(id) {
             window.location.href = `${$Api.baseUrl}/lesson/${id}`;
-        }
+        },
     },
-    created() {
+    async created() {
+        await this.checkPassedLevel();
         this.getAllLevel();
     },
     mounted() {

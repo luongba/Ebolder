@@ -605,7 +605,7 @@ import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import baseRequest from "../../../utils/baseRequest";
 export default {
-    props: ["data"],
+    props: ["data", "query"],
     data() {
         return {
             answerData: [],
@@ -664,10 +664,6 @@ export default {
                     }
                 }
             });
-            console.log(
-                "🚀 ~ file: ListeningTest.vue:598 ~ this.answerData.forEach ~ this.answerData",
-                this.answerData
-            );
             let dataHistory = {
                 test_type: "Listening",
                 topic_name: this.data.name,
@@ -679,7 +675,27 @@ export default {
                     "/admin/save-history",
                     dataHistory
                 );
-            } catch (e) {}
+            } catch (e) {
+                console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
+            }
+
+            if (
+                this.query.testId &&
+                this.query.levelId &&
+                (this.arrRightAns.length / this.answerData.length) * 100 > 10
+            ) {
+                try {
+                    let rs = await baseRequest.post("/admin/save-exam-result", {
+                        levelId: this.query.levelId,
+                        type: 1,
+                    });
+                } catch (e) {
+                    console.log(
+                        "🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e",
+                        e
+                    );
+                }
+            }
             window.scrollTo({ top: 0, behavior: "smooth" });
             setTimeout(() => {
                 this.isShowLabel = false;

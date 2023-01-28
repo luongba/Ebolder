@@ -117,8 +117,13 @@
                     Question <strong>{{ index + 1 }}</strong> of
                     <strong>{{ questions.length }}</strong>
                 </p>
-                <p class="mt-2 mb-4 text-[16px]" v-if="question.type == 1">{{ question.question }}</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" v-if="question.type == 1">
+                <p class="mt-2 mb-4 text-[16px]" v-if="question.type == 1">
+                    {{ question.question }}
+                </p>
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    v-if="question.type == 1"
+                >
                     <div
                         class="w-full"
                         v-for="(item, indexItem) in question.dataAns"
@@ -200,7 +205,10 @@
                         </label>
                     </div>
                 </div>
-                <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center" v-if="question.type == 2">
+                <div
+                    class="flex mt-2 mb-4 text-[16px] mt-4 items-center"
+                    v-if="question.type == 2"
+                >
                     <div
                         v-for="(item, indexAns) in arrQuestion(question)"
                         :key="indexAns"
@@ -239,8 +247,13 @@
                     Question <strong>{{ index + 1 }}</strong> of
                     <strong>{{ questions.length }}</strong>
                 </p>
-                <p class="mt-2 mb-4 text-[16px]" v-if="question.type == 1">{{ question.question }}</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" v-if="question.type == 1">
+                <p class="mt-2 mb-4 text-[16px]" v-if="question.type == 1">
+                    {{ question.question }}
+                </p>
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    v-if="question.type == 1"
+                >
                     <div
                         class="w-full"
                         v-for="(item, indexItem) in question.dataAns"
@@ -361,7 +374,10 @@
                         </label>
                     </div>
                 </div>
-                <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center"  v-if="question.type == 2">
+                <div
+                    class="flex mt-2 mb-4 text-[16px] mt-4 items-center"
+                    v-if="question.type == 2"
+                >
                     <div
                         v-for="(item, indexAns) in arrQuestion(question)"
                         :key="indexAns"
@@ -437,7 +453,7 @@ import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import baseRequest from "../../../utils/baseRequest";
 export default {
-    props: ["data"],
+    props: ["data", "query"],
     data() {
         return {
             answerData: [],
@@ -494,6 +510,23 @@ export default {
                 );
             } catch (e) {
                 console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
+            }
+            if (
+                this.query.testId &&
+                this.query.levelId &&
+                (this.arrRightAns.length / this.answerData.length) * 100 > 10
+            ) {
+                try {
+                    let rs = await baseRequest.post("/admin/save-exam-result", {
+                        levelId: this.query.levelId,
+                        type: 3,
+                    });
+                } catch (e) {
+                    console.log(
+                        "🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e",
+                        e
+                    );
+                }
             }
             window.scrollTo({ top: 0, behavior: "smooth" });
             setTimeout(() => {

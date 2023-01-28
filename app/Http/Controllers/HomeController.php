@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\models\Grammar\Grammar;
+use App\models\Learn\ExamResult;
 use App\models\Learn\Learn;
 use App\models\Listen\Listening;
 use App\models\Read\Reading;
@@ -32,11 +33,14 @@ class HomeController extends Controller
     {
 
         if (isset($request->testId)) {
+            $query = explode('=', $request->query('testId'));
+            $testId = $query[0][0];
+            $levelId = $query[1];
             $vocabulary = Vocabulary::whereId($request->testId)->with(['QuestitonVocabulary' => function ($question) {
                 $question->with('answers');
                 $question->with('right_answers');
             }])->first();
-            return view('pages.frontend.vocabulary', compact('vocabulary'));
+            return view('pages.frontend.vocabulary', compact(['vocabulary', 'testId', 'levelId']));
         } else {
             $randomVocabulary = Vocabulary::all()->random(1)->first();
             $vocabulary = $randomVocabulary->with(['QuestitonVocabulary' => function ($question) {
@@ -50,10 +54,14 @@ class HomeController extends Controller
     public function grammarTest(Request $request)
     {
         if (isset($request->testId)) {
+            $query = explode('=', $request->query('testId'));
+
+            $testId = $query[0][0];
+            $levelId = $query[1];
             $grammar = Grammar::whereId($request->testId)->with(['QuestitonGrammar' => function ($question) {
                 $question->with('answers')->with('right_answers')->get();
             }])->first();
-            return view('pages.frontend.grammar', compact('grammar'));
+            return view('pages.frontend.grammar', compact(['grammar', 'testId', 'levelId']));
         } else {
 
             $randomGrammar = Grammar::all()->random(1)->first();
@@ -67,10 +75,14 @@ class HomeController extends Controller
     public function readingTest(Request $request)
     {
         if (isset($request->testId)) {
+            $query = explode('=', $request->query('testId'));
+
+            $testId = $query[0][0];
+            $levelId = $query[1];
             $reading = Reading::whereId($request->testId)->with(['QuestionReading' => function ($question) {
                 $question->with('AnswerReading')->with('RightAnswerReading')->get();
             }])->first();
-            return view('pages.frontend.read', compact('reading'));
+            return view('pages.frontend.read', compact(['reading', 'testId', 'levelId']));
         } else {
             $randomReading = Reading::all()->random(1)->first();
             $reading = $randomReading->with(['QuestionReading' => function ($question) {
@@ -84,12 +96,16 @@ class HomeController extends Controller
     public function listeningTest(Request $request)
     {
         if (isset($request->testId)) {
+            $query = explode('=', $request->query('testId'));
+
+            $testId = $query[0][0];
+            $levelId = $query[1];
             $listening = Listening::whereId($request->testId)->with(['TopicAudioListen' => function ($audio) {
                 $audio->with(['questionListening' => function ($question) {
                     $question->with('answerListening')->with('rightAnswers');
                 }]);
             }])->first();
-            return view('pages.frontend.listening', compact('listening'));
+            return view('pages.frontend.listening', compact(['listening', 'testId', 'levelId']));
         } else {
             $listening = Listening::all()->random(1)->first();;
             $listening = $listening::with(['TopicAudioListen' => function ($audio) {
@@ -143,12 +159,82 @@ class HomeController extends Controller
         return view('pages.recover-password');
     }
 
-    public function lessonPage($id){
-        
+    public function lessonPage($id)
+    {
+
         $lesson = Learn::whereId($id)->with(['QuestionLesson' => function ($question) {
             $question->with('AnswerLesson')->with('RightAnswerLesson')->get();
         }])->first();
         return view('pages.frontend.lessonpage', compact('lesson'));
+    }
+
+    public function saveExamResult(Request $request)
+    {
+        $type = $request->type;
+        $levelId = $request->levelId;
+        $userId = Auth::user()->id;
+        switch ($type) {
+            case 1:
+                $isCheck = ExamResult::where('user_id', $userId)->where('level_id', $levelId)->exists();
+                if ($isCheck) {
+                    ExamResult::where('user_id', $userId)->where('level_id', $levelId)->update([
+                        'is_done_listen' => 1,
+                    ]);
+                } else {
+                    ExamResult::create([
+                        'level_id' => $levelId,
+                        'user_id' => $userId,
+                        'is_done_listen' => 1
+                    ]);
+                }
+                break;
+
+
+            case 2:
+                $isCheck = ExamResult::where('user_id', $userId)->where('level_id', $levelId)->exists();
+                if ($isCheck) {
+                    ExamResult::where('user_id', $userId)->where('level_id', $levelId)->update([
+                        'is_done_read' => 1,
+                    ]);
+                } else {
+                    ExamResult::create([
+                        'level_id' => $levelId,
+                        'user_id' => $userId,
+                        'is_done_read' => 1
+                    ]);
+                }
+                break;
+            case 3:
+                $isCheck = ExamResult::where('user_id', $userId)->where('level_id', $levelId)->exists();
+                if ($isCheck) {
+                    ExamResult::where('user_id', $userId)->where('level_id', $levelId)->update([
+                        'is_done_vocabulary' => 1,
+                    ]);
+                } else {
+                    ExamResult::create([
+                        'level_id' => $levelId,
+                        'user_id' => $userId,
+                        'is_done_vocabulary' => 1
+                    ]);
+                }
+                break;
+            case 4:
+                $isCheck = ExamResult::where('user_id', $userId)->where('level_id', $levelId)->exists();
+                if ($isCheck) {
+                    ExamResult::where('user_id', $userId)->where('level_id', $levelId)->update([
+                        'is_done_grammar' => 1,
+                    ]);
+                } else {
+                    ExamResult::create([
+                        'level_id' => $levelId,
+                        'user_id' => $userId,
+                        'is_done_grammar' => 1
+                    ]);
+                }
+                break;
+            
+        }   
+        
     }
 
 
