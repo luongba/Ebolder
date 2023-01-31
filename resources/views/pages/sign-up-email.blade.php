@@ -24,10 +24,6 @@
                 <div class="h-100 d-md-flex d-sm-block bg-white justify-content-center align-items-center col-md-12 col-lg-7">
                     <div class="mx-auto app-login-box col-sm-12 col-md-10 col-lg-9">
                         <div class="app-logo"></div>
-                        <h4>
-                            <div class="text-dark">Start your free trial today</div>
-                            <span class="text-dark">Join our best marketing platform to grow their sales with pop ups, email marketing.</span>
-                        </h4>
                         <div>
                             @if ($errors->any())
                                 <div class="alert alert-danger">
@@ -81,15 +77,9 @@
                                     </div>
 
                                 </div>
-                                <div class="mt-3 position-relative form-check" style="padding-left: 0em;">
-
-                                    <label for="exampleCheck" class="form-check-label">By signing up, you are agreeing to Ebolder
-                                        <a href="javascript:void(0);" href="#">Terms and Conditions</a>.
-                                    </label>
-                                </div>
                                 <div class="mt-4 d-flex align-items-center">
                                     <h5 class="mb-0">Already have an account?
-                                        <a href="sign-in.html" class="text-primary">Sign in</a>
+                                        <a href="{{route('sign-in')}}" class="text-primary">Sign in</a>
                                     </h5>
                                     <div class="ml-auto">
                                         <button type="submit" class="btn-wide btn-pill btn-shadow btn-hover-shine btn btn-primary btn-lg">SIGN UP</button>

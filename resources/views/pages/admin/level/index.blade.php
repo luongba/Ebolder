@@ -6,10 +6,10 @@
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
-                        <i class="lnr-book icon-gradient bg-mean-fruit"></i>
+                        <i class="fa-solid fa-chart-simple icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div>
-                        <p>LEVEL</p>
+                        <p>Cấp độ bài học</p>
                         {{-- <div class="page-title-subheading">
                             <ul>
                                 <li>Read the text, then try to answer the questions.</li>

@@ -35,11 +35,6 @@
                                          style="background-image: url('images/originals/city.jpg');"></div>
                                     <div class="slider-content">
 
-                                        <h3>Best Email Marketing Platform.</h3>
-                                        <p>
-                                            Ebolder is like a dream. Some think it's too good to be true! Extensive
-                                            collection of unified Email marketing Platform.
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -50,11 +45,6 @@
                                     <div class="slide-img-bg"
                                          style="background-image: url('images/originals/citynights.jpg');"></div>
                                     <div class="slider-content">
-                                        <h3>Grow their sales on your Business.</h3>
-                                        <p>
-                                            Easy make campaigns on Ecommerce website swiftly and win more sales with
-                                            Ebolder.
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -65,9 +55,6 @@
                                     <div class="slide-img-bg"
                                          style="background-image: url('images/originals/citydark.jpg');"></div>
                                     <div class="slider-content">
-                                        <h3>Too many template to help</h3>
-                                        <p>We've included a lot of Application that cover almost all use cases for any
-                                            type of Feature.</p>
                                     </div>
                                 </div>
                             </div>
@@ -82,19 +69,9 @@
                             <span>Please sign in to your account.</span>
                         </h4>
                         <div class="dev-shopify-login" style="padding-top:1em;display: flex; align-items: center">
-                            <a href="{{route('auth.facebook')}}" class="dev-a-button">
+                            <a href="{{route('sign-up-email')}}" class="dev-a-button">
                                 <button class="mb-2 mr-2 btn-icon btn btn-light btn-hover-shine dev-sign-up" style="text-align: end">
-                                    <i class="dot-btn-icon fab fa-brands fa-facebook-f icon-gradient"
-                                       style="background-image: linear-gradient(to right, #009fff, #009fff) !important;"></i>
-                                    SIGN UP WITH FACEBOOK
-                                </button>
-
-                            </a>
-                            <a href="#" class="dev-a-button">
-                                <button class="mb-2 mr-2 btn-icon btn btn-light btn-hover-shine dev-sign-up" style="text-align: end">
-                                    <i class="dot-btn-icon fab fa-brands fa-google icon-gradient"
-                                       style="background-image: linear-gradient(to right, #ed213a, #93291e); !important;"></i>
-                                    SIGN UP WITH GOOGLE
+                                    SIGN UP
                                 </button>
 
                             </a>

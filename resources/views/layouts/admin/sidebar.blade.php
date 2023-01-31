@@ -11,32 +11,32 @@
                     Dashboard
                 </a>
             </li>
-            <li class="app-sidebar__heading">Level</li>
+            <li class="app-sidebar__heading">Cấp độ bài học</li>
             <li>
                 <a class="{{ request()->is(['admin/level']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.level-list') }}">
-                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
-                    Level
+                    <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
+                    Quản lý cấp độ bài học
                 </a>
             </li>
-            <li class="app-sidebar__heading">Lesson</li>
+            <li class="app-sidebar__heading">Bài học</li>
             <li>
                 <a class="{{ request()->is(['admin/lesson']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.lesson-list') }}">
-                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
-                    Topic
+                    <i class="metismenu-icon fa-solid fa-swatchbook"></i>
+                    Quản lý bài học
                 </a>
             </li>
             {{-- Start Testing --}}
             @if(Gate::check('Vocabulary_List') || Gate::check('Question_Vocabulary_List'))
-            <li class="app-sidebar__heading">Vocabulary</li>
+            <li class="app-sidebar__heading">Đề từ vựng</li>
             @endif
             @can('Vocabulary_List')
             <li>
                 <a class="{{ request()->is(['admin/volabulary-level-test']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.vocabulary-list') }}">
-                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
-                    Topic
+                    <i class="metismenu-icon fa-solid fa-laptop-file"></i>
+                    Quản lý đề
                 </a>
             </li>
             @endcan
@@ -44,20 +44,20 @@
             <li>
                 <a class="{{ request()->is(['admin/volabulary-level-test/question-list']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.vocabulary-question-list') }}">
-                    <i class="metismenu-icon lnr-question-circle lnr"></i>
-                    Questions
+                    <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
+                    Quản lý câu hỏi
                 </a>
             </li>
             @endcan
             @if(Gate::check('Listening_List') || Gate::check('Question_Listening_List'))
-            <li class="app-sidebar__heading">Listening</li>
+            <li class="app-sidebar__heading">Nghe</li>
             @endif
             @can('Listening_List')
             <li>
                 <a class="{{ request()->is(['admin/topic-listening-level-test']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.topic-listening-list') }}">
-                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
-                    Topic
+                    <i class="metismenu-icon fa-solid fa-laptop-file"></i>
+                    Quản lý đề
                 </a>
             </li>
             @endcan
@@ -65,33 +65,33 @@
             <li>
                 <a class="{{ request()->is(['admin/listening-level-test/question-list']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.listening-question-list') }}">
-                    <i class="metismenu-icon lnr-question-circle lnr"></i>
-                    Audio and Question
+                    <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
+                    Quản lý âm thanh và câu hỏi
                 </a>
             </li>
             @endcan
             @if(Gate::check('Reading_List'))
-            <li class="app-sidebar__heading">Reading</li>
+            <li class="app-sidebar__heading">Đọc</li>
             @endif
             @can('Reading_List')
             <li>
                 <a class="{{ request()->is(['admin/reading-level-test/topic-list']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.reading-topic-list') }}">
-                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
-                    Topic
+                    <i class="metismenu-icon fa-solid fa-laptop-file"></i>
+                    Quản lý đề
                 </a>
             </li>
             @endcan
             @if(Gate::check('Grammar_List') || Gate::check('Question_Grammar_List'))
-            <li class="app-sidebar__heading">Grammar</li>
+            <li class="app-sidebar__heading">Ngữ pháp</li>
             @endif
             @can('Grammar_List')
 
             <li>
                 <a class="{{ request()->is(['admin/grammar-level-test']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.grammar-list') }}">
-                    <i class="metismenu-icon lnr-graduation-hat lnr"></i>
-                    Topic
+                    <i class="metismenu-icon fa-solid fa-laptop-file"></i>
+                    Quản lý đề
                 </a>
             </li>
             @endcan
@@ -99,20 +99,20 @@
             <li>
                 <a class="{{ request()->is(['admin/grammar-level-test/question-list']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.grammar-question-list') }}">
-                    <i class="metismenu-icon lnr-question-circle lnr"></i>
-                    Questions
+                    <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
+                    Quản lý câu hỏi
                 </a>
             </li>
             @endcan
             @if(Gate::check('User_List') || Gate::check('Role_List'))
-            <li class="app-sidebar__heading">Users</li>
+            <li class="app-sidebar__heading">Người dùng</li>
             @endif
             @can('User_List')
             <li>
                 <a class="{{ request()->is(['admin/users']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.user-list') }}">
-                    <i class="metismenu-icon lnr-user lnr"></i>
-                    Users
+                    <i class="metismenu-icon fa-regular fa-user"></i>
+                    Quản lý người dùng
                 </a>
             </li>
             @endcan
@@ -120,8 +120,8 @@
             <li>
                 <a class="{{ request()->is(['admin/roles']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.role-list') }}">
-                    <i class="metismenu-icon lnr-users lnr"></i>
-                    Roles
+                    <i class="metismenu-icon fa-solid fa-users"></i>
+                    Quản lý vai trò
                 </a>
             </li>
             @endcan

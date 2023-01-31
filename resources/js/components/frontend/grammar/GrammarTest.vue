@@ -553,7 +553,7 @@ export default {
             for (let i = 0; i < arrQuestion.length; i++) {
                 if (arrQuestion[i] == "#") {
                     sum++;
-                    arrQuestion[i] = `<input 
+                    arrQuestion[i] = `<input
                             style="color:black;
                                 border: none;
                                 outline:none;
@@ -561,7 +561,7 @@ export default {
                                 5px; padding: 2px .5em;
                                 background: #e2e7ed;
                                 display: inline-block;
-                                width: 100px" 
+                                width: 100px"
                                 v-model='${
                                     this.answerData[index].dataChoose[sum - 1]
                                         .radioValue

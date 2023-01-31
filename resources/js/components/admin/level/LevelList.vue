@@ -25,7 +25,11 @@
                         >
                             <div class="py-2 relative">
                                 <h1 class="font-semibold uppercase text-[14px]">
-                                    Create new Level
+                                     {{
+                                        state == "create"
+                                            ? "Tạo mới cấp độ bài học"
+                                            : "Cập nhật cấp độ bài học"
+                                    }}
                                 </h1>
                                 <span
                                     class="
@@ -47,20 +51,20 @@
                             >
                                 <div class="my-2">
                                     <el-form-item
-                                        label="Name Topic"
+                                        label="Tên cấp độ"
                                         prop="name"
                                     >
                                         <el-input
-                                            placeholder="Name Topic"
+                                            placeholder="Tên cấp độ"
                                             v-model="topicData.name"
                                         ></el-input>
                                     </el-form-item>
                                 </div>
-                                <el-form-item label="Lesson" prop="valueLesson">
+                                <el-form-item label="Bài học" prop="valueLesson">
                                     <el-select
                                         v-model="topicData.valueLesson"
                                         multiple
-                                        placeholder="Select"
+                                        placeholder="Chọn bài học"
                                         style="width: 100%"
                                     >
                                         <el-option
@@ -76,16 +80,17 @@
                                     class="
                                         grid grid-cols-2
                                         md:grid-cols-4
-                                        gap-4
+                                        md:gap-4
+                                        gap-1
                                     "
                                 >
                                     <el-form-item
-                                        label="Reading"
+                                        label="Phần đọc"
                                         prop="reading"
                                     >
                                         <el-select
                                             v-model="topicData.valueReading"
-                                            placeholder="Select"
+                                            placeholder="Chọn đề"
                                             style="width: 100%"
                                         >
                                             <el-option
@@ -98,12 +103,12 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item
-                                        label="Vocabulary"
+                                        label="Phần từ vựng"
                                         prop="vocabulary"
                                     >
                                         <el-select
                                             v-model="topicData.valueVocabulary"
-                                            placeholder="Select"
+                                            placeholder="Chọn đề"
                                             style="width: 100%"
                                         >
                                             <el-option
@@ -116,12 +121,12 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item
-                                        label="Listening"
+                                        label="Phần nghe"
                                         prop="listening"
                                     >
                                         <el-select
                                             v-model="topicData.valueListening"
-                                            placeholder="Select"
+                                            placeholder="Chọn đề"
                                             style="width: 100%"
                                         >
                                             <el-option
@@ -134,12 +139,12 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item
-                                        label="Grammar"
+                                        label="Phần ngữ pháp"
                                         prop="grammar"
                                     >
                                         <el-select
                                             v-model="topicData.valueGrammar"
-                                            placeholder="Select"
+                                            placeholder="Chọn đề"
                                             style="width: 100%"
                                         >
                                             <el-option
@@ -154,7 +159,7 @@
                                 </div>
                                 <div class="flex justify-end items-center mt-4">
                                     <el-button plain @click="resetFeild"
-                                        >Cancel</el-button
+                                        >Thoát</el-button
                                     >
                                     <el-button
                                         type="primary"
@@ -165,8 +170,8 @@
                                         "
                                         >{{
                                             state == "create"
-                                                ? "Create"
-                                                : "Update"
+                                                ? "Tạo mới"
+                                                : "Cập nhật"
                                         }}</el-button
                                     >
                                 </div>
@@ -356,19 +361,19 @@ export default {
                             this.resetFeild();
                             this.$message({
                                 type: "success",
-                                message: "Add successful topics",
+                                message: "Thêm cấp độ bài học thành công",
                             });
                             this.getAllLevel();
                         } else {
                             this.$message({
                                 type: "error",
-                                message: "Add error topics",
+                                message: "Thêm cấp độ bài học thất bại",
                             });
                         }
                     } catch (e) {
                         this.$message({
                             type: "error",
-                            message: "Add error topics",
+                            message: "Thêm cấp độ bài học thất bại",
                         });
                     }
                 } else {
@@ -397,19 +402,19 @@ export default {
                             this.resetFeild();
                             this.$message({
                                 type: "success",
-                                message: "Add successful Level",
+                                message: "Sửa cấp độ bài học thành công",
                             });
                             this.getAllLevel();
                         } else {
                             this.$message({
                                 type: "error",
-                                message: "Add error Level",
+                                message: "Sửa cấp độ bài học thất bại",
                             });
                         }
                     } catch (e) {
                         this.$message({
                             type: "error",
-                            message: "Add error topics",
+                            message: "Sửa cấp độ bài học thất bại",
                         });
                     }
                 } else {

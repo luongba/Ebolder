@@ -4,10 +4,10 @@
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
-                        <i class="lnr-book icon-gradient bg-mean-fruit"></i>
+                        <i class="fa-solid fa-swatchbook icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div class="flex justify-between">
-                        <p>LESSON</p>
+                        <p>Quản lý bài học</p>
                     </div>
                 </div>
             </div>
@@ -52,10 +52,10 @@
                 }"
             />
             <el-button type="primary" class="mt-4" @click="chooseType(1)">
-                Upload Video
+                Tải lên Video
             </el-button>
             <el-button type="primary" class="mt-4" @click="chooseType(2)">
-                Link Media
+                Đường dẫn Media
             </el-button>
             <div
                 class="
@@ -562,11 +562,11 @@
                             icon="el-icon-circle-plus-outline"
                             plain
                             slot="reference"
-                            >More questions
+                            >Thêm câu hỏi
                         </el-button>
                     </el-popover>
                     <el-button @click="saveChangeTopic" type="primary" plain
-                        >Save
+                        >Lưu
                     </el-button>
                 </div>
             </div>

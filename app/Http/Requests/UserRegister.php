@@ -32,4 +32,18 @@ class UserRegister extends FormRequest
             'password' => 'required|string|confirmed',
         ];
     }
+    public function messages()
+    {
+        return [
+            'required' => 'Trường :attribute là bắt buộc',
+            'unique' => 'Trường :attribute là duy nhất',
+        ];
+    }
+    public function attributes()
+    {
+        return [
+            'name' => 'Tên',
+            'phone' => 'Số điện thoại'
+        ];
+    }
 }
