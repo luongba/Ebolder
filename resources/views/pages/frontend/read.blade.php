@@ -1,7 +1,7 @@
 @extends('pages.frontend.master')
 @section('content')
     <div class="w-full h-full">
-        @if(isset($request->testId))
+        @if(isset($testId))
             <reading-test :data="{{  json_encode($reading) }}" :query ="{{ json_encode(['testId' => $testId, 'levelId' => $levelId]) }}"/>
 
         @else

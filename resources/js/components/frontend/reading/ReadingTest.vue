@@ -246,7 +246,7 @@
                             "
                             v-if="item == '#'"
                         />
-                        <span v-else>{{ item }}</span>
+                        <span v-else class="mr-1">{{ item }}</span>
                     </div>
                 </div>
 
@@ -431,7 +431,7 @@
                             v-if="item == '#'"
                             disabled
                         />
-                        <span v-else>{{ item }}</span>
+                        <span v-else class="mr-1">{{ item }}</span>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -232,7 +232,7 @@
                             "
                             v-if="item == '#'"
                         />
-                        <span v-else>{{ item }}</span>
+                        <span v-else class="mr-1">{{ item }}</span>
                     </div>
                 </div>
             </div>
@@ -412,7 +412,7 @@
                             v-if="item == '#'"
                             disabled
                         />
-                        <span v-else>{{ item }}</span>
+                        <span v-else class="mr-1">{{ item }}</span>
                     </div>
                 </div>
             </div>

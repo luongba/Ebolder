@@ -154,13 +154,13 @@ class LevelController extends Controller
         $rows = DB::table('levels')->join('exam_result', 'levels.id', '=', 'exam_result.level_id')->where('user_id', $userID)->get();
         $sum = 1;
         foreach ($rows as $row) {
-            if ($row->reading_id == null || $row->is_done_read == 1
-                &&
-                $row->vocabulary_id == null || $row->is_done_vocabulary == 1
-                &&
-                $row->listening_id == null || $row->is_done_listen == 1
-                &&
-                $row->reading_id == null || $row->is_done_read == 1) {
+            if (($row->reading_id == null || $row->is_done_read == 1)
+            &&
+            ($row->vocabulary_id == null || $row->is_done_vocabulary == 1)
+            &&
+           ( $row->listening_id == null || $row->is_done_listen == 1)
+            &&
+            ($row->grammar_id == null || $row->is_done_grammar == 1)) {
                 $sum++;
             }
         }
