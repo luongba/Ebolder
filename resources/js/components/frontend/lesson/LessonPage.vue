@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <header-component />
+        <header-component :user="user" />
         <div class="w-full max-w-[1206px] mx-auto p-4">
             <transition name="el-zoom-in-top">
                 <div
@@ -594,7 +594,7 @@ import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import baseRequest from "../../../utils/baseRequest";
 export default {
-    props: ["data"],
+    props: ["data", "user"],
     data() {
         return {
             answerData: [],

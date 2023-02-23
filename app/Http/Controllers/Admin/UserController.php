@@ -8,6 +8,7 @@ use App\Http\Requests\UserUpdate;
 use App\models\User\HistoryExam;
 use App\models\User\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -22,9 +23,16 @@ class UserController extends Controller
     }
     public function getAllUser(){
         try {
+            $isAdmin = true;
             $users = User::all();
+            if (Gate::allows('User_Edit')) {
+                $isAdmin = true;
+            } else {
+                $isAdmin = false;
+            }
             return response()->json([
                 "status" => 200,
+                'isAdmin'=> $isAdmin,
                 "errorCode" => 0,
                 "data" => $users,
                 "message" => "Lấy user Thành công!"

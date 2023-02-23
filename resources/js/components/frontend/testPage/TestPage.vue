@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <header-component />
+        <header-component :user="user" />
         <div class="w-full mt-[37px] mb-[64px] max-w-[768px] mx-auto">
             <div class="grid grid-cols-2 gap-4">
                 <div
@@ -37,6 +37,7 @@ export default {
     data() {
         return {};
     },
+    props: ["user"],
     methods: {
         openLink(url) {
             window.location.href = `${$Api.baseUrl}/english-level-test/${url}`;

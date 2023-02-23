@@ -110,6 +110,26 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('Role_Edit', function ($user){
             return $user->checkPermisionAccess('Role_Edit');
         });
+
+        Gate::define('Lesson_List', function ($user){
+            return $user->checkPermisionAccess('Lesson_List');
+        });
+        Gate::define('Lesson_Create', function ($user){
+            return $user->checkPermisionAccess('Lesson_Create');
+        });
+        Gate::define('Lesson_Edit', function ($user){
+            return $user->checkPermisionAccess('Lesson_Edit');
+        });
+
+        Gate::define('Level_List', function ($user){
+            return $user->checkPermisionAccess('Level_List');
+        });
+        Gate::define('Level_Create', function ($user){
+            return $user->checkPermisionAccess('Level_Create');
+        });
+        Gate::define('Level_Edit', function ($user){
+            return $user->checkPermisionAccess('Level_Edit');
+        });
         //
     }
 }

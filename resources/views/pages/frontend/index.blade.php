@@ -4,7 +4,7 @@
         <input type="text" id="section" value="{{ session('token') }}" hidden>
     @endif
     <div class="w-full h-full">
-        <home-page-component/>
+        <home-page-component :user="{{json_encode(Auth::user()) }}"/>
     </div>
 @endsection
 @section('js')

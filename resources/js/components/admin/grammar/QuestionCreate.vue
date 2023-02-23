@@ -7,7 +7,7 @@
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div>
-                        <p>VOCABULARY LEVEL TEST</p>
+                        <p>GRAMMAR LEVEL TEST</p>
                     </div>
                 </div>
                 <div class="page-title-actions" @click="createQuestion">

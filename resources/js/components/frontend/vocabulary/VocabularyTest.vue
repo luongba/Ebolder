@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <header-component />
+        <header-component :user="user" />
         <div class="w-full max-w-[1206px] mx-auto p-4">
             <div class="bg-blur-f px-[48px] py-[48px]" v-show="isShowLabel">
                 <h2
@@ -453,7 +453,7 @@ import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import baseRequest from "../../../utils/baseRequest";
 export default {
-    props: ["data", "query"],
+    props: ["data", "query", "user"],
     data() {
         return {
             answerData: [],

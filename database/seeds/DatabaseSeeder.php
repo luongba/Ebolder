@@ -46,6 +46,16 @@ class DatabaseSeeder extends Seeder
             ["name" => "Role List", "display_name"=>"Role List", "parent_id"=>25, "key_code" => "Role_List"],
             ["name" => "Role Create", "display_name"=>"Role Create", "parent_id"=>25, "key_code" => "Role_Create"],
             ["name" => "Role Edit", "display_name"=>"Role Edit", "parent_id"=>25, "key_code" => "Role_Edit"],
+            
+            ["name" => "Lesson", "display_name"=>"Lesson", "parent_id"=>0, "key_code" => "Lesson"],
+            ["name" => "Lesson List", "display_name"=>"Lesson List", "parent_id"=>29, "key_code" => "Lesson_List"],
+            ["name" => "Lesson Create", "display_name"=>"Lesson Create", "parent_id"=>29, "key_code" => "Lesson_Create"],
+            ["name" => "Lesson Edit", "display_name"=>"Lesson Edit", "parent_id"=>29, "key_code" => "Lesson_Edit"],
+
+            ["name" => "Level", "display_name"=>"Level", "parent_id"=>0, "key_code" => "Level"],
+            ["name" => "Level List", "display_name"=>"Level List", "parent_id"=>33, "key_code" => "Level_List"],
+            ["name" => "Level Create", "display_name"=>"Level Create", "parent_id"=>33, "key_code" => "Level_Create"],
+            ["name" => "Level Edit", "display_name"=>"Level Edit", "parent_id"=>33, "key_code" => "Level_Edit"],
         ]);
     }
 }

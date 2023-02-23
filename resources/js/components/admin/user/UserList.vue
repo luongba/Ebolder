@@ -35,12 +35,14 @@
                         type="warning"
                         plain
                         @click="handleEdit(scope.$index, scope.row)"
+                        v-if="isAdmin"
                         >Edit
                     </el-button>
                     <el-button
                         size="mini"
                         type="danger"
                         @click="handleDelete(scope.$index, scope.row)"
+                        v-if="isAdmin"
                         >Delete
                     </el-button>
                 </template>
@@ -70,6 +72,7 @@ export default {
             search: "",
             show: true,
             isLoading: false,
+            isAdmin: true
         };
     },
     methods: {
@@ -130,6 +133,7 @@ export default {
                         email: item.email,
                         phone: item.phone,
                     }));
+                    this.isAdmin = data.isAdmin;
                 }
             } catch (error) {
                 setTimeout(() => {

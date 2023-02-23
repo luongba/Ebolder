@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <header-component />
+        <header-component :user="user" />
         <h2 class="text-[42px] font-semibold leading-[120%] text-center">
             <p>
                 Giải pháp tối ưu dành cho người học
@@ -307,10 +307,10 @@
         <div class="w-full mt-[128px] max-w-[1206px] mx-auto">
             <div class="flex items-center py-[27px] footer-line">
                 <img src="/images/logo/logo.svg" alt="" />
-                <dir class="p-0 text-[16px] font-bold uppercase w-full">
+                <div class="p-0 text-[16px] font-bold uppercase w-full">
                     <p>If You Don’t Walk Today</p>
                     <p>You’ll Have To Run Tomorrow.</p>
-                </dir>
+                </div>
             </div>
         </div>
         <footer-component />
@@ -318,6 +318,7 @@
 </template>
 <script>
 export default {
+    props: ["user"],
     data() {
         return {};
     },

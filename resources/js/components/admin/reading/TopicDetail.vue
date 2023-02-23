@@ -640,7 +640,7 @@ export default {
         pushAns(id) {
             let dataQues = this.dataQuestion.find((item) => item.id == id);
             dataQues.dataAns.push({
-                idAns: Date.now(),
+                idAns: $Helper.randomId(),
                 text: null,
                 alphabet: this.alphabet[dataQues.dataAns.length].toUpperCase(),
             });

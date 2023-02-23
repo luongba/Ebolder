@@ -15,7 +15,7 @@
     <div id="app">
         <div class="w-full h-full bg-app" >
 
-            <learn-page/>
+            <learn-page :user="{{json_encode(Auth::user()) }}"/>
         </div>
         
     </div>

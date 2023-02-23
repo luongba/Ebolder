@@ -2,10 +2,10 @@
 @section('content')
     <div class="w-full h-full">
         @if(isset($testId))
-            <grammar-test :data="{{  json_encode($grammar) }}" :query ="{{ json_encode(['testId' => $testId, 'levelId' => $levelId]) }}"/>
+            <grammar-test :data="{{  json_encode($grammar) }}" :query ="{{ json_encode(['testId' => $testId, 'levelId' => $levelId]) }}" :user="{{json_encode(Auth::user()) }}"/>
 
         @else
-            <grammar-test :data="{{  json_encode($grammar) }}"/>
+            <grammar-test :data="{{  json_encode($grammar) }}" :user="{{json_encode(Auth::user()) }}"/>
 
         @endif
     </div>

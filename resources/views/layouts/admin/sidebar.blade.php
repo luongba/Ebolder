@@ -11,6 +11,7 @@
                     Dashboard
                 </a>
             </li>
+            @can('Level_List')
             <li class="app-sidebar__heading">Cấp độ bài học</li>
             <li>
                 <a class="{{ request()->is(['admin/level']) ? 'mm-active' : '' }}"
@@ -19,6 +20,8 @@
                     Quản lý cấp độ bài học
                 </a>
             </li>
+            @endcan
+            @can('Lesson_List')
             <li class="app-sidebar__heading">Bài học</li>
             <li>
                 <a class="{{ request()->is(['admin/lesson']) ? 'mm-active' : '' }}"
@@ -27,6 +30,7 @@
                     Quản lý bài học
                 </a>
             </li>
+            @endcan
             {{-- Start Testing --}}
             @if(Gate::check('Vocabulary_List') || Gate::check('Question_Vocabulary_List'))
             <li class="app-sidebar__heading">Đề từ vựng</li>

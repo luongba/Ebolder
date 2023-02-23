@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <header-component />
+        <header-component :user="user" />
         <div class="w-full max-w-[1206px] mx-auto p-4">
             <div class="bg-blur-f px-[48px] py-[48px]" v-show="isShowLabel">
                 <h2
@@ -12,16 +12,14 @@
                         mb-4
                     "
                 >
-                    <p>ENGLISH READING LEVEL TEST</p>
+                <p>About The Listening Test</p>
                 </h2>
                 <ul>
                     <li class="list-disc text-[16px] mb-2">
-                        Read the text, then try to answer the questions
+                        There are six parts in this listening test, and four questions for each part.
                     </li>
                     <li class="list-disc text-[16px] mb-2">
-                        There are 20 questions, and you see one at a time in a
-                        random order. The answers are not in the same order as
-                        the text.
+                        You can listen to the recordings more than once if you need to. However, you shouldn’t listen more than three times. The test is here to find your natural listening level. Ideally, you should listen only once or twice.
                     </li>
 
                     <li class="list-disc text-[16px] mb-2">
@@ -29,8 +27,7 @@
                         Don’t worry if you don’t know the answer!
                     </li>
                     <li class="list-disc text-[16px]">
-                        Try not to use a dictionary – the idea is to find your
-                        natural level.
+                        You will get your results after you have answered all the questions.
                     </li>
                 </ul>
                 <h2
@@ -605,198 +602,190 @@ import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import baseRequest from "../../../utils/baseRequest";
 export default {
-    props: ["data", "query"],
-    data() {
-        return {
-            answerData: [],
-            topic: [],
+  props: ["data", "query", "user"],
+  data() {
+    return {
+      answerData: [],
+      topic: [],
 
-            arrRightAns: [],
-            arrWrongAns: [],
-            total: 0,
-            isShowLabel: true,
-            timeWork: 20 * 60 * 1000,
-            timerun: 0,
-            indexPage: 0,
-            baseURl: $Api.baseUrl,
-        };
+      arrRightAns: [],
+      arrWrongAns: [],
+      total: 0,
+      isShowLabel: true,
+      timeWork: 20 * 60 * 1000,
+      timerun: 0,
+      indexPage: 0,
+      baseURl: $Api.baseUrl,
+    };
+  },
+  components: {
+    AVue,
+    BVue,
+    CVue,
+    DVue,
+    VueCountdown,
+  },
+  watch: {
+    indexPage() {
+      setTimeout(() => {
+        this.customAudio();
+      }, 100);
     },
-    components: {
-        AVue,
-        BVue,
-        CVue,
-        DVue,
-        VueCountdown,
-    },
-    watch: {
-        indexPage() {
-            setTimeout(() => {
-                this.customAudio();
-            }, 100);
-        },
-    },
-    methods: {
-        async submit() {
-            this.$refs.countdown.abort();
-            this.topic.forEach((itemTopic) => {
-                itemTopic.questions.forEach((item) => {
-                    this.answerData.find(
-                        (itemAns) => itemAns.id == item.id
-                    ).right_answer = item.right_answer;
-                });
-            });
+  },
+  methods: {
+    async submit() {
+      this.$refs.countdown.abort();
+      this.topic.forEach((itemTopic) => {
+        itemTopic.questions.forEach((item) => {
+          this.answerData.find(
+            (itemAns) => itemAns.id == item.id
+          ).right_answer = item.right_answer;
+        });
+      });
 
-            this.answerData.forEach((item) => {
-                if (item.type == 1) {
-                    if (item.radioValue == item.right_answer) {
-                        this.arrRightAns.push(item);
-                    }
-                } else {
-                    const sameArray =
-                        item.dataChoose.length === item.dataRight.length &&
-                        item.dataChoose.every(
-                            (value, index) =>
-                                value.radioValue ===
-                                item.dataRight[index].right_answer
-                        );
-                    if (sameArray) {
-                        this.arrRightAns.push(item);
-                    }
-                }
-            });
-            let dataHistory = {
-                test_type: "Listening",
-                topic_name: this.data.name,
-                scores: `${this.arrRightAns.length}/${this.answerData.length}`,
-                completion_time: this.timerun,
-            };
-            try {
-                let result = await baseRequest.post(
-                    "/admin/save-history",
-                    dataHistory
-                );
-            } catch (e) {
-                console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
-            }
+      this.answerData.forEach((item) => {
+        if (item.type == 1) {
+          if (item.radioValue == item.right_answer) {
+            this.arrRightAns.push(item);
+          }
+        } else {
+          const sameArray =
+            item.dataChoose.length === item.dataRight.length &&
+            item.dataChoose.every(
+              (value, index) =>
+                value.radioValue === item.dataRight[index].right_answer
+            );
+          if (sameArray) {
+            this.arrRightAns.push(item);
+          }
+        }
+      });
+      let dataHistory = {
+        test_type: "Listening",
+        topic_name: this.data.name,
+        scores: `${this.arrRightAns.length}/${this.answerData.length}`,
+        completion_time: this.timerun,
+      };
+      try {
+        let result = await baseRequest.post("/admin/save-history", dataHistory);
+      } catch (e) {
+        console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
+      }
 
-            if (
-                this.query.testId &&
-                this.query.levelId &&
-                (this.arrRightAns.length / this.answerData.length) * 100 > 10
-            ) {
-                try {
-                    let rs = await baseRequest.post("/admin/save-exam-result", {
-                        levelId: this.query.levelId,
-                        type: 1,
-                    });
-                } catch (e) {
-                    console.log(
-                        "🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e",
-                        e
-                    );
-                }
-            }
-            window.scrollTo({ top: 0, behavior: "smooth" });
-            setTimeout(() => {
-                this.isShowLabel = false;
-            }, 800);
-        },
-        handleCountdownProgress(data) {
-            this.timerun = this.timeWork - data.totalMilliseconds + 1000;
-            if (this.timerun === this.timeWork) {
-                this.submit();
-            }
-        },
-        movePage(number) {
-            switch (number) {
-                case -1: {
-                    if (this.indexPage > 0) {
-                        this.indexPage += number;
-                    }
-                    return;
-                }
-                case 1: {
-                    if (this.indexPage < this.topic.length - 1) {
-                        this.indexPage += number;
-                    }
-                    return;
-                }
-            }
-        },
-        customAudio() {
-            const playerButton = document.querySelector(".player-button"),
-                audio = document.querySelector("audio"),
-                playIcon = `
+      if (
+        this.query.testId &&
+        this.query.levelId &&
+        (this.arrRightAns.length / this.answerData.length) * 100 > 10
+      ) {
+        try {
+          let rs = await baseRequest.post("/admin/save-exam-result", {
+            levelId: this.query.levelId,
+            type: 1,
+          });
+        } catch (e) {
+          console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
+        }
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => {
+        this.isShowLabel = false;
+      }, 800);
+    },
+    handleCountdownProgress(data) {
+      this.timerun = this.timeWork - data.totalMilliseconds + 1000;
+      if (this.timerun === this.timeWork) {
+        this.submit();
+      }
+    },
+    movePage(number) {
+      switch (number) {
+        case -1: {
+          if (this.indexPage > 0) {
+            this.indexPage += number;
+          }
+          return;
+        }
+        case 1: {
+          if (this.indexPage < this.topic.length - 1) {
+            this.indexPage += number;
+          }
+          return;
+        }
+      }
+    },
+    customAudio() {
+      const playerButton = document.querySelector(".player-button"),
+        audio = document.querySelector("audio"),
+        playIcon = `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#FFF">
     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
   </svg>
       `,
-                pauseIcon = `
+        pauseIcon = `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#FFF">
   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
 </svg>
       `;
-            function toggleAudio() {
-                console.log(audio);
-                if (audio.paused) {
-                    audio.play();
-                    playerButton.innerHTML = pauseIcon;
-                } else {
-                    audio.pause();
-                    playerButton.innerHTML = playIcon;
-                }
-            }
-            playerButton.addEventListener("click", toggleAudio);
-            function audioEnded() {
-                playerButton.innerHTML = playIcon;
-            }
+      function toggleAudio() {
+        console.log(audio);
+        if (audio.paused) {
+          audio.play();
+          playerButton.innerHTML = pauseIcon;
+        } else {
+          audio.pause();
+          playerButton.innerHTML = playIcon;
+        }
+      }
+      playerButton.addEventListener("click", toggleAudio);
+      function audioEnded() {
+        playerButton.innerHTML = playIcon;
+      }
 
-            audio.onended = audioEnded;
-            const timeline = document.querySelector(".timeline");
-            function changeTimelinePosition() {
-                const percentagePosition =
-                    (100 * audio.currentTime) / audio.duration;
-                timeline.style.backgroundSize = `${percentagePosition}% 100%`;
-                timeline.value = percentagePosition;
-            }
+      audio.onended = audioEnded;
+      const timeline = document.querySelector(".timeline");
+      function changeTimelinePosition() {
+        const percentagePosition = (100 * audio.currentTime) / audio.duration;
+        timeline.style.backgroundSize = `${percentagePosition}% 100%`;
+        timeline.value = percentagePosition;
+      }
 
-            audio.ontimeupdate = changeTimelinePosition;
-            function changeSeek() {
-                const time = (timeline.value * audio.duration) / 100;
-                audio.currentTime = time;
-            }
+      audio.ontimeupdate = changeTimelinePosition;
+      function changeSeek() {
+        const time = (timeline.value * audio.duration) / 100;
+        audio.currentTime = time;
+      }
 
-            timeline.addEventListener("change", changeSeek);
-            const soundButton = document.querySelector(".sound-button"),
-                soundIcon = `
+      timeline.addEventListener("change", changeSeek);
+      const soundButton = document.querySelector(".sound-button"),
+        soundIcon = `
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#FFF">
   <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd" />
 </svg>`,
-                muteIcon = `
+        muteIcon = `
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#FFF">
   <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd" />
 </svg>`;
-            function toggleSound() {
-                audio.muted = !audio.muted;
-                soundButton.innerHTML = audio.muted ? muteIcon : soundIcon;
-            }
+      function toggleSound() {
+        audio.muted = !audio.muted;
+        soundButton.innerHTML = audio.muted ? muteIcon : soundIcon;
+      }
 
-            soundButton.addEventListener("click", toggleSound);
-        },
-        arrQuestion(question) {
-            return question.question.split(" ");
-        },
-        getIndexSharp(question, index) {
-            let arr = question.question.split(" ").splice(0, index + 1);
-            return arr.filter((e) => e == "#").length - 1;
-        },
-        renderInput(question, index) {
-            let sum = 0;
-            let arrQuestion = question.question.split(" ");
-            for (let i = 0; i < arrQuestion.length; i++) {
-                if (arrQuestion[i] == "#") {
-                    sum++;
-                    arrQuestion[i] = `<input 
+      soundButton.addEventListener("click", toggleSound);
+    },
+    arrQuestion(question) {
+      return question.question.split(" ");
+    },
+    getIndexSharp(question, index) {
+      let arr = question.question.split(" ").splice(0, index + 1);
+      return arr.filter((e) => e == "#").length - 1;
+    },
+    renderInput(question, index) {
+      let sum = 0;
+      let arrQuestion = question.question.split(" ");
+      for (let i = 0; i < arrQuestion.length; i++) {
+        if (arrQuestion[i] == "#") {
+          sum++;
+          arrQuestion[i] = `<input 
                             style="color:black;
                                 border: none;
                                 outline:none;
@@ -806,160 +795,160 @@ export default {
                                 display: inline-block;
                                 width: 100px" 
                                 v-model='${
-                                    this.answerData[index].dataChoose[sum - 1]
-                                        .radioValue
+                                  this.answerData[index].dataChoose[sum - 1]
+                                    .radioValue
                                 }'>`;
-                }
-            }
-            return arrQuestion.join(" ");
-        },
+        }
+      }
+      return arrQuestion.join(" ");
     },
-    created() {
-        this.topic = this.data.topic_audio_listen.map((audio) => ({
-            id: audio.id,
-            audio: audio.audio,
-            questions: audio.question_listening.map((question) => ({
-                id: question.id,
-                question: question.question,
-                type: question.type,
-                dataAns: question.answer_listening.map((answer) => ({
-                    id: answer.answer_id,
-                    text: answer.text,
-                })),
+  },
+  created() {
+    this.topic = this.data.topic_audio_listen.map((audio) => ({
+      id: audio.id,
+      audio: audio.audio,
+      questions: audio.question_listening.map((question) => ({
+        id: question.id,
+        question: question.question,
+        type: question.type,
+        dataAns: question.answer_listening.map((answer) => ({
+          id: answer.answer_id,
+          text: answer.text,
+        })),
 
-                right_answer: question.right_answers
-                    ? question.right_answers.answer_id
-                    : "",
+        right_answer: question.right_answers
+          ? question.right_answers.answer_id
+          : "",
+      })),
+    }));
+    this.topic.forEach((itemTopic) => {
+      itemTopic.questions.forEach((item) => {
+        if (item.type == 1) {
+          console.log(
+            "🚀 ~ file: ListeningTest.vue:766 ~ itemTopic.questions.forEach ~ item",
+            item
+          );
+
+          this.answerData.push({
+            radioValue: null,
+            right_answer: "",
+            type: 1,
+            id: item.id,
+          });
+        } else {
+          this.answerData.push({
+            dataChoose: item.dataAns.map((item, index) => ({
+              radioValue: null,
             })),
-        }));
-        this.topic.forEach((itemTopic) => {
-            itemTopic.questions.forEach((item) => {
-                if (item.type == 1) {
-                    console.log(
-                        "🚀 ~ file: ListeningTest.vue:766 ~ itemTopic.questions.forEach ~ item",
-                        item
-                    );
-
-                    this.answerData.push({
-                        radioValue: null,
-                        right_answer: "",
-                        type: 1,
-                        id: item.id,
-                    });
-                } else {
-                    this.answerData.push({
-                        dataChoose: item.dataAns.map((item, index) => ({
-                            radioValue: null,
-                        })),
-                        dataRight: item.dataAns.map((item, index) => ({
-                            right_answer: item.text,
-                        })),
-                        type: 2,
-                        id: item.id,
-                    });
-                }
-            });
-        });
-    },
-    mounted() {
-        this.customAudio();
-    },
+            dataRight: item.dataAns.map((item, index) => ({
+              right_answer: item.text,
+            })),
+            type: 2,
+            id: item.id,
+          });
+        }
+      });
+    });
+  },
+  mounted() {
+    this.customAudio();
+  },
 };
 </script>
 <style>
 .border-answer {
-    border-color: #eee;
+  border-color: #eee;
 }
 .border-answer.active {
-    border-color: #5b5ea6;
-    border-width: 3px;
+  border-color: #5b5ea6;
+  border-width: 3px;
 }
 .border-answer.active.right {
-    border-color: #009b77;
-    border-width: 3px;
+  border-color: #009b77;
+  border-width: 3px;
 }
 .border-answer.wrong.right_wait {
-    border-color: #009b77;
-    border-width: 3px;
+  border-color: #009b77;
+  border-width: 3px;
 }
 .border-answer.active.right_wait.bgright {
-    background-color: #009b77;
+  background-color: #009b77;
 }
 .border-answer.active.wrong {
-    border-color: #dd4124;
-    border-width: 3px;
+  border-color: #dd4124;
+  border-width: 3px;
 }
 .text-answer {
-    color: #eee;
+  color: #eee;
 }
 .text-answer.active {
-    color: #5b5ea6;
+  color: #5b5ea6;
 }
 .text-answer.active.right {
-    color: #009b77;
+  color: #009b77;
 }
 .text-answer.wrong.right_wait {
-    color: #009b77;
+  color: #009b77;
 }
 .text-answer.active.wrong {
-    color: #dd4124;
+  color: #dd4124;
 }
 .text-answer.active.right_wait.bgright {
-    color: #fff;
+  color: #fff;
 }
 
 .controls {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
 }
 .player-button {
-    background-color: transparent;
-    border: 0;
-    width: 3em;
-    height: 3em;
-    cursor: pointer;
-    padding: 0;
+  background-color: transparent;
+  border: 0;
+  width: 3em;
+  height: 3em;
+  cursor: pointer;
+  padding: 0;
 }
 .timeline {
-    -webkit-appearance: none;
-    width: calc(100% - 3em);
-    height: 0.5em;
-    background-color: #e5e5e5;
-    border-radius: 5px;
-    background-size: 0% 100%;
-    background-image: linear-gradient(#5b5ea6, #5b5ea6);
-    background-repeat: no-repeat;
-    margin: 0 16px;
+  -webkit-appearance: none;
+  width: calc(100% - 3em);
+  height: 0.5em;
+  background-color: #e5e5e5;
+  border-radius: 5px;
+  background-size: 0% 100%;
+  background-image: linear-gradient(#5b5ea6, #5b5ea6);
+  background-repeat: no-repeat;
+  margin: 0 16px;
 }
 .timeline::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 1em;
-    height: 1em;
-    border-radius: 50%;
-    cursor: pointer;
-    opacity: 0;
-    transition: all 0.1s;
-    background-color: #5b5ea6;
+  -webkit-appearance: none;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.1s;
+  background-color: #5b5ea6;
 }
 
 .timeline::-webkit-slider-runnable-track {
-    -webkit-appearance: none;
-    box-shadow: none;
-    border: none;
-    background: transparent;
+  -webkit-appearance: none;
+  box-shadow: none;
+  border: none;
+  background: transparent;
 }
 .timeline {
-    width: calc(100% - (3em + 2em + 0.5em));
-    margin-right: 0.5em;
+  width: calc(100% - (3em + 2em + 0.5em));
+  margin-right: 0.5em;
 }
 .sound-button {
-    background-color: transparent;
-    border: 0;
-    width: 2em;
-    height: 2em;
-    cursor: pointer;
-    padding: 0;
+  background-color: transparent;
+  border: 0;
+  width: 2em;
+  height: 2em;
+  cursor: pointer;
+  padding: 0;
 }
 </style>

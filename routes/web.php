@@ -45,7 +45,7 @@ Route::prefix('/')->group(function () {
 
     //trang-chu
     Route::get('/', 'HomeController@index')->name('home-page');
-    Route::get('/learn', 'HomeController@learnPage')->name('learn-page');
+    Route::get('/learn', 'HomeController@learnPage')->name('learn-page')->middleware('checkLogin');
     Route::prefix('/english-level-test')->group(function () {
         Route::get('/', 'HomeController@testPage')->name('test-page')->middleware('checkLogin');
         Route::get('/Vocabulary', 'HomeController@vocabularyTest')->name('vocabulary-test-page')->middleware('checkLogin');
@@ -97,12 +97,12 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/role/edit/{id}', 'Admin\RoleController@edit')->name('role-edit')->middleware('can:Role_Edit');
 
         //learn
-        Route::get('/lesson', 'Admin\LearnController@index')->name('lesson-list');
-        Route::get('/lesson/topic-create', 'Admin\LearnController@createTopic')->name('lesson-topic-create');
-        Route::get('/lesson/topic-detail/{id}', 'Admin\LearnController@detailTopic')->name('lesson-topic-detail');
+        Route::get('/lesson', 'Admin\LearnController@index')->name('lesson-list')->middleware('can:Lesson_List');
+        Route::get('/lesson/topic-create', 'Admin\LearnController@createTopic')->name('lesson-topic-create')->middleware('can:Lesson_Create');
+        Route::get('/lesson/topic-detail/{id}', 'Admin\LearnController@detailTopic')->name('lesson-topic-detail')->middleware('can:Lesson_Edit');
 
         //Admin level
-        Route::get('/level', 'Admin\LevelController@index')->name('level-list');
+        Route::get('/level', 'Admin\LevelController@index')->name('level-list')->middleware('can:Level_List');
 
     });
 });

@@ -4,9 +4,9 @@
 
         @if(isset($testId))
             <listening-test :data="{{ json_encode($listening) }}"
-                            :query="{{ json_encode(['testId' => $testId, 'levelId' => $levelId]) }}"/>
+                            :query="{{ json_encode(['testId' => $testId, 'levelId' => $levelId]) }}" :user="{{json_encode(Auth::user()) }}"/>
         @else
-            <listening-test :data="{{ json_encode($listening) }}"/>
+            <listening-test :data="{{ json_encode($listening) }}" :user="{{json_encode(Auth::user()) }}" />
         @endif
     </div>
 @endsection
