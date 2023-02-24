@@ -1,7 +1,8 @@
 <template>
     <div class="w-full h-[100vh] overflow-y-scroll">
+        <header-component :user="user" />
         <div class="w-full  mt-4">
-            <header-component :user="user" />
+
             <div class="container">
                 <div class="block" v-if="data.length > 0">
                     <el-timeline>
