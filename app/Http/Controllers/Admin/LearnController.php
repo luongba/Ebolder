@@ -222,7 +222,6 @@ class LearnController extends Controller
     public function addQuestionSingle(Request $request)
     {
         try {
-            DB::beginTransaction();
             $check = QuestionLesson::where('id', $request->id)->exists();
             if ($check) {
                 $question = QuestionLesson::where('id', $request->id)->first();
@@ -231,11 +230,13 @@ class LearnController extends Controller
                         "question" => $request->question,
                         "level" => $request->level,
                         'type' => $request->type,
+                        "learn_id" => $request->learn_id
                     ]
                 );
                 if ($request->type == 1) {
                     foreach ($request->dataAns as $keyAds => $item) {
                         $ans = $question->AnswerLesson()->where("id_answer", $item['id'])->first();
+
                         if (isset($ans)) {
                             $ans->update([
                                 "text" => $item['text'],
@@ -294,7 +295,6 @@ class LearnController extends Controller
                     ]);
                 }
 
-                DB::commit();
                 return response()->json([
                     "status" => 200,
                     "errorCode" => 0,
@@ -303,7 +303,6 @@ class LearnController extends Controller
             }
 
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
