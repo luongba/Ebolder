@@ -102,23 +102,11 @@
                     <ul>
                         <li class="flex items-center text-[16px] mt-4">
                             <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
+                            <span class="ml-2">Cấu trúc ngữ pháp</span>
                         </li>
                         <li class="flex items-center text-[16px] mt-4">
                             <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
+                            <span class="ml-2">Tăng cường vốn từ vựng</span>
                         </li>
                     </ul>
                 </li>
@@ -126,23 +114,11 @@
                     <ul>
                         <li class="flex items-center text-[16px] mt-4">
                             <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
+                            <span class="ml-2">Học với video</span>
                         </li>
                         <li class="flex items-center text-[16px] mt-4">
                             <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
+                            <span class="ml-2">Học với Audio</span>
                         </li>
                     </ul>
                 </li>
@@ -150,23 +126,11 @@
                     <ul>
                         <li class="flex items-center text-[16px] mt-4">
                             <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
+                            <span class="ml-2">Luyện khả năng nghe</span>
                         </li>
                         <li class="flex items-center text-[16px] mt-4">
                             <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
+                            <span class="ml-2">Phân tích một đoạn văn</span>
                         </li>
                     </ul>
                 </li>
@@ -174,23 +138,11 @@
                     <ul>
                         <li class="flex items-center text-[16px] mt-4">
                             <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
+                            <span class="ml-2">Cách sắp xếp câu</span>
                         </li>
                         <li class="flex items-center text-[16px] mt-4">
                             <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
-                        </li>
-                        <li class="flex items-center text-[16px] mt-4">
-                            <i class="el-icon-check"></i>
-                            <span class="ml-2">Cấu trúc tiếng anh</span>
+                            <span class="ml-2">Cách giải đề từ dễ đến khó</span>
                         </li>
                     </ul>
                 </li>
@@ -205,21 +157,17 @@
                     <span class="text-[40px] color-gadient">
                         <i class="el-icon-s-management"></i>
                     </span>
-                    <p class="text-[20px] mt-4 font-semibold">Trực quan</p>
+                    <p class="text-[20px] mt-4 font-semibold">Thực tế</p>
                     <ul>
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                            Các bài học bám sát thực tế
                         </li>
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
-                        </li>
-
-                        <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                            phù hợp với người đi học, đi làm
                         </li>
 
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                            Có loại đề phù hợp để ôn luyện kỹ năng
                         </li>
 
                         <li class="text-[16px] mt-2">
@@ -229,27 +177,27 @@
                 </div>
                 <div class="p-[32px] bg-blur-f mx-auto relative">
                     <span class="text-[40px] color-gadient">
-                        <i class="el-icon-s-management"></i>
+                        <i class="el-icon-sunny"></i>
                     </span>
-                    <p class="text-[20px] mt-4 font-semibold">Trực quan</p>
+                    <p class="text-[20px] mt-4 font-semibold">Đủ kiến thức</p>
                     <ul>
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                            Rất nhiều bài tập để ôn luyện
                         </li>
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
-                        </li>
-
-                        <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                            Đầy đủ kiến thức quan trọng
                         </li>
 
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                            Nắm chắc ngữ pháp, từ vựng
                         </li>
 
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                           Hiểu rõ cấu trúc câu
+                        </li>
+
+                        <li class="text-[16px] mt-2">
+                            Phương pháp ghi nhớ dài hạn
                         </li>
                     </ul>
                 </div>
@@ -257,26 +205,23 @@
                     <span class="text-[40px] color-gadient">
                         <i class="el-icon-s-management"></i>
                     </span>
-                    <p class="text-[20px] mt-4 font-semibold">Trực quan</p>
+                    <p class="text-[20px] mt-4 font-semibold">Theo lộ trình</p>
                     <ul>
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                            Lộ trình được thiết kế bởi giáo viên có nhiều kinh nghiệm
                         </li>
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                           Kiến thức từ dễ đến khó
                         </li>
 
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                            Nội dung thiết kế khoa học
                         </li>
 
                         <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
+                            Phù hợp với người mới bắt đầu
                         </li>
-
-                        <li class="text-[16px] mt-2">
-                            Hệ thống làm bài kiểm tra tân tiến
-                        </li>
+                        
                     </ul>
                 </div>
             </div>
