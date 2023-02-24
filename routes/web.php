@@ -53,7 +53,8 @@ Route::prefix('/')->group(function () {
         Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page')->middleware('checkLogin');
         Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page')->middleware('checkLogin');
     });
-    Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page');
+    Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page')->middleware('checkLogin');
+    Route::get('/history', 'HomeController@historyPage')->name('history-page')->middleware('checkLogin');
 
 
 

@@ -16,9 +16,13 @@
         </div>
         <template #dropdown>
       <el-dropdown-menu>
+          <el-dropdown-item>
+              <span @click="history()">Lịch sử làm bài thi</span>
+          </el-dropdown-item>
         <el-dropdown-item>
             <span @click="logout()">Đăng xuất</span>
         </el-dropdown-item>
+
       </el-dropdown-menu>
     </template>
     </el-dropdown>
@@ -31,6 +35,9 @@ export default {
     methods: {
         logout(){
             window.location.href = "/logout";
+        },
+        history(){
+            window.location.href = "/history";
         }
     },
     created(){

@@ -379,7 +379,7 @@ export default {
                 let rs = await baseRequest.get(`/admin/check-passed-level`);
                 if (rs.data.status == 200) {
                     this.levelCountPassed = rs.data.data;
-                    this.level = rs.data.data - 1
+                    this.level = rs.data.data
                 }
             } catch (e) {
                 console.log(e);

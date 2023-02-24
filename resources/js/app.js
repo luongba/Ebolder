@@ -204,6 +204,12 @@ Vue.component(
     require("./components/frontend/lesson/LessonPage.vue").default
 );
 
+//History
+Vue.component(
+    "history-page",
+    require("./components/frontend/history/History.vue").default
+);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

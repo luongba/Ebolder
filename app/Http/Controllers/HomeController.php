@@ -232,9 +232,15 @@ class HomeController extends Controller
                     ]);
                 }
                 break;
-            
-        }   
-        
+
+        }
+
+    }
+
+    public function historyPage(){
+        $user = Auth::user();
+        $history = HistoryExam::where('user_id', $user->id)->orderBy('created_at', 'desc')->take(20)->get();
+        return view('pages.frontend.history', compact('history'));
     }
 
 
