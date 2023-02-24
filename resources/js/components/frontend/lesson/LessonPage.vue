@@ -1,10 +1,10 @@
 <template>
     <div class="w-full">
         <header-component :user="user" />
-        <div class="w-full max-w-[1206px] mx-auto p-4">
+        <div class="w-full max-w-[1206px] mx-auto lg:p-4 p-2">
             <transition name="el-zoom-in-top">
                 <div
-                    class="bg-blur-f px-[48px] py-[48px] mt-4 mb-4"
+                    class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px] mt-4 mb-4"
                     v-show="!isShowLabel"
                 >
                     <h2
@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </transition>
-            <div class="bg-blur-f px-[48px] py-[48px]">
+            <div class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px]">
                 <h2
                     class="
                         text-[28px]
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <div class="w-full max-w-[1206px] mx-auto p-4">
+        <div class="w-full max-w-[1206px] mx-auto lg:p-4 p-2">
             <div
                 v-if="isShowLabel && index == indexPage && question.type == 1"
                 class="w-full mt-4"
@@ -172,9 +172,9 @@
                 </p>
                 <!-- <p
                     class="mt-2 mb-4 text-[16px] mt-4"
-                    
+
                 > -->
-                <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center">
+                <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center flex-wrap">
                     <div
                         v-for="(item, indexAns) in arrQuestion(question)"
                         :key="indexAns"
@@ -187,7 +187,8 @@
                                 border-none
                                 outline-none
                                 rounded-md
-                                w-[150px]
+                                w-[86px]
+                                lg:w-[150px]
                                 px-2
                                 py-1
                             "
@@ -348,10 +349,11 @@
                     Question <strong>{{ index + 1 }}</strong> of
                     <strong>{{ topic.questions.length }}</strong>
                 </p>
-                <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center">
+                <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center flex-wrap">
                     <div
                         v-for="(item, indexAns) in arrQuestion(question)"
                         :key="indexAns"
+                        class="mt-2"
                     >
                         <input
                             type="text"
@@ -361,7 +363,8 @@
                                 border-none
                                 outline-none
                                 rounded-md
-                                w-[150px]
+                                w-[86px]
+                                lg:w-[150px]
                                 px-2
                                 py-1
                             "
@@ -676,7 +679,7 @@ export default {
             for (let i = 0; i < arrQuestion.length; i++) {
                 if (arrQuestion[i] == "#") {
                     sum++;
-                    arrQuestion[i] = `<input 
+                    arrQuestion[i] = `<input
                             style="color:black;
                                 border: none;
                                 outline:none;
@@ -684,7 +687,7 @@ export default {
                                 5px; padding: 2px .5em;
                                 background: #e2e7ed;
                                 display: inline-block;
-                                width: 100px" 
+                                width: 100px"
                                 v-model='${
                                     this.answerData[index].dataChoose[sum - 1]
                                         .radioValue

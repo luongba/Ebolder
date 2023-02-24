@@ -1,6 +1,6 @@
 <template>
-    <div class="w-full max-w-[1206px] mx-auto">
-        <div class="w-full grid grid-cols-4 gap-4 px-2">
+    <div class="w-full px-2 max-w-[95%] xl:max-w-[1206px] mx-auto">
+        <div class="w-full grid grid-cols-1 xl:grid-cols-4 gap-4 px-2">
             <ul>
                 <li class="text-[20px] mb-2">
                     <span><i class="el-icon-phone"></i></span>

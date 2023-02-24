@@ -1,22 +1,25 @@
 <template>
     <div class="w-full">
         <header-component :user="user" />
-        <h2 class="text-[42px] font-semibold leading-[120%] text-center">
-            <p>
-                Giải pháp tối ưu dành cho người học
-                <strong class="strong">tiếng anh</strong>
-            </p>
+        <div class="px-2 xl:px-0">
+            <h2 class="text-[28px] xl:text-[42px] font-semibold leading-[120%] text-center">
+                <p>
+                    Giải pháp tối ưu dành cho người học
+                    <strong class="strong">tiếng anh</strong>
+                </p>
 
-            <p>từ mức độ dễ đến khó !</p>
-        </h2>
-        <div class="text-[16px] text-center my-4">
-            <p>Không cần cài đặt phần mềm phức tạp.</p>
-            <p>
-                Học luôn trên trang web,
-                <span class="text-[#5ebbff]">có rất nhiều đề </span> để bạn tha hồ thử
-                sức.
-            </p>
+                <p>từ mức độ dễ đến khó !</p>
+            </h2>
+            <div class="text-[16px] text-center my-4">
+                <p>Không cần cài đặt phần mềm phức tạp.</p>
+                <p>
+                    Học luôn trên trang web,
+                    <span class="text-[#5ebbff]">có rất nhiều đề </span> để bạn tha hồ thử
+                    sức.
+                </p>
+            </div>
         </div>
+
         <button
             @click="openLink"
             class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white mx-auto hover:opacity-80"
@@ -24,13 +27,13 @@
             Thử sức ngay
         </button>
         <div class="w-full relative mt-[64px]">
-            <div class="absolute left-0 top-[110px]">
+            <div class="absolute left-0 top-[110px] hidden xl:block">
                 <img src="/images/bg/landing_page_background_item1.png" alt="" />
             </div>
             <div
-                class="py-[134px] px-[134px] max-w-[1206px] bg-blur-f mx-auto mt-4 relative"
+                class="py-[16px] px-[8px] max-w-[95%] xl:py-[134px] xl:px-[134px] xl:max-w-[1206px] bg-blur-f mx-auto mt-4 relative"
             >
-                <div class="grid grid-cols-5 gap-4">
+                <div class="grid grid-cols-1 xl:grid-cols-5 gap-4 p-4 xl:p-0">
                     <h2 class="text-[28px] font-semibold leading-[120%] col-span-3">
                         <p>Học tiếng anh bước khởi đầu để bước chân ra ngoài thế giới</p>
                     </h2>
@@ -83,21 +86,21 @@
                         </li>
                     </ul>
                 </div>
-                <div class="absolute bottom-[-80px] left-[90px]">
+                <div class="absolute bottom-[-80px] left-[90px] hidden xl:block">
                     <img src="images/bg/landing_page_hero_image.png" alt="" />
                 </div>
             </div>
         </div>
-        <div class="w-full mt-[128px] relative">
-            <div class="absolute right-0 top-[-112px]">
+        <div class="w-full mt-[16px] xl:mt-[128px] relative">
+            <div class="absolute right-0 top-[-112px] hidden xl:block">
                 <img src="/images/bg/landing_page_background_item2.png" alt="" />
             </div>
-            <h2 class="text-[42px] font-semibold leading-[120%] text-center">
+            <h2 class="text-[28px] xl:text-[42px] mt-4 font-semibold leading-[120%] text-center">
                 <p>Bạn sẽ học được</p>
 
                 <p>những gì ?</p>
             </h2>
-            <ul class="grid grid-cols-4 gap-4 max-w-[980px] mx-auto mt-[32px]">
+            <ul class="grid  grid-cols-2 md:grid-cols-3 max-w-[95%] mt-[16px]  xl:grid-cols-4 gap-4 xl:max-w-[980px] mx-auto xl:mt-[32px]">
                 <li>
                     <ul>
                         <li class="flex items-center text-[16px] mt-4">
@@ -148,12 +151,12 @@
                 </li>
             </ul>
         </div>
-        <div class="w-full mt-[128px] px-[128px]">
-            <h2 class="text-[42px] font-semibold leading-[120%] text-center">
+        <div class="w-full mt-[32px] xl:mt-[128px] xl:px-[128px]">
+            <h2 class="text-[28px] xl:text-[42px] font-semibold leading-[120%] text-center">
                 <p>Tại sao nên học ở đây ?</p>
             </h2>
-            <div class="w-full grid grid-cols-3 gap-4 w-[1124px] mt-[64px] mx-auto">
-                <div class="p-[32px] bg-blur-f mx-auto relative">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 w-[95%] xl:w-[1124px] mt-[32px] mx-auto">
+                <div class="p-[32px] bg-blur-f relative">
                     <span class="text-[40px] color-gadient">
                         <i class="el-icon-s-management"></i>
                     </span>
@@ -175,7 +178,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="p-[32px] bg-blur-f mx-auto relative">
+                <div class="p-[32px] bg-blur-f relative">
                     <span class="text-[40px] color-gadient">
                         <i class="el-icon-sunny"></i>
                     </span>
@@ -201,7 +204,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="p-[32px] bg-blur-f mx-auto relative">
+                <div class="p-[32px] bg-blur-f relative">
                     <span class="text-[40px] color-gadient">
                         <i class="el-icon-s-management"></i>
                     </span>
@@ -221,22 +224,22 @@
                         <li class="text-[16px] mt-2">
                             Phù hợp với người mới bắt đầu
                         </li>
-                        
+
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="w-full mt-[128px] relative">
-            <div class="absolute left-0 top-0">
+        <div class="w-full mt-[16px] xl:mt-[128px] relative">
+            <div class="absolute left-0 top-0 hidden xl:block">
                 <img src="/images/bg/landing_page_background_item3.png" alt="" />
             </div>
-            <div class="py-[134px] px-[134px] max-w-[1124px] bg-blur-f mx-auto relative">
-                <div class="absolute right-[-35px] top-[-12px]">
+            <div class="xl:py-[134px] xl:px-[134px] w-[95%] xl:w-[1124px] bg-blur-f mx-auto relative">
+                <div class="absolute right-[-35px] top-[-12px] hidden xl:block">
                     <img src="/images/bg/landing-bottom-bg.png" alt="" />
                 </div>
-                <div class="grid grid-cols-2">
+                <div class="grid grid-cols-1 xl:grid-cols-2 p-4">
                     <div class="col-span-1 flex justify-start items-start flex-col">
-                        <h2 class="text-[42px] font-semibold leading-[120%] text-start">
+                        <h2 class="text-[28px] xl:text-[42px] font-semibold leading-[120%] text-start">
                             <p>Cách dễ nhất để học tiếng anh!</p>
                         </h2>
                         <button
@@ -249,10 +252,10 @@
                 </div>
             </div>
         </div>
-        <div class="w-full mt-[128px] max-w-[1206px] mx-auto">
+        <div class="w-full mt-4 xl:mt-[128px] max-w-[1206px] mx-auto">
             <div class="flex items-center py-[27px] footer-line">
                 <img src="/images/logo/logo.svg" alt="" />
-                <div class="p-0 text-[16px] font-bold uppercase w-full">
+                <div class="p-0 text-[16px] font-bold uppercase w-full hidden xl:block">
                     <p>If You Don’t Walk Today</p>
                     <p>You’ll Have To Run Tomorrow.</p>
                 </div>

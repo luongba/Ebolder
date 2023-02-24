@@ -83,7 +83,7 @@
             <div class="x5">
                 <div class="cloud"></div>
             </div> -->
-            <div class="cloud-box" id="cloud-box" v-show="!show">
+            <div class="cloud-box px-2" id="cloud-box" v-show="!show">
                 <div
                     class="box"
                     :id="`cloud-${listLevel.length - index}`"
@@ -284,7 +284,7 @@
                 </div> -->
             </div>
         </div>
-        <div class="absolute bottom-[10%] right-[5%] z-10" v-show="!show">
+        <div class="absolute bottom-[5%] right-[5%] z-10" v-show="!show">
             <div class="mb-4">
                 <el-button
                     :disabled="!(level < listLevel.length)"
@@ -363,12 +363,12 @@ export default {
                             grammar_id: item.grammar_id,
                             lessons: item.learn || [],
                         }))
-                        
+
                     console.log("🚀 ~ file: LearnPage.vue:367 ~ getAllLevel ~ listLevel", this.listLevel)
                     this.listLevel = this.listLevel.filter(
                         (item, index) => index < this.levelCountPassed
                     ).reverse();
-                    
+
                 }
             } catch (e) {
                 console.log(e);
@@ -379,7 +379,7 @@ export default {
                 let rs = await baseRequest.get(`/admin/check-passed-level`);
                 if (rs.data.status == 200) {
                     this.levelCountPassed = rs.data.data;
-                    this.level = rs.data.data
+                    this.level = rs.data.data - 1
                 }
             } catch (e) {
                 console.log(e);

@@ -2,7 +2,7 @@
     <div class="w-full">
         <header-component :user="user" />
         <div class="w-full max-w-[1206px] mx-auto p-4">
-            <div class="bg-blur-f px-[48px] py-[48px]" v-show="isShowLabel">
+            <div class="bg-blur-f lg:px-[48px] lg:py-[48px] px-[16px] py-[16px]" v-show="isShowLabel">
                 <h2
                     class="
                         text-[28px]
@@ -56,7 +56,7 @@
             </div>
             <transition name="el-zoom-in-top">
                 <div
-                    class="bg-blur-f px-[48px] py-[48px] mt-4"
+                    class="bg-blur-f lg:px-[48px] lg:py-[48px] px-[16px] py-[16px] mt-4"
                     v-show="!isShowLabel"
                 >
                     <h2
@@ -224,7 +224,8 @@
                                 border-none
                                 outline-none
                                 rounded-md
-                                w-[150px]
+                                w-[86px]
+                                lg:w-[150px]
                                 px-2
                                 py-1
                             "
@@ -393,7 +394,8 @@
                                 border-none
                                 outline-none
                                 rounded-md
-                                w-[150px]
+                               w-[86px]
+                                lg:w-[150px]
                                 px-2
                                 py-1
                             "

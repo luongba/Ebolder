@@ -2,7 +2,7 @@
     <div class="w-full">
         <header-component :user="user" />
         <div class="w-full max-w-[1206px] mx-auto p-4">
-            <div class="bg-blur-f px-[48px] py-[48px]" v-show="isShowLabel">
+            <div class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px]" v-show="isShowLabel">
                 <h2
                     class="
                         text-[28px]
@@ -54,7 +54,7 @@
 
             <transition name="el-zoom-in-top">
                 <div
-                    class="bg-blur-f px-[48px] py-[48px] mt-4"
+                    class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px] mt-4"
                     v-show="!isShowLabel"
                 >
                     <h2
@@ -116,7 +116,7 @@
                     Audio: <strong>{{ indexAudio + 1 }}</strong> of
                     <strong>{{ topic.length }}</strong>
                 </p>
-                <div class="bg-blur-f px-[48px] py-[16px] mt-4">
+                <div class="bg-blur-f px-[16px] py-[16px] lg:px-[48px] lg:py-[16px] mt-4">
                     <audio
                         id="audio-preview"
                         class="w-full bg-transparent"
@@ -280,7 +280,8 @@
                                 border-none
                                 outline-none
                                 rounded-md
-                                w-[150px]
+                                w-[86px]
+                                lg:w-[150px]
                                 px-2
                                 py-1
                             "
@@ -492,7 +493,8 @@
                                 border-none
                                 outline-none
                                 rounded-md
-                                w-[150px]
+                                w-[86px]
+                                lg:w-[150px]
                                 px-2
                                 py-1
                             "
@@ -517,7 +519,7 @@
                         <span v-else class="mr-1">{{ item }}</span>
                     </div>
                 </div>
-                    
+
                 </div>
             </div>
             <div class="flex items-center justify-between mt-4">
@@ -785,7 +787,7 @@ export default {
       for (let i = 0; i < arrQuestion.length; i++) {
         if (arrQuestion[i] == "#") {
           sum++;
-          arrQuestion[i] = `<input 
+          arrQuestion[i] = `<input
                             style="color:black;
                                 border: none;
                                 outline:none;
@@ -793,7 +795,7 @@ export default {
                                 5px; padding: 2px .5em;
                                 background: #e2e7ed;
                                 display: inline-block;
-                                width: 100px" 
+                                width: 100px"
                                 v-model='${
                                   this.answerData[index].dataChoose[sum - 1]
                                     .radioValue
