@@ -49,12 +49,15 @@ class LevelController extends Controller
     {
         try {
             DB::beginTransaction();
+            $userID = Auth::user()->id;
             $level = Level::with('Learn')->get();
+            $examResult = DB::table('exam_result')->where('user_id', $userID)->get();
             DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "data" => $level,
+                'examResult' => $examResult,
                 "message" => "Lấy danh sách level Thành công!"
             ]);
         } catch (\Throwable $th) {
