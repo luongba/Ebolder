@@ -116,7 +116,8 @@
                 <a class="{{ request()->is(['admin/users']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.user-list') }}">
                     <i class="metismenu-icon fa-regular fa-user"></i>
-                    Quản lý người dùng
+                    {{Auth::user()->is_admin == 1 ? 'Quản lý người dùng' : 'Xem lịch sử kiểm tra'}}
+                    
                 </a>
             </li>
             @endcan

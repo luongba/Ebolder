@@ -28,6 +28,7 @@
                         type="info"
                         plain
                         @click="handleHistory(scope.$index, scope.row)"
+                        v-if="scope.row.is_admin == 0"
                         >History
                     </el-button>
                     <el-button
@@ -80,6 +81,7 @@ export default {
             window.location.href = `${$Api.baseUrl}/admin/user/edit/` + row.id;
         },
         handleHistory(index, row) {
+            console.log(row)
             window.location.href =
                 `${$Api.baseUrl}/admin/user/exam-history/` + row.id;
         },
@@ -132,6 +134,7 @@ export default {
                         name: item.name,
                         email: item.email,
                         phone: item.phone,
+                        is_admin: item.is_admin
                     }));
                     this.isAdmin = data.isAdmin;
                 }
