@@ -49,7 +49,7 @@ class AuthController extends Controller
                 $authCtrl = new AuthController();
                 $token = $user->createToken("hoctienganh")->accessToken;
                 $cookie = cookie('token', $token);
-                if($user->is_admin == 1){
+                if($user->is_admin == 1 || $user->is_admin == 2){
                     return redirect(route('admin.home'))->with('token', $token);
 
                 }
