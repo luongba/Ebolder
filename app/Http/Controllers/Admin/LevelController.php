@@ -154,6 +154,7 @@ class LevelController extends Controller
     public function checkLevelPassed()
     {
         $userID = Auth::user()->id;
+        $count = DB::table('levels')->count();
         $rows = DB::table('levels')->join('exam_result', 'levels.id', '=', 'exam_result.level_id')->where('user_id', $userID)->get();
         $sum = 1;
         foreach ($rows as $row) {
@@ -166,6 +167,10 @@ class LevelController extends Controller
             ($row->grammar_id == null || $row->is_done_grammar == 1)) {
                 $sum++;
             }
+        }
+
+        if($sum > $count){
+            $sum = $count;
         }
         return response()->json([
             "data" => $sum,
