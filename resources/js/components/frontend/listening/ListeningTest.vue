@@ -51,7 +51,29 @@
                     </VueCountdown>
                 </h2>
             </div>
+            <a href="/learn" style="text-decoration: none;"  v-show="!isShowLabel">
 
+                <button
+                        class="
+                            cursor-pointer
+                            px-4
+                            py-2
+                            text-center
+                            uppercase
+                            leading-[28px]
+                            flex
+                            items-center
+                            justify-center
+                            font-light
+                            rounded-md
+                            bg-button
+                            text-[19px] text-white
+                            hover:opacity-80
+                        "
+                    >
+                        Back to learn page
+                    </button>
+            </a>
             <transition name="el-zoom-in-top">
                 <div
                     class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px] mt-4"
@@ -826,11 +848,6 @@ export default {
     this.topic.forEach((itemTopic) => {
       itemTopic.questions.forEach((item) => {
         if (item.type == 1) {
-          console.log(
-            "🚀 ~ file: ListeningTest.vue:766 ~ itemTopic.questions.forEach ~ item",
-            item
-          );
-
           this.answerData.push({
             radioValue: null,
             right_answer: "",

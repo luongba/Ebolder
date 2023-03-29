@@ -1,7 +1,6 @@
 .wrapper {
     background: url("/images/bg/landing_page_bg.png");
     color: #333;
-    font: 100% Arial, Sans Serif;
     height: 100vh;
     background-size: cover;
     margin: 0;
@@ -9,7 +8,11 @@
     overflow-x: hidden;
     z-index: 1;
     width: full;
-    font-family: "ponny";
+}
+
+.content {
+    font: 100% Arial, Sans Serif;
+    font-family: "ponny";  
 }
 
 #background-wrap {
