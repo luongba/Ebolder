@@ -13,10 +13,6 @@
           <li class="list-disc text-[16px] mb-2">
             Read the text, then try to answer the questions
           </li>
-          <li class="list-disc text-[16px] mb-2">
-            There are 20 questions, and you see one at a time in a random order.
-            The answers are not in the same order as the text.
-          </li>
 
           <li class="list-disc text-[16px] mb-2">
             Some questions are easier; some are more difficult. Don’t worry if

@@ -5,7 +5,7 @@
             <input type="text" id="section" value="{{ session('token') }}" hidden>
         @endif
         <!---------------------     Start head content  section     --------------------->
-        <div class="app-page-title">
+        {{-- <div class="app-page-title">
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
@@ -24,12 +24,12 @@
                                     </span>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!---------------------     End head content  section     --------------------->
         <!---------------------     Start main  content  section     --------------------->
         <div class="tabs-animation">
             <!---------------------     Start report short  content  section     --------------------->
-            <div class="mb-3 card">
+            {{-- <div class="mb-3 card">
                 <div class="card-header-tab card-header">
                     <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
                         <i class="header-icon pe-7s-graph3 bg-grow-early icon-gradient"></i>
@@ -202,7 +202,7 @@
                     </button>
                     </a>
                 </div>
-            </div>
+            </div> --}}
 
             <!---------------------     End short report content  section     --------------------->
             <div class="row">

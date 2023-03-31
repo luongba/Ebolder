@@ -1,234 +1,109 @@
 <template>
-  <div class="w-full">
-    <header-component :user="user" />
-    <div class="w-full max-w-[1206px] mx-auto lg:p-4 p-2">
-      <a href="/learn" style="text-decoration: none" v-show="!isShowLabel">
-        <button
-          class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
-        >
-          Back to learn page
-        </button>
-      </a>
-      <transition name="el-zoom-in-top">
-        <div
-          class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px] mt-4 mb-4"
-          v-show="!isShowLabel"
-        >
-          <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-            <p>
-              You have reached {{ arrRightAns.length }} of
-              {{ topic.questions.length }} point(s),
-            </p>
-          </h2>
-          <div class="flex items-center justify-center">
-            <el-progress
-              type="circle"
-              :percentage="
-                Number(
-                  ((arrRightAns.length / topic.questions.length) * 100).toFixed(
-                    2
+  <div class="w-full" style="height: 100vh; overflow-y: scroll">
+    <div class="w-full h-full">
+      <header-component :user="user" />
+      <div class="w-full max-w-[1206px] mx-auto lg:p-4 p-2">
+        <a href="/learn" style="text-decoration: none" v-show="!isShowLabel">
+          <button
+            class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
+          >
+            Back to learn page
+          </button>
+        </a>
+        <transition name="el-zoom-in-top">
+          <div
+            class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px] mt-4 mb-4"
+            v-show="!isShowLabel"
+          >
+            <h2
+              class="text-[28px] font-semibold leading-[120%] text-center mb-4"
+            >
+              <p>
+                You have reached {{ arrRightAns.length }} of
+                {{ topic.questions.length }} point(s),
+              </p>
+            </h2>
+            <div class="flex items-center justify-center">
+              <el-progress
+                type="circle"
+                :percentage="
+                  Number(
+                    (
+                      (arrRightAns.length / topic.questions.length) *
+                      100
+                    ).toFixed(2)
                   )
-                )
-              "
-            ></el-progress>
-          </div>
-        </div>
-      </transition>
-      <div class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px]">
-        <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>{{ topic.name }}</p>
-        </h2>
-        <div class="flex items-center justify-center mb-4">
-          <video
-            controls
-            style="width: 100%; height: auto"
-            id="video"
-            v-show="topic.type_video == 'upload'"
-          ></video>
-          <video-embed
-            :src="linkMedia"
-            v-show="topic.type_video == 'social'"
-          ></video-embed>
-        </div>
-        <div v-html="topic.content" class="text-[16px]"></div>
-      </div>
-    </div>
-
-    <div class="w-full max-w-[1206px] mx-auto lg:p-4 p-2">
-      <div
-        v-if="isShowLabel && index == indexPage && question.type == 1"
-        class="w-full mt-4"
-        v-for="(question, index) in topic.questions"
-        :key="question.id"
-      >
-        <p class="text-[16px]">
-          Question <strong>{{ index + 1 }}</strong> of
-          <strong>{{ topic.questions.length }}</strong>
-        </p>
-        <p class="mt-2 mb-4 text-[16px]">{{ question.question }}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div
-            class="w-full"
-            v-for="(item, indexItem) in question.dataAns"
-            :key="item.id"
-          >
-            <input
-              type="radio"
-              :id="`test${item.id}`"
-              :name="`radio-group${index}`"
-              checked
-              v-model="answerData[index].radioValue"
-              :value="item.id"
-              hidden
-              :disabled="isShowLabel == false"
-            />
-            <label
-              :for="`test${item.id}`"
-              class="flex justify-between items-center w-full py-2 px-4 border-2 rounded-lg border-answer"
-              :class="[answerData[index].radioValue == item.id ? `active` : '']"
-            >
-              <div
-                class="text-[16px] font-semibold"
-                :style="
-                  answerData[index].radioValue == item.id
-                    ? `color: #5B5EA6`
-                    : 'color: #eee'
                 "
-              >
-                {{ item.text }}
-              </div>
-              <div>
-                <AVue
-                  :isActive="
-                    answerData[index].radioValue == item.id ? true : false
-                  "
-                  v-if="indexItem == 0"
-                />
-                <BVue
-                  :isActive="
-                    answerData[index].radioValue == item.id ? true : false
-                  "
-                  v-if="indexItem == 1"
-                />
-                <CVue
-                  :isActive="
-                    answerData[index].radioValue == item.id ? true : false
-                  "
-                  v-if="indexItem == 2"
-                />
-                <DVue
-                  :isActive="
-                    answerData[index].radioValue == item.id ? true : false
-                  "
-                  v-if="indexItem == 3"
-                />
-              </div>
-            </label>
+              ></el-progress>
+            </div>
           </div>
+        </transition>
+        <div class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px]">
+          <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
+            <p>{{ topic.name }}</p>
+          </h2>
+          <div class="flex items-center justify-center mb-4">
+            <video
+              controls
+              style="width: 100%; height: auto"
+              id="video"
+              v-show="topic.type_video == 'upload'"
+            ></video>
+            <video-embed
+              :src="linkMedia"
+              v-show="topic.type_video == 'social'"
+            ></video-embed>
+          </div>
+          <div v-html="topic.content" class="text-[16px]"></div>
         </div>
       </div>
-      <div
-        v-if="isShowLabel && index == indexPage && question.type == 2"
-        class="w-full mt-4"
-        v-for="(question, index) in topic.questions"
-        :key="question.id"
-      >
-        <p class="text-[16px]">
-          Question <strong>{{ index + 1 }}</strong> of
-          <strong>{{ topic.questions.length }}</strong>
-        </p>
-        <!-- <p
-                    class="mt-2 mb-4 text-[16px] mt-4"
 
-                > -->
-        <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center flex-wrap">
-          <div
-            v-for="(item, indexAns) in arrQuestion(question)"
-            :key="indexAns"
-          >
-            <input
-              type="text"
-              class="mx-2 text-black border-none outline-none rounded-md w-[86px] lg:w-[150px] px-2 py-1"
-              v-model="
-                answerData[index].dataChoose[getIndexSharp(question, indexAns)]
-                  .radioValue
-              "
-              v-if="item == '#'"
-            />
-            <span v-else class="mr-1">{{ item }}</span>
-          </div>
-        </div>
-
-        <!-- </p> -->
-        <!-- v-html="renderInput(question, index)" -->
-      </div>
-      <div
-        v-if="!isShowLabel && index == indexPage && question.type == 1"
-        class="w-full mt-4"
-        v-for="(question, index) in topic.questions"
-        :key="question.id"
-      >
-        <p class="text-[16px]">
-          Question <strong>{{ index + 1 }}</strong> of
-          <strong>{{ topic.questions.length }}</strong>
-        </p>
-        <p class="mt-2 mb-4 text-[16px]">{{ question.question }}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div
-            class="w-full"
-            v-for="(item, indexItem) in question.dataAns"
-            :key="item.id"
-          >
-            <input
-              type="radio"
-              :id="`test${item.id}`"
-              :name="`radio-group${index}`"
-              checked
-              v-model="answerData[index].radioValue"
-              :value="item.id"
-              hidden
-              :disabled="isShowLabel == false"
-            />
-            <label
-              :for="`test${item.id}`"
-              class="flex justify-between items-center w-full py-2 px-4 border-2 rounded-lg border-answer min-h-[70px]"
-              :class="[
-                answerData[index].radioValue == item.id ? `active` : '',
-                answerData[index].radioValue == answerData[index].right_answer
-                  ? `right`
-                  : 'wrong',
-                item.id == answerData[index].right_answer ? `right_wait` : '',
-                item.id == answerData[index].right_answer &&
-                item.id == answerData[index].radioValue
-                  ? 'bgright'
-                  : '',
-              ]"
+      <div class="w-full max-w-[1206px] mx-auto lg:p-4 p-2">
+        <div
+          v-if="isShowLabel && index == indexPage && question.type == 1"
+          class="w-full mt-4"
+          v-for="(question, index) in topic.questions"
+          :key="question.id"
+        >
+          <p class="text-[16px]">
+            Question <strong>{{ index + 1 }}</strong> of
+            <strong>{{ topic.questions.length }}</strong>
+          </p>
+          <p class="mt-2 mb-4 text-[16px]">{{ question.question }}</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div
+              class="w-full"
+              v-for="(item, indexItem) in question.dataAns"
+              :key="item.id"
             >
-              <div
-                class="text-[16px] font-semibold text-answer"
+              <input
+                type="radio"
+                :id="`test${item.id}`"
+                :name="`radio-group${index}`"
+                checked
+                v-model="answerData[index].radioValue"
+                :value="item.id"
+                hidden
+                :disabled="isShowLabel == false"
+              />
+              <label
+                :for="`test${item.id}`"
+                class="flex justify-between items-center w-full py-2 px-4 border-2 rounded-lg border-answer"
                 :class="[
                   answerData[index].radioValue == item.id ? `active` : '',
-                  answerData[index].radioValue == answerData[index].right_answer
-                    ? `right`
-                    : 'wrong',
-                  item.id == answerData[index].right_answer ? `right_wait` : '',
-                  item.id == answerData[index].right_answer &&
-                  item.id == answerData[index].radioValue
-                    ? 'bgright'
-                    : '',
                 ]"
               >
-                {{ item.text }}
-              </div>
-              <div>
-                <el-button
-                  v-if="item.id == answerData[index].right_answer"
-                  type="success"
-                  icon="el-icon-check"
-                  circle
-                  size="mini"
-                ></el-button>
-                <div v-else>
+                <div
+                  class="text-[16px] font-semibold"
+                  :style="
+                    answerData[index].radioValue == item.id
+                      ? `color: #5B5EA6`
+                      : 'color: #eee'
+                  "
+                >
+                  {{ item.text }}
+                </div>
+                <div>
                   <AVue
                     :isActive="
                       answerData[index].radioValue == item.id ? true : false
@@ -254,97 +129,215 @@
                     v-if="indexItem == 3"
                   />
                 </div>
-              </div>
-            </label>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
-      <div
-        v-if="!isShowLabel && index == indexPage && question.type == 2"
-        class="w-full mt-4"
-        v-for="(question, index) in topic.questions"
-        :key="question.id"
-      >
-        <p class="text-[16px]">
-          Question <strong>{{ index + 1 }}</strong> of
-          <strong>{{ topic.questions.length }}</strong>
-        </p>
-        <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center flex-wrap">
-          <div
-            v-for="(item, indexAns) in arrQuestion(question)"
-            :key="indexAns"
-            class="mt-2"
-          >
-            <input
-              type="text"
-              class="mx-2 text-white border-none outline-none rounded-md w-[86px] lg:w-[150px] px-2 py-1"
-              v-model="
-                answerData[index].dataChoose[getIndexSharp(question, indexAns)]
-                  .radioValue
-              "
-              :class="[
-                answerData[index].dataChoose[getIndexSharp(question, indexAns)]
-                  .radioValue ==
-                answerData[index].dataRight[getIndexSharp(question, indexAns)]
-                  .right_answer
-                  ? 'right-ans'
-                  : 'wrong-ans',
-              ]"
-              v-if="item == '#'"
-              disabled
-            />
-            <span v-else class="mr-1">{{ item }}</span>
+        <div
+          v-if="isShowLabel && index == indexPage && question.type == 2"
+          class="w-full mt-4"
+          v-for="(question, index) in topic.questions"
+          :key="question.id"
+        >
+          <p class="text-[16px]">
+            Question <strong>{{ index + 1 }}</strong> of
+            <strong>{{ topic.questions.length }}</strong>
+          </p>
+          <!-- <p
+                        class="mt-2 mb-4 text-[16px] mt-4"
+    
+                    > -->
+          <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center flex-wrap">
+            <div
+              v-for="(item, indexAns) in arrQuestion(question)"
+              :key="indexAns"
+            >
+              <input
+                type="text"
+                class="mx-2 text-black border-none outline-none rounded-md w-[86px] lg:w-[150px] px-2 py-1"
+                v-model="
+                  answerData[index].dataChoose[
+                    getIndexSharp(question, indexAns)
+                  ].radioValue
+                "
+                v-if="item == '#'"
+              />
+              <span v-else class="mr-1">{{ item }}</span>
+            </div>
+          </div>
+
+          <!-- </p> -->
+          <!-- v-html="renderInput(question, index)" -->
+        </div>
+        <div
+          v-if="!isShowLabel && index == indexPage && question.type == 1"
+          class="w-full mt-4"
+          v-for="(question, index) in topic.questions"
+          :key="question.id"
+        >
+          <p class="text-[16px]">
+            Question <strong>{{ index + 1 }}</strong> of
+            <strong>{{ topic.questions.length }}</strong>
+          </p>
+          <p class="mt-2 mb-4 text-[16px]">{{ question.question }}</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div
+              class="w-full"
+              v-for="(item, indexItem) in question.dataAns"
+              :key="item.id"
+            >
+              <input
+                type="radio"
+                :id="`test${item.id}`"
+                :name="`radio-group${index}`"
+                checked
+                v-model="answerData[index].radioValue"
+                :value="item.id"
+                hidden
+                :disabled="isShowLabel == false"
+              />
+              <label
+                :for="`test${item.id}`"
+                class="flex justify-between items-center w-full py-2 px-4 border-2 rounded-lg border-answer min-h-[70px]"
+                :class="[
+                  answerData[index].radioValue == item.id ? `active` : '',
+                  answerData[index].radioValue == answerData[index].right_answer
+                    ? `right`
+                    : 'wrong',
+                  item.id == answerData[index].right_answer ? `right_wait` : '',
+                  item.id == answerData[index].right_answer &&
+                  item.id == answerData[index].radioValue
+                    ? 'bgright'
+                    : '',
+                ]"
+              >
+                <div
+                  class="text-[16px] font-semibold text-answer"
+                  :class="[
+                    answerData[index].radioValue == item.id ? `active` : '',
+                    answerData[index].radioValue ==
+                    answerData[index].right_answer
+                      ? `right`
+                      : 'wrong',
+                    item.id == answerData[index].right_answer
+                      ? `right_wait`
+                      : '',
+                    item.id == answerData[index].right_answer &&
+                    item.id == answerData[index].radioValue
+                      ? 'bgright'
+                      : '',
+                  ]"
+                >
+                  {{ item.text }}
+                </div>
+                <div>
+                  <el-button
+                    v-if="item.id == answerData[index].right_answer"
+                    type="success"
+                    icon="el-icon-check"
+                    circle
+                    size="mini"
+                  ></el-button>
+                  <div v-else>
+                    <AVue
+                      :isActive="
+                        answerData[index].radioValue == item.id ? true : false
+                      "
+                      v-if="indexItem == 0"
+                    />
+                    <BVue
+                      :isActive="
+                        answerData[index].radioValue == item.id ? true : false
+                      "
+                      v-if="indexItem == 1"
+                    />
+                    <CVue
+                      :isActive="
+                        answerData[index].radioValue == item.id ? true : false
+                      "
+                      v-if="indexItem == 2"
+                    />
+                    <DVue
+                      :isActive="
+                        answerData[index].radioValue == item.id ? true : false
+                      "
+                      v-if="indexItem == 3"
+                    />
+                  </div>
+                </div>
+              </label>
+            </div>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div
-            class="w-full"
-            v-for="(item, indexItem) in question.dataAns"
-            :key="item.id"
-          >
-            <!-- <input
-                            type="radio"
-                            :id="`test${item.id}`"
-                            :name="`radio-group${index}`"
-                            checked
-                            v-model="answerData[index].radioValue"
-                            :value="item.id"
-                            hidden
-                            :disabled="isShowLabel == false"
-                        />
-                        <label
-                            :for="`test${item.id}`"
-                            class="
-                                flex
-                                justify-between
-                                items-center
-                                w-full
-                                py-2
-                                px-4
-                                border-2
-                                rounded-lg
-                                border-answer
-                                min-h-[70px]
-                            "
-                            :class="[
-                                answerData[index].radioValue == item.id
-                                    ? `active`
-                                    : '',
-                                answerData[index].radioValue ==
-                                answerData[index].right_answer
-                                    ? `right`
-                                    : 'wrong',
-                                item.id == answerData[index].right_answer
-                                    ? `right_wait`
-                                    : '',
-                                item.id == answerData[index].right_answer &&
-                                item.id == answerData[index].radioValue
-                                    ? 'bgright'
-                                    : '',
-                            ]"
-                        >
-                            <div
-                                class="text-[16px] font-semibold text-answer"
+        <div
+          v-if="!isShowLabel && index == indexPage && question.type == 2"
+          class="w-full mt-4"
+          v-for="(question, index) in topic.questions"
+          :key="question.id"
+        >
+          <p class="text-[16px]">
+            Question <strong>{{ index + 1 }}</strong> of
+            <strong>{{ topic.questions.length }}</strong>
+          </p>
+          <div class="flex mt-2 mb-4 text-[16px] mt-4 items-center flex-wrap">
+            <div
+              v-for="(item, indexAns) in arrQuestion(question)"
+              :key="indexAns"
+              class="mt-2"
+            >
+              <input
+                type="text"
+                class="mx-2 text-white border-none outline-none rounded-md w-[86px] lg:w-[150px] px-2 py-1"
+                v-model="
+                  answerData[index].dataChoose[
+                    getIndexSharp(question, indexAns)
+                  ].radioValue
+                "
+                :class="[
+                  answerData[index].dataChoose[
+                    getIndexSharp(question, indexAns)
+                  ].radioValue ==
+                  answerData[index].dataRight[getIndexSharp(question, indexAns)]
+                    .right_answer
+                    ? 'right-ans'
+                    : 'wrong-ans',
+                ]"
+                v-if="item == '#'"
+                disabled
+              />
+              <span v-else class="mr-1">{{ item }}</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div
+              class="w-full"
+              v-for="(item, indexItem) in question.dataAns"
+              :key="item.id"
+            >
+              <!-- <input
+                                type="radio"
+                                :id="`test${item.id}`"
+                                :name="`radio-group${index}`"
+                                checked
+                                v-model="answerData[index].radioValue"
+                                :value="item.id"
+                                hidden
+                                :disabled="isShowLabel == false"
+                            />
+                            <label
+                                :for="`test${item.id}`"
+                                class="
+                                    flex
+                                    justify-between
+                                    items-center
+                                    w-full
+                                    py-2
+                                    px-4
+                                    border-2
+                                    rounded-lg
+                                    border-answer
+                                    min-h-[70px]
+                                "
                                 :class="[
                                     answerData[index].radioValue == item.id
                                         ? `active`
@@ -362,88 +355,108 @@
                                         : '',
                                 ]"
                             >
-                                {{ item.text }}
-                            </div>
-                            <div>
-                                <el-button
-                                    v-if="
-                                        item.id ==
+                                <div
+                                    class="text-[16px] font-semibold text-answer"
+                                    :class="[
+                                        answerData[index].radioValue == item.id
+                                            ? `active`
+                                            : '',
+                                        answerData[index].radioValue ==
                                         answerData[index].right_answer
-                                    "
-                                    type="success"
-                                    icon="el-icon-check"
-                                    circle
-                                    size="mini"
-                                ></el-button>
-                                <div v-else>
-                                    <AVue
-                                        :isActive="
-                                            answerData[index].radioValue ==
-                                            item.id
-                                                ? true
-                                                : false
-                                        "
-                                        v-if="indexItem == 0"
-                                    />
-                                    <BVue
-                                        :isActive="
-                                            answerData[index].radioValue ==
-                                            item.id
-                                                ? true
-                                                : false
-                                        "
-                                        v-if="indexItem == 1"
-                                    />
-                                    <CVue
-                                        :isActive="
-                                            answerData[index].radioValue ==
-                                            item.id
-                                                ? true
-                                                : false
-                                        "
-                                        v-if="indexItem == 2"
-                                    />
-                                    <DVue
-                                        :isActive="
-                                            answerData[index].radioValue ==
-                                            item.id
-                                                ? true
-                                                : false
-                                        "
-                                        v-if="indexItem == 3"
-                                    />
+                                            ? `right`
+                                            : 'wrong',
+                                        item.id == answerData[index].right_answer
+                                            ? `right_wait`
+                                            : '',
+                                        item.id == answerData[index].right_answer &&
+                                        item.id == answerData[index].radioValue
+                                            ? 'bgright'
+                                            : '',
+                                    ]"
+                                >
+                                    {{ item.text }}
                                 </div>
-                            </div>
-                        </label> -->
+                                <div>
+                                    <el-button
+                                        v-if="
+                                            item.id ==
+                                            answerData[index].right_answer
+                                        "
+                                        type="success"
+                                        icon="el-icon-check"
+                                        circle
+                                        size="mini"
+                                    ></el-button>
+                                    <div v-else>
+                                        <AVue
+                                            :isActive="
+                                                answerData[index].radioValue ==
+                                                item.id
+                                                    ? true
+                                                    : false
+                                            "
+                                            v-if="indexItem == 0"
+                                        />
+                                        <BVue
+                                            :isActive="
+                                                answerData[index].radioValue ==
+                                                item.id
+                                                    ? true
+                                                    : false
+                                            "
+                                            v-if="indexItem == 1"
+                                        />
+                                        <CVue
+                                            :isActive="
+                                                answerData[index].radioValue ==
+                                                item.id
+                                                    ? true
+                                                    : false
+                                            "
+                                            v-if="indexItem == 2"
+                                        />
+                                        <DVue
+                                            :isActive="
+                                                answerData[index].radioValue ==
+                                                item.id
+                                                    ? true
+                                                    : false
+                                            "
+                                            v-if="indexItem == 3"
+                                        />
+                                    </div>
+                                </div>
+                            </label> -->
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="flex items-center justify-between mt-4">
-        <div v-if="indexPage == 0"></div>
-        <button
-          v-if="indexPage > 0"
-          @click="movePage(-1)"
-          class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
-        >
-          Prev
-        </button>
-        <button
-          v-show="indexPage != topic.questions.length - 1"
-          @click="movePage(1)"
-          class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
-        >
-          Next
-        </button>
-        <button
-          v-show="
-            indexPage == topic.questions.length - 1 && isShowLabel == true
-          "
-          @click="submit"
-          class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
-        >
-          Finish
-        </button>
+        <div class="flex items-center justify-between mt-4">
+          <div v-if="indexPage == 0"></div>
+          <button
+            v-if="indexPage > 0"
+            @click="movePage(-1)"
+            class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
+          >
+            Prev
+          </button>
+          <button
+            v-show="indexPage != topic.questions.length - 1"
+            @click="movePage(1)"
+            class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
+          >
+            Next
+          </button>
+          <button
+            v-show="
+              indexPage == topic.questions.length - 1 && isShowLabel == true
+            "
+            @click="submit"
+            class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
+          >
+            Finish
+          </button>
+        </div>
       </div>
     </div>
 
