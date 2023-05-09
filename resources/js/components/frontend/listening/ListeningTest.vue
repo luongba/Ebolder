@@ -684,11 +684,18 @@ export default {
           }
         }
       });
+      let data_exam = {
+        answerData: this.answerData,
+        arrRightAns: this.arrRightAns,
+      };
+      data_exam = JSON.stringify(data_exam);
       let dataHistory = {
         test_type: "Listening",
         topic_name: this.data.name,
         scores: `${this.arrRightAns.length}/${this.answerData.length}`,
         completion_time: this.timerun,
+        content_exam: data_exam,
+        exam_id: this.data.id,
       };
       try {
         let result = await baseRequest.post("/admin/save-history", dataHistory);
@@ -826,6 +833,28 @@ export default {
       }
       return arrQuestion.join(" ");
     },
+    async checkHistoryExam() {
+      try {
+        let result = await baseRequest.post("/admin/check-history-exam", {
+          type: "Listening",
+          exam_id: this.data.id,
+        });
+        result = result.data;
+        if (result.status === 200 && result.data !== null) {
+          this.$refs.countdown.abort();
+          this.timerun = parseInt(result.data.completion_time);
+          let data_exam = JSON.parse(result.data.content_exam);
+          this.answerData = data_exam.answerData;
+          this.arrRightAns = data_exam.arrRightAns;
+          this.isShowLabel = false;
+        }
+      } catch (error) {
+        console.log(
+          "🚀 ~ file: VocabularyTest.vue:456 ~ checkHistoryExam ~ error:",
+          error
+        );
+      }
+    },
   },
   created() {
     this.topic = this.data.topic_audio_listen.map((audio) => ({
@@ -867,6 +896,7 @@ export default {
           });
         }
       });
+      this.checkHistoryExam();
     });
   },
   mounted() {

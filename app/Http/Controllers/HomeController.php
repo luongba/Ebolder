@@ -127,6 +127,8 @@ class HomeController extends Controller
                 'scores' => $request->scores,
                 'completion_time' => $request->completion_time,
                 'user_id' => $request->user()->id,
+                'content_exam'=> $request->content_exam,
+                'exam_id' => $request->exam_id
             ]);
         } catch (\Exception $e) {
             print_r($e);
@@ -243,8 +245,22 @@ class HomeController extends Controller
         return view('pages.frontend.history', compact('history'));
     }
 
-    public function uploadImage(Request $request){
-        dd($request);
+    public function checkHistoryExam(Request $request){
+        try {
+            $history = HistoryExam::where('test_type', $request->type)->where('exam_id', $request->exam_id)->first();
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "data" => $history
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 0,
+                "message" => "Không tồn tại"
+            ]);
+        }
+        
     }
 
 
