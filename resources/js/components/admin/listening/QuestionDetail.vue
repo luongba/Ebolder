@@ -989,7 +989,6 @@ export default {
             save.classList.remove("hidden");
         },
         closeEditQuestion(index) {
-            console.log(this.$refs.card[index]);
             this.$refs.card[index].children[1].classList.add("hidden");
             this.$refs.card[index].children[1].classList.remove("block");
             this.$refs.card[index].children[2].classList.add("block");
@@ -1072,7 +1071,6 @@ export default {
                             message: "Edit error",
                         });
                     }
-                    console.log(result);
                 } catch (e) {
                     console.log(e);
                 }
@@ -1134,7 +1132,6 @@ export default {
             this.$refs.fileAudio.click();
         },
         getChangeAudio(event) {
-            console.log(event.target.files[0]);
             if (event.target.files[0].type == "audio/mpeg") {
                 this.file = event.target.files[0];
                 this.detailAudio.name = event.target.files[0].name;
@@ -1519,7 +1516,6 @@ export default {
         this.getDetailAudio();
     },
     mounted() {
-        console.log(this.detailAudio.audio);
         let audio = document.getElementById("audio-preview");
         setTimeout(() => {
             audio.src = `${$Api.baseUrl}/upload/audio/${this.audio}`;

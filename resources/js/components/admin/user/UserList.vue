@@ -81,7 +81,6 @@ export default {
             window.location.href = `${$Api.baseUrl}/admin/user/edit/` + row.id;
         },
         handleHistory(index, row) {
-            console.log(row)
             window.location.href =
                 `${$Api.baseUrl}/admin/user/exam-history/` + row.id;
         },

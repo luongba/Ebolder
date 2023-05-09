@@ -13,6 +13,7 @@
 use Illuminate\Http\Request;
 //frontEnd
 Route::prefix('/')->group(function () {
+    Route::post('/upload-image', 'HomeController@uploadImage');
     Route::get('/chinh-sach-rieng-tu', function () {
         return '<h1>Chinh Sach Rieng Tu</h1>';
     });

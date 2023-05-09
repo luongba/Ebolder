@@ -489,6 +489,9 @@ video {
     padding-left: 16px;
   }
 }
+.collapse {
+  visibility: collapse;
+}
 .static {
   position: static;
 }
@@ -750,6 +753,9 @@ video {
 }
 .grow {
   flex-grow: 1;
+}
+.border-collapse {
+  border-collapse: collapse;
 }
 .translate-x-\[-50\%\] {
   --tw-translate-x: -50%;

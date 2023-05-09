@@ -537,7 +537,6 @@ export default {
                         name: data.name,
                         content: data.content,
                     };
-                    console.log(data)
                     let temp = data.question_reading?.map((item) => {
                         return {
                             id: item.id,
@@ -556,7 +555,6 @@ export default {
                                 : null,
                         };
                     });
-                    console.log("temp",temp);
                     this.dataQuestion = temp.map((question) => ({
                         id: question.id,
                         question: question.question,
@@ -858,7 +856,6 @@ export default {
             save.classList.remove("hidden");
         },
         closeEditQuestion(index) {
-            console.log(this.$refs.card[index]);
             this.$refs.card[index].children[1].classList.add("hidden");
             this.$refs.card[index].children[1].classList.remove("block");
             this.$refs.card[index].children[2].classList.add("block");

@@ -27,33 +27,19 @@
                             <div>
                                 <div class="position-relative h-100 d-flex justify-content-center align-items-center bg-plum-plate" tabindex="-1">
                                     <div class="slide-img-bg" style="background-image: url('images/originals/city.jpg');"></div>
-                                    <div class="slider-content">
-                                        <h3>Best Email Marketing Platform.</h3>
-                                        <p>
-                                            Ebolder is like a dream. Some think it's too good to be true! Extensive
-                                            collection of unified Email marketing Platform.
-                                        </p>
-                                    </div>
+                                    
                                 </div>
                             </div>
                             <div>
                                 <div class="position-relative h-100 d-flex justify-content-center align-items-center bg-premium-dark" tabindex="-1">
                                     <div class="slide-img-bg" style="background-image: url('images/originals/citynights.jpg');"></div>
-                                    <div class="slider-content">
-                                        <h3>Grow their sales on your Business.</h3>
-                                        <p>
-                                            Easy make campaigns on Ecommerce website swiftly and win more sales with Ebolder.
-                                        </p>
-                                    </div>
+                                    
                                 </div>
                             </div>
                             <div>
                                 <div class="position-relative h-100 d-flex justify-content-center align-items-center bg-sunny-morning" tabindex="-1">
                                     <div class="slide-img-bg" style="background-image: url('images/originals/citydark.jpg');"></div>
-                                    <div class="slider-content">
-                                        <h3>Too many template to help</h3>
-                                        <p>We've included a lot of Application that cover almost all use cases for any type of Feature.</p>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>

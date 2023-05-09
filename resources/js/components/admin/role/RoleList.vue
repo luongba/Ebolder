@@ -90,7 +90,6 @@ export default {
                             });
                         }
                     } catch (error) {
-                        console.log(error);
                         this.$message({
                             type: "error",
                             message: "Delete error",

@@ -666,4 +666,9 @@ export default {
 .wrong-ans {
   border: 2px solid red;
 }
+table, th, td {
+  border: 1px solid #fff;
+  border-collapse: collapse;
+  padding: 5px;
+}
 </style>

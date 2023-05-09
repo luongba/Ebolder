@@ -454,7 +454,6 @@ export default {
                 let rs = await baseRequest.post(`/admin/detail-level`, { id });
                 let { data } = rs;
                 if (data.status == 200) {
-                    console.log(data);
                     this.topicData = {
                         name: data.data.name || null,
                         valueGrammar: Number(data.data.grammar_id) || null,
@@ -475,7 +474,6 @@ export default {
             try {
                 let rs = await baseRequest.get(`/admin/list-topic-lesson`);
                 if (rs.data.status == 200) {
-                    console.log(rs.data.data);
                     this.listTopicLesson = rs.data.data.map((item) => ({
                         id: item.id,
                         name: item.name,
@@ -515,7 +513,6 @@ export default {
             try {
                 let rs = await baseRequest.get(`/admin/list-topic-reading`);
                 if (rs.data.status == 200) {
-                    console.log(rs.data.data);
                     this.listTopicReading = rs.data.data.map((item) => ({
                         id: item.id,
                         name: item.name,

@@ -439,7 +439,6 @@ export default {
     },
   },
   created() {
-    console.log(this.data.questiton_vocabulary);
     this.questions = this.data.questiton_vocabulary.map((vocabulary) => ({
       id: vocabulary.id,
       question: vocabulary.question,

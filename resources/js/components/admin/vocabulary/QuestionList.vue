@@ -579,7 +579,6 @@ export default {
             save.classList.remove("hidden");
         },
         closeEditQuestion(index) {
-            console.log(this.$refs.card[index]);
             this.$refs.card[index].children[1].classList.add("hidden");
             this.$refs.card[index].children[1].classList.remove("block");
             this.$refs.card[index].children[2].classList.add("block");
@@ -676,7 +675,6 @@ export default {
                     for (let i = 0; i < data.question.length; i++) {
                         if (data.question[i] === "#") {
                             sum++;
-                            console.log(this.dataQuestion[index].answers);
                             let idTemp = $Helper.randomId();
                             this.dataQuestion[index].answers.push({
                                 id: Date.now() + i,

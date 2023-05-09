@@ -351,7 +351,6 @@ export default {
                 );
                 if (rs.data.status == 200) {
                     let data = rs.data.data;
-                    console.log(data);
                     this.detailTopic = {
                         id: data.id,
                         name: data.name,
@@ -388,7 +387,6 @@ export default {
                 let { data } = await baseRequest.get(
                     `/admin/get-audio-listening`
                 );
-                console.log(data);
                 this.dataAudio = data.data.filter(
                     (elem) =>
                         !this.detailTopic.audioList.find(

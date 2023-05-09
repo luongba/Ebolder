@@ -440,7 +440,6 @@ export default {
             this.$refs.fileAudio.click();
         },
         getChangeAudio(event) {
-            console.log(event.target.files[0]);
             if (event.target.files[0].type == "audio/mpeg") {
                 this.file = event.target.files[0];
                 this.previewAudio();
@@ -556,7 +555,6 @@ export default {
                 dataAns: item.dataAns,
                 answer: item.answer,
             }));
-            console.log("🚀 ~ file: QuestionCreate.vue:559 ~ dataTemp ~ dataTemp", dataTemp)
             try {
                 let result = await baseRequest.post(
                     `/admin/add-question-to-audio-listening`,

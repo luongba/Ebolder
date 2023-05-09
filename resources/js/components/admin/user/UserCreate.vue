@@ -185,7 +185,6 @@ export default {
       });
     },
     validatePass2(rule, value, callback) {
-      console.log(rule);
       if (value === "") {
         callback(new Error("Please input the password again"));
       } else if (value !== this.dynamicValidateForm.password) {

@@ -243,5 +243,9 @@ class HomeController extends Controller
         return view('pages.frontend.history', compact('history'));
     }
 
+    public function uploadImage(Request $request){
+        dd($request);
+    }
+
 
 }

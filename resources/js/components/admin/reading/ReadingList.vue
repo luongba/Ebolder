@@ -152,7 +152,6 @@ export default {
                     setTimeout(() => {
                     this.isLoading = false;
                 }, 1000);
-                    console.log(rs.data.data);
                     this.listTopic = rs.data.data.map((item) => ({
                         id: item.id,
                         name: item.name,

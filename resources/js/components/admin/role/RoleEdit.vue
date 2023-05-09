@@ -190,7 +190,6 @@ export default {
                     this.permisions.forEach((item,index) => {
                         item.child.forEach((itemChild) => {
                             let indexPermison = this.dynamicValidateForm.permisions.findIndex(itemPe => itemPe.id === itemChild.id);
-                            console.log(indexPermison)
                             if(indexPermison !=-1){
                                 this.permisionItem[index].push(itemChild.id);
                             }
