@@ -42,12 +42,12 @@
     <div id="background-wrap" class="content">
       <div class="cloud-box px-2" id="cloud-box" v-show="!show">
         <div
-          class="box"
+          class="box-landing"
           :id="`cloud-${listLevel.length - index}`"
           v-for="(item, index) in listLevel"
           :key="index"
         >
-          <div class="box-inner">
+          <div class="box-landing-inner">
             <div class="box-filter"></div>
             <div class="box-content">
               <h2 class="title">{{ item.name }}</h2>
