@@ -108,6 +108,9 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/update-level', 'Admin\LevelController@updateLevel')->name('update-level');
         Route::get('/check-passed-level', 'Admin\LevelController@checkLevelPassed')->name('check-passed-level');
 
+        //check exam
+        Route::post('/check-history-exam', 'HomeController@checkHistoryExam')->name('check-history-exam');
+
     });
 });
 
