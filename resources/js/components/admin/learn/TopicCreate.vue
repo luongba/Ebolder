@@ -49,7 +49,7 @@
         v-model="dataTopic.content"
         api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
         :init="{
-          height: 200,
+          height: 600,
           menubar: false,
           plugins: [
             'advlist autolink lists link image charmap print preview anchor',
@@ -60,9 +60,12 @@
             'undo redo | formatselect | bold italic backcolor | \
            alignleft aligncenter alignright alignjustify | \
            bullist numlist outdent indent | removeformat | help',
-           image_advtab: true,
-           images_upload_url: 'upload',
-           visual: false
+          visual: false,
+          content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+          paste_data_images: true,
         }"
       />
       <el-button type="primary" class="mt-4" @click="chooseType(1)">
