@@ -110,6 +110,8 @@ Route::middleware('auth:api')->group(function (){
 
         //check exam
         Route::post('/check-history-exam', 'HomeController@checkHistoryExam')->name('check-history-exam');
+        //history
+        Route::get('/get-full-history', 'HomeController@fullhistory');
 
     });
 });

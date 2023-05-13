@@ -543,6 +543,7 @@ export default {
         completion_time: this.timerun,
         content_exam: data_exam,
         exam_id: this.data.id,
+        level_id: this.query.levelId
       };
       try {
         let result = await baseRequest.post("/admin/save-history", dataHistory);
@@ -625,6 +626,7 @@ export default {
         let result = await baseRequest.post("/admin/check-history-exam", {
           type: "Reading",
           exam_id: this.data.id,
+          level_id: this.query.levelId
         });
         result = result.data;
         if (result.status === 200 && result.data !== null) {
@@ -634,6 +636,7 @@ export default {
           this.answerData = data_exam.answerData;
           this.arrRightAns = data_exam.arrRightAns;
           this.isShowLabel = false;
+
         }
       } catch (error) {
         console.log(

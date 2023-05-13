@@ -22,12 +22,12 @@ class LevelController extends Controller
             DB::beginTransaction();
             $level = Level::create([
                 "name" => $request->name,
-                "listening_id" => $request->listening_id,
-                "reading_id" => $request->reading_id,
-                "vocabulary_id" => $request->vocabulary_id,
-                "grammar_id" => $request->grammar_id,
             ]);
             $level->Learn()->attach($request->lessons);
+            $level->Reading()->attach($request->readings);
+            $level->Vocabulary()->attach($request->vocabularies);
+            $level->Listen()->attach($request->listenings);
+            $level->Grammar()->attach($request->grammars);
             DB::commit();
             return response()->json([
                 "status" => 200,
@@ -50,14 +50,13 @@ class LevelController extends Controller
         try {
             DB::beginTransaction();
             $userID = Auth::user()->id;
-            $level = Level::with('Learn')->get();
-            $examResult = DB::table('exam_result')->where('user_id', $userID)->get();
+            $level = Level::with('Reading')
+             ->with('Vocabulary')->with('Grammar')->with('Listen')->with('Learn')->get();
             DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "data" => $level,
-                'examResult' => $examResult,
                 "message" => "Lấy danh sách level Thành công!"
             ]);
         } catch (\Throwable $th) {
@@ -101,20 +100,20 @@ class LevelController extends Controller
         try {
             DB::beginTransaction();
             $level = new Level();
-            $level = $level->where('id', $request->id)->with('Learn')->first();
+            $level = $level->where('id', $request->id)->with('Learn')->with('Reading')->with('Vocabulary')->with('Grammar')->with('Listen')->first();
             DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "data" => $level,
-                "message" => "Xóa level Thành công!"
+                "message" => "Lấy level Thành công!"
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Xóa level Thất bại!"
+                "message" => "Lấy level Thất bại!"
             ]);
         }
 
@@ -127,12 +126,12 @@ class LevelController extends Controller
             $level = Level::where('id', $request->id)->first();
             $level->update([
                 "name" => $request->name,
-                "listening_id" => $request->listening_id,
-                "reading_id" => $request->reading_id,
-                "vocabulary_id" => $request->vocabulary_id,
-                "grammar_id" => $request->grammar_id,
             ]);
             $level->Learn()->sync($request->lessons);
+            $level->Reading()->sync($request->readings);
+            $level->Vocabulary()->sync($request->vocabularies);
+            $level->Listen()->sync($request->listenings);
+            $level->Grammar()->sync($request->grammars);
             DB::commit();
             return response()->json([
                 "status" => 200,
