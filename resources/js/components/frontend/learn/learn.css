@@ -176,7 +176,7 @@
     overflow: hidden;
     transform: translate(-50%, -50%);
 }
-.box {
+.box-landing {
     margin: 50vh auto;
     background-color: rgba(#000, 0.5);
     width: 100%;
@@ -186,19 +186,19 @@
     cursor: pointer;
 }
 
-.box:before {
+.box-landing:before {
     left: 5px;
 }
-.box:after {
+.box-landing:after {
     right: 5px;
 }
-.box .box-inner {
+.box-landing .box-landing-inner {
     position: relative;
     border: 3px solid #fff ;
 }
 
-.box .box-inner:before,
-.box .box-inner:after {
+.box-landing .box-landing-inner:before,
+.box-landing .box-landing-inner:after {
     content: "•";
     position: absolute;
     width: 14px;
@@ -211,10 +211,10 @@
     text-align: center;
 }
 
-.box .box-inner:before {
+.box-landing .box-landing-inner:before {
     left: -2px;
 }
-.box .box-inner:after {
+.box-landing .box-landing-inner:after {
     right: -2px;
 }
 

@@ -128,7 +128,8 @@ class HomeController extends Controller
                 'completion_time' => $request->completion_time,
                 'user_id' => $request->user()->id,
                 'content_exam'=> $request->content_exam,
-                'exam_id' => $request->exam_id
+                'exam_id' => $request->exam_id,
+                'level_id' => $request->level_id
             ]);
         } catch (\Exception $e) {
             print_r($e);
@@ -244,10 +245,28 @@ class HomeController extends Controller
         $history = HistoryExam::where('user_id', $user->id)->orderBy('created_at', 'desc')->take(20)->get();
         return view('pages.frontend.history', compact('history'));
     }
+    public function fullhistory(){
+        $user = Auth::user();
+        $history = HistoryExam::where('user_id', $user->id)->get();
+        return response()->json([
+            "status" => 200,
+            "errorCode" => 0,
+            "data" => $history
+        ]);
+    }
 
     public function checkHistoryExam(Request $request){
+        
         try {
-            $history = HistoryExam::where('test_type', $request->type)->where('exam_id', $request->exam_id)->first();
+            $history = HistoryExam::where('test_type', $request->type)->where('exam_id', $request->exam_id)->where('user_id', Auth::user()->id)->where('level_id', $request->level_id)->orderBy('id', 'desc')->first();
+            if(isset($history)){
+                $score = explode("/",$history->scores);
+                $totalScore = (float)$score[0] / (float)$score[1] * 100;
+                if($totalScore < 20){
+                    $history = null;
+                }
+                
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -260,6 +279,7 @@ class HomeController extends Controller
                 "message" => "Không tồn tại"
             ]);
         }
+        
         
     }
 

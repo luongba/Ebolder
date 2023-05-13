@@ -3,7 +3,7 @@
     <header-component :user="user" />
     <transition name="fade">
       <div class="w-full h-full relative z-10 content" v-show="show">
-        <div class="absolute w-[70%] bg-box-lesson rounded-md p-4">
+        <div class="absolute w-[70%] h-[60vh] bg-box-lesson rounded-md p-4">
           <span
             class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer text-[#fff]"
             @click="dongMoPopup()"
@@ -13,21 +13,28 @@
           <h2 class="text-[26px] text-center text-white uppercase">
             Danh sách bài học
           </h2>
+          <div class="w-full border relative mt-2 mb-4"></div>
           <div
-            data-v-61751496=""
-            class="w-full border relative mt-2 mb-4"
-          ></div>
-          <div
-            class="grid grid-cols-2 sm:grid-cols-4 mt-4"
+            class="w-full overflow-y-scroll h-full"
             v-if="listLesson.length > 0"
           >
             <div
-              class="p-3 border text-[#fff] text-[18px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 text-center font-thin cursor-pointer"
-              @click="openLesson(itemLesson.id)"
-              v-for="itemLesson in listLesson"
-              :key="itemLesson.id"
+              class="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4 mt-4"
             >
-              {{ itemLesson.name }}
+              <div
+                class="p-3 border text-[#fff] text-[18px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 text-center font-thin cursor-pointer exam relative"
+                :class="checkPassExam(keyUrl, itemLesson) ? 'active' : ''"
+                @click="openExamPage(keyUrl, itemLesson.id)"
+                v-for="itemLesson in listLesson"
+                :key="itemLesson.id"
+              >
+                <div
+                  class="absolute top-[50%] translate-y-[-50%] right-[8px] bg-[green] border rounded-full w-5 h-5 p-2 hidden justify-center items-center exam-pass"
+                >
+                  <i class="fa-solid fa-check text-sm"></i>
+                </div>
+                {{ itemLesson.name }}
+              </div>
             </div>
           </div>
           <div
@@ -42,12 +49,12 @@
     <div id="background-wrap" class="content">
       <div class="cloud-box px-2" id="cloud-box" v-show="!show">
         <div
-          class="box"
+          class="box-landing"
           :id="`cloud-${listLevel.length - index}`"
           v-for="(item, index) in listLevel"
           :key="index"
         >
-          <div class="box-inner">
+          <div class="box-landing-inner">
             <div class="box-filter"></div>
             <div class="box-content">
               <h2 class="title">{{ item.name }}</h2>
@@ -63,7 +70,7 @@
                     >
                       <div
                         class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm"
-                        @click="openListLesson(item.id)"
+                        @click="openListLesson(item, 'LESSON')"
                       >
                         <i class="fa-solid fa-graduation-cap"></i>
                       </div>
@@ -77,22 +84,9 @@
                       placement="bottom"
                     >
                       <div
-                        v-if="item.listening_id != null"
                         class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        :class="
-                          findLevel(item.id) &&
-                          findLevel(item.id).is_done_listen &&
-                          findLevel(item.id).is_done_listen == 1
-                            ? 'active'
-                            : ''
-                        "
-                        @click="openExamPage('listening', item)"
+                        @click="openListLesson(item, 'LISTEN')"
                       >
-                        <div
-                          class="absolute top-[-8px] right-[-8px] bg-[green] border rounded-full w-5 h-5 p-2 hidden justify-center items-center exam-pass"
-                        >
-                          <i class="fa-solid fa-check text-sm"></i>
-                        </div>
                         <i class="fa-solid fa-ear-listen"></i>
                       </div>
                     </el-tooltip>
@@ -103,22 +97,9 @@
                       placement="bottom"
                     >
                       <div
-                        v-if="item.reading_id != null"
                         class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        :class="
-                          findLevel(item.id) &&
-                          findLevel(item.id).is_done_read &&
-                          findLevel(item.id).is_done_read == 1
-                            ? 'active'
-                            : ''
-                        "
-                        @click="openExamPage('reading', item)"
+                        @click="openListLesson(item, 'READ')"
                       >
-                        <div
-                          class="absolute top-[-8px] right-[-8px] bg-[green] border rounded-full w-5 h-5 p-2 hidden justify-center items-center exam-pass"
-                        >
-                          <i class="fa-solid fa-check text-sm"></i>
-                        </div>
                         <i class="fa-solid fa-book-open-reader"></i>
                       </div>
                     </el-tooltip>
@@ -129,22 +110,9 @@
                       placement="bottom"
                     >
                       <div
-                        v-if="item.vocabulary_id != null"
                         class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        :class="
-                          findLevel(item.id) &&
-                          findLevel(item.id).is_done_vocabulary &&
-                          findLevel(item.id).is_done_vocabulary == 1
-                            ? 'active'
-                            : ''
-                        "
-                        @click="openExamPage('vocabulary', item)"
+                        @click="openListLesson(item, 'VOCABULARY')"
                       >
-                        <div
-                          class="absolute top-[-8px] right-[-8px] bg-[green] border rounded-full w-5 h-5 p-2 hidden justify-center items-center exam-pass"
-                        >
-                          <i class="fa-solid fa-check text-sm"></i>
-                        </div>
                         <i class="fa-solid fa-spell-check"></i>
                       </div>
                     </el-tooltip>
@@ -155,22 +123,9 @@
                       placement="bottom"
                     >
                       <div
-                        v-if="item.grammar_id != null"
                         class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        :class="
-                          findLevel(item.id) &&
-                          findLevel(item.id).is_done_grammar &&
-                          findLevel(item.id).is_done_grammar == 1
-                            ? 'active'
-                            : ''
-                        "
-                        @click="openExamPage('grammar', item)"
+                        @click="openListLesson(item, 'GRAMMAR')"
                       >
-                        <div
-                          class="absolute top-[-8px] right-[-8px] bg-[green] border rounded-full w-5 h-5 p-2 hidden justify-center items-center exam-pass"
-                        >
-                          <i class="fa-solid fa-check text-sm"></i>
-                        </div>
                         <i class="fa-solid fa-gears"></i>
                       </div>
                     </el-tooltip>
@@ -207,7 +162,7 @@ import baseRequest from "../../../utils/baseRequest";
 import "./learn.css";
 export default {
   props: ["user"],
-    
+
   data() {
     return {
       level: 1,
@@ -216,6 +171,10 @@ export default {
       listLesson: [],
       levelCountPassed: 1,
       examResult: [],
+      keyUrl: "",
+      idLevel: null,
+      dataHistory: [],
+      targetScore: 20,
     };
   },
   methods: {
@@ -244,9 +203,46 @@ export default {
     dongMoPopup() {
       this.show = !this.show;
     },
-    openListLesson(id) {
+    openListLesson(itemLevel, type) {
+      this.listLesson = [];
+      this.keyUrl = type;
+      this.idLevel = itemLevel.id;
+      switch (type) {
+        case "LESSON": {
+          this.listLesson = this.listLevel.find(
+            (item) => item.id === itemLevel.id
+          ).lessons;
+          break;
+        }
+        case "READ": {
+          this.listLesson = this.listLevel.find(
+            (item) => item.id === itemLevel.id
+          ).reads;
+          break;
+        }
+        case "LISTEN": {
+          this.listLesson = this.listLevel.find(
+            (item) => item.id === itemLevel.id
+          ).listens;
+          break;
+        }
+        case "VOCABULARY": {
+          this.listLesson = this.listLevel.find(
+            (item) => item.id === itemLevel.id
+          ).vocabularies;
+          break;
+        }
+        case "GRAMMAR": {
+          this.listLesson = this.listLevel.find(
+            (item) => item.id === itemLevel.id
+          ).grammars;
+          break;
+        }
+        default: {
+          break;
+        }
+      }
       this.show = true;
-      this.listLesson = this.listLevel.find((item) => item.id === id).lessons;
     },
     async getAllLevel() {
       try {
@@ -255,61 +251,128 @@ export default {
           this.listLevel = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-            listening_id: item.listening_id,
-            reading_id: item.reading_id,
-            vocabulary_id: item.vocabulary_id,
-            grammar_id: item.grammar_id,
+            listens: item.listen,
+            reads: item.reading,
+            vocabularies: item.vocabulary,
+            grammars: item.grammar,
             lessons: item.learn || [],
           }));
-
-          this.listLevel = this.listLevel
-            .filter((item, index) => index < this.levelCountPassed)
-            .reverse();
-          this.examResult = rs.data.examResult || [];
         }
       } catch (e) {
         console.log(e);
       }
     },
     async checkPassedLevel() {
+      //   let temp = this.dataHistory;
+      this.listLevel.forEach((item) => {
+        let tongSoBaiThiDaHoanThanh = this.dataHistory.filter(
+          (itemHistory, id) => {
+            let score = itemHistory.scores;
+            score = score.split("/");
+            let toltalScore = (parseInt(score[0]) / parseInt(score[1])) * 100;
+            return (
+              itemHistory.level_id == item.id && toltalScore >= this.targetScore
+            );
+          }
+        );
+
+        let countVocabulary = item.vocabularies.length || 0;
+
+        let countGrammar = item.grammars.length || 0;
+
+        let countRead = item.reads.length || 0;
+
+        let countListen = item.listens.length || 0;
+
+        let tongSoBaiThi =
+          countVocabulary + countGrammar + countRead + countListen;
+        if (tongSoBaiThi === tongSoBaiThiDaHoanThanh.length) {
+          if (this.level < this.listLevel.length) {
+            this.level++;
+          }
+        }
+      });
+      if (this.level === 1) {
+        this.listLevel = this.listLevel.slice(0, this.level);
+      } else {
+        this.listLevel = this.listLevel.reverse().slice(0, this.level);
+      }
+    },
+    openExamPage(type, id) {
+      switch (type) {
+        case "READ":
+          window.location.href = `${$Api.baseUrl}/english-level-test/Reading?testId=${id}?levelId=${this.idLevel}`;
+          break;
+        case "LISTEN":
+          window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${id}?levelId=${this.idLevel}`;
+          break;
+        case "VOCABULARY":
+          window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${id}?levelId=${this.idLevel}`;
+          break;
+        case "GRAMMAR":
+          window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${id}?levelId=${this.idLevel}`;
+          break;
+        default:
+          window.location.href = `${$Api.baseUrl}/lesson/${id}`;
+      }
+    },
+    findLevel(id) {
+      return this.examResult.find((item) => item.level_id === id);
+    },
+    async getFullHistory() {
       try {
-        let rs = await baseRequest.get(`/admin/check-passed-level`);
+        let rs = await baseRequest.get(`/admin/get-full-history`);
         if (rs.data.status == 200) {
-          this.levelCountPassed = rs.data.data;
-          this.level = rs.data.data;
+          this.dataHistory = rs.data.data;
         }
       } catch (e) {
         console.log(e);
       }
     },
-    openExamPage(type, item) {
+    checkPassExam(type, item) {
+      let temp = null;
       switch (type) {
-        case "reading":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Reading?testId=${item.reading_id}?levelId=${item.id}`;
+        case "READ":
+          temp = "Reading";
           break;
-        case "listening":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${item.listening_id}?levelId=${item.id}`;
+        case "LISTEN":
+          temp = "Listening";
           break;
-        case "vocabulary":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${item.vocabulary_id}?levelId=${item.id}`;
+        case "VOCABULARY":
+          temp = "Vocabulary";
           break;
-        case "grammar":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${item.grammar_id}?levelId=${item.id}`;
+        case "GRAMMAR":
+          temp = "Grammar";
           break;
         default:
-          return;
+          temp = "Lesson";
       }
-    },
-    openLesson(id) {
-      window.location.href = `${$Api.baseUrl}/lesson/${id}`;
-    },
-    findLevel(id) {
-      return this.examResult.find((item) => item.level_id === id);
+      let dataArrTemp = this.dataHistory.filter(
+        (itemH) => itemH.level_id == this.idLevel
+      );
+      let rs;
+      if (dataArrTemp.length > 0) {
+        rs = dataArrTemp.findIndex((itemHistory, id) => {
+          let score = itemHistory.scores;
+          score = score.split("/");
+          let toltalScore = (parseInt(score[0]) / parseInt(score[1])) * 100;
+
+          return (
+            itemHistory.test_type == temp &&
+            itemHistory.exam_id == item.id &&
+            toltalScore >= this.targetScore
+          );
+        });
+      } else {
+        rs = -1;
+      }
+      return rs != -1;
     },
   },
   async created() {
-    await this.checkPassedLevel();
-    this.getAllLevel();
+    await this.getAllLevel();
+    await this.getFullHistory();
+    this.checkPassedLevel();
   },
   mounted() {
     setTimeout(() => {
@@ -400,6 +463,12 @@ export default {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+
+.exam {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .exam.active {
