@@ -88,6 +88,13 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/grammar-level-test/question-list', 'Admin\GrammarController@questionlist')->name('grammar-question-list')->middleware('can:Question_Grammar_List');
         Route::get('/grammar-level-test/question-create', 'Admin\GrammarController@create')->name('grammar-question-create')->middleware('can:Question_Grammar_Create');
 
+        //speaking
+        Route::get('/speaking-level-test', 'Admin\SpeakController@index')->name('speak-list');
+        Route::get('/speaking-level-test/detail/{id}', 'Admin\SpeakController@detailTopic')->name('speak-detail');
+        Route::get('/speaking-level-test/question-list', 'Admin\SpeakController@questionlist')->name('speak-question-list');
+        Route::get('/speaking-level-test/question-create', 'Admin\SpeakController@create')->name('speak-question-create');
+        Route::get('/speaking-level-test/question-luyen-am', 'Admin\SpeakController@pageQuestionSpeak')->name('speak-question-luyen-am');
+
         //user
         Route::get('/users', 'Admin\UserController@index')->name('user-list')->middleware('can:User_List');
         Route::get('/user/create', 'Admin\UserController@create')->name('user-create')->middleware('can:User_Create');

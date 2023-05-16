@@ -1,13 +1,31 @@
-version: "3.4"
-
+version: '3.4'
 services:
-  ebolder:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    ports:
-      - 8001:80
 
-  ebolder_bash:
-    extends: ebolder
-    entrypoint: bash
+  #PHP Service
+  app:
+    image: learning-docker/laravel:v1
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www/html
+
+  #Nginx Service
+  webserver:
+    image: nginx:1.17-alpine
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+  db:
+    image: mysql:5.7.22
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ebolder
+      MYSQL_ROOT_PASSWORD: 123456aA@
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql

@@ -95,6 +95,28 @@ Vue.component(
     "grammar-list",
     require("./components/admin/grammar/GrammarList.vue").default
 );
+
+//Speak
+Vue.component(
+    "question-speak-create",
+    require("./components/admin/speak/QuestionCreate.vue").default
+);
+Vue.component(
+    "question-speak-list",
+    require("./components/admin/speak/QuestionList.vue").default
+);
+Vue.component(
+    "speak-detail",
+    require("./components/admin/speak/SpeakDetail.vue").default
+);
+Vue.component(
+    "speak-list",
+    require("./components/admin/speak/SpeakList.vue").default
+);
+Vue.component(
+    "question-speak-luyen-am",
+    require("./components/admin/speak/QuestionLuyenAm.vue").default
+);
 //user
 Vue.component(
     "user-list",

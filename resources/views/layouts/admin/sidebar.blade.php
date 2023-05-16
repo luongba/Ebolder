@@ -1,5 +1,5 @@
 <div class="scrollbar-sidebar">
-    <div class="app-sidebar__inner">
+    <div class="app-sidebar__inner" style="overflow-y: scroll; height: 100%">
         <ul class="vertical-nav-menu">
             <!---------------------     Start Dashbroad section     --------------------->
             <li class="app-sidebar__heading">Dashboard</li>
@@ -108,6 +108,28 @@
                 </a>
             </li>
             @endcan
+            <li class="app-sidebar__heading">Luyện âm</li>
+            <li>
+                <a class="{{ request()->is(['admin/speaking-level-test']) ? 'mm-active' : '' }}"
+                   href="{{ route('admin.speak-list') }}">
+                    <i class="metismenu-icon fa-solid fa-laptop-file"></i>
+                    Quản lý đề
+                </a>
+            </li>
+            <li>
+                <a class="{{ request()->is(['admin/speaking-level-test/question-list']) ? 'mm-active' : '' }}"
+                   href="{{ route('admin.speak-question-list') }}">
+                    <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
+                    Câu hỏi dạng trắc nghiệm
+                </a>
+            </li>
+            <li>
+                <a class="{{ request()->is(['admin/speaking-level-test/question-list']) ? 'mm-active' : '' }}"
+                   href="{{ route('admin.speak-question-luyen-am') }}">
+                    <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
+                    Luyện âm theo chủ đề
+                </a>
+            </li>
             @if(Gate::check('User_List') || Gate::check('Role_List'))
             <li class="app-sidebar__heading">Người dùng</li>
             @endif
