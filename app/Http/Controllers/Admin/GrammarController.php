@@ -71,7 +71,8 @@ class GrammarController extends Controller
         try {
             Grammar::create([
                 "name" => $request->name,
-                "description" => $request->description
+                "description" => $request->description,
+                "is_exam" => $request->isExam
             ]);
             return response()->json([
                 "status" => 200,

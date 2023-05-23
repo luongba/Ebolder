@@ -117,6 +117,11 @@ Vue.component(
     "question-speak-luyen-am",
     require("./components/admin/speak/QuestionLuyenAm.vue").default
 );
+
+Vue.component(
+    "page-speak-luyen-am",
+    require("./components/frontend/speaking/PageLuyenAm.vue").default
+);
 //user
 Vue.component(
     "user-list",
@@ -147,6 +152,12 @@ Vue.component(
 Vue.component(
     "role-edit",
     require("./components/admin/role/RoleEdit.vue").default
+);
+
+//exam
+Vue.component(
+    "exam-list",
+    require("./components/admin/exam/ExamList.vue").default
 );
 
 //frontend

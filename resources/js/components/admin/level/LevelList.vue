@@ -1,5 +1,6 @@
 <template>
   <div>
+    <LoadingVue v-if="isLoading" />
     <div class="container">
       <transition name="fade">
         <div class="w-full h-full" v-if="show">
@@ -133,7 +134,7 @@
           </div>
         </div>
       </transition>
-      <LoadingVue v-if="isLoading" />
+
       <div class="flex items-center justify-center mb-4">
         <el-button
           icon="el-icon-plus"
@@ -372,10 +373,9 @@ export default {
             .reverse();
         }
       } catch (e) {
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 1000);
         console.log(e);
+      } finally {
+        this.isLoading = false;
       }
     },
     editLevel(id) {
@@ -483,7 +483,6 @@ export default {
             let rs = await baseRequest.post(`/admin/delete-level`, {
               id,
             });
-            console.log("🚀 ~ file: LevelList.vue:459 ~ .then ~ rs", rs);
             if (rs.data.status == 200) {
               this.getAllLevel();
               this.$message({
@@ -548,12 +547,12 @@ export default {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 /* Handle on hover */

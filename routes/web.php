@@ -53,6 +53,7 @@ Route::prefix('/')->group(function () {
         Route::get('/Grammar', 'HomeController@grammarTest')->name('grammar-test-page')->middleware('checkLogin');
         Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page')->middleware('checkLogin');
         Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page')->middleware('checkLogin');
+        Route::get('/Speaking', 'HomeController@speakingTest')->name('speaking-test-page')->middleware('checkLogin');
     });
     Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page')->middleware('checkLogin');
     Route::get('/history', 'HomeController@historyPage')->name('history-page')->middleware('checkLogin');
@@ -94,6 +95,9 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/speaking-level-test/question-list', 'Admin\SpeakController@questionlist')->name('speak-question-list');
         Route::get('/speaking-level-test/question-create', 'Admin\SpeakController@create')->name('speak-question-create');
         Route::get('/speaking-level-test/question-luyen-am', 'Admin\SpeakController@pageQuestionSpeak')->name('speak-question-luyen-am');
+
+        //exam
+        Route::get('/exam-administration', 'Admin\ExamController@index')->name('exam-list');
 
         //user
         Route::get('/users', 'Admin\UserController@index')->name('user-list')->middleware('can:User_List');

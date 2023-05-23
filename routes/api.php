@@ -86,6 +86,13 @@ Route::middleware('auth:api')->group(function (){
         Route::put('/update-question-speak', 'Admin\SpeakController@update')->name('update-speak');
         Route::post('/delete-answer-speak', 'Admin\SpeakController@destroyAns')->name('delete-speak');
         Route::post('/delete-question-speak', 'Admin\SpeakController@destroyQues')->name('delete-question-speak');
+        Route::post('/create-question-luyen-am', 'Admin\SpeakController@createQuestionLuyenAm')->name('create-question-luyen-am');
+        Route::get('/all-question-luyen-am', 'Admin\SpeakController@allQuestionLuyenAm')->name('all-question-luyen-am');
+        Route::post('/update-question-luyen-am/{id}', 'Admin\SpeakController@updateQuestionLuyenAm')->name('update-question-luyen-am');
+        Route::post('/delete-question-luyen-am/{id}', 'Admin\SpeakController@deleteQuestionLuyenAm')->name('delete-question-luyen-am');
+        Route::post('/save-result-exam-luyen-am', 'Admin\SpeakController@saveResultExam')->name('save-result-luyen-am');
+        Route::post('/get-result-exam-luyen-am', 'Admin\SpeakController@getAudioUser')->name('get-result-luyen-am');
+
         //user
         Route::get('/list-user', 'Admin\UserController@getAllUser')->name('get-all-user');
         Route::post('/create-user', 'Admin\UserController@registerUserApi')->name('create-user');
@@ -120,6 +127,7 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-level', 'Admin\LevelController@deleteLevel')->name('delete-level');
         Route::post('/update-level', 'Admin\LevelController@updateLevel')->name('update-level');
         Route::get('/check-passed-level', 'Admin\LevelController@checkLevelPassed')->name('check-passed-level');
+        Route::post('/update-status-exam', 'HomeController@updateStatusExam');
 
         //check exam
         Route::post('/check-history-exam', 'HomeController@checkHistoryExam')->name('check-history-exam');

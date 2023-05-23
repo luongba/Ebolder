@@ -20,6 +20,10 @@
       </p>
     </div>
     <div class="container">
+      <div class="flex justify-center">
+        <span class="font-semibold text-[15px] mb-2 mr-2">Exam</span>
+        <el-switch v-model="dataTopic.isExam"></el-switch>
+      </div>
       <div class="mb-4">
         <el-form ref="ruleFormItem" :model="dataTopic" class="w-full">
           <el-form-item
@@ -332,6 +336,7 @@ export default {
       dataTopic: {
         name: null,
         content: "hello",
+        isExam: false,
       },
 
       dataQuestion: [],
@@ -357,6 +362,7 @@ export default {
         let dataTemp = {
           name: this.dataTopic.name,
           contentReading: this.dataTopic.content,
+          isExam: this.dataTopic.isExam,
           dataQuestion: this.dataQuestion,
         };
         let result = await baseRequest.post(

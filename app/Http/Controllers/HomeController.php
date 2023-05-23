@@ -6,6 +6,7 @@ use App\models\Grammar\Grammar;
 use App\models\Learn\ExamResult;
 use App\models\Learn\Learn;
 use App\models\Listen\Listening;
+use App\models\Speak\QuestionLuyenAm;
 use App\models\Read\Reading;
 use App\models\User\HistoryExam;
 use App\models\Vocabulary\Vocabulary;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    public $data;
     public function home()
     {
         return view('pages.admin.dashbroad.index');
@@ -33,9 +35,8 @@ class HomeController extends Controller
     {
 
         if (isset($request->testId)) {
-            $query = explode('=', $request->query('testId'));
-            $testId = $query[0][0];
-            $levelId = $query[1];
+            $testId = $request->testId;
+            $levelId =$request->levelId;
             $vocabulary = Vocabulary::whereId($request->testId)->with(['QuestitonVocabulary' => function ($question) {
                 $question->with('answers');
                 $question->with('right_answers');
@@ -54,10 +55,8 @@ class HomeController extends Controller
     public function grammarTest(Request $request)
     {
         if (isset($request->testId)) {
-            $query = explode('=', $request->query('testId'));
-
-            $testId = $query[0][0];
-            $levelId = $query[1];
+            $testId = $request->testId;
+            $levelId =$request->levelId;
             $grammar = Grammar::whereId($request->testId)->with(['QuestitonGrammar' => function ($question) {
                 $question->with('answers')->with('right_answers')->get();
             }])->first();
@@ -75,10 +74,8 @@ class HomeController extends Controller
     public function readingTest(Request $request)
     {
         if (isset($request->testId)) {
-            $query = explode('=', $request->query('testId'));
-
-            $testId = $query[0][0];
-            $levelId = $query[1];
+            $testId = $request->testId;
+            $levelId =$request->levelId;
             $reading = Reading::whereId($request->testId)->with(['QuestionReading' => function ($question) {
                 $question->with('AnswerReading')->with('RightAnswerReading')->get();
             }])->first();
@@ -96,10 +93,8 @@ class HomeController extends Controller
     public function listeningTest(Request $request)
     {
         if (isset($request->testId)) {
-            $query = explode('=', $request->query('testId'));
-
-            $testId = $query[0][0];
-            $levelId = $query[1];
+            $testId = $request->testId;
+            $levelId =$request->levelId;
             $listening = Listening::whereId($request->testId)->with(['TopicAudioListen' => function ($audio) {
                 $audio->with(['questionListening' => function ($question) {
                     $question->with('answerListening')->with('rightAnswers');
@@ -114,6 +109,16 @@ class HomeController extends Controller
                 }]);
             }])->inRandomOrder()->first();
             return view('pages.frontend.listening', compact('listening'));
+        }
+
+    }
+    public function speakingTest(Request $request)
+    {
+        if (isset($request->testId)) {
+            $testId = $request->testId;
+            $levelId =$request->levelId;
+            $speaking = QuestionLuyenAm::whereId($testId)->first();
+            return view('pages.frontend.speaking', compact(['speaking', 'testId', 'levelId']));
         }
 
     }
@@ -281,6 +286,17 @@ class HomeController extends Controller
         }
         
         
+    }
+
+    public function updateStatusExam(Request $request){
+        $data = app("App\\models\\{$request->model}\\{$request->class}");
+        $data->whereId($request->id)->update([
+            'is_exam' => $request->is_exam
+        ]);
+        return response()->json([
+            "status" => 200,
+            "errorCode" => 0,
+        ]);
     }
 
 

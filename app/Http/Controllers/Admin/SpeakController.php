@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\models\Speak\AnswerSpeak;
 use App\models\Speak\Speak;
 use App\models\Speak\QuestionSpeak;
+use App\models\Speak\QuestionLuyenAm;
+use App\models\Speak\SaveResultExamSpeaking;
 use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Exception;
 class SpeakController extends Controller
@@ -363,5 +365,74 @@ class SpeakController extends Controller
     }
     public function pageQuestionSpeak(){
         return view('pages.admin.speak.question.luyenam');
+    }
+
+    public function createQuestionLuyenAm(Request $request){
+        QuestionLuyenAm::create([
+            "name" =>  $request->name,
+            "content" => $request->content,
+        ]);
+        return [
+            "status" => 200,
+            "errorCode" => 0,
+            "message" => "Thêm câu hỏi thành công !"
+        ];
+    }
+    public function allQuestionLuyenAm(Request $request){
+        $questions = QuestionLuyenAm::paginate(10);
+        return [
+            "status" => 200,
+            "errorCode" => 0,
+            "data"=>  $questions,
+            "message" => "Thêm câu hỏi thành công !"
+        ];
+    }
+    public function updateQuestionLuyenAm(Request $request, $id){
+        QuestionLuyenAm::find($id)->update([
+            "name" =>  $request->name,
+            "content" => $request->content,
+        ]);
+        return [
+            "status" => 200,
+            "errorCode" => 0,
+            "message" => "Cập nhật câu hỏi thành công !"
+        ];
+    }
+    public function deleteQuestionLuyenAm(Request $request, $id){
+        QuestionLuyenAm::find($id)->delete();
+        return [
+            "status" => 200,
+            "errorCode" => 0,
+            "message" => "Cập nhật câu hỏi thành công !"
+        ];
+    }
+
+    public function saveResultExam(Request $request){
+        if ($request->has('file')) {
+            $file = $request->file;
+            $file_name = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('upload/audio-speaking/'.$request->email), $file_name);
+            SaveResultExamSpeaking::create([
+                'level_id' => $request->level_id,
+                'user_id' => $request->user_id,
+                'test_id' => $request->test_id,
+                'url_audio' => $_SERVER['SERVER_NAME'] . ':8000/upload/audio-speaking/'.$request->email.'/' . $file_name,
+            ]);
+        }
+        return [
+            "status" => 200,
+            "errorCode" => 0,
+            "message" => "Lưu file ghi âm thành công !"
+        ];
+
+    }
+    public function getAudioUser(Request $request){
+        $data = SaveResultExamSpeaking::where('level_id',  $request->level_id)->where('user_id', $request->user_id)->where('test_id', $request->exam_id)->first();
+        return [
+            "status" => 200,
+            "errorCode" => 0,
+            "data" => $data,
+            "message" => "Lấy file ghi âm thành công !"
+        ];
     }
 }

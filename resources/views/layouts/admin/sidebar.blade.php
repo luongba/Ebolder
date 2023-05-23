@@ -11,6 +11,14 @@
                     Dashboard
                 </a>
             </li>
+            <li class="app-sidebar__heading">Đề kiểm tra</li>
+            <li>
+                <a class="{{ request()->is(['admin/exam-administration']) ? 'mm-active' : '' }}"
+                   href="{{ route('admin.exam-list') }}">
+                    <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
+                    Quản lý đề kiểm tra
+                </a>
+            </li>
             @can('Level_List')
             <li class="app-sidebar__heading">Cấp độ bài học</li>
             <li>
@@ -21,6 +29,7 @@
                 </a>
             </li>
             @endcan
+            
             @can('Lesson_List')
             <li class="app-sidebar__heading">Bài học</li>
             <li>
@@ -113,7 +122,7 @@
                 <a class="{{ request()->is(['admin/speaking-level-test']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.speak-list') }}">
                     <i class="metismenu-icon fa-solid fa-laptop-file"></i>
-                    Quản lý đề
+                    Quản lý đề trắc nghiệm
                 </a>
             </li>
             <li>
@@ -124,7 +133,7 @@
                 </a>
             </li>
             <li>
-                <a class="{{ request()->is(['admin/speaking-level-test/question-list']) ? 'mm-active' : '' }}"
+                <a class="{{ request()->is(['admin/speaking-level-test/question-luyen-am']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.speak-question-luyen-am') }}">
                     <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
                     Luyện âm theo chủ đề

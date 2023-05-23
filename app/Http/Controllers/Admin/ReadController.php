@@ -29,6 +29,7 @@ class ReadController extends Controller
             $read = Reading::create([
                 "name" => $request->name,
                 "content" => $request->contentReading,
+                "is_exam" => $request->isExam
             ]);
             foreach ($request->dataQuestion as $key => $value) {
                 $res = $read->QuestionReading()->create([
@@ -303,6 +304,7 @@ class ReadController extends Controller
             $read->update([
                 "name" => $request->name,
                 "content" => $request->contentReading,
+                "is_exam" => $request->isExam
             ]);
             foreach ($dataQuestion as $key => $value) {
                 $check = QuestionReading::whereId($value['id'])->exists();

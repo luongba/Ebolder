@@ -1,177 +1,181 @@
 <template>
-    <div class="container">
-        <transition name="fade">
-            <div class="w-full h-full" v-if="show">
-                <div
-                    class="md:absolute fixed inset-0 bg-blur flex items-center justify-center"
-                >
-                    <div
-                        class="w-[95%] md:w-[70%] bg-white shadow-sm px-4 py-4 max-h-[540px] overflow-y-scroll"
-                    >
-                        <div class="py-2 relative">
-                            <h1 class="font-semibold uppercase text-[14px] mb-4">
-                                Add Question
-                            </h1>
-                            <span
-                                class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer"
-                                @click="show = !show"
-                            >
-                                <i class="lnr-cross"></i>
-                            </span>
-                        </div>
-                        <div class="my-2">
-                            <div v-if="(dataQuestion.length == 0)">
-                                <el-empty description="No question"></el-empty>
-                            </div>
-                            <div
-                                class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-2 text-[14px] font-semibold mb-4"
-                                v-for="itemQues in dataQuestion"
-                                :key="itemQues.id"
-                                v-else
-                            >
-                                <span class="flex-1">{{ itemQues.question }}</span>
-                                <div class="flex items-center">
-                                    <star-rating
-                                        :star-size="20"
-                                        :animate="false"
-                                        v-model="itemQues.level"
-                                        :show-rating="false"
-                                        :max-rating="3"
-                                        :read-only="true"
-                                    />
-                                    <el-button
-                                        icon="el-icon-plus"
-                                        size="mini"
-                                        class="ml-2"
-                                        @click="addTopic(itemQues.id)"
-                                        circle
-                                    ></el-button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </transition>
-        <div class="flex items-center justify-center">
-            <p
-                class="font-bold lg:text-[30px] text-[20px] uppercase text-center w-full"
-                v-if="!isEditTitle"
-            >
-                {{ detailTopic.name }}
-            </p>
-            <input
-                type="text"
-                class="font-bold lg:text-[30px] text-[20px] uppercase text-center w-full"
-                v-model="detailTopic.name"
-                v-else
-            />
-            <el-button
-                size="small"
-                plain
-                type="primary"
-                icon="el-icon-edit"
-                circle
-                class="ml-2"
-                v-if="!isEditTitle"
-                @click="isEditTitle = !isEditTitle"
-            ></el-button>
-
-            <el-button
-                type="success"
-                icon="el-icon-check"
-                circle
-                size="small"
-                plain
-                v-if="isEditTitle"
-                class="ml-2"
-                @click="saveChangeTitle(detailTopic.id)"
-            ></el-button>
-        </div>
-        <p class="font-semibold text-[15px] mt-4 mb-2">Statistical</p>
+  <div class="container">
+    <transition name="fade">
+      <div class="w-full h-full" v-if="show">
         <div
-            class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-4 text-[14px] font-semibold flex flex-col items-start"
+          class="md:absolute fixed inset-0 bg-blur flex items-center justify-center"
         >
-            <div class="flex justify-between items-center w-full">
-                <p>{{ levelEasy }}</p>
-                <star-rating
-                    :star-size="20"
-                    :animate="false"
-                    :show-rating="false"
-                    :max-rating="1"
-                    :read-only="true"
-                    :rating="1"
-                />
+          <div
+            class="w-[95%] md:w-[70%] bg-white shadow-sm px-4 py-4 max-h-[540px] overflow-y-scroll"
+          >
+            <div class="py-2 relative">
+              <h1 class="font-semibold uppercase text-[14px] mb-4">
+                Add Question
+              </h1>
+              <span
+                class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer"
+                @click="show = !show"
+              >
+                <i class="lnr-cross"></i>
+              </span>
             </div>
-            <div class="flex justify-between items-center w-full">
-                <p>{{ levelMedium }}</p>
-                <star-rating
+            <div class="my-2">
+              <div v-if="dataQuestion.length == 0">
+                <el-empty description="No question"></el-empty>
+              </div>
+              <div
+                class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-2 text-[14px] font-semibold mb-4"
+                v-for="itemQues in dataQuestion"
+                :key="itemQues.id"
+                v-else
+              >
+                <span class="flex-1">{{ itemQues.question }}</span>
+                <div class="flex items-center">
+                  <star-rating
                     :star-size="20"
                     :animate="false"
-                    :show-rating="false"
-                    :max-rating="2"
-                    :read-only="true"
-                    :rating="2"
-                />
-            </div>
-            <div class="flex justify-between items-center w-full">
-                <p>{{ levelhard }}</p>
-                <star-rating
-                    :star-size="20"
-                    :animate="false"
+                    v-model="itemQues.level"
                     :show-rating="false"
                     :max-rating="3"
                     :read-only="true"
-                    :rating="3"
-                />
-            </div>
-
-            <div class="flex justify-between items-center w-full border-t my-2">
-                <p class="mt-2">Total: {{ levelhard + levelMedium + levelEasy }}</p>
-            </div>
-        </div>
-
-        <!--        <p class="font-semibold text-[15px] mt-2">Description: {{ detailTopic.description }}</p>-->
-        <p class="font-semibold text-[15px] mt-4 mb-2">Questions of Topic</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div
-                class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
-                v-for="item in detailTopic.question"
-                :key="item.idQues"
-            >
-                <span class="flex-1">{{ item.question }}</span>
-                <div class="flex items-center">
-                    <star-rating
-                        :star-size="20"
-                        :animate="false"
-                        v-model="item.level"
-                        :show-rating="false"
-                        :max-rating="3"
-                        :read-only="true"
-                    />
-                    <el-button
-                        size="small"
-                        type="danger"
-                        plain
-                        icon="el-icon-delete"
-                        circle
-                        class="ml-2"
-                        @click="removeTopic(item.idQues)"
-                    ></el-button>
+                  />
+                  <el-button
+                    icon="el-icon-plus"
+                    size="mini"
+                    class="ml-2"
+                    @click="addTopic(itemQues.id)"
+                    circle
+                  ></el-button>
                 </div>
+              </div>
             </div>
-            <div
-                class="bg-white shadow-sm flex items-center justify-center cursor-pointer py-4 px-4 text-[14px] font-semibold"
-                @click="show = !show"
-            >
-                <div class="flex items-center">
-                    <div class="w-[32px] h-[32px] flex items-center justify-center">
-                        <i class="el-icon-plus text-[20px]"></i>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
+    </transition>
+    <div class="flex items-center justify-center">
+      <p
+        class="font-bold lg:text-[30px] text-[20px] uppercase text-center w-full"
+        v-if="!isEditTitle"
+      >
+        {{ detailTopic.name }}
+      </p>
+      <input
+        type="text"
+        class="font-bold lg:text-[30px] text-[20px] uppercase text-center w-full"
+        v-model="detailTopic.name"
+        v-else
+      />
+      <el-button
+        size="small"
+        plain
+        type="primary"
+        icon="el-icon-edit"
+        circle
+        class="ml-2"
+        v-if="!isEditTitle"
+        @click="isEditTitle = !isEditTitle"
+      ></el-button>
+
+      <el-button
+        type="success"
+        icon="el-icon-check"
+        circle
+        size="small"
+        plain
+        v-if="isEditTitle"
+        class="ml-2"
+        @click="saveChangeTitle(detailTopic.id)"
+      ></el-button>
     </div>
+    <div>
+      <span class="font-semibold text-[15px] mt-4 mb-2 mr-2">Exam</span>
+      <el-switch v-model="detailTopic.isExam"></el-switch>
+    </div>
+    <p class="font-semibold text-[15px] mt-4 mb-2">Statistical</p>
+    <div
+      class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-4 text-[14px] font-semibold flex flex-col items-start"
+    >
+      <div class="flex justify-between items-center w-full">
+        <p>{{ levelEasy }}</p>
+        <star-rating
+          :star-size="20"
+          :animate="false"
+          :show-rating="false"
+          :max-rating="1"
+          :read-only="true"
+          :rating="1"
+        />
+      </div>
+      <div class="flex justify-between items-center w-full">
+        <p>{{ levelMedium }}</p>
+        <star-rating
+          :star-size="20"
+          :animate="false"
+          :show-rating="false"
+          :max-rating="2"
+          :read-only="true"
+          :rating="2"
+        />
+      </div>
+      <div class="flex justify-between items-center w-full">
+        <p>{{ levelhard }}</p>
+        <star-rating
+          :star-size="20"
+          :animate="false"
+          :show-rating="false"
+          :max-rating="3"
+          :read-only="true"
+          :rating="3"
+        />
+      </div>
+
+      <div class="flex justify-between items-center w-full border-t my-2">
+        <p class="mt-2">Total: {{ levelhard + levelMedium + levelEasy }}</p>
+      </div>
+    </div>
+
+    <!--        <p class="font-semibold text-[15px] mt-2">Description: {{ detailTopic.description }}</p>-->
+    <p class="font-semibold text-[15px] mt-4 mb-2">Questions of Topic</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div
+        class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
+        v-for="item in detailTopic.question"
+        :key="item.idQues"
+      >
+        <span class="flex-1">{{ item.question }}</span>
+        <div class="flex items-center">
+          <star-rating
+            :star-size="20"
+            :animate="false"
+            v-model="item.level"
+            :show-rating="false"
+            :max-rating="3"
+            :read-only="true"
+          />
+          <el-button
+            size="small"
+            type="danger"
+            plain
+            icon="el-icon-delete"
+            circle
+            class="ml-2"
+            @click="removeTopic(item.idQues)"
+          ></el-button>
+        </div>
+      </div>
+      <div
+        class="bg-white shadow-sm flex items-center justify-center cursor-pointer py-4 px-4 text-[14px] font-semibold"
+        @click="show = !show"
+      >
+        <div class="flex items-center">
+          <div class="w-[32px] h-[32px] flex items-center justify-center">
+            <i class="el-icon-plus text-[20px]"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -191,6 +195,7 @@ export default {
                 name: null,
                 description: null,
                 question: [],
+                isExam: false
             },
             dataQuestion: [],
             take: 5,
@@ -227,7 +232,13 @@ export default {
             }, 0);
         },
     },
-    watch: {},
+    watch: {
+        'detailTopic.isExam'(value){
+            if(typeof(value) == 'boolean'){
+               this.setStatusExam(value)
+            }
+        }
+    },
     methods: {
         resetFeild() {
             this.show = false;
@@ -235,6 +246,27 @@ export default {
                 name: null,
                 description: null,
             };
+        },
+        async setStatusExam(value){
+            try {
+                let rs = await baseRequest.post(
+                    `/admin/update-status-exam`,
+                    {
+                        is_exam: value,
+                        class: "vocabulary",
+                        model: "vocabulary",
+                        id: this.detailTopic.id
+                    }
+                );
+                if (rs.data.status == 200) {
+                    this.$message({
+                    type: "success",
+                    message: "Thay đổi trạng thái thành công!",
+                });
+                }
+            } catch (e) {
+                console.log(e);
+            }
         },
         async createTopic() {
             try {
@@ -262,6 +294,7 @@ export default {
                         id: data.id,
                         name: data.name,
                         description: data.description,
+                        isExam: data.is_exam,
                         question: data.questiton_vocabulary?.map((item) => {
                             return {
                                 idQues: item.id,
@@ -356,15 +389,15 @@ export default {
 </script>
 <style scoped>
 .bg-blur {
-    background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.2s;
+  transition: opacity 0.2s;
 }
 
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
+  opacity: 0;
 }
 </style>
