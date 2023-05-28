@@ -7,12 +7,12 @@
     padding: 0;
     overflow-x: hidden;
     z-index: 1;
-    width: full;
+    width: 100%;
 }
 
 .content {
     font: 100% Arial, Sans Serif;
-    font-family: "ponny";  
+    font-family: "lexend";  
 }
 
 #background-wrap {

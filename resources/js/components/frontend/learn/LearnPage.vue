@@ -469,6 +469,8 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .exam.active {

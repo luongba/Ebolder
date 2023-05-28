@@ -39,7 +39,7 @@
           </VueCountdown>
         </h2>
       </div>
-      <a href="/learn" style="text-decoration: none" v-show="!isShowLabel">
+      <a href="/learn" style="text-decoration: none" v-show="!isShowLabel || !request.exam">
         <button
           class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
         >
@@ -331,7 +331,7 @@ import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import baseRequest from "../../../utils/baseRequest";
 export default {
-  props: ["data", "query", "user"],
+  props: ["data", "query", "user", "request"],
   data() {
     return {
       answerData: [],
@@ -404,6 +404,21 @@ export default {
         } catch (e) {
           console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
         }
+      }
+      if (this.request.exam) {
+        try {
+          let result = await baseRequest.post(
+            "/admin/save-exam-history-final",
+            {
+              id: this.request.historyId,
+              result_grammar: `${this.arrRightAns.length}/${this.answerData.length}`,
+              time: this.timerun,
+            }
+          );
+          if (result.data.status === 200) {
+            window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${this.request.l}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&exam=true`;
+          }
+        } catch (error) {}
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
       setTimeout(() => {

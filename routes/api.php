@@ -133,7 +133,14 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/check-history-exam', 'HomeController@checkHistoryExam')->name('check-history-exam');
         //history
         Route::get('/get-full-history', 'HomeController@fullhistory');
-
+        //exam
+        Route::post('/create-exam', 'Admin\ExamController@createExam');
+        Route::get('/get-all-exam', 'Admin\ExamController@getAllExam');
+        Route::get('/get-detail-exam/{id}', 'Admin\ExamController@getDetailExam');
+        Route::post('/update-exam/{id}', 'Admin\ExamController@updateExam');
+        Route::post('/delete-exam/{id}', 'Admin\ExamController@deleteExam');
+        Route::post('/save-exam-history-final', 'Admin\ExamController@saveHistoryExam');
+        Route::get('/get-exam-history-final/{id}', 'Admin\ExamController@getAllHistoryForExam');
     });
 });
 

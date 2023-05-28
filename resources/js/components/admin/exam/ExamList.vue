@@ -12,8 +12,8 @@
                 <h1 class="font-semibold uppercase text-[14px]">
                   {{
                     state == "create"
-                      ? "Tạo mới cấp độ bài học"
-                      : "Cập nhật cấp độ bài học"
+                      ? "Tạo mới đề kiểm tra"
+                      : "Cập nhật đề kiểm tra"
                   }}
                 </h1>
                 <span
@@ -34,8 +34,13 @@
                       ></el-input>
                     </el-form-item>
                   </div>
+                  <div class="my-2">
+                    <el-form-item label="Exam" prop="isExam">
+                      <el-switch v-model="topicData.isExam"></el-switch>
+                    </el-form-item>
+                  </div>
                   <div class="grid grid-cols-1 md:grid-cols-1 md:gap-4 gap-1">
-                    <el-form-item label="Phần đọc" prop="reading">
+                    <el-form-item label="Phần đọc" prop="valueReading">
                       <el-select
                         v-model="topicData.valueReading"
                         placeholder="Chọn đề"
@@ -50,7 +55,7 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần từ vựng" prop="vocabulary">
+                    <el-form-item label="Phần từ vựng" prop="valueVocabulary">
                       <el-select
                         v-model="topicData.valueVocabulary"
                         placeholder="Chọn đề"
@@ -65,7 +70,7 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần nghe" prop="listening">
+                    <el-form-item label="Phần nghe" prop="valueListening">
                       <el-select
                         v-model="topicData.valueListening"
                         placeholder="Chọn đề"
@@ -80,7 +85,7 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần ngữ pháp" prop="grammar">
+                    <el-form-item label="Phần ngữ pháp" prop="valueGrammar">
                       <el-select
                         v-model="topicData.valueGrammar"
                         placeholder="Chọn đề"
@@ -95,7 +100,7 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần luyện âm" prop="speak">
+                    <el-form-item label="Phần luyện âm" prop="valueSpeaking">
                       <el-select
                         v-model="topicData.valueSpeaking"
                         placeholder="Chọn đề"
@@ -151,7 +156,7 @@
       <div class="grid grid-cols-1 gap-4">
         <div
           class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
-          v-for="item in listLevel"
+          v-for="item in listExam"
           :key="item.id"
         >
           <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
@@ -217,8 +222,10 @@ export default {
         valueVocabulary: null,
         valueListening: null,
         valueSpeaking: null,
+        isExam: 0,
+
       },
-      listLevel: [],
+      listExam: [],
       ApiUrl: $Api.baseUrl,
       rules: {
         name: [
@@ -228,39 +235,39 @@ export default {
             trigger: "blur",
           },
         ],
-        lesson: [
+        valueSpeaking: [
           {
             required: true,
-            message: "Please select lesson",
-            trigger: "blur",
+            message: "Please select speak",
+            trigger: 'change'
           },
         ],
-        vocabulary: [
+        valueVocabulary: [
           {
-            required: false,
+            required: true,
             message: "Please select vocabulary",
-            trigger: "blur",
+            trigger: 'change'
           },
         ],
-        reading: [
+        valueReading: [
           {
-            required: false,
+            required: true,
             message: "Please select reading",
-            trigger: "blur",
+            trigger: 'change'
           },
         ],
-        grammar: [
+        listTopicGrammar: [
           {
-            required: false,
+            required: true,
             message: "Please select grammar",
-            trigger: "blur",
+            trigger: 'change'
           },
         ],
-        listening: [
+        valueListening: [
           {
-            required: false,
+            required: true,
             message: "Please select listening",
-            trigger: "blur",
+            trigger: 'change'
           },
         ],
       },
@@ -280,35 +287,36 @@ export default {
   watch: {},
   methods: {
     async createTopic(formName) {
-      this.$refs[formName].validate(async (valid) => {
+      this.$refs[formName].validate(async (valid,err) => {
         if (valid) {
           try {
             let dataTemp = {
               name: this.topicData.name,
-              lessons: this.topicData.valueLesson,
-              listenings: this.topicData.valueListening,
-              readings: this.topicData.valueReading,
-              vocabularies: this.topicData.valueVocabulary,
-              grammars: this.topicData.valueGrammar,
+              listening_id: this.topicData.valueListening,
+              reading_id: this.topicData.valueReading,
+              vocabulary_id: this.topicData.valueVocabulary,
+              grammar_id: this.topicData.valueGrammar,
+              speaking_id: this.topicData.valueSpeaking,
+              status: this.topicData.isExam || false,
             };
-            let rs = await baseRequest.post(`/admin/create-level`, dataTemp);
+            let rs = await baseRequest.post(`/admin/create-exam`, dataTemp);
             if (rs.data.status == 200) {
               this.resetFeild();
               this.$message({
                 type: "success",
-                message: "Thêm cấp độ bài học thành công",
+                message: "Thêm đề kiểm tra thành công",
               });
-              this.getAllLevel();
+              this.getAllExam();
             } else {
               this.$message({
                 type: "error",
-                message: "Thêm cấp độ bài học thất bại",
+                message: "Thêm cấp đề kiểm tra thất bại",
               });
             }
           } catch (e) {
             this.$message({
               type: "error",
-              message: "Thêm cấp độ bài học thất bại",
+              message: "Thêm cấp đề kiểm tra thất bại",
             });
           }
         } else {
@@ -322,31 +330,31 @@ export default {
           try {
             let dataTemp = {
               name: this.topicData.name,
-              lessons: this.topicData.valueLesson,
+              speaking_id: this.topicData.valueSpeaking,
               listening_id: this.topicData.valueListening,
               reading_id: this.topicData.valueReading,
               vocabulary_id: this.topicData.valueVocabulary,
               grammar_id: this.topicData.valueGrammar,
-              id: this.idTemp,
+              status: this.topicData.isExam ,
             };
-            let rs = await baseRequest.post(`/admin/update-level`, dataTemp);
+            let rs = await baseRequest.post(`/admin/update-exam/${this.idTemp}`, dataTemp);
             if (rs.data.status == 200) {
               this.resetFeild();
               this.$message({
                 type: "success",
-                message: "Sửa cấp độ bài học thành công",
+                message: "Sửa đề kiểm tra thành công",
               });
-              this.getAllLevel();
+              this.getAllExam();
             } else {
               this.$message({
                 type: "error",
-                message: "Sửa cấp độ bài học thất bại",
+                message: "Sửa đề kiểm tra thất bại",
               });
             }
           } catch (e) {
             this.$message({
               type: "error",
-              message: "Sửa cấp độ bài học thất bại",
+              message: "Sửa đề kiểm tra thất bại",
             });
           }
         } else {
@@ -354,15 +362,15 @@ export default {
         }
       });
     },
-    async getAllLevel() {
+    async getAllExam() {
       try {
         this.isLoading = true;
-        let rs = await baseRequest.get(`/admin/get-all-level`);
+        let rs = await baseRequest.get(`/admin/get-all-exam`);
         if (rs.data.status == 200) {
           setTimeout(() => {
             this.isLoading = false;
           }, 1000);
-          this.listLevel = rs.data.data
+          this.listExam = rs.data.data
             .map((item) => ({
               id: item.id,
               name: item.name,
@@ -376,22 +384,23 @@ export default {
       }
     },
     editLevel(id) {
-      this.getDetailLevel(id);
+      this.getDetailExam(id);
       this.state = "edit";
       this.idTemp = id;
     },
-    async getDetailLevel(id) {
+    async getDetailExam(id) {
       try {
-        let rs = await baseRequest.post(`/admin/detail-level`, { id });
+        let rs = await baseRequest.get(`/admin/get-detail-exam/${id}`);
         let { data } = rs;
         if (data.status == 200) {
           this.topicData = {
             name: data.data.name || null,
-            valueGrammar: data.data.grammar.map((item) => item.id) || [],
-            valueVocabulary: data.data.vocabulary.map((item) => item.id) || [],
-            valueReading: data.data.reading.map((item) => item.id) || [],
-            valueListening: data.data.listen.map((item) => item.id) || [],
-            valueLesson: data.data.learn.map((item) => item.id) || [],
+            valueGrammar: data.data.listening_id,
+            valueVocabulary: data.data.reading_id,
+            valueReading: data.data.vocabulary_id,
+            valueListening: data.data.grammar_id,
+            valueSpeaking: data.data.speaking_id,
+            isExam: data.data.status === 1 ? true : false
           };
           this.show = !this.show;
         }
@@ -506,11 +515,9 @@ export default {
       )
         .then(async () => {
           try {
-            let rs = await baseRequest.post(`/admin/delete-level`, {
-              id,
-            });
+            let rs = await baseRequest.post(`/admin/delete-exam/${id}`);
             if (rs.data.status == 200) {
-              this.getAllLevel();
+              this.getAllExam();
               this.$message({
                 type: "success",
                 message: "Delete completed",
@@ -552,7 +559,7 @@ export default {
     this.getAllTopicVocabulary();
     this.getAllTopicGrammar();
     this.getAllTopicListening();
-    this.getAllLevel();
+    this.getAllExam();
     this.getAllTopicSpeaking();
   },
 };

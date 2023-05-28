@@ -299,5 +299,9 @@ class HomeController extends Controller
         ]);
     }
 
+    public function chooseAction(){
+        return view('pages.frontend.chooseAction');
+    }
+
 
 }

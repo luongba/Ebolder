@@ -271,7 +271,7 @@ export default {
           this.detailTopic = {
             id: data.id,
             name: data.name,
-            isExam: data.is_exam,
+            isExam: data.is_exam == 1 ? true : false,
             description: data.description,
             question: data.questiton_grammar?.map((item) => {
               return {

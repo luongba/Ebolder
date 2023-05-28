@@ -479,7 +479,7 @@ export default {
           this.dataTopic = {
             name: data.name,
             content: data.content,
-            isExam: data.is_exam,
+            isExam: data.is_exam == 1 ? true : false,
           };
           let temp = data.question_reading?.map((item) => {
             return {

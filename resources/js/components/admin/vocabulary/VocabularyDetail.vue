@@ -294,7 +294,7 @@ export default {
                         id: data.id,
                         name: data.name,
                         description: data.description,
-                        isExam: data.is_exam,
+                        isExam: data.is_exam == 1 ? true : false,
                         question: data.questiton_vocabulary?.map((item) => {
                             return {
                                 idQues: item.id,

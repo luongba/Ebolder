@@ -2,7 +2,7 @@
     <div class="w-full">
         <header-component :user="user" />
         <div class="w-full max-w-[1206px] mx-auto p-4">
-            <div class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px]" v-show="isShowLabel">
+            <div class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px]" v-show="isShowLabel || !request.exam">
                 <h2
                     class="
                         text-[28px]
@@ -626,7 +626,7 @@ import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import baseRequest from "../../../utils/baseRequest";
 export default {
-  props: ["data", "query", "user"],
+  props: ["data", "query", "user", "request"],
   data() {
     return {
       answerData: [],
@@ -717,6 +717,21 @@ export default {
         } catch (e) {
           console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
         }
+      }
+      if (this.request.exam) {
+        try {
+          let result = await baseRequest.post(
+            "/admin/save-exam-history-final",
+            {
+              id: this.request.historyId,
+              result_listening: `${this.arrRightAns.length}/${this.answerData.length}`,
+              time: this.timerun,
+            }
+          );
+          if (result.data.status === 200) {
+            window.location.href = `${$Api.baseUrl}/english-level-test/Speaking?testId=${this.request.s}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&exam=true`;
+          }
+        } catch (error) {}
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
       setTimeout(() => {

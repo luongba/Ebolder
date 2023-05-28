@@ -58,6 +58,8 @@ Route::prefix('/')->group(function () {
     Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page')->middleware('checkLogin');
     Route::get('/history', 'HomeController@historyPage')->name('history-page')->middleware('checkLogin');
 
+    Route::get('/choose-action', 'HomeController@chooseAction')->name('choose-action')->middleware('checkLogin');
+
 
 
 });
@@ -65,6 +67,12 @@ Route::prefix('/')->group(function () {
 //admin
 
 Route::middleware(['checkLogin'])->group(function () {
+    //exam
+    Route::prefix('/exam')->name('exam.')->group(function () {
+        Route::get('/', 'Admin\ExamController@renderExamList')->name('list');
+    });
+
+    //admin
     Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/', 'HomeController@home')->name('home');
         //vocabulary
