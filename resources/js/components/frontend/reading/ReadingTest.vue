@@ -36,7 +36,7 @@
           </VueCountdown>
         </h2>
       </div>
-      <a href="/learn" style="text-decoration: none" v-show="!isShowLabel">
+      <a href="/learn" style="text-decoration: none" v-show="!isShowLabel && !request.exam">
         <button
           class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
         >
@@ -486,7 +486,7 @@ import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import baseRequest from "../../../utils/baseRequest";
 export default {
-  props: ["data", "query", "user"],
+  props: ["data", "query", "user", "request"],
   data() {
     return {
       answerData: [],
@@ -543,10 +543,10 @@ export default {
         completion_time: this.timerun,
         content_exam: data_exam,
         exam_id: this.data.id,
-        level_id: this.query.levelId
+        level_id: this.query.levelId,
       };
       try {
-        let result = await baseRequest.post("/admin/save-history", dataHistory);
+        await baseRequest.post("/admin/save-history", dataHistory);
       } catch (e) {
         console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
       }
@@ -563,6 +563,21 @@ export default {
         } catch (e) {
           console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
         }
+      }
+      if (this.request.exam) {
+        try {
+          let result = await baseRequest.post(
+            "/admin/save-exam-history-final",
+            {
+              id: this.request.historyId,
+              result_reading: `${this.arrRightAns.length}/${this.answerData.length}`,
+              time: this.timerun,
+            }
+          );
+          if (result.data.status === 200) {
+            window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${this.request.v}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&exam=true`;
+          }
+        } catch (error) {}
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
       setTimeout(() => {
@@ -626,7 +641,7 @@ export default {
         let result = await baseRequest.post("/admin/check-history-exam", {
           type: "Reading",
           exam_id: this.data.id,
-          level_id: this.query.levelId
+          level_id: this.query.levelId,
         });
         result = result.data;
         if (result.status === 200 && result.data !== null) {
@@ -636,7 +651,6 @@ export default {
           this.answerData = data_exam.answerData;
           this.arrRightAns = data_exam.arrRightAns;
           this.isShowLabel = false;
-
         }
       } catch (error) {
         console.log(

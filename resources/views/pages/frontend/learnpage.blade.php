@@ -11,13 +11,14 @@
         background-size: cover;
     }
 </style> --}}
+
 <body>
     <div id="app">
-        <div class="w-full h-full bg-app" >
+        <div class="w-full h-full bg-app">
 
-            <learn-page :user="{{json_encode(Auth::user()) }}"/>
+            <learn-page :user="{{ json_encode(Auth::user()) }}" />
         </div>
-        
+
     </div>
     @include('layouts.script')
 </body>

@@ -95,6 +95,33 @@ Vue.component(
     "grammar-list",
     require("./components/admin/grammar/GrammarList.vue").default
 );
+
+//Speak
+Vue.component(
+    "question-speak-create",
+    require("./components/admin/speak/QuestionCreate.vue").default
+);
+Vue.component(
+    "question-speak-list",
+    require("./components/admin/speak/QuestionList.vue").default
+);
+Vue.component(
+    "speak-detail",
+    require("./components/admin/speak/SpeakDetail.vue").default
+);
+Vue.component(
+    "speak-list",
+    require("./components/admin/speak/SpeakList.vue").default
+);
+Vue.component(
+    "question-speak-luyen-am",
+    require("./components/admin/speak/QuestionLuyenAm.vue").default
+);
+
+Vue.component(
+    "page-speak-luyen-am",
+    require("./components/frontend/speaking/PageLuyenAm.vue").default
+);
 //user
 Vue.component(
     "user-list",
@@ -125,6 +152,17 @@ Vue.component(
 Vue.component(
     "role-edit",
     require("./components/admin/role/RoleEdit.vue").default
+);
+
+//exam
+Vue.component(
+    "exam-list",
+    require("./components/admin/exam/ExamList.vue").default
+);
+
+Vue.component(
+    "exam-list-enable",
+    require("./components/frontend/exam/ExamList.vue").default
 );
 
 //frontend
@@ -210,6 +248,12 @@ Vue.component(
     require("./components/frontend/history/History.vue").default
 );
 
+//choose-action 
+
+Vue.component(
+    "choose-action",
+    require("./components/frontend/chooseAction/ChooseAction.vue").default
+);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

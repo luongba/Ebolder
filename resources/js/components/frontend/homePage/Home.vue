@@ -273,7 +273,7 @@ export default {
     methods: {
         openLink() {
             // window.location.href = `${$Api.baseUrl}/english-level-test`;
-            window.location.href = `${$Api.baseUrl}/learn`;
+            window.location.href = `${$Api.baseUrl}/choose-action`;
         },
     },
 };

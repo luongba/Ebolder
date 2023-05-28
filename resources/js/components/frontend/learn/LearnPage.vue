@@ -301,16 +301,16 @@ export default {
     openExamPage(type, id) {
       switch (type) {
         case "READ":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Reading?testId=${id}?levelId=${this.idLevel}`;
+          window.location.href = `${$Api.baseUrl}/english-level-test/Reading?testId=${id}&levelId=${this.idLevel}`;
           break;
         case "LISTEN":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${id}?levelId=${this.idLevel}`;
+          window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${id}&levelId=${this.idLevel}`;
           break;
         case "VOCABULARY":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${id}?levelId=${this.idLevel}`;
+          window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${id}&levelId=${this.idLevel}`;
           break;
         case "GRAMMAR":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${id}?levelId=${this.idLevel}`;
+          window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${id}&levelId=${this.idLevel}`;
           break;
         default:
           window.location.href = `${$Api.baseUrl}/lesson/${id}`;
@@ -469,6 +469,8 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .exam.active {

@@ -73,6 +73,26 @@ Route::middleware('auth:api')->group(function (){
         Route::put('/update-question-grammar', 'Admin\GrammarController@update')->name('update-grammar');
         Route::post('/delete-answer-grammar', 'Admin\GrammarController@destroyAns')->name('delete-grammar');
         Route::post('/delete-question-grammar', 'Admin\GrammarController@destroyQues')->name('delete-question-grammar');
+        //speaking 
+        Route::post('/add-question-to-topic-speak', 'Admin\SpeakController@addQuestionToTopic')->name('add-question-to-topic-speak');
+        Route::post('/edit-topic-speak', 'Admin\SpeakController@editTopic')->name('edit-topic-speak');
+        Route::post('/remove-question-from-topic-speak', 'Admin\SpeakController@removeQuestionFromTopic')->name('remove-question-from-topic-speak');
+        Route::get('/detail-topic-speak/{id}', 'Admin\SpeakController@detailTopicData')->name('detail-topic-speak');
+        Route::get('/list-topic-speak', 'Admin\SpeakController@ListTopic')->name('list-topic-speak');
+        Route::post('/store-topic-speak', 'Admin\SpeakController@createTopic')->name('store-topic-speak');
+        Route::post('/delete-topic-speak', 'Admin\SpeakController@deleteTopic')->name('delete-topic-speak');
+        Route::post('/store-question-speak', 'Admin\SpeakController@store')->name('store-speak');
+        Route::get('/list-question-speak', 'Admin\SpeakController@getAllInfoQuestion')->name('list-speak');
+        Route::put('/update-question-speak', 'Admin\SpeakController@update')->name('update-speak');
+        Route::post('/delete-answer-speak', 'Admin\SpeakController@destroyAns')->name('delete-speak');
+        Route::post('/delete-question-speak', 'Admin\SpeakController@destroyQues')->name('delete-question-speak');
+        Route::post('/create-question-luyen-am', 'Admin\SpeakController@createQuestionLuyenAm')->name('create-question-luyen-am');
+        Route::get('/all-question-luyen-am', 'Admin\SpeakController@allQuestionLuyenAm')->name('all-question-luyen-am');
+        Route::post('/update-question-luyen-am/{id}', 'Admin\SpeakController@updateQuestionLuyenAm')->name('update-question-luyen-am');
+        Route::post('/delete-question-luyen-am/{id}', 'Admin\SpeakController@deleteQuestionLuyenAm')->name('delete-question-luyen-am');
+        Route::post('/save-result-exam-luyen-am', 'Admin\SpeakController@saveResultExam')->name('save-result-luyen-am');
+        Route::post('/get-result-exam-luyen-am', 'Admin\SpeakController@getAudioUser')->name('get-result-luyen-am');
+
         //user
         Route::get('/list-user', 'Admin\UserController@getAllUser')->name('get-all-user');
         Route::post('/create-user', 'Admin\UserController@registerUserApi')->name('create-user');
@@ -107,12 +127,20 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-level', 'Admin\LevelController@deleteLevel')->name('delete-level');
         Route::post('/update-level', 'Admin\LevelController@updateLevel')->name('update-level');
         Route::get('/check-passed-level', 'Admin\LevelController@checkLevelPassed')->name('check-passed-level');
+        Route::post('/update-status-exam', 'HomeController@updateStatusExam');
 
         //check exam
         Route::post('/check-history-exam', 'HomeController@checkHistoryExam')->name('check-history-exam');
         //history
         Route::get('/get-full-history', 'HomeController@fullhistory');
-
+        //exam
+        Route::post('/create-exam', 'Admin\ExamController@createExam');
+        Route::get('/get-all-exam', 'Admin\ExamController@getAllExam');
+        Route::get('/get-detail-exam/{id}', 'Admin\ExamController@getDetailExam');
+        Route::post('/update-exam/{id}', 'Admin\ExamController@updateExam');
+        Route::post('/delete-exam/{id}', 'Admin\ExamController@deleteExam');
+        Route::post('/save-exam-history-final', 'Admin\ExamController@saveHistoryExam');
+        Route::get('/get-exam-history-final/{id}', 'Admin\ExamController@getAllHistoryForExam');
     });
 });
 

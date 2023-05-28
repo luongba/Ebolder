@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Listening extends Model
 {
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'description', 'is_exam'];
     public function TopicAudioListen(){
         return $this->belongsToMany('App\models\Listen\AudioListening','topic_audio_listen_relationship', 'topic_listen_id', 'audio_listen_id' );
     }

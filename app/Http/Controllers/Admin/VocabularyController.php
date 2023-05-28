@@ -72,7 +72,8 @@ class VocabularyController extends Controller
             DB::beginTransaction();
             Vocabulary::create([
                 "name" => $request->name,
-                "description" => $request->description
+                "description" => $request->description,
+                "is_exam" => $request->isExam,
             ]);
             DB::commit();
             return response()->json([

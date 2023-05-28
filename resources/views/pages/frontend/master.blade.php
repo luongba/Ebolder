@@ -3,7 +3,7 @@
 @include('layouts.head')
 <style>
     * {
-        font-family: lexend !important;
+        font-family: lexend;
     }
     .bg-app {
         background-image: url('/images/bg/landing_page_bg.png');
