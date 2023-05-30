@@ -36,7 +36,11 @@
           </VueCountdown>
         </h2>
       </div>
-      <a href="/learn" style="text-decoration: none" v-show="!isShowLabel && !request.exam">
+      <a
+        href="/learn"
+        style="text-decoration: none"
+        v-show="!isShowLabel && !request.exam"
+      >
         <button
           class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
         >
@@ -313,9 +317,9 @@
               "
               :class="[
                 answerData[index].dataChoose[getIndexSharp(question, indexAns)]
-                  .radioValue ==
+                  .radioValue?.trim()?.toLowerCase() ==
                 answerData[index].dataRight[getIndexSharp(question, indexAns)]
-                  .right_answer
+                  .right_answer.trim()?.toLowerCase()
                   ? 'right-ans'
                   : 'wrong-ans',
               ]"
@@ -524,7 +528,7 @@ export default {
             item.dataChoose.length === item.dataRight.length &&
             item.dataChoose.every(
               (value, index) =>
-                value.radioValue === item.dataRight[index].right_answer
+                value.radioValue?.trim()?.toLowerCase() === item.dataRight[index].right_answer?.trim()?.toLowerCase()
             );
           if (sameArray) {
             this.arrRightAns.push(item);
@@ -545,6 +549,9 @@ export default {
         exam_id: this.data.id,
         level_id: this.query.levelId,
       };
+      if (this.request.exam) {
+        dataHistory.exam_final_id = this.request.examId;
+      }
       try {
         await baseRequest.post("/admin/save-history", dataHistory);
       } catch (e) {
@@ -575,7 +582,7 @@ export default {
             }
           );
           if (result.data.status === 200) {
-            window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${this.request.v}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&exam=true`;
+            window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${this.request.v}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
           }
         } catch (error) {}
       }
@@ -628,7 +635,7 @@ export default {
                                 background: #e2e7ed;
                                 display: inline-block;
                                 width: 100px"
-                                v-model='${
+                                v-model.trim='${
                                   this.answerData[index].dataChoose[sum - 1]
                                     .radioValue
                                 }'>`;
@@ -638,11 +645,21 @@ export default {
     },
     async checkHistoryExam() {
       try {
-        let result = await baseRequest.post("/admin/check-history-exam", {
+        let config = {
           type: "Reading",
           exam_id: this.data.id,
-          level_id: this.query.levelId,
-        });
+        };
+        if (this.request.exam) {
+          config.exam_final_id = this.request.examId;
+          config.status = "exam";
+        } else {
+          config.level_id = this.request.this.query.levelId;
+          config.status = "learn";
+        }
+        let result = await baseRequest.post(
+          "/admin/check-history-exam",
+          config
+        );
         result = result.data;
         if (result.status === 200 && result.data !== null) {
           this.$refs.countdown.abort();

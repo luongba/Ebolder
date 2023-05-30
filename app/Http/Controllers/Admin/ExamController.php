@@ -145,12 +145,12 @@ class ExamController extends Controller
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "history_id" => $history->id,
+                "history" => $history,
                 "message" => "Thành công!"
             ]);
         }else {
             $id = isset($request->id) ? $request->id : $exists->id;
-            $history = ExamHistoryFinal::find($id)->first();
+            $history = ExamHistoryFinal::whereId($id)->first();
             $history->update([
                 "result_reading" =>$history->result_reading ? $history->result_reading:  $request->result_reading,
                 "result_speaking"=> $history->result_speaking ? $history->result_speaking: $request->result_speaking,
@@ -164,7 +164,7 @@ class ExamController extends Controller
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "history_id" => $id,
+                "history" => $history,
                 "message" => "Thành công!"
             ]);
         }
@@ -177,5 +177,9 @@ class ExamController extends Controller
             "exam" =>$exam,
             "message" => "Thành công!"
         ]);
+    }
+    public function renderResultView($id){
+        $history = ExamHistoryFinal::whereId($id)->first();
+        return view('pages.frontend.result', compact('history'));
     }
 }

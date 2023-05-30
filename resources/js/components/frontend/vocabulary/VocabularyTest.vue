@@ -35,7 +35,11 @@
           </VueCountdown>
         </h2>
       </div>
-      <a href="/learn" style="text-decoration: none" v-show="!isShowLabel || !request.exam">
+      <a
+        href="/learn"
+        style="text-decoration: none"
+        v-show="!isShowLabel && !request.exam"
+      >
         <button
           class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
         >
@@ -383,8 +387,11 @@ export default {
         completion_time: this.timerun,
         content_exam: data_exam,
         exam_id: this.data.id,
-        level_id: this.query.levelId
+        level_id: this.query.levelId,
       };
+      if (this.request.exam) {
+        dataHistory.exam_final_id = this.request.examId;
+      }
       try {
         let result = await baseRequest.post("/admin/save-history", dataHistory);
       } catch (e) {
@@ -415,7 +422,7 @@ export default {
             }
           );
           if (result.data.status === 200) {
-            window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${this.request.g}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&exam=true`;
+            window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${this.request.g}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
           }
         } catch (error) {}
       }
@@ -462,22 +469,30 @@ export default {
     },
     async checkHistoryExam() {
       try {
-        let result = await baseRequest.post("/admin/check-history-exam", {
-          type: 'Vocabulary',
+        let config = {
+          type: "Vocabulary",
           exam_id: this.data.id,
-          level_id: this.query.levelId
-        });
-        result = result.data;
-        if(result.status === 200 && result.data !== null){
-            this.$refs.countdown.abort();
-            this.timerun = parseInt(result.data.completion_time);
-            let data_exam = JSON.parse(result.data.content_exam);
-            this.answerData = data_exam.answerData;
-            this.arrRightAns = data_exam.arrRightAns;
-            this.isShowLabel = false;
-
+        };
+        if (this.request.exam) {
+          config.exam_final_id = this.request.examId;
+          config.status = 'exam';
+        } else {
+          config.level_id = this.query.levelId;
+          config.status = 'learn';
         }
-        
+        let result = await baseRequest.post(
+          "/admin/check-history-exam",
+          config
+        );
+        result = result.data;
+        if (result.status === 200 && result.data !== null) {
+          this.$refs.countdown.abort();
+          this.timerun = parseInt(result.data.completion_time);
+          let data_exam = JSON.parse(result.data.content_exam);
+          this.answerData = data_exam.answerData;
+          this.arrRightAns = data_exam.arrRightAns;
+          this.isShowLabel = false;
+        }
       } catch (error) {
         console.log(
           "🚀 ~ file: VocabularyTest.vue:456 ~ checkHistoryExam ~ error:",

@@ -649,6 +649,9 @@ video {
 .mt-\[32px\] {
   margin-top: 32px;
 }
+.mb-12 {
+  margin-bottom: 3rem;
+}
 .mt-\[37px\] {
   margin-top: 37px;
 }
@@ -847,6 +850,9 @@ video {
 .overflow-hidden {
   overflow: hidden;
 }
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
 .overflow-y-scroll {
   overflow-y: scroll;
 }
@@ -1024,6 +1030,10 @@ video {
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 .text-xl {
   font-size: 1.25rem;

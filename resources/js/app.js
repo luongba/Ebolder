@@ -206,6 +206,11 @@ Vue.component(
     "listening-test",
     require("./components/frontend/listening/ListeningTest.vue").default
 );
+
+Vue.component(
+    "speaking-test",
+    require("./components/frontend/speaking/SpeakingTest.vue").default
+);
 //error page
 Vue.component(
     "error-page",
@@ -254,6 +259,11 @@ Vue.component(
     "choose-action",
     require("./components/frontend/chooseAction/ChooseAction.vue").default
 );
+//result
+Vue.component(
+    "result-exam",
+    require("./components/frontend/result/Result.vue").default
+); 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

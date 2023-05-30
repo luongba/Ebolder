@@ -53,7 +53,9 @@ Route::prefix('/')->group(function () {
         Route::get('/Grammar', 'HomeController@grammarTest')->name('grammar-test-page')->middleware('checkLogin');
         Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page')->middleware('checkLogin');
         Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page')->middleware('checkLogin');
+        Route::get('/Speaking-type-second', 'HomeController@speakingTestTypeSecond')->name('speaking-test-page')->middleware('checkLogin');
         Route::get('/Speaking', 'HomeController@speakingTest')->name('speaking-test-page')->middleware('checkLogin');
+
     });
     Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page')->middleware('checkLogin');
     Route::get('/history', 'HomeController@historyPage')->name('history-page')->middleware('checkLogin');
@@ -70,6 +72,7 @@ Route::middleware(['checkLogin'])->group(function () {
     //exam
     Route::prefix('/exam')->name('exam.')->group(function () {
         Route::get('/', 'Admin\ExamController@renderExamList')->name('list');
+        Route::get('/result/{id}', 'Admin\ExamController@renderResultView')->name('result');
     });
 
     //admin

@@ -9,6 +9,7 @@ use App\models\Listen\Listening;
 use App\models\Speak\QuestionLuyenAm;
 use App\models\Read\Reading;
 use App\models\User\HistoryExam;
+use App\models\Speak\Speak;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -112,7 +113,25 @@ class HomeController extends Controller
         }
 
     }
-    public function speakingTest(Request $request)
+    public function speakingTest(Request $request){
+        if (isset($request->testId)) {
+            $testId = $request->testId;
+            $levelId =$request->levelId;
+            $speaking = Speak::whereId($request->testId)->with(['QuestitonSpeak' => function ($question) {
+                $question->with('answers')->with('right_answers')->get();
+            }])->first();
+            return view('pages.frontend.speakingBasic', compact(['speaking', 'testId', 'levelId']));
+        } else {
+
+            $randomSpeaking = Speak::all()->random(1)->first();
+            $speaking = $randomSpeaking->with(['QuestitonSpeak' => function ($question) {
+                $question->with('answers')->with('right_answers')->get();
+            }])->inRandomOrder()->first();
+            return view('pages.frontend.speakingBasic', compact('speaking'));
+        }
+    }
+
+    public function speakingTestTypeSecond(Request $request)
     {
         if (isset($request->testId)) {
             $testId = $request->testId;
@@ -122,6 +141,7 @@ class HomeController extends Controller
         }
 
     }
+    
 
     public function saveHistory(Request $request)
     {
@@ -134,7 +154,8 @@ class HomeController extends Controller
                 'user_id' => $request->user()->id,
                 'content_exam'=> $request->content_exam,
                 'exam_id' => $request->exam_id,
-                'level_id' => $request->level_id
+                'level_id' => $request->level_id,
+                'exam_final_id' => $request->exam_final_id
             ]);
         } catch (\Exception $e) {
             print_r($e);
@@ -263,14 +284,11 @@ class HomeController extends Controller
     public function checkHistoryExam(Request $request){
         
         try {
-            $history = HistoryExam::where('test_type', $request->type)->where('exam_id', $request->exam_id)->where('user_id', Auth::user()->id)->where('level_id', $request->level_id)->orderBy('id', 'desc')->first();
-            if(isset($history)){
-                $score = explode("/",$history->scores);
-                $totalScore = (float)$score[0] / (float)$score[1] * 100;
-                if($totalScore < 20){
-                    $history = null;
-                }
-                
+            $history;
+            if($request->status == 'learn'){
+                $history = HistoryExam::where('test_type', $request->type)->where('exam_id', $request->exam_id)->where('user_id', Auth::user()->id)->where('level_id', $request->level_id)->orderBy('id', 'desc')->first();
+            }else {
+                $history = HistoryExam::where('test_type', $request->type)->where('exam_id', $request->exam_id)->where('user_id', Auth::user()->id)->where('exam_final_id', $request->exam_final_id)->orderBy('id', 'desc')->first();
             }
             return response()->json([
                 "status" => 200,

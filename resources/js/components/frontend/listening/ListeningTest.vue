@@ -51,7 +51,7 @@
                     </VueCountdown>
                 </h2>
             </div>
-            <a href="/learn" style="text-decoration: none;"  v-show="!isShowLabel">
+            <a href="/learn" style="text-decoration: none;"  v-show="!isShowLabel && !request.exam">
 
                 <button
                         class="
@@ -696,8 +696,11 @@ export default {
         completion_time: this.timerun,
         content_exam: data_exam,
         exam_id: this.data.id,
-        level_id: this.query.levelId
+        level_id: this.query.levelId,
       };
+      if (this.request.exam) {
+        dataHistory.exam_final_id = this.request.examId;
+      }
       try {
         let result = await baseRequest.post("/admin/save-history", dataHistory);
       } catch (e) {
@@ -729,7 +732,7 @@ export default {
             }
           );
           if (result.data.status === 200) {
-            window.location.href = `${$Api.baseUrl}/english-level-test/Speaking?testId=${this.request.s}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&exam=true`;
+            window.location.href = `${$Api.baseUrl}/english-level-test/Speaking?testId=${this.request.s}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
           }
         } catch (error) {}
       }
@@ -851,11 +854,21 @@ export default {
     },
     async checkHistoryExam() {
       try {
-        let result = await baseRequest.post("/admin/check-history-exam", {
+        let config = {
           type: "Listening",
           exam_id: this.data.id,
-          level_id: this.query.levelId
-        });
+        };
+        if (this.request.exam) {
+          config.exam_final_id = this.request.examId;
+          config.status = "exam";
+        } else {
+          config.level_id = this.query.levelId;
+          config.status = "learn";
+        }
+        let result = await baseRequest.post(
+          "/admin/check-history-exam",
+          config
+        );
         result = result.data;
         if (result.status === 200 && result.data !== null) {
           this.$refs.countdown.abort();
