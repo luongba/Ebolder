@@ -7,7 +7,7 @@
             <i class="fa-solid fa-swatchbook icon-gradient bg-mean-fruit"></i>
           </div>
           <div class="flex justify-between">
-            <p>Quản lý bài học</p>
+            <p>Quản lý đề kỹ năng viết</p>
           </div>
         </div>
       </div>

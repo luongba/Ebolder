@@ -65,11 +65,51 @@ class SpeakController extends Controller
 
     public function createTopic(Request $request)
     {
+        
         try {
-            Speak::create([
-                "name" => $request->name,
-                "description" => $request->description
+            if ($request->has('file')) {
+                $file = $request->file;
+                $file_name = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('upload/speaking'), $file_name);
+                Speak::create([
+                    "name" => $request->name,
+                    "description" => $request->description,
+                    'audio_url' => $_SERVER['SERVER_NAME'] . '/upload/speaking/' . $file_name,
+                    'path_url' => 'upload/speaking/' . $file_name
+                ]);
+    
+            }
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "message" => "Thêm topic thành công !"
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Thêm topic thất bại !"
+            ]);
+        }
+
+
+    }
+    public function updateSpeak(Request $request, $id)
+    {
+        
+        try {
+            if ($request->has('file')) {
+                $file = $request->file;
+                $file_name = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('upload/speaking'), $file_name);
+                Speak::whereId($id)->update([
+                    "name" => $request->name,
+                    "description" => $request->description,
+                    'audio_url' => $_SERVER['SERVER_NAME'] . '/upload/speaking/' . $file_name,
+                    'path_url' => 'upload/speaking/' . $file_name
+                ]);
+    
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

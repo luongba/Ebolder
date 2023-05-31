@@ -11,6 +11,7 @@ use App\models\Read\Reading;
 use App\models\User\HistoryExam;
 use App\models\Speak\Speak;
 use App\models\Vocabulary\Vocabulary;
+use App\models\Exam\ExamHistoryFinal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -188,13 +189,18 @@ class HomeController extends Controller
         return view('pages.recover-password');
     }
 
-    public function lessonPage($id)
+    public function lessonPage(Request $request)
     {
 
-        $lesson = Learn::whereId($id)->with(['QuestionLesson' => function ($question) {
-            $question->with('AnswerLesson')->with('RightAnswerLesson')->get();
-        }])->first();
-        return view('pages.frontend.lessonpage', compact('lesson'));
+        if (isset($request->testId)) {
+            $testId = $request->testId;
+            $levelId =$request->levelId;
+            $lesson = Learn::whereId($request->testId)->with(['QuestionLesson' => function ($question) {
+                $question->with('AnswerLesson')->with('RightAnswerLesson')->get();
+            }])->first();
+            return view('pages.frontend.lessonpage', compact(['lesson', 'testId', 'levelId']));
+        }
+        
     }
 
     public function saveExamResult(Request $request)
@@ -268,7 +274,7 @@ class HomeController extends Controller
 
     public function historyPage(){
         $user = Auth::user();
-        $history = HistoryExam::where('user_id', $user->id)->orderBy('created_at', 'desc')->take(20)->get();
+        $history = ExamHistoryFinal::where('user_id', $user->id)->with('Exam')->orderBy('created_at', 'desc')->take(20)->get();
         return view('pages.frontend.history', compact('history'));
     }
     public function fullhistory(){

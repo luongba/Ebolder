@@ -28,13 +28,48 @@
                   </el-form-item>
                 </div>
                 <div class="">
-                  <el-form-item label="Description" prop="description">
-                    <el-input
-                      type="textarea"
-                      placeholder="Description"
-                      rows="3"
+                  <el-form-item label="Content" prop="description">
+                    <editor
                       v-model="topicData.description"
-                    ></el-input>
+                      api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
+                      :init="{
+                        height: 300,
+                        menubar: false,
+                        plugins: [
+                          'advlist autolink lists link image charmap print preview anchor',
+                          'searchreplace visualblocks code fullscreen',
+                          'insertdatetime media table paste code help wordcount',
+                        ],
+                        toolbar:
+                          'undo redo | formatselect | bold italic backcolor | \
+           alignleft aligncenter alignright alignjustify | \
+           bullist numlist outdent indent | removeformat | help',
+                        visual: false,
+                        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+                        paste_data_images: true,
+                      }"
+                    />
+                  </el-form-item>
+                </div>
+                <div>
+                  <el-form-item label="Audio file" prop="description">
+                    <el-upload
+                      class="upload-demo"
+                      action="#"
+                      :on-change="handleChange"
+                      :auto-upload="false"
+                      :file-list="fileList"
+                    >
+                      <el-button size="small" type="primary"
+                        >Chosse file</el-button
+                      >
+                      <div slot="tip" class="el-upload__tip">
+                        audio size less than 500kb
+                      </div>
+                    </el-upload>
                   </el-form-item>
                 </div>
                 <div class="">
@@ -57,7 +92,9 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
-          :style="item.is_exam == 1 ? 'border: 4px solid #8bca4a !important' : ''"
+          :style="
+            item.is_exam == 1 ? 'border: 4px solid #3f6ad8 !important' : ''
+          "
           v-for="item in listTopic"
           :key="item.id"
         >
@@ -103,10 +140,12 @@
 <script>
 import LoadingVue from "../loading/Loading.vue";
 import baseRequest from "../../../utils/baseRequest";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   components: {
     LoadingVue,
+    Editor,
   },
   data() {
     return {
@@ -114,7 +153,7 @@ export default {
       topicData: {
         name: null,
         description: null,
-        isExam: false
+        isExam: false,
       },
       listTopic: [],
       ApiUrl: $Api.baseUrl,
@@ -126,15 +165,10 @@ export default {
             trigger: "blur",
           },
         ],
-        description: [
-          {
-            required: true,
-            message: "Please input description",
-            trigger: "blur",
-          },
-        ],
       },
       isLoading: false,
+      fileList: [],
+      file: null,
     };
   },
   computed: {},
@@ -151,9 +185,18 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           try {
+            let formData = new FormData();
+            formData.append("file", this.file.raw);
+            formData.append("name", this.topicData.name);
+            formData.append("description", this.topicData.description);
+            formData.append("isExam", this.topicData.isExam);
+            const headers = {
+              "Content-Type": "multipart/form-data",
+            };
             let rs = await baseRequest.post(
               `/admin/store-topic-speak`,
-              this.topicData
+              formData,
+              { headers }
             );
             if (rs.data.status == 200) {
               this.getAllTopic();
@@ -236,6 +279,9 @@ export default {
         .catch(() => {
           return;
         });
+    },
+    handleChange(file, fileList) {
+      this.file = file;
     },
   },
 

@@ -18,6 +18,7 @@
               <th>Grammar</th>
               <th>Listening</th>
               <th>Speaking</th>
+              <th>Writing</th>
             </tr>
 
             <tr>
@@ -36,9 +37,12 @@
               <td>
                 {{ data.result_speaking || "Không thực hiện" }}
               </td>
+              <td>
+                {{ data.result_writing || "Không thực hiện" }}
+              </td>
             </tr>
             <tr>
-              <td colspan="5">
+              <td colspan="6">
                 Thời gian hoàn thành bài kiểm tra:
                 {{ completion_time(data.time) }} phút
               </td>

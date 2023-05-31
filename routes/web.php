@@ -50,6 +50,7 @@ Route::prefix('/')->group(function () {
     Route::prefix('/english-level-test')->group(function () {
         Route::get('/', 'HomeController@testPage')->name('test-page')->middleware('checkLogin');
         Route::get('/Vocabulary', 'HomeController@vocabularyTest')->name('vocabulary-test-page')->middleware('checkLogin');
+        Route::get('/Writing', 'HomeController@lessonPage')->name('writing-test-page')->middleware('checkLogin');
         Route::get('/Grammar', 'HomeController@grammarTest')->name('grammar-test-page')->middleware('checkLogin');
         Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page')->middleware('checkLogin');
         Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page')->middleware('checkLogin');
@@ -57,7 +58,7 @@ Route::prefix('/')->group(function () {
         Route::get('/Speaking', 'HomeController@speakingTest')->name('speaking-test-page')->middleware('checkLogin');
 
     });
-    Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page')->middleware('checkLogin');
+    // Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page')->middleware('checkLogin');
     Route::get('/history', 'HomeController@historyPage')->name('history-page')->middleware('checkLogin');
 
     Route::get('/choose-action', 'HomeController@chooseAction')->name('choose-action')->middleware('checkLogin');

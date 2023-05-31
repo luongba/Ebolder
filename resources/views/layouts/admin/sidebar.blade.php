@@ -31,12 +31,12 @@
             @endcan
             
             @can('Lesson_List')
-            <li class="app-sidebar__heading">Bài học</li>
+            <li class="app-sidebar__heading">Kỹ năng viết</li>
             <li>
                 <a class="{{ request()->is(['admin/lesson']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.lesson-list') }}">
                     <i class="metismenu-icon fa-solid fa-swatchbook"></i>
-                    Quản lý bài học
+                    Quản lý đề kỹ năng viết
                 </a>
             </li>
             @endcan

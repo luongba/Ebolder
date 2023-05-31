@@ -582,7 +582,7 @@ export default {
             }
           );
           if (result.data.status === 200) {
-            window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${this.request.v}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
+            window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${this.request.v}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
           }
         } catch (error) {}
       }

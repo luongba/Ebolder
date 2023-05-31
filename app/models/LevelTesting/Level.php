@@ -24,6 +24,10 @@ class Level extends Model
         return $this->belongsToMany('App\models\Listen\Listening','level_listens');
     }
 
+    public function Speak(){
+        return $this->belongsToMany('App\models\Speak\Speak','level_speaks');
+    }
+
     public function ExamResult(){
         return $this->hasOne('App\models\Learn\ExamResult');
     }

@@ -9,6 +9,8 @@ use App\models\User\HistoryExam;
 use App\models\User\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use App\models\Exam\ExamHistoryFinal;
+
 
 class UserController extends Controller
 {
@@ -158,7 +160,7 @@ class UserController extends Controller
     }
     public function history($id){
         try {
-            $history = HistoryExam::where('user_id', $id)->orderBy('created_at', 'desc')->take(20)->get();
+            $history = ExamHistoryFinal::where('user_id', $id)->with('Exam')->orderBy('created_at', 'desc')->take(20)->get();
             return view('pages.admin.user.history', compact('history'));
         }catch (\Exception $e){
             return response()->json([

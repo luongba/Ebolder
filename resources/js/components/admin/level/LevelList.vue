@@ -54,7 +54,7 @@
                     <el-form-item label="Phần đọc" prop="reading">
                       <el-select
                         v-model="topicData.valueReading"
-                        placeholder="Chọn đề"
+                        placeholder="Phần viết"
                         style="width: 100%"
                         multiple
                       >
@@ -115,6 +115,21 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
+                    <el-form-item label="Phần luyện âm" prop="speaking">
+                      <el-select
+                        v-model="topicData.valueSpeaking"
+                        placeholder="Chọn đề"
+                        style="width: 100%"
+                      >
+                        <el-option
+                          v-for="item in listTopicSpeaking"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        >
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
                   </div>
                 </div>
                 <div class="flex justify-end items-center mt-4">
@@ -149,6 +164,7 @@
               valueReading: null,
               valueVocabulary: null,
               valueListening: null,
+              valueSpeaking: null,
             };
           "
         ></el-button>
@@ -182,22 +198,6 @@
         </div>
       </div>
     </div>
-    <!-- <editor
-            api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-            :init="{
-                height: 500,
-                menubar: false,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount',
-                ],
-                toolbar:
-                    'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | \
-           bullist numlist outdent indent | removeformat | help',
-            }"
-        /> -->
   </div>
 </template>
 
@@ -221,6 +221,7 @@ export default {
         valueReading: null,
         valueVocabulary: null,
         valueListening: null,
+        valueSpeaking: null,
       },
       listLevel: [],
       ApiUrl: $Api.baseUrl,
@@ -267,6 +268,13 @@ export default {
             trigger: "blur",
           },
         ],
+        speaking: [
+          {
+            required: false,
+            message: "Please select speaking",
+            trigger: "blur",
+          },
+        ],
       },
 
       listTopicGrammar: [],
@@ -274,6 +282,7 @@ export default {
       listTopicVocabulary: [],
       listTopicListening: [],
       listTopicLesson: [],
+      listTopicSpeaking: [],
       state: "create",
       idTemp: null,
       isLoading: false,
@@ -293,6 +302,7 @@ export default {
               readings: this.topicData.valueReading,
               vocabularies: this.topicData.valueVocabulary,
               grammars: this.topicData.valueGrammar,
+              speakings: this.topicData.valueSpeaking
             };
             let rs = await baseRequest.post(`/admin/create-level`, dataTemp);
             if (rs.data.status == 200) {
@@ -330,6 +340,7 @@ export default {
               reading_id: this.topicData.valueReading,
               vocabulary_id: this.topicData.valueVocabulary,
               grammar_id: this.topicData.valueGrammar,
+              speakings: this.topicData.valueSpeaking,
               id: this.idTemp,
             };
             let rs = await baseRequest.post(`/admin/update-level`, dataTemp);
@@ -467,6 +478,20 @@ export default {
         console.log(e);
       }
     },
+    async getAllTopicSpeaking() {
+      try {
+        let rs = await baseRequest.get(`/admin/list-topic-speak`);
+        if (rs.data.status == 200) {
+          this.listTopicSpeaking = rs.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            is_exam: item.is_exam || null,
+          }));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
 
     async deleteLevel(id) {
       this.$confirm(
@@ -527,6 +552,7 @@ export default {
     this.getAllTopicGrammar();
     this.getAllTopicListening();
     this.getAllLevel();
+    this.getAllTopicSpeaking()
   },
 };
 </script>

@@ -115,6 +115,21 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
+                      <el-form-item label="Phần kỹ năng viết" prop="valueLesson">
+                        <el-select
+                          v-model="topicData.valueLesson"
+                          placeholder="Chọn đề"
+                          style="width: 100%"
+                        >
+                          <el-option
+                            v-for="item in listTopicLesson"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id"
+                          >
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
                     </div>
                   </div>
                   <div class="flex justify-end items-center mt-4">
@@ -149,6 +164,7 @@
                 valueReading: null,
                 valueVocabulary: null,
                 valueListening: null,
+                valueSpeaking: null
               };
             "
           ></el-button>
@@ -156,7 +172,7 @@
         <div class="grid grid-cols-1 gap-4">
           <div
             class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
-            :style="item.exam_id == 1 ? 'border: 4px solid #8bca4a !important' : ''"
+            :style="item.exam_id == 1 ? 'border: 4px solid #3f6ad8 !important' : ''"
             v-for="item in listExam"
             :key="item.id"
           >
@@ -183,22 +199,6 @@
           </div>
         </div>
       </div>
-      <!-- <editor
-              api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-              :init="{
-                  height: 500,
-                  menubar: false,
-                  plugins: [
-                      'advlist autolink lists link image charmap print preview anchor',
-                      'searchreplace visualblocks code fullscreen',
-                      'insertdatetime media table paste code help wordcount',
-                  ],
-                  toolbar:
-                      'undo redo | formatselect | bold italic backcolor | \
-             alignleft aligncenter alignright alignjustify | \
-             bullist numlist outdent indent | removeformat | help',
-              }"
-          /> -->
     </div>
   </template>
   
@@ -223,6 +223,7 @@
           valueVocabulary: null,
           valueListening: null,
           valueSpeaking: null,
+          valueLesson: null,
           isExam: 0,
   
         },
@@ -271,6 +272,13 @@
               trigger: 'change'
             },
           ],
+          valueLesson: [
+            {
+              required: true,
+              message: "Please select Writing",
+              trigger: 'change'
+            },
+          ],
         },
   
         listTopicGrammar: [],
@@ -279,6 +287,7 @@
         listTopicListening: [],
         listTopicLesson: [],
         listTopicSpeaking: [],
+        listTopicLesson: [],
         state: "create",
         idTemp: null,
         isLoading: false,
@@ -298,6 +307,7 @@
                 vocabulary_id: this.topicData.valueVocabulary,
                 grammar_id: this.topicData.valueGrammar,
                 speaking_id: this.topicData.valueSpeaking,
+                writing_id: this.topicData.valueLesson,
                 status: this.topicData.isExam || false,
               };
               let rs = await baseRequest.post(`/admin/create-exam`, dataTemp);
@@ -336,6 +346,7 @@
                 reading_id: this.topicData.valueReading,
                 vocabulary_id: this.topicData.valueVocabulary,
                 grammar_id: this.topicData.valueGrammar,
+                writing_id: this.topicData.valueLesson,
                 status: this.topicData.isExam ,
               };
               let rs = await baseRequest.post(`/admin/update-exam/${this.idTemp}`, dataTemp);
@@ -402,6 +413,7 @@
               valueReading: data.data.vocabulary_id,
               valueListening: data.data.grammar_id,
               valueSpeaking: data.data.speaking_id,
+              valueLesson: data.data.writing_id,
               isExam: data.data.status === 1 ? true : false
             };
             this.show = !this.show;
@@ -418,7 +430,7 @@
               id: item.id,
               name: item.name,
               is_exam: item.is_exam || null,
-            }));
+            })).filter((itemTopic) => itemTopic.is_exam);;
           }
         } catch (e) {
           console.log(e);

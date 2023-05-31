@@ -23,6 +23,7 @@ class ExamController extends Controller
                 'grammar_id'=> $request->grammar_id,
                 'speaking_id'=> $request->speaking_id,
                 'listening_id'=> $request->listening_id,
+                'writing_id'=> $request->writing_id,
                 'status'=> $request->status,
             ]);
             DB::commit();
@@ -138,6 +139,7 @@ class ExamController extends Controller
                 "result_listening"=> $request->result_listening,
                 "result_vocabulary"=> $request->result_vocabulary,
                 "result_grammar"=> $request->result_grammar,
+                "result_writing"=> $request->result_writing,
                 "user_id"=> $request->user_id,
                 "exam_id"=> $request->exam_id,
                 "time"=> $request->time,
@@ -157,6 +159,7 @@ class ExamController extends Controller
                 "result_listening"=>$history->result_listening ? $history->result_listening: $request->result_listening,
                 "result_vocabulary"=> $history->result_vocabulary ? $history->result_vocabulary: $request->result_vocabulary,
                 "result_grammar"=>$history->result_grammar ? $history->result_grammar: $request->result_grammar,
+                "result_writing"=> $history->result_writing ? $history->result_writing: $request->result_writing,
                 "user_id"=>$history->user_id ? $history->user_id: $request->user_id,
                 "exam_id"=>$history->exam_id ? $history->exam_id: $request->exam_id,
                 "time"=> $history->time += $request->time,

@@ -9,7 +9,7 @@
                         <i class="fa-solid fa-swatchbook icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div>
-                        <p>Quản lý bài học</p>
+                        <p>Quản lý đề kỹ năng viết</p>
                         {{-- <div class="page-title-subheading">
                             <ul>
                                 <li>Read the text, then try to answer the questions.</li>
@@ -24,7 +24,7 @@
                 <div class="page-title-actions">
                                     <span class="btn-icon-wrapper pr-2">
                                         <a class="btn-icon btn dev-button btn-primary" href="{{route('admin.lesson-topic-create')}}" style="padding: 10px 15px;">
-                                            <i class="pe-7s-plus dev-icon btn-icon-wrapper " style="margin-top: -3px;"></i>Tạo mới bài học
+                                            <i class="pe-7s-plus dev-icon btn-icon-wrapper " style="margin-top: -3px;"></i>Tạo mới đề
                                         </a>
                                     </span>
                 </div>

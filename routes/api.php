@@ -92,6 +92,9 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-question-luyen-am/{id}', 'Admin\SpeakController@deleteQuestionLuyenAm')->name('delete-question-luyen-am');
         Route::post('/save-result-exam-luyen-am', 'Admin\SpeakController@saveResultExam')->name('save-result-luyen-am');
         Route::post('/get-result-exam-luyen-am', 'Admin\SpeakController@getAudioUser')->name('get-result-luyen-am');
+        Route::post('/update-topic-speak/{id}', 'Admin\SpeakController@updateSpeak')->name('update-luyen-am');
+
+        
 
         //user
         Route::get('/list-user', 'Admin\UserController@getAllUser')->name('get-all-user');

@@ -57,7 +57,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
-          :style="item.is_exam == 1 ? 'border: 4px solid #8bca4a !important' : ''"
+          :style="item.is_exam == 1 ? 'border: 4px solid #3f6ad8 !important' : ''"
           v-for="item in listTopic"
           :key="item.id"
         >
