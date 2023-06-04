@@ -29,12 +29,29 @@
                 </div>
                 <div class="">
                   <el-form-item label="Description" prop="description">
-                    <el-input
-                      type="textarea"
-                      placeholder="Description"
-                      rows="3"
+                    <editor
                       v-model="topicData.description"
-                    ></el-input>
+                      api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
+                      :init="{
+                        height: 400,
+                        menubar: false,
+                        plugins: [
+                          'advlist autolink lists link image charmap print preview anchor',
+                          'searchreplace visualblocks code fullscreen',
+                          'insertdatetime media table paste code help wordcount',
+                        ],
+                        toolbar:
+                          'undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat | help',
+                        visual: false,
+                        content_style: `
+            table, th, td {
+                border: 1px solid #000 !important;
+            }	`,
+                        paste_data_images: true,
+                      }"
+                    />
                   </el-form-item>
                 </div>
                 <div class="">
@@ -59,7 +76,9 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
-          :style="item.is_exam == 1 ? 'border: 4px solid #3f6ad8 !important' : ''"
+          :style="
+            item.is_exam == 1 ? 'border: 4px solid #3f6ad8 !important' : ''
+          "
           v-for="item in listTopic"
           :key="item.id"
         >
@@ -105,10 +124,12 @@
 <script>
 import baseRequest from "../../../utils/baseRequest";
 import LoadingVue from "../loading/Loading.vue";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   components: {
     LoadingVue,
+    Editor,
   },
   data() {
     return {
@@ -116,7 +137,7 @@ export default {
       topicData: {
         name: null,
         description: null,
-        isExam: false
+        isExam: false,
       },
       listTopic: [],
       ApiUrl: $Api.baseUrl,

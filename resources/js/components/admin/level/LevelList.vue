@@ -120,6 +120,7 @@
                         v-model="topicData.valueSpeaking"
                         placeholder="Chọn đề"
                         style="width: 100%"
+                        multiple
                       >
                         <el-option
                           v-for="item in listTopicSpeaking"
@@ -380,6 +381,7 @@ export default {
             .map((item) => ({
               id: item.id,
               name: item.name,
+              is_exam: item.is_exam || null,
             }))
             .reverse();
         }
@@ -406,6 +408,7 @@ export default {
             valueReading: data.data.reading.map((item) => item.id) || [],
             valueListening: data.data.listen.map((item) => item.id) || [],
             valueLesson: data.data.learn.map((item) => item.id) || [],
+            valueSpeaking: data.data.speak.map((item) => item.id) || [],
           };
           this.show = !this.show;
         }
@@ -420,7 +423,9 @@ export default {
           this.listTopicLesson = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);
@@ -433,7 +438,9 @@ export default {
           this.listTopicVocabulary = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);
@@ -446,7 +453,9 @@ export default {
           this.listTopicGrammar = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);
@@ -459,7 +468,9 @@ export default {
           this.listTopicReading = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);
@@ -472,7 +483,9 @@ export default {
           this.listTopicListening = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);
@@ -486,7 +499,9 @@ export default {
             id: item.id,
             name: item.name,
             is_exam: item.is_exam || null,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);

@@ -24,10 +24,10 @@ class LevelController extends Controller
                 "name" => $request->name,
             ]);
             $level->Learn()->attach($request->lessons);
-            $level->Reading()->attach($request->readings);
-            $level->Vocabulary()->attach($request->vocabularies);
-            $level->Listen()->attach($request->listenings);
-            $level->Grammar()->attach($request->grammars);
+            $level->Reading()->attach($request->reading_id);
+            $level->Vocabulary()->attach($request->vocabulary_id);
+            $level->Listen()->attach($request->listening_id);
+            $level->Grammar()->attach($request->grammar_id);
             $level->Speak()->attach($request->speakings);
             DB::commit();
             return response()->json([
@@ -101,7 +101,7 @@ class LevelController extends Controller
         try {
             DB::beginTransaction();
             $level = new Level();
-            $level = $level->where('id', $request->id)->with('Learn')->with('Reading')->with('Vocabulary')->with('Grammar')->with('Listen')->first();
+            $level = $level->where('id', $request->id)->with('Learn')->with('Reading')->with('Vocabulary')->with('Grammar')->with('Listen')->with('Speak')->first();
             DB::commit();
             return response()->json([
                 "status" => 200,
@@ -122,6 +122,7 @@ class LevelController extends Controller
 
     public function updateLevel(Request $request)
     {
+        
         try {
             DB::beginTransaction();
             $level = Level::where('id', $request->id)->first();
@@ -129,10 +130,10 @@ class LevelController extends Controller
                 "name" => $request->name,
             ]);
             $level->Learn()->sync($request->lessons);
-            $level->Reading()->sync($request->readings);
-            $level->Vocabulary()->sync($request->vocabularies);
-            $level->Listen()->sync($request->listenings);
-            $level->Grammar()->sync($request->grammars);
+            $level->Reading()->sync($request->reading_id);
+            $level->Vocabulary()->sync($request->vocabulary_id);
+            $level->Listen()->sync($request->listening_id);
+            $level->Grammar()->sync($request->grammar_id);
             $level->Speak()->sync($request->speakings);
             DB::commit();
             return response()->json([

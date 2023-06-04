@@ -164,7 +164,8 @@ class GrammarController extends Controller
             $grammar = Grammar::find($request->id);
             $grammar->update(
                 [
-                    "name" => $request->name
+                    "name" => $request->name,
+                    "description" => $request->description
                 ]
             );
             return response()->json([
