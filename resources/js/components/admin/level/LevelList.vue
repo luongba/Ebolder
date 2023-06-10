@@ -34,11 +34,11 @@
                       ></el-input>
                     </el-form-item>
                   </div>
-                  <el-form-item label="Bài học" prop="valueLesson">
+                  <el-form-item label="Phần viết" prop="valueLesson">
                     <el-select
                       v-model="topicData.valueLesson"
                       multiple
-                      placeholder="Chọn bài học"
+                      placeholder="Phần viết"
                       style="width: 100%"
                     >
                       <el-option
@@ -51,7 +51,7 @@
                     </el-select>
                   </el-form-item>
                   <div class="grid grid-cols-1 md:grid-cols-1 md:gap-4 gap-1">
-                    <el-form-item label="Phần đọc" prop="reading">
+                    <el-form-item label="Phần đọc" prop="valueReading">
                       <el-select
                         v-model="topicData.valueReading"
                         placeholder="Phần viết"
@@ -67,7 +67,7 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần từ vựng" prop="vocabulary">
+                    <el-form-item label="Phần từ vựng" prop="valueVocabulary">
                       <el-select
                         v-model="topicData.valueVocabulary"
                         placeholder="Chọn đề"
@@ -83,7 +83,7 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần nghe" prop="listening">
+                    <el-form-item label="Phần nghe" prop="valueListening">
                       <el-select
                         v-model="topicData.valueListening"
                         placeholder="Chọn đề"
@@ -99,7 +99,7 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần ngữ pháp" prop="grammar">
+                    <el-form-item label="Phần ngữ pháp" prop="valueGrammar">
                       <el-select
                         v-model="topicData.valueGrammar"
                         placeholder="Chọn đề"
@@ -115,7 +115,7 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần luyện âm" prop="speaking">
+                    <el-form-item label="Phần luyện âm" prop="valueSpeaking">
                       <el-select
                         v-model="topicData.valueSpeaking"
                         placeholder="Chọn đề"
@@ -124,6 +124,22 @@
                       >
                         <el-option
                           v-for="item in listTopicSpeaking"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        >
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="Phần nói" prop="valueTalking">
+                      <el-select
+                        v-model="topicData.valueTalking"
+                        placeholder="Chọn đề"
+                        style="width: 100%"
+                        multiple
+                      >
+                        <el-option
+                          v-for="item in listTopicTalking"
                           :key="item.id"
                           :label="item.name"
                           :value="item.id"
@@ -166,6 +182,7 @@
               valueVocabulary: null,
               valueListening: null,
               valueSpeaking: null,
+              valueTalking: null
             };
           "
         ></el-button>
@@ -223,6 +240,7 @@ export default {
         valueVocabulary: null,
         valueListening: null,
         valueSpeaking: null,
+        valueTalking: null,
       },
       listLevel: [],
       ApiUrl: $Api.baseUrl,
@@ -234,42 +252,49 @@ export default {
             trigger: "blur",
           },
         ],
-        lesson: [
+        valueLesson: [
           {
-            required: true,
+            required: false,
             message: "Please select lesson",
             trigger: "blur",
           },
         ],
-        vocabulary: [
+        valuevocabulary: [
           {
             required: false,
             message: "Please select vocabulary",
             trigger: "blur",
           },
         ],
-        reading: [
+        valueReading: [
           {
             required: false,
             message: "Please select reading",
             trigger: "blur",
           },
         ],
-        grammar: [
+        valueGrammar: [
           {
             required: false,
             message: "Please select grammar",
             trigger: "blur",
           },
         ],
-        listening: [
+        valueListening: [
           {
             required: false,
             message: "Please select listening",
             trigger: "blur",
           },
         ],
-        speaking: [
+        valueSpeaking: [
+          {
+            required: false,
+            message: "Please select speaking",
+            trigger: "blur",
+          },
+        ],
+        valueTalking: [
           {
             required: false,
             message: "Please select speaking",
@@ -284,6 +309,7 @@ export default {
       listTopicListening: [],
       listTopicLesson: [],
       listTopicSpeaking: [],
+      listTopicTalking: [],
       state: "create",
       idTemp: null,
       isLoading: false,
@@ -303,7 +329,8 @@ export default {
               readings: this.topicData.valueReading,
               vocabularies: this.topicData.valueVocabulary,
               grammars: this.topicData.valueGrammar,
-              speakings: this.topicData.valueSpeaking
+              speakings: this.topicData.valueSpeaking,
+              talkings: this.topicData.valueTalking,
             };
             let rs = await baseRequest.post(`/admin/create-level`, dataTemp);
             if (rs.data.status == 200) {
@@ -342,6 +369,7 @@ export default {
               vocabulary_id: this.topicData.valueVocabulary,
               grammar_id: this.topicData.valueGrammar,
               speakings: this.topicData.valueSpeaking,
+              talkings: this.topicData.valueTalking,
               id: this.idTemp,
             };
             let rs = await baseRequest.post(`/admin/update-level`, dataTemp);
@@ -409,6 +437,7 @@ export default {
             valueListening: data.data.listen.map((item) => item.id) || [],
             valueLesson: data.data.learn.map((item) => item.id) || [],
             valueSpeaking: data.data.speak.map((item) => item.id) || [],
+            valueTalking: data.data.question_luyen_am.map((item) => item.id) || [],
           };
           this.show = !this.show;
         }
@@ -499,6 +528,20 @@ export default {
             id: item.id,
             name: item.name,
             is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllTopicTalking() {
+      try {
+        let rs = await baseRequest.get(`/admin/all-question-luyen-am`);
+        if (rs.data.status == 200) {
+          this.listTopicTalking = rs.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
             is_exam: item.is_exam || null,
           }))
           .filter((itemTopic) => !itemTopic.is_exam);
@@ -568,6 +611,7 @@ export default {
     this.getAllTopicListening();
     this.getAllLevel();
     this.getAllTopicSpeaking()
+    this.getAllTopicTalking()
   },
 };
 </script>

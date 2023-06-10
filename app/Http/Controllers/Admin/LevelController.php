@@ -29,6 +29,7 @@ class LevelController extends Controller
             $level->Listen()->attach($request->listening_id);
             $level->Grammar()->attach($request->grammar_id);
             $level->Speak()->attach($request->speakings);
+            $level->QuestionLuyenAm()->attach($request->talkings);
             DB::commit();
             return response()->json([
                 "status" => 200,
@@ -52,7 +53,7 @@ class LevelController extends Controller
             DB::beginTransaction();
             $userID = Auth::user()->id;
             $level = Level::with('Reading')
-             ->with('Vocabulary')->with('Grammar')->with('Listen')->with('Learn')->with('Speak')->get();
+             ->with('Vocabulary')->with('Grammar')->with('Listen')->with('Learn')->with('Speak')->with('QuestionLuyenAm')->get();
             DB::commit();
             return response()->json([
                 "status" => 200,
@@ -101,7 +102,7 @@ class LevelController extends Controller
         try {
             DB::beginTransaction();
             $level = new Level();
-            $level = $level->where('id', $request->id)->with('Learn')->with('Reading')->with('Vocabulary')->with('Grammar')->with('Listen')->with('Speak')->first();
+            $level = $level->where('id', $request->id)->with('Learn')->with('Reading')->with('Vocabulary')->with('Grammar')->with('Listen')->with('Speak')->with('QuestionLuyenAm')->first();
             DB::commit();
             return response()->json([
                 "status" => 200,
@@ -136,6 +137,7 @@ class LevelController extends Controller
             $level->Grammar()->sync($request->grammar_id);
             $level->Speak()->sync($request->speakings);
             DB::commit();
+            $level->QuestionLuyenAm()->sync($request->talkings);
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

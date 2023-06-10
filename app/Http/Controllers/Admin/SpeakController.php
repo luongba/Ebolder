@@ -75,9 +75,16 @@ class SpeakController extends Controller
                     "name" => $request->name,
                     "description" => $request->description,
                     'audio_url' => $_SERVER['SERVER_NAME'] . '/upload/speaking/' . $file_name,
-                    'path_url' => 'upload/speaking/' . $file_name
+                    'path_url' => 'upload/speaking/' . $file_name,
+                    "is_exam" => $request->isExam
                 ]);
     
+            }else {
+                Speak::create([
+                    "name" => $request->name,
+                    "description" => $request->description,
+                    "is_exam" => $request->isExam
+                ]);
             }
             return response()->json([
                 "status" => 200,
@@ -109,6 +116,12 @@ class SpeakController extends Controller
                     'path_url' => 'upload/speaking/' . $file_name
                 ]);
     
+            }else {
+                Speak::whereId($id)->update([
+                    "name" => $request->name,
+                    "description" => $request->description,
+                    "is_exam" => $request->isExam
+                ]);
             }
             return response()->json([
                 "status" => 200,
@@ -411,6 +424,7 @@ class SpeakController extends Controller
         QuestionLuyenAm::create([
             "name" =>  $request->name,
             "content" => $request->content,
+            "is_exam" => $request->isExam
         ]);
         return [
             "status" => 200,
@@ -419,7 +433,12 @@ class SpeakController extends Controller
         ];
     }
     public function allQuestionLuyenAm(Request $request){
-        $questions = QuestionLuyenAm::paginate(10);
+        if(isset($request->page)){
+            $questions = QuestionLuyenAm::paginate(10);
+
+        }else {
+            $questions = QuestionLuyenAm::all();
+        }
         return [
             "status" => 200,
             "errorCode" => 0,
@@ -431,6 +450,7 @@ class SpeakController extends Controller
         QuestionLuyenAm::find($id)->update([
             "name" =>  $request->name,
             "content" => $request->content,
+            "is_exam" => $request->isExam
         ]);
         return [
             "status" => 200,
@@ -452,12 +472,21 @@ class SpeakController extends Controller
             $file = $request->file;
             $file_name = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('upload/audio-speaking/'.$request->email), $file_name);
-            SaveResultExamSpeaking::create([
-                'level_id' => $request->level_id,
-                'user_id' => $request->user_id,
-                'test_id' => $request->test_id,
-                'url_audio' => $_SERVER['SERVER_NAME'] . ':8000/upload/audio-speaking/'.$request->email.'/' . $file_name,
-            ]);
+            if(isset($request->level_id)){
+                SaveResultExamSpeaking::create([
+                    'level_id' => $request->level_id,
+                    'user_id' => $request->user_id,
+                    'test_id' => $request->test_id,
+                    'url_audio' => $_SERVER['SERVER_NAME'] . ':8000/upload/audio-speaking/'.$request->email.'/' . $file_name,
+                ]);
+            }else {
+                SaveResultExamSpeaking::create([
+                    'exam_id' => $request->exam_id,
+                    'user_id' => $request->user_id,
+                    'test_id' => $request->test_id,
+                    'url_audio' => $_SERVER['SERVER_NAME'] . ':8000/upload/audio-speaking/'.$request->email.'/' . $file_name,
+                 ]);
+            }
         }
         return [
             "status" => 200,
@@ -467,7 +496,11 @@ class SpeakController extends Controller
 
     }
     public function getAudioUser(Request $request){
-        $data = SaveResultExamSpeaking::where('level_id',  $request->level_id)->where('user_id', $request->user_id)->where('test_id', $request->exam_id)->first();
+        if(isset($request->exam_final_id)){
+            $data = SaveResultExamSpeaking::where('exam_id',  $request->exam_final_id)->where('user_id', $request->user_id)->where('test_id', $request->exam_id)->first();
+        }else {
+            $data = SaveResultExamSpeaking::where('level_id',  $request->level_id)->where('user_id', $request->user_id)->where('test_id', $request->exam_id)->first();
+        }
         return [
             "status" => 200,
             "errorCode" => 0,

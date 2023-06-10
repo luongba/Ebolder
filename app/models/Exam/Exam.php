@@ -26,4 +26,7 @@ class Exam extends Model
     public function speak(){
         return $this->hasMany('App\models\Speak\Speak','speaking_id');
     }
+    public function talk(){
+        return $this->hasMany('App\models\Speak\QuestionLuyenAm','talking_id');
+    }
 }

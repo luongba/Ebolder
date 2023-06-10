@@ -26,7 +26,7 @@ class UserController extends Controller
     public function getAllUser(){
         try {
             $isAdmin = true;
-            $users = User::all();
+            $users = User::paginate(10);
             if (Gate::allows('User_Edit')) {
                 $isAdmin = true;
             } else {

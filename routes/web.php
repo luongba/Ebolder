@@ -54,7 +54,7 @@ Route::prefix('/')->group(function () {
         Route::get('/Grammar', 'HomeController@grammarTest')->name('grammar-test-page')->middleware('checkLogin');
         Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page')->middleware('checkLogin');
         Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page')->middleware('checkLogin');
-        Route::get('/Speaking-type-second', 'HomeController@speakingTestTypeSecond')->name('speaking-test-page')->middleware('checkLogin');
+        Route::get('/Talking', 'HomeController@speakingTestTypeSecond')->name('speaking-test-page')->middleware('checkLogin');
         Route::get('/Speaking', 'HomeController@speakingTest')->name('speaking-test-page')->middleware('checkLogin');
 
     });
@@ -102,14 +102,14 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/grammar-level-test/question-create', 'Admin\GrammarController@create')->name('grammar-question-create')->middleware('can:Question_Grammar_Create');
 
         //speaking
-        Route::get('/speaking-level-test', 'Admin\SpeakController@index')->name('speak-list');
-        Route::get('/speaking-level-test/detail/{id}', 'Admin\SpeakController@detailTopic')->name('speak-detail');
-        Route::get('/speaking-level-test/question-list', 'Admin\SpeakController@questionlist')->name('speak-question-list');
-        Route::get('/speaking-level-test/question-create', 'Admin\SpeakController@create')->name('speak-question-create');
-        Route::get('/speaking-level-test/question-luyen-am', 'Admin\SpeakController@pageQuestionSpeak')->name('speak-question-luyen-am');
+        Route::get('/speaking-level-test', 'Admin\SpeakController@index')->name('speak-list')->middleware('can:Speaking_List');;
+        Route::get('/speaking-level-test/detail/{id}', 'Admin\SpeakController@detailTopic')->name('speak-detail')->middleware('can:Speaking_Detail');
+        Route::get('/speaking-level-test/question-list', 'Admin\SpeakController@questionlist')->name('speak-question-list')->middleware('can:Question_Speaking_List');
+        Route::get('/speaking-level-test/question-create', 'Admin\SpeakController@create')->name('speak-question-create')->middleware('can:Question_Speaking_Create');
+        Route::get('/speaking-level-test/question-luyen-am', 'Admin\SpeakController@pageQuestionSpeak')->name('speak-question-luyen-am')->middleware('can:Talking_List');
 
         //exam
-        Route::get('/exam-administration', 'Admin\ExamController@index')->name('exam-list');
+        Route::get('/exam-administration', 'Admin\ExamController@index')->name('exam-list')->middleware('can:Exam_List');;
 
         //user
         Route::get('/users', 'Admin\UserController@index')->name('user-list')->middleware('can:User_List');

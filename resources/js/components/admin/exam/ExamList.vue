@@ -130,6 +130,21 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
+                      <el-form-item label="Phần kỹ năng nói" prop="valueTalking">
+                        <el-select
+                          v-model="topicData.valueTalking"
+                          placeholder="Chọn đề"
+                          style="width: 100%"
+                        >
+                          <el-option
+                            v-for="item in listTopicTalking"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id"
+                          >
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
                     </div>
                   </div>
                   <div class="flex justify-end items-center mt-4">
@@ -159,12 +174,13 @@
               state = 'create';
               topicData = {
                 name: null,
-                valueLesson: [],
+                valueLesson: null,
                 valueGrammar: null,
                 valueReading: null,
                 valueVocabulary: null,
                 valueListening: null,
-                valueSpeaking: null
+                valueSpeaking: null,
+                valueTalking: null
               };
             "
           ></el-button>
@@ -217,13 +233,13 @@
         topicData: {
           id: null,
           name: null,
-          valueLesson: [],
           valueGrammar: null,
           valueReading: null,
           valueVocabulary: null,
           valueListening: null,
           valueSpeaking: null,
           valueLesson: null,
+          valueTalking: null,
           isExam: 0,
   
         },
@@ -258,7 +274,7 @@
               trigger: 'change'
             },
           ],
-          listTopicGrammar: [
+          valueGrammar: [
             {
               required: true,
               message: "Please select grammar",
@@ -279,6 +295,13 @@
               trigger: 'change'
             },
           ],
+          valueTalking: [
+            {
+              required: true,
+              message: "Please select Talking",
+              trigger: 'change'
+            },
+          ],
         },
   
         listTopicGrammar: [],
@@ -287,7 +310,7 @@
         listTopicListening: [],
         listTopicLesson: [],
         listTopicSpeaking: [],
-        listTopicLesson: [],
+        listTopicTalking: [],
         state: "create",
         idTemp: null,
         isLoading: false,
@@ -308,6 +331,7 @@
                 grammar_id: this.topicData.valueGrammar,
                 speaking_id: this.topicData.valueSpeaking,
                 writing_id: this.topicData.valueLesson,
+                talking_id: this.topicData.valueTalking,
                 status: this.topicData.isExam || false,
               };
               let rs = await baseRequest.post(`/admin/create-exam`, dataTemp);
@@ -347,6 +371,7 @@
                 vocabulary_id: this.topicData.valueVocabulary,
                 grammar_id: this.topicData.valueGrammar,
                 writing_id: this.topicData.valueLesson,
+                talking_id: this.topicData.valueTalking,
                 status: this.topicData.isExam ,
               };
               let rs = await baseRequest.post(`/admin/update-exam/${this.idTemp}`, dataTemp);
@@ -408,12 +433,14 @@
           if (data.status == 200) {
             this.topicData = {
               name: data.data.name || null,
-              valueGrammar: data.data.listening_id,
+              valueListening: data.data.listening_id,
               valueVocabulary: data.data.reading_id,
               valueReading: data.data.vocabulary_id,
-              valueListening: data.data.grammar_id,
+              valueGrammar: data.data.grammar_id,
               valueSpeaking: data.data.speaking_id,
               valueLesson: data.data.writing_id,
+              valueTalking: data.data.talking_id,
+
               isExam: data.data.status === 1 ? true : false
             };
             this.show = !this.show;
@@ -430,7 +457,7 @@
               id: item.id,
               name: item.name,
               is_exam: item.is_exam || null,
-            })).filter((itemTopic) => itemTopic.is_exam);;
+            })).filter((itemTopic) => itemTopic.is_exam);
           }
         } catch (e) {
           console.log(e);
@@ -516,6 +543,21 @@
           console.log(e);
         }
       },
+      async getAllTopicTalking() {
+      try {
+        let rs = await baseRequest.get(`/admin/all-question-luyen-am`);
+        if (rs.data.status == 200) {
+          this.listTopicTalking = rs.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => itemTopic.is_exam);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
   
       async deleteLevel(id) {
         this.$confirm(
@@ -575,6 +617,7 @@
       this.getAllTopicListening();
       this.getAllExam();
       this.getAllTopicSpeaking();
+      this.getAllTopicTalking()
     },
   };
   </script>

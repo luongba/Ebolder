@@ -186,10 +186,12 @@ export default {
         if (valid) {
           try {
             let formData = new FormData();
-            formData.append("file", this.file.raw);
+            if (this.file) {
+              formData.append("file", this.file.raw);
+            }
             formData.append("name", this.topicData.name);
             formData.append("description", this.topicData.description);
-            formData.append("isExam", this.topicData.isExam);
+            formData.append("isExam", this.topicData.isExam ? 1 : 0);
             const headers = {
               "Content-Type": "multipart/form-data",
             };
@@ -213,6 +215,7 @@ export default {
               });
             }
           } catch (e) {
+            console.log(e);
             this.$message({
               type: "error",
               message: "Add error topics",

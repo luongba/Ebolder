@@ -31,4 +31,7 @@ class Level extends Model
     public function ExamResult(){
         return $this->hasOne('App\models\Learn\ExamResult');
     }
+    public function QuestionLuyenAm(){
+        return $this->belongsToMany('App\models\Speak\QuestionLuyenAm','level_question_luyen_ams');
+    }
 }

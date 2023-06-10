@@ -89,6 +89,19 @@
                           <i class="fa-solid fa-head-side-cough"></i>
                         </div>
                       </el-tooltip>
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        content="Luyện nói"
+                        placement="right"
+                      >
+                        <div
+                          class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                          @click="x(item, 'TALKING')"
+                        >
+                        <i class="fa-solid fa-microphone"></i>
+                        </div>
+                      </el-tooltip>
                     </div>
                   </div>
                   <div class="flex justify-center mt-4">
@@ -259,6 +272,12 @@ export default {
           ).speaks;
           break;
         }
+        case "TALKING": {
+          this.listLesson = this.listLevel.find(
+            (item) => item.id === itemLevel.id
+          ).talks;
+          break;
+        }
         default: {
           break;
         }
@@ -278,6 +297,7 @@ export default {
             grammars: item.grammar,
             lessons: item.learn || [],
             speaks: item.speak || [],
+            talks: item.question_luyen_am || []
           }));
         }
       } catch (e) {
@@ -340,6 +360,9 @@ export default {
         case "SPEAKING":
           window.location.href = `${$Api.baseUrl}/english-level-test/Speaking?testId=${id}&levelId=${this.idLevel}`;
           break;
+          case "TALKING":
+          window.location.href = `${$Api.baseUrl}/english-level-test/Talking?testId=${id}&levelId=${this.idLevel}`;
+          break;
         default:
           window.location.href = `${$Api.baseUrl}/lesson/${id}`;
       }
@@ -372,6 +395,12 @@ export default {
         case "GRAMMAR":
           temp = "Grammar";
           break;
+        case "TALKING":
+          temp = "Talking";
+          break;
+          case "WRITING":
+          temp = "Writing";
+          break;
         default:
           temp = "Lesson";
       }
@@ -381,14 +410,9 @@ export default {
       let rs;
       if (dataArrTemp.length > 0) {
         rs = dataArrTemp.findIndex((itemHistory, id) => {
-          let score = itemHistory.scores;
-          score = score.split("/");
-          let toltalScore = (parseInt(score[0]) / parseInt(score[1])) * 100;
-
           return (
             itemHistory.test_type == temp &&
-            itemHistory.exam_id == item.id &&
-            toltalScore >= this.targetScore
+            itemHistory.exam_id == item.id
           );
         });
       } else {

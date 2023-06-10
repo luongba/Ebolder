@@ -420,6 +420,7 @@ export default {
 <style scoped>
 .bg-blur {
   background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
 }
 
 .fade-enter-active,
