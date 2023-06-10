@@ -27,7 +27,7 @@
                     <a class="{{ request()->is(['admin/level']) ? 'mm-active' : '' }}"
                         href="{{ route('admin.level-list') }}">
                         <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
-                        level management
+                        Level management
                     </a>
                 </li>
             @endcan

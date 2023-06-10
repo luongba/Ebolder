@@ -7,7 +7,7 @@
         v-show="isShowLabel"
       >
         <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>ENGLISH SPEAKING LEVEL TEST</p>
+          <p>ENGLISH SPEAKING </p>
         </h2>
         <ul>
           <li class="list-disc text-[16px] mb-2">
@@ -44,7 +44,7 @@
           </h2>
           <div v-html="data.description" class="text-[16px]"></div>
         </div>
-        <div class="bg-blur-f px-[16px] py-[16px] lg:px-[48px] lg:py-[16px] mt-4">
+        <!-- <div class="bg-blur-f px-[16px] py-[16px] lg:px-[48px] lg:py-[16px] mt-4">
                     <audio
                         id="audio-preview"
                         class="w-full bg-transparent"
@@ -78,7 +78,7 @@
         </svg>
             </button>
                     </div>
-                </div>
+                </div> -->
       </div>
       <a
         href="/learn"

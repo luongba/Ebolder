@@ -7,7 +7,7 @@
             <i class="lnr-book icon-gradient bg-mean-fruit"></i>
           </div>
           <div>
-            <p>LISTENING LEVEL TEST</p>
+            <p>LISTENING </p>
           </div>
         </div>
         <div class="page-title-actions" @click="submitFile">

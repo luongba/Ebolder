@@ -97,28 +97,15 @@
         style="z-index: -1"
         v-model="detailTopic.description"
         api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-        :init="{
-          height: 600,
-          menubar: false,
-          plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount',
-          ],
-          toolbar:
-            'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | \
-           bullist numlist outdent indent | removeformat | help',
-          visual: false,
-          content_style: `
-		table, th, td {
-    		border: 1px solid #000 !important;
-		}	`,
-          paste_data_images: true,
-        }"
+        :init="init()"
       />
     </div>
-    <div class="mt-4">
+    <div class="flex items-center justify-center mt-4">
+      <el-button @click="saveChangeTitle(detailTopic.id)"
+        >Change description</el-button
+      >
+    </div>
+    <!-- <div class="mt-4">
       <div
         class="w-full p-4 rounded-sm border-dashed bg-white flex items-center justify-center cursor-pointer mt-4"
         style="border-width: 2px"
@@ -141,7 +128,7 @@
     </div>
     <div class="flex items-center justify-center" v-if="file">
       <el-button @click="update">Change</el-button>
-    </div>
+    </div> -->
     <p class="font-semibold text-[15px] mt-4 mb-2">Statistical</p>
     <div
       class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-4 text-[14px] font-semibold flex flex-col items-start"
@@ -295,6 +282,42 @@ export default {
     },
   },
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 600,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+      };
+    },
     resetFeild() {
       this.show = false;
       this.topicData = {
@@ -367,9 +390,13 @@ export default {
         const headers = {
           "Content-Type": "multipart/form-data",
         };
-        let rs = await baseRequest.post(`/admin/update-topic-speak/${this.detailTopic.id}`, formData, {
-          headers,
-        });
+        let rs = await baseRequest.post(
+          `/admin/update-topic-speak/${this.detailTopic.id}`,
+          formData,
+          {
+            headers,
+          }
+        );
         if (rs.data.status == 200) {
           this.getDetailTopic();
           this.$message({
@@ -463,10 +490,15 @@ export default {
         let { data } = await baseRequest.post(`/admin/edit-topic-speak`, {
           id,
           name: this.detailTopic.name,
+          description: this.detailTopic.description,
         });
         if (data.status == 200) {
           this.isEditTitle = false;
           this.getDetailTopic();
+          this.$message({
+            type: "success",
+            message: "cập nhật thành công!",
+          });
         }
       } catch (error) {
         console.log(error);
@@ -518,6 +550,5 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
-
 </style>
   

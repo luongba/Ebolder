@@ -213,7 +213,8 @@ class SpeakController extends Controller
             $speak = Speak::find($request->id);
             $speak->update(
                 [
-                    "name" => $request->name
+                    "name" => $request->name,
+                    "description" => $request->description
                 ]
             );
             return response()->json([

@@ -32,29 +32,11 @@
                     <editor
                       v-model="topicData.description"
                       api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-                      :init="{
-                        height: 300,
-                        menubar: false,
-                        plugins: [
-                          'advlist autolink lists link image charmap print preview anchor',
-                          'searchreplace visualblocks code fullscreen',
-                          'insertdatetime media table paste code help wordcount',
-                        ],
-                        toolbar:
-                          'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | \
-           bullist numlist outdent indent | removeformat | help',
-                        visual: false,
-                        content_style: `
-		table, th, td {
-    		border: 1px solid #000 !important;
-		}	`,
-                        paste_data_images: true,
-                      }"
+                      :init="init()"
                     />
                   </el-form-item>
                 </div>
-                <div>
+                <!-- <div>
                   <el-form-item label="Audio file" prop="description">
                     <el-upload
                       class="upload-demo"
@@ -71,7 +53,7 @@
                       </div>
                     </el-upload>
                   </el-form-item>
-                </div>
+                </div> -->
                 <div class="">
                   <el-form-item label="Exam" prop="isExam">
                     <el-switch v-model="topicData.isExam"></el-switch>
@@ -174,11 +156,48 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 400,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+      };
+    },
     resetFeild() {
       this.show = false;
       this.topicData = {
         name: null,
         description: null,
+        isExam: false,
       };
     },
     async createTopic(formName) {

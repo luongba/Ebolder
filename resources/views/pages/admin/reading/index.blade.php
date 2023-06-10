@@ -9,7 +9,7 @@
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div>
-                        <p>READING LEVEL TEST</p>
+                        <p>READING </p>
                         {{-- <div class="page-title-subheading">
                             <ul>
                                 <li>Read the text, then try to answer the questions.</li>

@@ -10,7 +10,7 @@
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div>
-                        <p>VOCABULARY LEVEL TEST</p>
+                        <p>VOCABULARY</p>
                         {{-- <div class="page-title-subheading">
                             <ul>
                                 <li>Read the text, then try to answer the questions.</li>

@@ -24,7 +24,7 @@
             @click="openLink"
             class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white mx-auto hover:opacity-80"
         >
-            Thử sức ngay
+            Start Learning English
         </button>
         <div class="w-full relative mt-[64px]">
             <div class="absolute left-0 top-[110px] hidden xl:block">
@@ -246,7 +246,7 @@
                             @click="openLink"
                             class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80 mt-4"
                         >
-                            Thử sức ngay
+                            Start Learning English
                         </button>
                     </div>
                 </div>

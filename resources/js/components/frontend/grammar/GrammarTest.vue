@@ -7,7 +7,7 @@
         v-show="isShowLabel"
       >
         <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>ENGLISH GRAMMAR LEVEL TEST</p>
+          <p>ENGLISH GRAMMAR </p>
         </h2>
         <ul>
           <li class="list-disc text-[16px] mb-2">

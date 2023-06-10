@@ -139,7 +139,7 @@
                     >
                       <div
                         class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        @click="x(item, 'VOCABULARY')"
+                        @click="x(item, '')"
                       >
                         <i class="fa-solid fa-spell-check"></i>
                       </div>
@@ -254,7 +254,7 @@ export default {
           ).listens;
           break;
         }
-        case "VOCABULARY": {
+        case "": {
           this.listLesson = this.listLevel.find(
             (item) => item.id === itemLevel.id
           ).vocabularies;
@@ -348,7 +348,7 @@ export default {
         case "LISTEN":
           window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${id}&levelId=${this.idLevel}`;
           break;
-        case "VOCABULARY":
+        case "":
           window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${id}&levelId=${this.idLevel}`;
           break;
         case "GRAMMAR":
@@ -389,7 +389,7 @@ export default {
         case "LISTEN":
           temp = "Listening";
           break;
-        case "VOCABULARY":
+        case "":
           temp = "Vocabulary";
           break;
         case "GRAMMAR":

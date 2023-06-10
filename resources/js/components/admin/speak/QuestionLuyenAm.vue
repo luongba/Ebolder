@@ -76,7 +76,7 @@
             <i class="lnr-book icon-gradient bg-mean-fruit"></i>
           </div>
           <div>
-            <p>SPEAKING LEVEL TEST</p>
+            <p>SPEAKING </p>
           </div>
         </div>
         <div
