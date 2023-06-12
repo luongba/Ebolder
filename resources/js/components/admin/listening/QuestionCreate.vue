@@ -7,7 +7,7 @@
             <i class="lnr-book icon-gradient bg-mean-fruit"></i>
           </div>
           <div>
-            <p>LISTENING </p>
+            <p>LISTENING</p>
           </div>
         </div>
         <div class="page-title-actions" @click="submitFile">
@@ -23,6 +23,13 @@
       </div>
     </div>
     <div class="container">
+      <div>
+        <editor
+          v-model="content"
+          api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
+          :init="init()"
+        />
+      </div>
       <div
         class="w-full p-4 rounded-sm border-dashed bg-white flex items-center justify-center cursor-pointer"
         style="border-width: 2px"
@@ -295,6 +302,7 @@
 import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 import { Input, Button, Select, Form } from "element-ui";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   components: {
@@ -303,6 +311,7 @@ export default {
     Button,
     Select,
     Form,
+    Editor
   },
   data() {
     return {
@@ -321,9 +330,50 @@ export default {
         ],
       },
       file: null,
+      content: null
     };
   },
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 600,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+      };
+    },
     async submitFile() {
       if (this.file == null) {
         this.$message({
@@ -337,6 +387,7 @@ export default {
           try {
             const formData = new FormData();
             formData.append("file", this.file);
+            formData.append("content", this.content);
             const headers = {
               "Content-Type": "multipart/form-data",
             };

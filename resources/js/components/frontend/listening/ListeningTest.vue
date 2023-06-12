@@ -12,24 +12,8 @@
                         mb-4
                     "
                 >
-                <p>About The Listening Test</p>
+                <p>Listening</p>
                 </h2>
-                <ul>
-                    <li class="list-disc text-[16px] mb-2">
-                        There are six parts in this listening test, and four questions for each part.
-                    </li>
-                    <li class="list-disc text-[16px] mb-2">
-                        You can listen to the recordings more than once if you need to. However, you shouldn’t listen more than three times. The test is here to find your natural listening level. Ideally, you should listen only once or twice.
-                    </li>
-
-                    <li class="list-disc text-[16px] mb-2">
-                        Some questions are easier; some are more difficult.
-                        Don’t worry if you don’t know the answer!
-                    </li>
-                    <li class="list-disc text-[16px]">
-                        You will get your results after you have answered all the questions.
-                    </li>
-                </ul>
                 <h2
                     class="
                         text-[24px]
@@ -134,6 +118,8 @@
                 :key="topicItem.id"
                 v-if="indexAudio == indexPage"
             >
+            <div v-html="topicItem.content" class="bg-blur-f p-[8px] mt-4">
+                    </div>
                 <p class="text-[16px] mt-4">
                     Audio: <strong>{{ indexAudio + 1 }}</strong> of
                     <strong>{{ topic.length }}</strong>
@@ -890,6 +876,7 @@ export default {
     this.topic = this.data.topic_audio_listen.map((audio) => ({
       id: audio.id,
       audio: audio.audio,
+      content: audio.content,
       questions: audio.question_listening.map((question) => ({
         id: question.id,
         question: question.question,

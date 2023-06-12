@@ -61,7 +61,6 @@
           v-for="item in listTopic"
           :key="item.id"
         >
-        {{ item.is_exam }}
           <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
           <div class="flex items-center">
             <el-button

@@ -321,6 +321,18 @@
         <p class="mt-2">Total: {{ levelhard + levelMedium + levelEasy }}</p>
       </div>
     </div>
+    <div>
+      <editor
+        v-model="detailAudio.content"
+        api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
+        :init="init()"
+      />
+      <div class="flex items-center justify-center mt-4">
+        <el-button @click="saveEditContentAudio()"
+          >Change content</el-button
+        >
+      </div>
+    </div>
     <div
       class="w-full p-4 rounded-sm border-dashed bg-white flex items-center justify-center cursor-pointer mt-4"
       style="border-width: 2px"
@@ -692,10 +704,12 @@
 <script>
 import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   components: {
     StarRating,
+    Editor,
   },
   data() {
     return {
@@ -715,6 +729,7 @@ export default {
         id: null,
         name: null,
         audio: null,
+        content: null,
         question: [],
       },
       dataQuestion: [],
@@ -761,6 +776,46 @@ export default {
   },
   watch: {},
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 600,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+      };
+    },
     EditQuestion(id) {
       this.$refs.card[id].children[1].classList.add("block");
       this.$refs.card[id].children[1].classList.remove("hidden");
@@ -834,19 +889,11 @@ export default {
               };
             }),
           };
-          console.log(
-            "🚀 ~ file: QuestionDetail.vue:925 ~ SaveQuestion ~ temp",
-            temp
-          );
           let result = await baseRequest.put(
             `/admin/update-question-listening`,
             temp
           );
           if (result.data.status == 200) {
-            console.log(
-              "🚀 ~ file: QuestionDetail.vue ~ line 461 ~ SaveQuestion ~ result.data",
-              result.data
-            );
             this.closeEditQuestion(index);
             this.$message({
               type: "success",
@@ -864,7 +911,6 @@ export default {
       }
     },
     pushAns(id) {
-      console.log(id);
       let dataQues = this.detailAudio.question.find(
         (item) => item.idQues == id
       );
@@ -957,11 +1003,11 @@ export default {
         );
         if (rs.data.status == 200) {
           let data = rs.data.data;
-          console.log(data);
           this.detailAudio = {
             id: data.id,
             name: data.name,
             audio: data.audio,
+            content: data.content,
             question: data.question_listening?.map((item) => {
               return {
                 idQues: item.id,
@@ -1099,11 +1145,6 @@ export default {
       }
     },
     deleteAnsQuestion(idQues, idAns) {
-      console.log(
-        "🚀 ~ file: QuestionDetail.vue ~ line 1007 ~ deleteAnsQuestion ~ idQues, idAns",
-        idQues,
-        idAns
-      );
       let dataQues = this.dataQuestion.find((item) => item.id == idQues);
       dataQues.dataAns = dataQues.dataAns.filter((item) => item.idAns != idAns);
       let data = dataQues.dataAns;
@@ -1154,12 +1195,41 @@ export default {
         console.log("🚀 ~ ~ error", error);
       }
     },
+    async saveEditContentAudio() {
+        try {
+          
+          let result = await baseRequest.post(
+            `/admin/update-audio-listening/${this.param}`,
+           {
+            content: this.detailAudio.content
+           },
+          );
+          let { data } = result;
+          if (data.status == 200) {
+            this.$message({
+              type: "success",
+              message: "update successful Audio",
+            });
+          } else {
+            this.$message({
+              type: "error",
+              message: "update error Audio",
+            });
+          }
+        } catch (error) {
+          console.log(
+            "🚀 ~ file: QuestionCreate.vue ~ line 320 ~ submitFile ~ error",
+            error
+          );
+        }
+    },
     async saveEditAudio() {
       let isCheck = this.validate("ruleFormData", "ruleFormItem");
       if (isCheck) {
         try {
           const formData = new FormData();
           formData.append("file", this.file);
+          formData.append("content", this.detailAudio.content);
           const headers = { "Content-Type": "multipart/form-data" };
           let result = await baseRequest.post(
             `/admin/update-audio-listening/${this.param}`,
@@ -1171,12 +1241,12 @@ export default {
             this.isEditFile = false;
             this.$message({
               type: "success",
-              message: "delete successful Audio",
+              message: "update successful Audio",
             });
           } else {
             this.$message({
               type: "error",
-              message: "delete error Audio",
+              message: "update error Audio",
             });
           }
         } catch (error) {
@@ -1197,11 +1267,6 @@ export default {
       return text;
     },
     renderAnswer(data, index) {
-      console.log(
-        "🚀 ~ file: QuestionDetail.vue:1269 ~ renderAnswer ~ data, index",
-        data,
-        index
-      );
       if (data.question != null) {
         let sum = 0;
         this.detailAudio.question[index].answers = [];
@@ -1258,11 +1323,6 @@ export default {
         });
     },
     renderAnswerPopup(data, index) {
-      console.log(
-        "🚀 ~ file: QuestionDetail.vue:1492 ~ renderAnswerPopup ~ data, index",
-        data,
-        index
-      );
       let question = data.question;
       if (question != null) {
         let sum = 0;
