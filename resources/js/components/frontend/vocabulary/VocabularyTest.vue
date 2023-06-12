@@ -7,21 +7,8 @@
         v-show="isShowLabel"
       >
         <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>ENGLISH  </p>
+          <p>ENGLISH VOCABULARY TEST</p>
         </h2>
-        <ul>
-          <li class="list-disc text-[16px] mb-2">
-            There are 40 questions in this vocabulary test.
-          </li>
-          <li class="list-disc text-[16px] mb-2">
-            They cover all levels from elementary (A1) to advanced (C1) in a
-            random order. You will get your score at the end
-          </li>
-
-          <li class="list-disc text-[16px]">
-            Don’t use a dictionary – the idea is to find your natural level
-          </li>
-        </ul>
         <h2 class="text-[24px] font-semibold leading-[120%] text-center mt-4">
           <VueCountdown
             :time="timeWork"
@@ -34,6 +21,7 @@
             >
           </VueCountdown>
         </h2>
+        <div v-html="data.description"></div>
       </div>
       <a
         href="/learn"
@@ -324,7 +312,7 @@
     <!-- <footer-component /> -->
   </div>
 </template>
-<script>
+  <script>
 import AVue from "../alphabet/A.vue";
 import BVue from "../alphabet/B.vue";
 import CVue from "../alphabet/C.vue";
@@ -451,18 +439,18 @@ export default {
         if (arrQuestion[i] == "#") {
           sum++;
           arrQuestion[i] = `<input
-                            style="color:black;
-                                border: none;
-                                outline:none;
-                                border-radius:
-                                5px; padding: 2px .5em;
-                                background: #e2e7ed;
-                                display: inline-block;
-                                width: 100px"
-                                v-model='${
-                                  this.answerData[index].dataChoose[sum - 1]
-                                    .radioValue
-                                }'>`;
+                              style="color:black;
+                                  border: none;
+                                  outline:none;
+                                  border-radius:
+                                  5px; padding: 2px .5em;
+                                  background: #e2e7ed;
+                                  display: inline-block;
+                                  width: 100px"
+                                  v-model='${
+                                    this.answerData[index].dataChoose[sum - 1]
+                                      .radioValue
+                                  }'>`;
         }
       }
       return arrQuestion.join(" ");
@@ -475,10 +463,10 @@ export default {
         };
         if (this.request.exam) {
           config.exam_final_id = this.request.examId;
-          config.status = 'exam';
+          config.status = "exam";
         } else {
           config.level_id = this.query.levelId;
-          config.status = 'learn';
+          config.status = "learn";
         }
         let result = await baseRequest.post(
           "/admin/check-history-exam",
@@ -539,7 +527,7 @@ export default {
   },
 };
 </script>
-<style>
+  <style scoped>
 .border-answer {
   border-color: #eee;
 }
@@ -581,3 +569,4 @@ export default {
   color: #fff;
 }
 </style>
+  

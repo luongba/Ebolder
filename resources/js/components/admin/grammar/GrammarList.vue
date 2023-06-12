@@ -178,6 +178,10 @@ export default {
             },
           });
         },
+        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
       };
     },
     resetFeild() {

@@ -112,7 +112,7 @@ class ReadController extends Controller
 
     public function detailTopic($id)
     {
-        return view('pages.admin.Reading.detail', compact('id'));
+        return view('pages.admin.reading.detail', compact('id'));
     }
 
     public function detailTopicData(Request $request, $id)
