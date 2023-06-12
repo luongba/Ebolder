@@ -78,6 +78,20 @@ Vue.component(
     "topic-reading-detail",
     require("./components/admin/reading/TopicDetail.vue").default
 );
+
+// Pronunciation
+Vue.component(
+    "topic-pronunciation-list",
+    require("./components/admin/pronunciation/PronunciationList.vue").default
+);
+Vue.component(
+    "topic-pronunciation-create",
+    require("./components/admin/pronunciation/TopicCreate.vue").default
+);
+Vue.component(
+    "topic-pronunciation-detail",
+    require("./components/admin/pronunciation/TopicDetail.vue").default
+);
 //grammar
 Vue.component(
     "question-grammar-create",
@@ -200,6 +214,12 @@ Vue.component(
 Vue.component(
     "reading-test",
     require("./components/frontend/reading/ReadingTest.vue").default
+);
+
+//Pronunciation
+Vue.component(
+    "pronunciation-test",
+    require("./components/frontend/pronunciation/PronunciationTest.vue").default
 );
 //listening
 Vue.component(

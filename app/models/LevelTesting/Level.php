@@ -14,6 +14,9 @@ class Level extends Model
     public function Reading(){
         return $this->belongsToMany('App\models\Read\Reading','level_readings');
     }
+    public function Pronunciation(){
+        return $this->belongsToMany('App\models\Pronunciation\Pronunciation','level_pronunciations');
+    }
     public function Vocabulary(){
         return $this->belongsToMany('App\models\Vocabulary\Vocabulary','level_vocabularies');
     }

@@ -27,23 +27,23 @@
                 <el-form :model="topicData" :rules="rules" ref="ruleForm">
                   <div class="w-full h-[60vh] overflow-y-scroll">
                     <div class="my-2">
-                      <el-form-item label="Đề kiểm tra" prop="name">
+                      <el-form-item label="Exam name" prop="name">
                         <el-input
-                          placeholder="Đề kiểm tra"
+                          placeholder="Exam name"
                           v-model="topicData.name"
                         ></el-input>
                       </el-form-item>
                     </div>
                     <div class="my-2">
-                      <el-form-item label="Exam" prop="isExam">
+                      <el-form-item label="Enable" prop="isExam">
                         <el-switch v-model="topicData.isExam"></el-switch>
                       </el-form-item>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-1 md:gap-4 gap-1">
-                      <el-form-item label="Phần đọc" prop="valueReading">
+                      <el-form-item label="Reading" prop="valueReading">
                         <el-select
                           v-model="topicData.valueReading"
-                          placeholder="Chọn đề"
+                          placeholder="Reading"
                           style="width: 100%"
                         >
                           <el-option
@@ -55,10 +55,10 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
-                      <el-form-item label="Phần từ vựng" prop="valueVocabulary">
+                      <el-form-item label="Vocabulary" prop="valueVocabulary">
                         <el-select
                           v-model="topicData.valueVocabulary"
-                          placeholder="Chọn đề"
+                          placeholder="Vocabulary"
                           style="width: 100%"
                         >
                           <el-option
@@ -70,10 +70,10 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
-                      <el-form-item label="Phần nghe" prop="valueListening">
+                      <el-form-item label="Listening" prop="valueListening">
                         <el-select
                           v-model="topicData.valueListening"
-                          placeholder="Chọn đề"
+                          placeholder="Listening"
                           style="width: 100%"
                         >
                           <el-option
@@ -85,10 +85,10 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
-                      <el-form-item label="Phần ngữ pháp" prop="valueGrammar">
+                      <el-form-item label="Grammar" prop="valueGrammar">
                         <el-select
                           v-model="topicData.valueGrammar"
-                          placeholder="Chọn đề"
+                          placeholder="Grammar"
                           style="width: 100%"
                         >
                           <el-option
@@ -100,10 +100,10 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
-                      <el-form-item label="Phần luyện âm" prop="valueSpeaking">
+                      <el-form-item label="Speaking" prop="valueSpeaking">
                         <el-select
                           v-model="topicData.valueSpeaking"
-                          placeholder="Chọn đề"
+                          placeholder="Speaking"
                           style="width: 100%"
                         >
                           <el-option
@@ -115,10 +115,10 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
-                      <el-form-item label="Phần kỹ năng viết" prop="valueLesson">
+                      <el-form-item label="Writing" prop="valueLesson">
                         <el-select
                           v-model="topicData.valueLesson"
-                          placeholder="Chọn đề"
+                          placeholder="Writing"
                           style="width: 100%"
                         >
                           <el-option
@@ -130,10 +130,10 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
-                      <el-form-item label="Phần kỹ năng nói" prop="valueTalking">
+                      <el-form-item label="Pronunciation" prop="valueTalking">
                         <el-select
                           v-model="topicData.valueTalking"
-                          placeholder="Chọn đề"
+                          placeholder="Pronunciation"
                           style="width: 100%"
                         >
                           <el-option
@@ -331,7 +331,7 @@
                 grammar_id: this.topicData.valueGrammar,
                 speaking_id: this.topicData.valueSpeaking,
                 writing_id: this.topicData.valueLesson,
-                talking_id: this.topicData.valueTalking,
+                pronunciation_id: this.topicData.valueTalking,
                 status: this.topicData.isExam || false,
               };
               let rs = await baseRequest.post(`/admin/create-exam`, dataTemp);
@@ -371,7 +371,7 @@
                 vocabulary_id: this.topicData.valueVocabulary,
                 grammar_id: this.topicData.valueGrammar,
                 writing_id: this.topicData.valueLesson,
-                talking_id: this.topicData.valueTalking,
+                pronunciation_id: this.topicData.valueTalking,
                 status: this.topicData.isExam ,
               };
               let rs = await baseRequest.post(`/admin/update-exam/${this.idTemp}`, dataTemp);
@@ -439,7 +439,7 @@
               valueGrammar: data.data.grammar_id,
               valueSpeaking: data.data.speaking_id,
               valueLesson: data.data.writing_id,
-              valueTalking: data.data.talking_id,
+              valueTalking: data.data.pronunciation_id,
 
               isExam: data.data.status === 1 ? true : false
             };
@@ -545,7 +545,7 @@
       },
       async getAllTopicTalking() {
       try {
-        let rs = await baseRequest.get(`/admin/all-question-luyen-am`);
+        let rs = await baseRequest.get(`/admin/list-topic-pronunciation`);
         if (rs.data.status == 200) {
           this.listTopicTalking = rs.data.data.map((item) => ({
             id: item.id,

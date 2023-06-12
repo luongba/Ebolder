@@ -56,6 +56,7 @@ Route::prefix('/')->group(function () {
         Route::get('/Writing', 'HomeController@lessonPage')->name('writing-test-page')->middleware('checkLogin');
         Route::get('/Grammar', 'HomeController@grammarTest')->name('grammar-test-page')->middleware('checkLogin');
         Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page')->middleware('checkLogin');
+        Route::get('/Pronunciation', 'HomeController@pronunciationTest')->name('pronunciation-test-page')->middleware('checkLogin');
         Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page')->middleware('checkLogin');
         Route::get('/Talking', 'HomeController@speakingTestTypeSecond')->name('speaking-test-page')->middleware('checkLogin');
         Route::get('/Speaking', 'HomeController@speakingTest')->name('speaking-test-page')->middleware('checkLogin');
@@ -98,6 +99,10 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/reading-level-test/topic-list', 'Admin\ReadController@listTopic')->name('reading-topic-list')->middleware('can:Reading_List');
         Route::get('/reading-level-test/topic-create', 'Admin\ReadController@createTopic')->name('reading-topic-create')->middleware('can:Reading_Create');
         Route::get('/reading-level-test/topic-detail/{id}', 'Admin\ReadController@detailTopic')->name('reading-topic-detail')->middleware('can:Reading_Detail');
+        //pronunciation
+        Route::get('/pronunciation-level-test/topic-list', 'Admin\PronunciationController@listTopic')->name('pronunciation-topic-list')->middleware('can:Reading_List');
+        Route::get('/pronunciation-level-test/topic-create', 'Admin\PronunciationController@createTopic')->name('pronunciation-topic-create')->middleware('can:Reading_Create');
+        Route::get('/pronunciation-level-test/topic-detail/{id}', 'Admin\PronunciationController@detailTopic')->name('pronunciation-topic-detail')->middleware('can:Reading_Detail');
         //grammar
         Route::get('/grammar-level-test', 'Admin\GrammarController@index')->name('grammar-list')->middleware('can:Grammar_List');
         Route::get('/grammar-level-test/detail/{id}', 'Admin\GrammarController@detailTopic')->name('grammar-detail')->middleware('can:Grammar_Detail');

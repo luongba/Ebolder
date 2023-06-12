@@ -72,9 +72,9 @@
                     </a>
                     <ul class="mm-collapse">
                         <li>
-                            <a class="{{ request()->is(['admin/speaking-level-test/question-luyen-am']) ? 'mm-active' : '' }}"
-                                href="{{ route('admin.speak-question-luyen-am') }}">
-                                <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
+                            <a class="{{ request()->is(['admin/pronunciation-level-test/topic-list']) ? 'mm-active' : '' }}"
+                                href="{{ route('admin.pronunciation-topic-list') }}">
+                                <i class="metismenu-icon fa-solid fa-laptop-file"></i>
                                 Topics Management
                             </a>
                         </li>

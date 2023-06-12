@@ -14,6 +14,9 @@ class Exam extends Model
     public function Reading(){
         return $this->hasMany('App\models\Read\Reading','reading_id');
     }
+    public function Pronunciation(){
+        return $this->hasMany('App\models\Pronunciation\Pronunciation','pronunciation_id');
+    }
     public function Vocabulary(){
         return $this->hasMany('App\models\Vocabulary\Vocabulary','vocabulary_id', );
     }

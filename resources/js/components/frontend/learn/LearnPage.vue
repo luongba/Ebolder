@@ -97,7 +97,7 @@
                       >
                         <div
                           class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
-                          @click="x(item, 'TALKING')"
+                          @click="x(item, 'PRONUNCIATION')"
                         >
                         <i class="fa-solid fa-microphone"></i>
                         </div>
@@ -272,10 +272,10 @@ export default {
           ).speaks;
           break;
         }
-        case "TALKING": {
+        case "PRONUNCIATION": {
           this.listLesson = this.listLevel.find(
             (item) => item.id === itemLevel.id
-          ).talks;
+          ).pronunciations;
           break;
         }
         default: {
@@ -297,7 +297,7 @@ export default {
             grammars: item.grammar,
             lessons: item.learn || [],
             speaks: item.speak || [],
-            talks: item.question_luyen_am || []
+            pronunciations: item.pronunciation || []
           }));
         }
       } catch (e) {
@@ -360,8 +360,8 @@ export default {
         case "SPEAKING":
           window.location.href = `${$Api.baseUrl}/english-level-test/Speaking?testId=${id}&levelId=${this.idLevel}`;
           break;
-          case "TALKING":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Talking?testId=${id}&levelId=${this.idLevel}`;
+          case "PRONUNCIATION":
+          window.location.href = `${$Api.baseUrl}/english-level-test/Pronunciation?testId=${id}&levelId=${this.idLevel}`;
           break;
         default:
           window.location.href = `${$Api.baseUrl}/lesson/${id}`;
@@ -395,8 +395,8 @@ export default {
         case "GRAMMAR":
           temp = "Grammar";
           break;
-        case "TALKING":
-          temp = "Talking";
+        case "PRONUNCIATION":
+          temp = "Pronunciation";
           break;
           case "WRITING":
           temp = "Writing";
@@ -424,7 +424,7 @@ export default {
   async created() {
     await this.getAllLevel();
     await this.getFullHistory();
-    this.checkPassedLevel();
+    // this.checkPassedLevel();
   },
   mounted() {
     setTimeout(() => {

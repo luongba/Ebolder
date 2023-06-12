@@ -27,18 +27,18 @@
               <el-form :model="topicData" :rules="rules" ref="ruleForm">
                 <div class="w-full h-[60vh] overflow-y-scroll">
                   <div class="my-2">
-                    <el-form-item label="Tên cấp độ" prop="name">
+                    <el-form-item label="Level name" prop="name">
                       <el-input
-                        placeholder="Tên cấp độ"
+                        placeholder="Level name"
                         v-model="topicData.name"
                       ></el-input>
                     </el-form-item>
                   </div>
-                  <el-form-item label="Phần viết" prop="valueLesson">
+                  <el-form-item label="Writing" prop="valueLesson">
                     <el-select
                       v-model="topicData.valueLesson"
                       multiple
-                      placeholder="Phần viết"
+                      placeholder="Writing"
                       style="width: 100%"
                     >
                       <el-option
@@ -51,10 +51,10 @@
                     </el-select>
                   </el-form-item>
                   <div class="grid grid-cols-1 md:grid-cols-1 md:gap-4 gap-1">
-                    <el-form-item label="Phần đọc" prop="valueReading">
+                    <el-form-item label="Reading" prop="valueReading">
                       <el-select
                         v-model="topicData.valueReading"
-                        placeholder="Phần viết"
+                        placeholder="Reading"
                         style="width: 100%"
                         multiple
                       >
@@ -67,10 +67,10 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần từ vựng" prop="valueVocabulary">
+                    <el-form-item label="Vocabulary" prop="valueVocabulary">
                       <el-select
                         v-model="topicData.valueVocabulary"
-                        placeholder="Chọn đề"
+                        placeholder="Vocabulary"
                         style="width: 100%"
                         multiple
                       >
@@ -83,10 +83,10 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần nghe" prop="valueListening">
+                    <el-form-item label="Listening" prop="valueListening">
                       <el-select
                         v-model="topicData.valueListening"
-                        placeholder="Chọn đề"
+                        placeholder="Listening"
                         style="width: 100%"
                         multiple
                       >
@@ -99,10 +99,10 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần ngữ pháp" prop="valueGrammar">
+                    <el-form-item label="Grammar" prop="valueGrammar">
                       <el-select
                         v-model="topicData.valueGrammar"
-                        placeholder="Chọn đề"
+                        placeholder="Grammar"
                         style="width: 100%"
                         multiple
                       >
@@ -115,10 +115,10 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần luyện âm" prop="valueSpeaking">
+                    <el-form-item label="Speaking" prop="valueSpeaking">
                       <el-select
                         v-model="topicData.valueSpeaking"
-                        placeholder="Chọn đề"
+                        placeholder="Speaking"
                         style="width: 100%"
                         multiple
                       >
@@ -131,10 +131,10 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần nói" prop="valueTalking">
+                    <el-form-item label="Pronunciation" prop="valueTalking">
                       <el-select
                         v-model="topicData.valueTalking"
-                        placeholder="Chọn đề"
+                        placeholder="Pronunciation"
                         style="width: 100%"
                         multiple
                       >
@@ -428,6 +428,7 @@ export default {
       try {
         let rs = await baseRequest.post(`/admin/detail-level`, { id });
         let { data } = rs;
+
         if (data.status == 200) {
           this.topicData = {
             name: data.data.name || null,
@@ -437,7 +438,7 @@ export default {
             valueListening: data.data.listen.map((item) => item.id) || [],
             valueLesson: data.data.learn.map((item) => item.id) || [],
             valueSpeaking: data.data.speak.map((item) => item.id) || [],
-            valueTalking: data.data.question_luyen_am.map((item) => item.id) || [],
+            valueTalking: data.data.pronunciation.map((item) => item.id) || [],
           };
           this.show = !this.show;
         }
@@ -537,7 +538,7 @@ export default {
     },
     async getAllTopicTalking() {
       try {
-        let rs = await baseRequest.get(`/admin/all-question-luyen-am`);
+        let rs = await baseRequest.get(`/admin/list-topic-pronunciation`);
         if (rs.data.status == 200) {
           this.listTopicTalking = rs.data.data.map((item) => ({
             id: item.id,

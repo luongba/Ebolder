@@ -6,6 +6,7 @@ use App\models\Grammar\Grammar;
 use App\models\Learn\ExamResult;
 use App\models\Learn\Learn;
 use App\models\Listen\Listening;
+use App\models\Pronunciation\Pronunciation;
 use App\models\Speak\QuestionLuyenAm;
 use App\models\Read\Reading;
 use App\models\User\HistoryExam;
@@ -88,6 +89,25 @@ class HomeController extends Controller
                 $question->with('AnswerReading')->with('RightAnswerReading')->get();
             }])->inRandomOrder()->first();
             return view('pages.frontend.read', compact('reading'));
+        }
+
+    }
+
+    public function pronunciationTest(Request $request)
+    {
+        if (isset($request->testId)) {
+            $testId = $request->testId;
+            $levelId =$request->levelId;
+            $pronunciation = Pronunciation::whereId($request->testId)->with(['QuestionPronunciation' => function ($question) {
+                $question->with('AnswerPronunciation')->with('RightAnswerPronunciation')->get();
+            }])->first();
+            return view('pages.frontend.pronunciation', compact(['pronunciation', 'testId', 'levelId']));
+        } else {
+            $randomPronunciation = Pronunciation::all()->random(1)->first();
+            $pronunciation = $randomPronunciation->with(['QuestionPronunciation' => function ($question) {
+                $question->with('AnswerPronunciation')->with('RightAnswerPronunciation')->get();
+            }])->inRandomOrder()->first();
+            return view('pages.frontend.pronunciation', compact('pronunciation'));
         }
 
     }

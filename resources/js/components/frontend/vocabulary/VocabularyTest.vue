@@ -7,7 +7,7 @@
         v-show="isShowLabel"
       >
         <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>ENGLISH VOCABULARY TEST</p>
+          <p>VOCABULARY</p>
         </h2>
         <h2 class="text-[24px] font-semibold leading-[120%] text-center mt-4">
           <VueCountdown

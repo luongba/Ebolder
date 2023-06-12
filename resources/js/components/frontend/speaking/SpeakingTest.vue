@@ -7,25 +7,8 @@
         v-show="isShowLabel"
       >
         <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>ENGLISH SPEAKING </p>
+          <p>SPEAKING </p>
         </h2>
-        <ul>
-          <li class="list-disc text-[16px] mb-2">
-            There are 40 questions in this vocabulary test.
-          </li>
-          <li class="list-disc text-[16px] mb-2">
-            They cover all levels from elementary (A1) to advanced (C1) in a
-            random order. You will get your score at the end
-          </li>
-
-          <li class="list-disc text-[16px] mb-2">
-            Don’t use a dictionary – the idea is to find your natural level
-          </li>
-          <li class="list-disc text-[16px]">
-            Some of the questions are easier, some are more difficult. Don’t
-            worry if you don’t know the answer!
-          </li>
-        </ul>
         <h2 class="text-[24px] font-semibold leading-[120%] text-center mt-4">
           <VueCountdown
             :time="timeWork"

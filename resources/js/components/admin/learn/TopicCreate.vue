@@ -24,6 +24,10 @@
       </div>
     </div>
     <div class="container">
+      <div class="flex justify-center">
+        <span class="font-semibold text-[15px] mb-2 mr-2">Exam</span>
+        <el-switch v-model="dataTopic.isExam"></el-switch>
+      </div>
       <div class="mb-4">
         <el-form ref="ruleFormItem" :model="dataTopic" class="w-full">
           <el-form-item
@@ -48,27 +52,9 @@
       <editor
         v-model="dataTopic.content"
         api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-        :init="{
-          height: 600,
-          menubar: false,
-          plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount',
-          ],
-          toolbar:
-            'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | \
-           bullist numlist outdent indent | removeformat | help',
-          visual: false,
-          content_style: `
-		table, th, td {
-    		border: 1px solid #000 !important;
-		}	`,
-          paste_data_images: true,
-        }"
+        :init="init()"
       />
-      <el-button type="primary" class="mt-4" @click="chooseType(1)">
+      <!-- <el-button type="primary" class="mt-4" @click="chooseType(1)">
         Tải lên Video
       </el-button>
       <el-button type="primary" class="mt-4" @click="chooseType(2)">
@@ -112,7 +98,7 @@
         <video controls style="width: 100%; height: auto" v-show="isVideo">
           Your browser does not support the video tag.
         </video>
-      </div>
+      </div> -->
       <div class="flex flex-col justify-center w-full items-center">
         <div
           class="card w-full mt-3"
@@ -383,6 +369,7 @@ export default {
       dataTopic: {
         name: null,
         content: "hello",
+        isExam: false
       },
 
       dataQuestion: [],
@@ -428,6 +415,46 @@ export default {
     };
   },
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 600,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+      };
+    },
     uploadAudio() {
       this.$refs.fileAudio.click();
     },
@@ -497,6 +524,7 @@ export default {
 
           let dataTemp = {
             name: this.dataTopic.name,
+            is_exam: this.dataTopic.isExam ? 1 : 0,
             contentReading: this.dataTopic.content,
             dataQuestion: this.dataQuestion,
             linkMedia: this.linkMedia,

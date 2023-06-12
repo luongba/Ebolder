@@ -7,22 +7,8 @@
         v-show="isShowLabel"
       >
         <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>ENGLISH READING </p>
+          <p>READING </p>
         </h2>
-        <ul>
-          <li class="list-disc text-[16px] mb-2">
-            Read the text, then try to answer the questions
-          </li>
-
-          <li class="list-disc text-[16px] mb-2">
-            Some questions are easier; some are more difficult. Don’t worry if
-            you don’t know the answer!
-          </li>
-          <li class="list-disc text-[16px]">
-            Try not to use a dictionary – the idea is to find your natural
-            level.
-          </li>
-        </ul>
         <h2 class="text-[24px] font-semibold leading-[120%] text-center mt-4">
           <VueCountdown
             :time="timeWork"
@@ -653,7 +639,7 @@ export default {
           config.exam_final_id = this.request.examId;
           config.status = "exam";
         } else {
-          config.level_id = this.request.this.query.levelId;
+          config.level_id = this.query.levelId;
           config.status = "learn";
         }
         let result = await baseRequest.post(
@@ -680,6 +666,7 @@ export default {
   created() {
     this.topic = {
       content: this.data.content,
+      
       questions: this.data.question_reading.map((reading) => ({
         id: reading.id,
         question: reading.question,

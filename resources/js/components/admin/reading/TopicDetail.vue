@@ -7,7 +7,7 @@
             <i class="lnr-book icon-gradient bg-mean-fruit"></i>
           </div>
           <div class="flex justify-between">
-            <p>READING </p>
+            <p>READING</p>
           </div>
         </div>
       </div>
@@ -41,27 +41,14 @@
       <editor
         v-model="dataTopic.content"
         api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-        :init="{
-          height: 600,
-          menubar: false,
-          plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount',
-          ],
-          toolbar:
-            'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | \
-           bullist numlist outdent indent | removeformat | help',
-          visual: false,
-          content_style: `
-		table, th, td {
-    		border: 1px solid #000 !important;
-		}	`,
-          paste_data_images: true,
-        }"
+        :init="init()"
       />
-      <div class="flex flex-col justify-center w-full items-center">
+      <div class="flex items-center justify-center mt-4">
+        <el-button @click="saveChangeTopic" type="primary" plain
+          >Save info topic
+        </el-button>
+      </div>
+      <div class="flex flex-col justify-center w-full mt-4 items-center">
         <div
           class="card w-full mt-3"
           v-for="(data, index) in dataQuestion"
@@ -418,9 +405,6 @@
               >More questions
             </el-button>
           </el-popover>
-          <el-button @click="saveChangeTopic" type="primary" plain
-            >Save
-          </el-button>
         </div>
       </div>
     </div>
@@ -448,7 +432,7 @@ export default {
       dataTopic: {
         name: null,
         content: "Hello",
-        isExam: false
+        isExam: false,
       },
 
       dataQuestion: [],
@@ -469,6 +453,46 @@ export default {
     };
   },
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 600,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+      };
+    },
     async getDetailTopic() {
       try {
         let rs = await baseRequest.get(

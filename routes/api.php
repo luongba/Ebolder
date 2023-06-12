@@ -60,6 +60,17 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-answer-reading', 'Admin\ReadController@deleteAnswerData')->name('delete-answer-reading');
         Route::post('/add-or-update-question-reading', 'Admin\ReadController@addQuestionSingle')->name('add-or-update-question-reading');
         Route::post('/update-question-reading', 'Admin\ReadController@addQuestionMultiple')->name('update-question-reading');
+
+        // Pronunciation
+        Route::post('/add-question-pronunciation', 'Admin\PronunciationController@storeTopic')->name('add-topic-question-pronunciation');
+        Route::get('/list-topic-pronunciation', 'Admin\PronunciationController@listTopicApi')->name('add-topic-question-pronunciation');
+        Route::post('/delete-topic-pronunciation', 'Admin\PronunciationController@deleteTopicApi')->name('delete-topic-question-pronunciation');
+        Route::get('/detail-topic-pronunciation/{id}', 'Admin\PronunciationController@detailTopicData')->name('detail-topic-question-pronunciation');
+        Route::post('/delete-question-pronunciation', 'Admin\PronunciationController@deleteQuestionData')->name('delete-question-pronunciation');
+        Route::post('/delete-answer-pronunciation', 'Admin\PronunciationController@deleteAnswerData')->name('delete-answer-pronunciation');
+        Route::post('/add-or-update-question-pronunciation', 'Admin\PronunciationController@addQuestionSingle')->name('add-or-update-question-pronunciation');
+        Route::post('/update-question-pronunciation', 'Admin\PronunciationController@addQuestionMultiple')->name('update-question-pronunciation');
+        
         //Grammar
         Route::post('/add-question-to-topic-grammar', 'Admin\GrammarController@addQuestionToTopic')->name('add-question-to-topic-grammar');
         Route::post('/edit-topic-grammar', 'Admin\GrammarController@editTopic')->name('edit-topic-grammar');
