@@ -5,7 +5,7 @@
       <div class="w-full h-full relative z-10 content" v-show="show">
         <div class="absolute w-[70%] h-[60vh] bg-box-lesson rounded-md p-4">
           <span
-            class="absolute right-[5px] top-[5px] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] cursor-pointer text-[#fff]"
+            class="absolute right-[5px] top-[5px] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] cursor-pointer text-[#fff]"
             @click="dongMoPopup()"
           >
             <i class="lnr-cross"></i>
@@ -61,7 +61,7 @@
                     placement="top"
                   >
                     <div
-                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
                       @click="x(item, 'WRITING')"
                     >
                       <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -74,7 +74,7 @@
                     placement="top"
                   >
                     <div
-                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
                       @click="x(item, 'PRONUNCIATION')"
                     >
                     <i class="fa-solid fa-microphone"></i>
@@ -87,7 +87,7 @@
                     placement="top"
                   >
                     <div
-                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
                       @click="x(item, 'SPEAKING')"
                     >
                       <i class="fa-solid fa-head-side-cough"></i>
@@ -104,7 +104,7 @@
                   placement="bottom"
                 >
                   <div
-                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                     @click="x(item, 'LISTEN')"
                   >
                     <i class="fa-solid fa-ear-listen"></i>
@@ -117,7 +117,7 @@
                   placement="bottom"
                 >
                   <div
-                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                     @click="x(item, 'READ')"
                   >
                     <i class="fa-solid fa-book-open-reader"></i>
@@ -130,7 +130,7 @@
                   placement="bottom"
                 >
                   <div
-                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                     @click="x(item, 'VOCABULARY')"
                   >
                     <i class="fa-solid fa-spell-check"></i>
@@ -143,7 +143,7 @@
                   placement="bottom"
                 >
                   <div
-                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                     @click="x(item, 'GRAMMAR')"
                   >
                     <i class="fa-solid fa-gears"></i>
@@ -179,7 +179,7 @@
                         placement="right"
                       >
                         <div
-                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
                           @click="x(item, 'WRITING')"
                         >
                           <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -192,7 +192,7 @@
                         placement="right"
                       >
                         <div
-                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
                           @click="x(item, 'SPEAKING')"
                         >
                           <i class="fa-solid fa-head-side-cough"></i>
@@ -205,7 +205,7 @@
                         placement="right"
                       >
                         <div
-                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
                           @click="x(item, 'PRONUNCIATION')"
                         >
                         <i class="fa-solid fa-microphone"></i>
@@ -221,7 +221,7 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                         @click="x(item, 'LISTEN')"
                       >
                         <i class="fa-solid fa-ear-listen"></i>
@@ -234,7 +234,7 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                         @click="x(item, 'READ')"
                       >
                         <i class="fa-solid fa-book-open-reader"></i>
@@ -247,7 +247,7 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                         @click="x(item, '')"
                       >
                         <i class="fa-solid fa-spell-check"></i>
@@ -260,7 +260,7 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                         @click="x(item, 'GRAMMAR')"
                       >
                         <i class="fa-solid fa-gears"></i>
