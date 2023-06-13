@@ -8,7 +8,7 @@
             <i class="fa-solid fa-swatchbook icon-gradient bg-mean-fruit"></i>
           </div>
           <div class="flex justify-between">
-            <p>Quản lý đề kỹ năng viết</p>
+            <p>WRITING</p>
           </div>
         </div>
       </div>
@@ -18,7 +18,7 @@
             class="btn-icon btn dev-button btn-primary"
             style="padding: 10px 15px"
           >
-            Lưu
+            Save
           </p>
         </span>
       </div>

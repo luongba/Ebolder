@@ -5,7 +5,7 @@
       <div class="w-full h-full relative z-10 content" v-show="show">
         <div class="absolute w-[70%] h-[60vh] bg-box-lesson rounded-md p-4">
           <span
-            class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer text-[#fff]"
+            class="absolute right-[5px] top-[5px] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] cursor-pointer text-[#fff]"
             @click="dongMoPopup()"
           >
             <i class="lnr-cross"></i>
@@ -46,7 +46,116 @@
         </div>
       </div>
     </transition>
-    <div id="background-wrap" class="content">
+    <div class="w-[90%] h-[90%] mx-auto">
+      <el-carousel height="700px" indicator-position="none" :autoplay="false">
+        <el-carousel-item v-for="(item, index) in listLevel" :key="index">
+          <div class="w-full h-full flex items-center justify-center">
+            <div class="flex justify-center flex-col items-center">
+                <h2 class="title">{{ item.name }}</h2>
+              <div class="mt-4">
+                <div class="flex justify-center mt-4">
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="WRITING"
+                    placement="top"
+                  >
+                    <div
+                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                      @click="x(item, 'WRITING')"
+                    >
+                      <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="PRONUNCIATION"
+                    placement="top"
+                  >
+                    <div
+                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                      @click="x(item, 'PRONUNCIATION')"
+                    >
+                    <i class="fa-solid fa-microphone"></i>
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="SPEAKING"
+                    placement="top"
+                  >
+                    <div
+                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                      @click="x(item, 'SPEAKING')"
+                    >
+                      <i class="fa-solid fa-head-side-cough"></i>
+                    </div>
+                  </el-tooltip>
+                  
+                </div>
+              </div>
+              <div class="flex justify-center mt-4">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="LISTEN"
+                  placement="bottom"
+                >
+                  <div
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    @click="x(item, 'LISTEN')"
+                  >
+                    <i class="fa-solid fa-ear-listen"></i>
+                  </div>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="READ"
+                  placement="bottom"
+                >
+                  <div
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    @click="x(item, 'READ')"
+                  >
+                    <i class="fa-solid fa-book-open-reader"></i>
+                  </div>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="VOCABULARY"
+                  placement="bottom"
+                >
+                  <div
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    @click="x(item, 'VOCABULARY')"
+                  >
+                    <i class="fa-solid fa-spell-check"></i>
+                  </div>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="GRAMMAR"
+                  placement="bottom"
+                >
+                  <div
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    @click="x(item, 'GRAMMAR')"
+                  >
+                    <i class="fa-solid fa-gears"></i>
+                  </div>
+                </el-tooltip>
+              </div>
+            </div>
+          </div>
+        </el-carousel-item>
+      </el-carousel>
+    </div>
+    <!-- <div id="background-wrap" class="content">
       <div class="cloud-box px-2" id="cloud-box" v-show="!show">
         <div
           class="box-landing"
@@ -70,7 +179,7 @@
                         placement="right"
                       >
                         <div
-                          class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
                           @click="x(item, 'WRITING')"
                         >
                           <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -83,7 +192,7 @@
                         placement="right"
                       >
                         <div
-                          class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
                           @click="x(item, 'SPEAKING')"
                         >
                           <i class="fa-solid fa-head-side-cough"></i>
@@ -96,7 +205,7 @@
                         placement="right"
                       >
                         <div
-                          class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
                           @click="x(item, 'PRONUNCIATION')"
                         >
                         <i class="fa-solid fa-microphone"></i>
@@ -112,7 +221,7 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                         @click="x(item, 'LISTEN')"
                       >
                         <i class="fa-solid fa-ear-listen"></i>
@@ -125,7 +234,7 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                         @click="x(item, 'READ')"
                       >
                         <i class="fa-solid fa-book-open-reader"></i>
@@ -138,7 +247,7 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                         @click="x(item, '')"
                       >
                         <i class="fa-solid fa-spell-check"></i>
@@ -151,7 +260,7 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
                         @click="x(item, 'GRAMMAR')"
                       >
                         <i class="fa-solid fa-gears"></i>
@@ -182,7 +291,7 @@
           @click="cloudDown"
         ></el-button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
   <script>
@@ -297,7 +406,7 @@ export default {
             grammars: item.grammar,
             lessons: item.learn || [],
             speaks: item.speak || [],
-            pronunciations: item.pronunciation || []
+            pronunciations: item.pronunciation || [],
           }));
         }
       } catch (e) {
@@ -360,7 +469,7 @@ export default {
         case "SPEAKING":
           window.location.href = `${$Api.baseUrl}/english-level-test/Speaking?testId=${id}&levelId=${this.idLevel}`;
           break;
-          case "PRONUNCIATION":
+        case "PRONUNCIATION":
           window.location.href = `${$Api.baseUrl}/english-level-test/Pronunciation?testId=${id}&levelId=${this.idLevel}`;
           break;
         default:
@@ -398,7 +507,7 @@ export default {
         case "PRONUNCIATION":
           temp = "Pronunciation";
           break;
-          case "WRITING":
+        case "WRITING":
           temp = "Writing";
           break;
         default:
@@ -411,8 +520,7 @@ export default {
       if (dataArrTemp.length > 0) {
         rs = dataArrTemp.findIndex((itemHistory, id) => {
           return (
-            itemHistory.test_type == temp &&
-            itemHistory.exam_id == item.id
+            itemHistory.test_type == temp && itemHistory.exam_id == item.id
           );
         });
       } else {
@@ -521,7 +629,6 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  font-size: 16px;
   font-weight: 600;
 }
 
@@ -532,6 +639,37 @@ export default {
 
 .exam.active > .exam-pass {
   display: flex;
+}
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 18px;
+  opacity: 0.75;
+  line-height: 300px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: linear-gradient(
+    96.6deg,
+    rgba(0, 115, 121, 0.112) 11.23%,
+    rgba(0, 95, 100, 0) 115.9%
+  );
+  border-radius: 20px;
+  border: 1px solid rgba(95, 95, 95, 0.1);
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: linear-gradient(
+    96.6deg,
+    rgba(0, 115, 121, 0.542) 11.23%,
+    rgba(0, 95, 100, 0) 115.9%
+  );
+  border-radius: 20px;
+  border: 1px solid rgba(95, 95, 95, 0.1);
 }
 </style>
   

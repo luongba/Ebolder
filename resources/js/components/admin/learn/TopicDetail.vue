@@ -7,7 +7,7 @@
             <i class="fa-solid fa-swatchbook icon-gradient bg-mean-fruit"></i>
           </div>
           <div class="flex justify-between">
-            <p>Quản lý đề kỹ năng viết</p>
+            <p>WRITING</p>
           </div>
         </div>
       </div>
@@ -467,7 +467,7 @@
             </el-button>
           </el-popover>
           <el-button @click="saveChangeTopic" type="primary" plain
-            >Lưu
+            >Save
           </el-button>
         </div>
       </div>

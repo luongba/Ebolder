@@ -7,7 +7,7 @@
         v-show="isShowLabel"
       >
         <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>READING </p>
+          <p>READING</p>
         </h2>
         <h2 class="text-[24px] font-semibold leading-[120%] text-center mt-4">
           <VueCountdown
@@ -302,10 +302,16 @@
                   .radioValue
               "
               :class="[
-                answerData[index].dataChoose[getIndexSharp(question, indexAns)]
-                  .radioValue?.trim()?.toLowerCase() ==
-                answerData[index].dataRight[getIndexSharp(question, indexAns)]
-                  .right_answer.trim()?.toLowerCase()
+                answerData[index].dataChoose[
+                  getIndexSharp(question, indexAns)
+                ].radioValue
+                  ?.trim()
+                  ?.toLowerCase() ==
+                answerData[index].dataRight[
+                  getIndexSharp(question, indexAns)
+                ].right_answer
+                  .trim()
+                  ?.toLowerCase()
                   ? 'right-ans'
                   : 'wrong-ans',
               ]"
@@ -455,7 +461,7 @@
         </button>
         <button
           v-show="
-            indexPage == topic.questions.length - 1 && isShowLabel == true
+            topic.questions.length > 0 && indexPage == topic.questions.length - 1 && isShowLabel == true
           "
           @click="submit"
           class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
@@ -486,7 +492,7 @@ export default {
       arrWrongAns: [],
       total: 0,
       isShowLabel: true,
-      timeWork: 20 * 60 * 1000,
+      timeWork: 45 * 60 * 1000,
       timerun: 0,
       indexPage: 0,
     };
@@ -514,7 +520,8 @@ export default {
             item.dataChoose.length === item.dataRight.length &&
             item.dataChoose.every(
               (value, index) =>
-                value.radioValue?.trim()?.toLowerCase() === item.dataRight[index].right_answer?.trim()?.toLowerCase()
+                value.radioValue?.trim()?.toLowerCase() ===
+                item.dataRight[index].right_answer?.trim()?.toLowerCase()
             );
           if (sameArray) {
             this.arrRightAns.push(item);
@@ -537,24 +544,10 @@ export default {
       };
       if (this.request.exam) {
         dataHistory.exam_final_id = this.request.examId;
-      }
-      try {
-        await baseRequest.post("/admin/save-history", dataHistory);
-      } catch (e) {
-        console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
-      }
-      if (
-        this.query.testId &&
-        this.query.levelId &&
-        (this.arrRightAns.length / this.answerData.length) * 100 > 10
-      ) {
         try {
-          let rs = await baseRequest.post("/admin/save-exam-result", {
-            levelId: this.query.levelId,
-            type: 2,
-          });
+          await baseRequest.post("/admin/save-history", dataHistory);
         } catch (e) {
-          console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
+          console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
         }
       }
       if (this.request.exam) {
@@ -568,7 +561,7 @@ export default {
             }
           );
           if (result.data.status === 200) {
-            window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${this.request.v}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&t=${this.request.t}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
+            window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${this.request.v}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&p=${this.request.p}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
           }
         } catch (error) {}
       }
@@ -666,7 +659,7 @@ export default {
   created() {
     this.topic = {
       content: this.data.content,
-      
+
       questions: this.data.question_reading.map((reading) => ({
         id: reading.id,
         question: reading.question,
@@ -700,7 +693,9 @@ export default {
         });
       }
     });
-    this.checkHistoryExam();
+    if (this.request.exam) {
+      this.checkHistoryExam();
+    }
   },
 };
 </script>

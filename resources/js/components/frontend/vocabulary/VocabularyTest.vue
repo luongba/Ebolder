@@ -301,7 +301,7 @@
         </div>
       </div>
       <button
-        v-show="isShowLabel"
+        v-show="isShowLabel && questions.length > 0"
         @click="submit"
         class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80 mt-4 ml-auto"
       >
@@ -329,7 +329,7 @@ export default {
       arrWrongAns: [],
       total: 0,
       isShowLabel: true,
-      timeWork: 20 * 60 * 1000,
+      timeWork: 45 * 60 * 1000,
       timerun: 0,
     };
   },
@@ -379,24 +379,10 @@ export default {
       };
       if (this.request.exam) {
         dataHistory.exam_final_id = this.request.examId;
-      }
-      try {
-        let result = await baseRequest.post("/admin/save-history", dataHistory);
-      } catch (e) {
-        console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
-      }
-      if (
-        this.query.testId &&
-        this.query.levelId &&
-        (this.arrRightAns.length / this.answerData.length) * 100 > 10
-      ) {
         try {
-          let rs = await baseRequest.post("/admin/save-exam-result", {
-            levelId: this.query.levelId,
-            type: 3,
-          });
+          let result = await baseRequest.post("/admin/save-history", dataHistory);
         } catch (e) {
-          console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
+          console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
         }
       }
       if (this.request.exam) {
@@ -410,7 +396,7 @@ export default {
             }
           );
           if (result.data.status === 200) {
-            window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${this.request.g}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&t=${this.request.t}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
+            window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${this.request.g}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&p=${this.request.p}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
           }
         } catch (error) {}
       }
@@ -523,7 +509,9 @@ export default {
         });
       }
     });
-    this.checkHistoryExam();
+    if (this.request.exam) {
+      this.checkHistoryExam();
+    }
   },
 };
 </script>

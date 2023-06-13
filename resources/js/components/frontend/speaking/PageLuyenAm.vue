@@ -186,7 +186,7 @@ export default {
       topic: {},
       total: 0,
       isShowLabel: true,
-      timeWork: 20 * 60 * 1000,
+      timeWork: 45 * 60 * 1000,
       timerun: 0,
       indexPage: 0,
       isRecord: false,

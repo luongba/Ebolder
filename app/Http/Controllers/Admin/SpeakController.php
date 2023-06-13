@@ -492,7 +492,7 @@ class SpeakController extends Controller
         return [
             "status" => 200,
             "errorCode" => 0,
-            "message" => "Lưu file ghi âm thành công !"
+            "message" => "Save file ghi âm thành công !"
         ];
 
     }
