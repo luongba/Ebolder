@@ -434,8 +434,8 @@
             this.topicData = {
               name: data.data.name || null,
               valueListening: data.data.listening_id,
-              valueVocabulary: data.data.reading_id,
-              valueReading: data.data.vocabulary_id,
+              valueVocabulary: data.data.vocabulary_id,
+              valueReading: data.data.reading_id,
               valueGrammar: data.data.grammar_id,
               valueSpeaking: data.data.speaking_id,
               valueLesson: data.data.writing_id,

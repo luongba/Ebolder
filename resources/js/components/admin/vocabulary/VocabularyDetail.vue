@@ -305,8 +305,8 @@ export default {
       try {
         let rs = await baseRequest.post(`/admin/update-status-exam`, {
           is_exam: value,
-          class: "vocabulary",
-          model: "vocabulary",
+          class: "Vocabulary",
+          model: "Vocabulary",
           id: this.detailTopic.id,
         });
         if (rs.data.status == 200) {
