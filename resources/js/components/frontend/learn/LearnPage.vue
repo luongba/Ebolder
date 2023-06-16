@@ -47,11 +47,11 @@
       </div>
     </transition>
     <div class="w-[90%] h-[90%] mx-auto">
-      <el-carousel height="700px" indicator-position="none" :autoplay="false">
+      <el-carousel height="700px" indicator-position="none" :autoplay="false" v-show="!show">
         <el-carousel-item v-for="(item, index) in listLevel" :key="index">
           <div class="w-full h-full flex items-center justify-center">
             <div class="flex justify-center flex-col items-center">
-                <h2 class="title">{{ item.name }}</h2>
+              <h2 class="title">{{ item.name }}</h2>
               <div class="mt-4">
                 <div class="flex justify-center mt-4">
                   <el-tooltip
@@ -77,7 +77,7 @@
                       class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
                       @click="x(item, 'PRONUNCIATION')"
                     >
-                    <i class="fa-solid fa-microphone"></i>
+                      <i class="fa-solid fa-microphone"></i>
                     </div>
                   </el-tooltip>
                   <el-tooltip
@@ -93,7 +93,6 @@
                       <i class="fa-solid fa-head-side-cough"></i>
                     </div>
                   </el-tooltip>
-                  
                 </div>
               </div>
               <div class="flex justify-center mt-4">
@@ -363,7 +362,7 @@ export default {
           ).listens;
           break;
         }
-        case "": {
+        case "VOCABULARY": {
           this.listLesson = this.listLevel.find(
             (item) => item.id === itemLevel.id
           ).vocabularies;
@@ -394,6 +393,12 @@ export default {
       this.show = true;
     },
     async getAllLevel() {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
       try {
         let rs = await baseRequest.get(`/admin/get-all-level`);
         if (rs.data.status == 200) {
@@ -411,6 +416,8 @@ export default {
         }
       } catch (e) {
         console.log(e);
+      } finally {
+        loading.close();
       }
     },
     async checkPassedLevel() {
@@ -457,7 +464,7 @@ export default {
         case "LISTEN":
           window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${id}&levelId=${this.idLevel}`;
           break;
-        case "":
+        case "VOCABULARY":
           window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${id}&levelId=${this.idLevel}`;
           break;
         case "GRAMMAR":
@@ -498,7 +505,7 @@ export default {
         case "LISTEN":
           temp = "Listening";
           break;
-        case "":
+        case "VOCABULARY":
           temp = "Vocabulary";
           break;
         case "GRAMMAR":
