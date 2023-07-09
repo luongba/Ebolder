@@ -9,26 +9,26 @@ class Level extends Model
     protected $guarded = [];
 
     public function Learn(){
-        return $this->belongsToMany('App\models\Learn\Learn','learn_levels')->orderBy('name');
+        return $this->belongsToMany('App\models\Learn\Learn','learn_levels');
     }
     public function Reading(){
-        return $this->belongsToMany('App\models\Read\Reading','level_readings')->orderBy('name');
+        return $this->belongsToMany('App\models\Read\Reading','level_readings');
     }
     public function Pronunciation(){
-        return $this->belongsToMany('App\models\Pronunciation\Pronunciation','level_pronunciations')->orderBy('name');
+        return $this->belongsToMany('App\models\Pronunciation\Pronunciation','level_pronunciations');
     }
     public function Vocabulary(){
-        return $this->belongsToMany('App\models\Vocabulary\Vocabulary','level_vocabularies')->orderBy('name');
+        return $this->belongsToMany('App\models\Vocabulary\Vocabulary','level_vocabularies');
     }
     public function Grammar(){
-        return $this->belongsToMany('App\models\Grammar\Grammar','level_grammars')->orderBy('name');
+        return $this->belongsToMany('App\models\Grammar\Grammar','level_grammars');
     }
     public function Listen(){
-        return $this->belongsToMany('App\models\Listen\Listening','level_listens')->orderBy('name');
+        return $this->belongsToMany('App\models\Listen\Listening','level_listens');
     }
 
     public function Speak(){
-        return $this->belongsToMany('App\models\Speak\Speak','level_speaks')->orderBy('name');
+        return $this->belongsToMany('App\models\Speak\Speak','level_speaks');
     }
 
     public function ExamResult(){

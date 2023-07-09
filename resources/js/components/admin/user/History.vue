@@ -14,7 +14,7 @@
             <el-row :gutter="20">
               <el-col :xs="24" :span="6">
                 <div class="my-2">
-                  <el-statistic title="Tên đề">
+                  <el-statistic title="Test name">
                     <template slot="formatter">
                       {{ item.exam.name }}
                     </template>
@@ -23,55 +23,7 @@
               </el-col>
               <el-col :xs="24" :span="6">
                 <div class="my-2">
-                  <el-statistic title="Điểm đọc">
-                    <template slot="formatter">
-                      <span class="text-green-500">{{
-                        item.result_reading
-                      }}</span>
-                    </template>
-                    <template slot="suffix">
-                      <span class="like">
-                        <i class="el-icon-trophy" style="color: green"></i>
-                      </span>
-                    </template>
-                  </el-statistic>
-                </div>
-              </el-col>
-              <el-col :xs="24" :span="6">
-                <div class="my-2">
-                  <el-statistic title="Điểm từ vựng">
-                    <template slot="formatter">
-                      <span class="text-green-500">{{
-                        item.result_vocabulary
-                      }}</span>
-                    </template>
-                    <template slot="suffix">
-                      <span class="like">
-                        <i class="el-icon-trophy" style="color: green"></i>
-                      </span>
-                    </template>
-                  </el-statistic>
-                </div>
-              </el-col>
-              <el-col :xs="24" :span="6">
-                <div class="my-2">
-                  <el-statistic title="Điểm ngữ pháp">
-                    <template slot="formatter">
-                      <span class="text-green-500">{{
-                        item.result_grammar
-                      }}</span>
-                    </template>
-                    <template slot="suffix">
-                      <span class="like">
-                        <i class="el-icon-trophy" style="color: green"></i>
-                      </span>
-                    </template>
-                  </el-statistic>
-                </div>
-              </el-col>
-              <el-col :xs="24" :span="6">
-                <div class="my-2">
-                  <el-statistic title="Điểm nghe">
+                  <el-statistic title="Listening score">
                     <template slot="formatter">
                       <span class="text-green-500">{{
                         item.result_listening
@@ -87,7 +39,7 @@
               </el-col>
               <el-col :xs="24" :span="6">
                 <div class="my-2">
-                  <el-statistic title="Điểm luyện âm">
+                  <el-statistic title="Speaking score">
                     <template slot="formatter">
                       <span class="text-green-500">{{
                         item.result_speaking
@@ -103,7 +55,23 @@
               </el-col>
               <el-col :xs="24" :span="6">
                 <div class="my-2">
-                  <el-statistic title="Điểm viết">
+                  <el-statistic title="Reading score">
+                    <template slot="formatter">
+                      <span class="text-green-500">{{
+                        item.result_reading
+                      }}</span>
+                    </template>
+                    <template slot="suffix">
+                      <span class="like">
+                        <i class="el-icon-trophy" style="color: green"></i>
+                      </span>
+                    </template>
+                  </el-statistic>
+                </div>
+              </el-col>
+              <el-col :xs="24" :span="6">
+                <div class="my-2">
+                  <el-statistic title="Writing score">
                     <template slot="formatter">
                       <span class="text-green-500">{{
                         item.result_writing
@@ -120,7 +88,7 @@
 
               <el-col :xs="24" :span="6">
                 <div class="my-2">
-                  <el-statistic title="Thời gian hoàn thành">
+                  <el-statistic title="Finished time">
                     <template slot="formatter">
                       {{ completion_time(item.time) }}
                     </template>

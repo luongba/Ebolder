@@ -330,9 +330,9 @@
               "
               :class="[
                 answerData[index].dataChoose[getIndexSharp(question, indexAns)]
-                  .radioValue ==
+                  .radioValue?.trim()?.toLowerCase() ==
                 answerData[index].dataRight[getIndexSharp(question, indexAns)]
-                  .right_answer
+                  .right_answer?.trim()?.toLowerCase()
                   ? 'right-ans'
                   : 'wrong-ans',
               ]"
@@ -401,7 +401,7 @@ export default {
               item.dataChoose.length === item.dataRight.length &&
               item.dataChoose.every(
                 (value, index) =>
-                  value.radioValue === item.dataRight[index].right_answer
+                  value.radioValue?.trim()?.toLowerCase() === item.dataRight[index].right_answer?.trim()?.toLowerCase()
               );
             if (sameArray) {
               this.arrRightAns.push(item);
@@ -443,7 +443,7 @@ export default {
               }
             );
             if (result.data.status === 200) {
-              window.location.href = `${$Api.baseUrl}/english-level-test/Writing?testId=${this.request.w}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&p=${this.request.p}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
+              window.location.href = `${$Api.baseUrl}/english-level-test/Reading?testId=${this.request.r}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
             }
           } catch (error) {}
         }

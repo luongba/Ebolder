@@ -53,7 +53,25 @@ class LevelController extends Controller
             DB::beginTransaction();
             $userID = Auth::user()->id;
             $level = Level::with('Reading')
-             ->with('Vocabulary')->with('Grammar')->with('Listen')->with('Learn')->with('Speak')->with('Pronunciation')->get();
+             ->with(array('Vocabulary' => function($query) {
+                $query->orderByRaw("CAST(REGEXP_REPLACE(name, '[^0-9]', '') AS UNSIGNED), name");
+            }))
+            ->with(array('Grammar' => function($query) {
+                $query->orderByRaw("CAST(REGEXP_REPLACE(name, '[^0-9]', '') AS UNSIGNED), name");
+            }))
+            ->with(array('Listen' => function($query) {
+                $query->orderByRaw("CAST(REGEXP_REPLACE(name, '[^0-9]', '') AS UNSIGNED), name");
+            }))
+            ->with(array('Learn' => function($query) {
+                $query->orderByRaw("CAST(REGEXP_REPLACE(name, '[^0-9]', '') AS UNSIGNED), name");
+            }))
+            ->with(array('Speak' => function($query) {
+                $query->orderByRaw("CAST(REGEXP_REPLACE(name, '[^0-9]', '') AS UNSIGNED), name");
+            }))
+            ->with(array('Pronunciation' => function($query) {
+                $query->orderByRaw("CAST(REGEXP_REPLACE(name, '[^0-9]', '') AS UNSIGNED), name");
+            }))
+            ->get();
             DB::commit();
             return response()->json([
                 "status" => 200,

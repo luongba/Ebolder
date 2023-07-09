@@ -26,51 +26,11 @@
                   </el-col>
                   <el-col :xs="24" :span="6">
                     <div class="my-2">
-                      <el-statistic title="Reading score">
-                        <template slot="formatter">
-                          <span class="text-green-500">{{ item.result_reading }}</span>
-                        </template>
-                        <template slot="suffix">
-                          <span class="like">
-                            <i class="el-icon-trophy" style="color: green"></i>
-                          </span>
-                        </template>
-                      </el-statistic>
-                    </div>
-                  </el-col>
-                  <el-col :xs="24" :span="6">
-                    <div class="my-2">
-                      <el-statistic title="Vocubulary score">
-                        <template slot="formatter">
-                          <span class="text-green-500">{{ item.result_vocabulary }}</span>
-                        </template>
-                        <template slot="suffix">
-                          <span class="like">
-                            <i class="el-icon-trophy" style="color: green"></i>
-                          </span>
-                        </template>
-                      </el-statistic>
-                    </div>
-                  </el-col>
-                  <el-col :xs="24" :span="6">
-                    <div class="my-2">
-                      <el-statistic title="Grammar score">
-                        <template slot="formatter">
-                          <span class="text-green-500">{{ item.result_grammar }}</span>
-                        </template>
-                        <template slot="suffix">
-                          <span class="like">
-                            <i class="el-icon-trophy" style="color: green"></i>
-                          </span>
-                        </template>
-                      </el-statistic>
-                    </div>
-                  </el-col>
-                  <el-col :xs="24" :span="6">
-                    <div class="my-2">
                       <el-statistic title="Listening score">
                         <template slot="formatter">
-                          <span class="text-green-500">{{ item.result_listening }}</span>
+                          <span class="text-green-500">{{
+                            item.result_listening
+                          }}</span>
                         </template>
                         <template slot="suffix">
                           <span class="like">
@@ -84,7 +44,25 @@
                     <div class="my-2">
                       <el-statistic title="Speaking score">
                         <template slot="formatter">
-                          <span class="text-green-500">{{ item.result_speaking }}</span>
+                          <span class="text-green-500">{{
+                            item.result_speaking
+                          }}</span>
+                        </template>
+                        <template slot="suffix">
+                          <span class="like">
+                            <i class="el-icon-trophy" style="color: green"></i>
+                          </span>
+                        </template>
+                      </el-statistic>
+                    </div>
+                  </el-col>
+                  <el-col :xs="24" :span="6">
+                    <div class="my-2">
+                      <el-statistic title="Reading score">
+                        <template slot="formatter">
+                          <span class="text-green-500">{{
+                            item.result_reading
+                          }}</span>
                         </template>
                         <template slot="suffix">
                           <span class="like">
@@ -98,7 +76,9 @@
                     <div class="my-2">
                       <el-statistic title="Writing score">
                         <template slot="formatter">
-                          <span class="text-green-500">{{ item.result_writing }}</span>
+                          <span class="text-green-500">{{
+                            item.result_writing
+                          }}</span>
                         </template>
                         <template slot="suffix">
                           <span class="like">
@@ -108,21 +88,6 @@
                       </el-statistic>
                     </div>
                   </el-col>
-                  <el-col :xs="24" :span="6">
-                    <div class="my-2">
-                      <el-statistic title="Pronunciation score">
-                        <template slot="formatter">
-                          <span class="text-green-500">{{ item.result_pronunciation }}</span>
-                        </template>
-                        <template slot="suffix">
-                          <span class="like">
-                            <i class="el-icon-trophy" style="color: green"></i>
-                          </span>
-                        </template>
-                      </el-statistic>
-                    </div>
-                  </el-col>
-
                   <el-col :xs="24" :span="6">
                     <div class="my-2">
                       <el-statistic title="Finished time">
@@ -166,9 +131,9 @@ export default {
       return $Helper.formatDateTime(time);
     },
   },
-  created(){
-    console.log(this.data)
-  }
+  created() {
+    console.log(this.data);
+  },
 };
 </script>
 <style scoped>

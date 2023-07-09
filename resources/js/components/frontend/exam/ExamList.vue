@@ -103,9 +103,9 @@ export default {
     },
     async startExam() {
       if (this.currentClick !== null && !this.isExamDone) {
-        window.location.href = `${$Api.baseUrl}/english-level-test/Reading?testId=${this.currentClick.reading_id}&v=${this.currentClick.vocabulary_id}&g=${this.currentClick.grammar_id}&l=${this.currentClick.listening_id}&s=${this.currentClick.speaking_id}&r=${this.currentClick.reading_id}&w=${this.currentClick.writing_id}&p=${this.currentClick.pronunciation_id}&historyId=${this.history_id}&examId=${this.currentClick.id}&exam=true1`;
+        window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${this.currentClick.listening_id}&l=${this.currentClick.listening_id}&s=${this.currentClick.speaking_id}&r=${this.currentClick.reading_id}&w=${this.currentClick.writing_id}&historyId=${this.history_id}&examId=${this.currentClick.id}&exam=true`;
       }else {
-        window.location.href = `${$Api.baseUrl}/exam/result/${this.history_id}&v=${this.currentClick.vocabulary_id}&g=${this.currentClick.grammar_id}&l=${this.currentClick.listening_id}&s=${this.currentClick.speaking_id}&w=${this.currentClick.writing_id}&p=${this.currentClick.pronunciation_id}&r=${this.currentClick.reading_id}&historyId=${this.history_id}&exam=true1`;
+        window.location.href = `${$Api.baseUrl}/exam/result/${this.history_id}&l=${this.currentClick.listening_id}&s=${this.currentClick.speaking_id}&w=${this.currentClick.writing_id}&r=${this.currentClick.reading_id}&historyId=${this.history_id}&exam=true`;
       }
     },
   },

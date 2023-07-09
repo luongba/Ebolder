@@ -13,25 +13,13 @@
         <div class="overflow-x-scroll w-full">
           <table style="width: 100%">
             <tr>
-              <th>Reading</th>
-              <th>Vocabulary</th>
-              <th>Grammar</th>
               <th>Listening</th>
               <th>Speaking</th>
+              <th>Reading</th>
               <th>Writing</th>
-              <th>Pronunciation</th>
             </tr>
 
             <tr>
-              <td>
-                {{ data.result_reading || "Không thực hiện" }}
-              </td>
-              <td>
-                {{ data.result_vocabulary || "Không thực hiện" }}
-              </td>
-              <td>
-                {{ data.result_grammar || "Không thực hiện" }}
-              </td>
               <td>
                 {{ data.result_listening || "Không thực hiện" }}
               </td>
@@ -39,14 +27,14 @@
                 {{ data.result_speaking || "Không thực hiện" }}
               </td>
               <td>
-                {{ data.result_writing || "Không thực hiện" }}
+                {{ data.result_reading || "Không thực hiện" }}
               </td>
               <td>
-                {{ data.result_pronunciation || "Không thực hiện" }}
+                {{ data.result_writing || "Không thực hiện" }}
               </td>
             </tr>
             <tr>
-              <td colspan="7">
+              <td colspan="4">
                 Finished time:
                 {{ completion_time(data.time) }} phút
               </td>

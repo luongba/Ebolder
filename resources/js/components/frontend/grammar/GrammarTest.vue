@@ -286,9 +286,9 @@
               "
               :class="[
                 answerData[index].dataChoose[getIndexSharp(question, indexAns)]
-                  .radioValue ==
+                  .radioValue?.trim()?.toLowerCase() ==
                 answerData[index].dataRight[getIndexSharp(question, indexAns)]
-                  .right_answer
+                  .right_answer?.trim()?.toLowerCase()
                   ? 'right-ans'
                   : 'wrong-ans',
               ]"
@@ -355,7 +355,7 @@ export default {
             item.dataChoose.length === item.dataRight.length &&
             item.dataChoose.every(
               (value, index) =>
-                value.radioValue === item.dataRight[index].right_answer
+                value.radioValue?.trim()?.toLowerCase() === item.dataRight[index].right_answer?.trim()?.toLowerCase()
             );
           if (sameArray) {
             this.arrRightAns.push(item);
