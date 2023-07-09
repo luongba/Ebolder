@@ -1,6 +1,6 @@
 const Api = {
-    baseUrl: "dev.hoctienganh.pro.vn",
-    baseUrlApi: "dev.hoctienganh.pro.vn/api"
+    baseUrl: "dev.hoctienganh.pro.vn/",
+    baseUrlApi: "dev.hoctienganh.pro.vn/api/"
 }
 const timeWork = 30 * 60 * 100;
 
