@@ -294,7 +294,7 @@
                                 py-1
                             "
                             v-model="
-                                answerData[index].dataChoose[
+                                answerData.find(item => item.id === question.id).dataChoose[
                                     getIndexSharp(question, indexAns)
                                 ].radioValue
                             "
@@ -507,15 +507,15 @@
                                 py-1
                             "
                             v-model="
-                                answerData[index].dataChoose[
+                                answerData.find(item => item.id === question.id).dataChoose[
                                     getIndexSharp(question, indexAns)
                                 ].radioValue
                             "
                             :class="[
-                                answerData[index].dataChoose[
+                                answerData.find(item => item.id === question.id).dataChoose[
                                     getIndexSharp(question, indexAns)
                                 ].radioValue?.trim()?.toLowerCase() ==
-                                answerData[index].dataRight[
+                                answerData.find(item => item.id === question.id).dataRight[
                                     getIndexSharp(question, indexAns)
                                 ].right_answer?.trim()?.toLowerCase()
                                     ? 'right-ans'
@@ -819,7 +819,7 @@ export default {
                                 display: inline-block;
                                 width: 100px"
                                 v-model='${
-                                  this.answerData[index].dataChoose[sum - 1]
+                                  this.answerData.find(item => item.id === question.id).dataChoose[sum - 1]
                                     .radioValue
                                 }'>`;
         }
