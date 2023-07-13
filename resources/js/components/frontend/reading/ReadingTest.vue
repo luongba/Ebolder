@@ -453,7 +453,7 @@
           Prev
         </button>
         <button
-          v-show="indexPage != topic.questions.length - 1"
+          v-show="indexPage != topic.questions.length - 1 && topic.questions.length > 0"
           @click="movePage(1)"
           class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
         >

@@ -555,7 +555,7 @@
                     Prev
                 </button>
                 <button
-                    v-show="indexPage != topic.length - 1"
+                    v-show="indexPage != topic.length - 1 && topic.length > 0"
                     @click="movePage(1)"
                     class="
                         cursor-pointer
