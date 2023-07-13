@@ -22,14 +22,21 @@
           />
         </template>
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="info"
-            plain
-            @click="handleHistory(scope.$index, scope.row)"
-            v-if="scope.row.is_admin == 0"
-            >History
-          </el-button>
+          <el-dropdown v-if="scope.row.is_admin == 0" size="small" split-button type="info" class="mr-2">
+            History
+            <el-dropdown-menu  slot="dropdown">
+              <el-dropdown-item
+                ><span @click="handleHistoryLearn(scope.$index, scope.row)"
+                  >Learn History</span
+                ></el-dropdown-item
+              >
+              <el-dropdown-item
+                ><span @click="handleHistory(scope.$index, scope.row)"
+                  >Test History</span
+                ></el-dropdown-item
+              >
+            </el-dropdown-menu>
+          </el-dropdown>
           <el-button
             size="mini"
             type="warning"
@@ -99,6 +106,10 @@ export default {
       window.location.href =
         `${$Api.baseUrl}/admin/user/exam-history/` + row.id;
     },
+    handleHistoryLearn(index, row) {
+      window.location.href =
+        `${$Api.baseUrl}/admin/user/learn-history/` + row.id;
+    },
     handleDelete(index, row) {
       this.$confirm(
         "This will permanently delete the file. Continue?",
@@ -135,7 +146,9 @@ export default {
     async getAllUser() {
       try {
         this.isLoading = true;
-        let result = await baseRequest.get(`/admin/list-user?page=${this.current}`);
+        let result = await baseRequest.get(
+          `/admin/list-user?page=${this.current}`
+        );
         let { data } = result;
         if (data.status == 200) {
           setTimeout(() => {

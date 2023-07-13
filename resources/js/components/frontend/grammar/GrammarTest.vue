@@ -378,6 +378,12 @@ export default {
       };
       if (this.request.exam) {
         dataHistory.exam_final_id = this.request.examId;
+        dataHistory.no_exam = false;
+        try {
+          let result = await baseRequest.post("/admin/save-history", dataHistory);
+        } catch (e) {}
+      }else {
+        dataHistory.no_exam = true;
         try {
           let result = await baseRequest.post("/admin/save-history", dataHistory);
         } catch (e) {}

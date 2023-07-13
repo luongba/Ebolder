@@ -544,6 +544,14 @@ export default {
       };
       if (this.request.exam) {
         dataHistory.exam_final_id = this.request.examId;
+        dataHistory.no_exam = false;
+        try {
+          await baseRequest.post("/admin/save-history", dataHistory);
+        } catch (e) {
+          console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
+        }
+      }else {
+        dataHistory.no_exam = true;
         try {
           await baseRequest.post("/admin/save-history", dataHistory);
         } catch (e) {

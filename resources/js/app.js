@@ -154,6 +154,11 @@ Vue.component(
     require("./components/admin/user/History.vue").default
 );
 
+Vue.component(
+    "history-learn-admin",
+    require("./components/admin/user/HistoryLearn.vue").default
+);
+
 //role
 Vue.component(
     "role-list",
@@ -271,6 +276,11 @@ Vue.component(
 Vue.component(
     "history-page",
     require("./components/frontend/history/History.vue").default
+);
+
+Vue.component(
+    "history-learn-page",
+    require("./components/frontend/history/HistoryLearn.vue").default
 );
 
 //choose-action 

@@ -29,7 +29,7 @@
                       <el-statistic title="Listening score">
                         <template slot="formatter">
                           <span class="text-green-500">{{
-                            item.result_listening
+                            item.result_listening || 'Trống'
                           }}</span>
                         </template>
                         <template slot="suffix">
@@ -45,7 +45,7 @@
                       <el-statistic title="Speaking score">
                         <template slot="formatter">
                           <span class="text-green-500">{{
-                            item.result_speaking
+                            item.result_speaking || 'Trống'
                           }}</span>
                         </template>
                         <template slot="suffix">
@@ -61,7 +61,7 @@
                       <el-statistic title="Reading score">
                         <template slot="formatter">
                           <span class="text-green-500">{{
-                            item.result_reading
+                            item.result_reading || 'Trống'
                           }}</span>
                         </template>
                         <template slot="suffix">
@@ -77,7 +77,7 @@
                       <el-statistic title="Writing score">
                         <template slot="formatter">
                           <span class="text-green-500">{{
-                            item.result_writing
+                            item.result_writing  || 'Trống'
                           }}</span>
                         </template>
                         <template slot="suffix">

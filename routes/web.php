@@ -65,6 +65,8 @@ Route::prefix('/')->group(function () {
     // Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page')->middleware('checkLogin');
     Route::get('/history', 'HomeController@historyPage')->name('history-page')->middleware('checkLogin');
 
+    Route::get('/history-learn', 'HomeController@historyLearnPage')->name('history-learn-page')->middleware('checkLogin');
+
     Route::get('/choose-action', 'HomeController@chooseAction')->name('choose-action')->middleware('checkLogin');
 
 
@@ -124,6 +126,7 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/user/create', 'Admin\UserController@create')->name('user-create')->middleware('can:User_Create');
         Route::get('/user/edit/{id}', 'Admin\UserController@edit')->name('user-edit')->middleware('can:User_Edit');
         Route::get('/user/exam-history/{id}', 'Admin\UserController@history')->name('user-history');
+        Route::get('/user/learn-history/{id}', 'Admin\UserController@historyLearn')->name('user-history');
         //role
         Route::get('/roles', 'Admin\RoleController@index')->name('role-list')->middleware('can:Role_List');
         Route::get('/role/create', 'Admin\RoleController@create')->name('role-create')->middleware('can:Role_Create');

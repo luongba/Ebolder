@@ -10,6 +10,7 @@ use App\models\Pronunciation\Pronunciation;
 use App\models\Speak\QuestionLuyenAm;
 use App\models\Read\Reading;
 use App\models\User\HistoryExam;
+use App\models\HistoryLearn;
 use App\models\Speak\Speak;
 use App\models\Vocabulary\Vocabulary;
 use App\models\Exam\ExamHistoryFinal;
@@ -167,17 +168,28 @@ class HomeController extends Controller
     public function saveHistory(Request $request)
     {
         try {
-            HistoryExam::create([
-                'test_type' => $request->test_type,
-                'topic_name' => $request->topic_name,
-                'scores' => $request->scores,
-                'completion_time' => $request->completion_time,
-                'user_id' => $request->user()->id,
-                'content_exam'=> $request->content_exam,
-                'exam_id' => $request->exam_id,
-                'level_id' => $request->level_id,
-                'exam_final_id' => $request->exam_final_id
-            ]);
+            if(isset($request->no_exam) && $request->no_exam == true){
+                HistoryLearn::create([
+                    'test_type' => $request->test_type,
+                    'topic_name' => $request->topic_name,
+                    'scores' => $request->scores,
+                    'completion_time' => $request->completion_time,
+                    'user_id' => $request->user()->id,
+                    'level_id' => $request->level_id,
+                ]);
+            }else {
+                HistoryExam::create([
+                    'test_type' => $request->test_type,
+                    'topic_name' => $request->topic_name,
+                    'scores' => $request->scores,
+                    'completion_time' => $request->completion_time,
+                    'user_id' => $request->user()->id,
+                    'content_exam'=> $request->content_exam,
+                    'exam_id' => $request->exam_id,
+                    'level_id' => $request->level_id,
+                    'exam_final_id' => $request->exam_final_id
+                ]);
+            }
         } catch (\Exception $e) {
             print_r($e);
         }
@@ -296,6 +308,11 @@ class HomeController extends Controller
         $user = Auth::user();
         $history = ExamHistoryFinal::where('user_id', $user->id)->with('Exam')->orderBy('created_at', 'desc')->take(20)->get();
         return view('pages.frontend.history', compact('history'));
+    }
+    public function historyLearnPage(){
+        $user = Auth::user();
+        $history = HistoryLearn::where('user_id', $user->id)->orderBy('created_at', 'desc')->take(20)->get();
+        return view('pages.frontend.historyLearn', compact('history'));
     }
     public function fullhistory(){
         $user = Auth::user();

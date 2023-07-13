@@ -10,6 +10,7 @@ use App\models\User\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\models\Exam\ExamHistoryFinal;
+use App\models\HistoryLearn;
 
 
 class UserController extends Controller
@@ -162,6 +163,18 @@ class UserController extends Controller
         try {
             $history = ExamHistoryFinal::where('user_id', $id)->with('Exam')->orderBy('created_at', 'desc')->take(20)->get();
             return view('pages.admin.user.history', compact('history'));
+        }catch (\Exception $e){
+            return response()->json([
+                "status" => 500,
+                "errorCode" => 500,
+                "message" => "Lỗi máy chủ!"
+            ]);
+        }
+    }
+    public function historyLearn($id){
+        try {
+            $history = HistoryLearn::where('user_id', $id)->orderBy('created_at', 'desc')->take(20)->get();
+            return view('pages.admin.user.historyLearn', compact('history'));
         }catch (\Exception $e){
             return response()->json([
                 "status" => 500,

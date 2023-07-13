@@ -18,6 +18,9 @@
       </div>
       <template #dropdown>
         <el-dropdown-menu>
+            <el-dropdown-item>
+            <span @click="learn()">Lịch sử học</span>
+          </el-dropdown-item>
           <el-dropdown-item>
             <span @click="history()">Lịch sử làm bài thi</span>
           </el-dropdown-item>
@@ -38,6 +41,9 @@ export default {
     },
     history() {
       window.location.href = "/history";
+    },
+    learn(){
+        window.location.href = "/history-learn";
     },
     backToHome() {
       window.location.href = "/";
