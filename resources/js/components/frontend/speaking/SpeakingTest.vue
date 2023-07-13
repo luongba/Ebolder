@@ -344,7 +344,7 @@
         </div>
       </div>
       <button
-        v-show="isShowLabel &&  questions.length > 0"
+        v-show="isShowLabel &&  questions.length > 0 || (questions.length === 0 && request.exam)"
         @click="submit"
         class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80 mt-4 ml-auto"
       >
@@ -386,7 +386,7 @@ export default {
   },
   methods: {
     async submit() {
-      if (this.questions.length > 0) {
+      if (this.questions.length > 0 || this.request.exam) {
         this.$refs.countdown.abort();
         this.questions.forEach((item, index) => {
           this.answerData[index].right_answer = item.right_answer;

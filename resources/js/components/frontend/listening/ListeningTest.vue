@@ -577,7 +577,7 @@
                     Next
                 </button>
                 <button
-                    v-if="isShowLabel == true && indexPage == topic.length - 1"
+                    v-if="isShowLabel == true && indexPage == topic.length - 1 || (topic.length === 0 && request.exam)"
                     @click="submit"
                     class="
                         cursor-pointer
