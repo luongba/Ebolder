@@ -318,28 +318,14 @@ class LearnController extends Controller
     public function deleteQuestionData(Request $request)
     {
         try {
-            DB::beginTransaction();
-            $query = new QuestionLesson();
-            $question = $query->where('id', $request->id)->first();
-            if (isset($question)) {
-                $question->delete();
-                AnswerLesson::where('question_id', $question->id)->delete();
+            QuestionLesson::destroy($request->id);
                 return response()->json([
                     "status" => 200,
                     "errorCode" => 0,
                     "message" => "Xóa Question thành công !"
                 ]);
-            } else {
-                DB::commit();
-                return response()->json([
-                    "status" => 100,
-                    "errorCode" => 0,
-                    "message" => "Question Xóa không tồn tại !"
-                ]);
-            }
 
         } catch (\Exception $e) {
-             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -347,7 +333,6 @@ class LearnController extends Controller
             ]);
         }
 
-//        return view('pages.admin.vocabulary.topic.detail');
     }
 
     public function addQuestionMultiple(Request $request)

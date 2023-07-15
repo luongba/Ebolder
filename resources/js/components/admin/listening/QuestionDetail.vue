@@ -845,27 +845,31 @@ export default {
       save.classList.remove("block");
     },
     validate(formNameItem, formNameData) {
-      let isCheck = true;
-      this.$refs[formNameItem].forEach((item) => {
-        item.validate((valid) => {
-          if (!valid) {
-            isCheck = false;
-          } else {
-            console.log("error submit!!");
-            return false;
-          }
-        });
-      });
-      this.$refs[formNameData].forEach((item) => {
-        item.validate((valid) => {
-          if (!valid) {
-            isCheck = false;
-          } else {
-            console.log("error submit!!");
-            return false;
-          }
-        });
-      });
+      var isCheck = true;
+      if(this.$refs[formNameItem]){
+          this.$refs[formNameItem].forEach((item) => {
+            item.validate((valid) => {
+              if (!valid) {
+                isCheck = false;
+              } else {
+                console.log("error submit!!");
+                return false;
+              }
+            });
+          });
+      }
+      if(this.$refs[formNameData]){
+          this.$refs[formNameData].forEach((item) => {
+            item.validate((valid) => {
+              if (!valid) {
+                isCheck = false;
+              } else {
+                console.log("error submit!!");
+                return false;
+              }
+            });
+          });
+      }
       return isCheck;
     },
     async SaveQuestion(id, index) {
@@ -1128,6 +1132,7 @@ export default {
     },
     pushQuesMore() {
       let isCheck = this.validate("ruleFormData", "ruleFormItem");
+      console.log(isCheck)
       if (isCheck) {
         this.dataQuestion.push({
           id: Date.now(),

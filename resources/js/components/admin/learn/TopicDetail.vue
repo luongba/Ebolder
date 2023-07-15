@@ -976,10 +976,6 @@ export default {
             `/admin/add-or-update-question-lesson`,
             temp
           );
-          console.log(
-            "🚀 ~ file: TopicDetail.vue ~ line 698 ~ SaveQuestion ~ result",
-            result
-          );
           if (result.data.status == 200) {
             this.getDetailTopic();
             this.closeEditQuestion(index);
