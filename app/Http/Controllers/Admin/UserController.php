@@ -7,6 +7,7 @@ use App\Http\Requests\UserRegister;
 use App\Http\Requests\UserUpdate;
 use App\models\User\HistoryExam;
 use App\models\User\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -21,10 +22,16 @@ class UserController extends Controller
     public function edit($id){
         return view('pages.admin.user.edit', compact('id'));
     }
-    public function getAllUser(){
+    public function getAllUser(Request $request){
+        $params = $request->all();
+        $params['page_size'] =  $params['page_size'] ?? 10;
         try {
             $isAdmin = true;
-            $users = User::all();
+            $users = User::query();
+            if(isset($params['search']) && trim($params['search'])) {
+                $user = $users->where('name', 'like', '%' . $params['search'] . '%');
+            }
+            $users = $users->paginate($params['page_size'], ['*'], 'page', $params['page_number'] ?? 1);
             if (Gate::allows('User_Edit')) {
                 $isAdmin = true;
             } else {

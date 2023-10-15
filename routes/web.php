@@ -11,6 +11,8 @@
 |
 */
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 //frontEnd
 Route::prefix('/')->group(function () {
     Route::post('/upload-image', 'HomeController@uploadImage');
