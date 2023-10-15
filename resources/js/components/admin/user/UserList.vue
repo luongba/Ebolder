@@ -2,13 +2,7 @@
     <div class="container">
         <LoadingVue v-if="isLoading" />
         <el-table
-            :data="
-                tableData.filter(
-                    (data) =>
-                        !search ||
-                        data.name.toLowerCase().includes(search.toLowerCase())
-                )
-            "
+            :data="tableData"
             style="width: 100%"
         >
             <el-table-column label="Name" prop="name"> </el-table-column>
@@ -18,6 +12,7 @@
                 <template slot="header" slot-scope="scope">
                     <el-input
                         v-model="search"
+                        @change="handleSearch"
                         size="small"
                         placeholder="Type to search"
                     />
@@ -49,6 +44,7 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination layout="prev, pager, next" v-model="page" :page-size="10" :total="total" @current-change="handleChangePage" />
     </div>
 </template>
 
@@ -73,7 +69,10 @@ export default {
             search: "",
             show: true,
             isLoading: false,
-            isAdmin: true
+            isAdmin: true,
+            total : 0,
+            page: 1,
+            timeOut: null,
         };
     },
     methods: {
@@ -119,28 +118,39 @@ export default {
                     return;
                 });
         },
+        async handleChangePage (page) {
+            this.page = page
+            await this.getAllUser()
+        },
+        handleSearch () {
+            console.log("kahnh");
+            this.page = 1;
+            this.total = 0;
+            clearTimeout(this.timeOut)
+            this.timeOut = setTimeout(async() => {
+                await this.getAllUser()
+            }, 300);
+        },
         async getAllUser() {
             try {
                 this.isLoading = true;
-                let result = await baseRequest.get("/admin/list-user");
-                let { data } = result;
+                const { data } = await baseRequest.get(`/admin/list-user?page_number=${this.page}&search=${this.search || ''}`);
                 if (data.status == 200) {
-                    setTimeout(() => {
                     this.isLoading = false;
-                }, 1000);
-                    this.tableData = data.data?.map((item) => ({
+                    const users = data?.data?.data || [];
+                    this.tableData = users.map((item) => ({
                         id: item.id,
                         name: item.name,
                         email: item.email,
                         phone: item.phone,
                         is_admin: item.is_admin
                     }));
-                    this.isAdmin = data.isAdmin;
+                    this.isAdmin = data?.data?.isAdmin;
+                    this.total = data?.data?.total;
+                    this.page = data?.data?.current_page;
                 }
             } catch (error) {
-                setTimeout(() => {
-                    this.isLoading = false;
-                }, 1000);
+                this.isLoading = false;
                 console.log(error);
             }
         },

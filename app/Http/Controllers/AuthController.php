@@ -46,15 +46,10 @@ class AuthController extends Controller
             $validate = $request->validated();
             if(auth()->attempt($validate)){
                 $user = auth()->user();
-                $authCtrl = new AuthController();
                 $token = $user->createToken("hoctienganh")->accessToken;
-                $cookie = cookie('token', $token);
                 if($user->is_admin == 1 || $user->is_admin == 2){
-                    return redirect(route('admin.home'))->with('token', $token);
-
+                    return redirect(route('admin.exam-list'))->with('token', $token);
                 }
-
-
                 return redirect(route('home-page'))->with('token', $token);
             }else {
                 return redirect()->back()->with('status', 'Email hoặc Password không chính xác');

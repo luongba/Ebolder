@@ -1,16 +1,6 @@
 <div class="scrollbar-sidebar">
     <div class="app-sidebar__inner" style="overflow-y: scroll; height: 100%">
         <ul class="vertical-nav-menu">
-            <!---------------------     Start Dashbroad section     --------------------->
-            <li class="app-sidebar__heading">Dashboard</li>
-            <!--            --><?php //dd(request()->routeIs('home'))
-            ?>
-            <li>
-                <a class="{{ request()->routeIs('admin/home') ? 'mm-active' : '' }}" href="{{ route('admin.home') }}">
-                    <i class="metismenu-icon pe-7s-rocket"></i>
-                    Dashboard
-                </a>
-            </li>
             <li class="app-sidebar__heading">Đề kiểm tra</li>
             <li>
                 <a class="{{ request()->is(['admin/exam-administration']) ? 'mm-active' : '' }}"
