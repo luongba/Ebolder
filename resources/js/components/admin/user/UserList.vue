@@ -2,12 +2,7 @@
   <div class="container">
     <LoadingVue v-if="isLoading" />
     <el-table
-      :data="
-        tableData.filter(
-          (data) =>
-            !search || data.name.toLowerCase().includes(search.toLowerCase())
-        )
-      "
+      :data="tableData"
       style="width: 100%"
     >
       <el-table-column label="Name" prop="name"> </el-table-column>
@@ -17,6 +12,7 @@
         <template slot="header" slot-scope="scope">
           <el-input
             v-model="search"
+            @change="handleSearch"
             size="small"
             placeholder="Type to search"
           />
@@ -55,17 +51,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      background
-      layout="prev, pager, next"
-      :total="total"
-      :current-page.sync="current"
-      :page-size="perPage"
-      @prev-click="paginateClick"
-      @next-click="paginateClick"
-      @current-change="paginateClick"
-    >
-    </el-pagination>
+    <el-pagination layout="prev, pager, next" v-model="page" :page-size="10" :total="total" @current-change="handleChangePage" />
   </div>
 </template>
 
@@ -91,11 +77,10 @@ export default {
       show: true,
       isLoading: false,
       isAdmin: true,
-      total: 1,
-      current: 1,
-      pageSize: 1,
-      perPage: 1,
-      isLoading: false,
+      isAdmin: true,
+      total : 0,
+      page: 1,
+      timeOut: null
     };
   },
   methods: {
@@ -143,41 +128,41 @@ export default {
           return;
         });
     },
+    async handleChangePage (page) {
+      this.page = page
+      await this.getAllUser()
+    },
+    handleSearch () {
+      this.page = 1;
+      this.total = 0;
+      clearTimeout(this.timeOut)
+      this.timeOut = setTimeout(async() => {
+          await this.getAllUser()
+      }, 300);
+    },
     async getAllUser() {
       try {
         this.isLoading = true;
-        let result = await baseRequest.get(
-          `/admin/list-user?page=${this.current}`
-        );
-        let { data } = result;
+        const { data } = await baseRequest.get(`/admin/list-user?page_number=${this.page}&search=${this.search || ''}`);
         if (data.status == 200) {
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1000);
-          this.tableData = data.data?.data.map((item) => ({
+          this.isLoading = false;
+          const users = data?.data?.data || [];
+          this.tableData = users.map((item) => ({
             id: item.id,
             name: item.name,
             email: item.email,
             phone: item.phone,
             is_admin: item.is_admin,
           }));
-          this.isAdmin = data.isAdmin;
-          this.total = result.data.data.total;
-          this.current = result.data.data.current_page;
-          this.pageSize = result.data.data.last_page;
-          this.perPage = result.data.data.per_page;
+          this.isAdmin = data?.data?.isAdmin;
+          this.total = data?.data?.total;
+          this.page = data?.data?.current_page;
+          
         }
       } catch (error) {
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 1000);
-        console.log(error);
+        this.isLoading = false;
       }
-    },
-    paginateClick(curentPage) {
-      this.current = curentPage;
-      this.getAllUser();
-    },
+    }
   },
   created() {
     this.getAllUser();

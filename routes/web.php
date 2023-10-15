@@ -11,9 +11,12 @@
 |
 */
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 Route::group(['prefix' => 'laravel-filemanager', 'middleware'], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
+
 //frontEnd
 Route::prefix('/')->group(function () {
     Route::post('/upload-image', 'HomeController@uploadImage');
