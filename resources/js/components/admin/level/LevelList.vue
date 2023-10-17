@@ -12,8 +12,8 @@
                 <h1 class="font-semibold uppercase text-[14px]">
                   {{
                     state == "create"
-                      ? "Tạo mới cấp độ bài học"
-                      : "Cập nhật cấp độ bài học"
+                      ? "Create level"
+                      : "Update Level"
                   }}
                 </h1>
                 <span
@@ -150,7 +150,7 @@
                   </div>
                 </div>
                 <div class="flex justify-end items-center mt-4">
-                  <el-button plain @click="resetFeild">Thoát</el-button>
+                  <el-button plain @click="resetFeild">Cancel</el-button>
                   <el-button
                     type="primary"
                     @click="
@@ -158,7 +158,7 @@
                         ? createTopic('ruleForm')
                         : updateLevel('ruleForm')
                     "
-                    >{{ state == "create" ? "Tạo mới" : "Cập nhật" }}</el-button
+                    >{{ state == "create" ? "Create" : "Update" }}</el-button
                   >
                 </div>
               </el-form>
@@ -337,19 +337,19 @@ export default {
               this.resetFeild();
               this.$message({
                 type: "success",
-                message: "Thêm cấp độ bài học thành công",
+                message: "Created successfully",
               });
               this.getAllLevel();
             } else {
               this.$message({
                 type: "error",
-                message: "Thêm cấp độ bài học thất bại",
+                message: "Created failed",
               });
             }
           } catch (e) {
             this.$message({
               type: "error",
-              message: "Thêm cấp độ bài học thất bại",
+              message: "Created failed",
             });
           }
         } else {
@@ -374,22 +374,20 @@ export default {
             };
             let rs = await baseRequest.post(`/admin/update-level`, dataTemp);
             if (rs.data.status == 200) {
-              this.resetFeild();
               this.$message({
                 type: "success",
-                message: "Sửa cấp độ bài học thành công",
+                message: "Updated successfully",
               });
-              this.getAllLevel();
             } else {
               this.$message({
                 type: "error",
-                message: "Sửa cấp độ bài học thất bại",
+                message: "Update failed",
               });
             }
           } catch (e) {
             this.$message({
               type: "error",
-              message: "Sửa cấp độ bài học thất bại",
+              message: "Update failed",
             });
           }
         } else {
@@ -601,12 +599,12 @@ export default {
   },
 
   created() {
+    this.getAllLevel();
     this.getAllTopicReading();
     this.getAllTopicLesson();
     this.getAllTopicVocabulary();
     this.getAllTopicGrammar();
     this.getAllTopicListening();
-    this.getAllLevel();
     this.getAllTopicSpeaking()
     this.getAllTopicTalking()
   },
