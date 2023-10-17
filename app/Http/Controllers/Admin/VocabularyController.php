@@ -46,12 +46,11 @@ class VocabularyController extends Controller
     public function detailTopicData(Request $request, $id)
     {
         try {
-            DB::beginTransaction();
             $query = new Vocabulary();
             $data = $query->where('id', $id)->with(['QuestitonVocabulary' => function ($question) {
                 $question->with('answers')->with('right_answers');
+            
             }])->first();
-            // $data = $query->where('id', $id)->with('questitonVocabulary')->first();
             DB::commit();
             return response()->json([
                 "status" => 200,
@@ -60,7 +59,6 @@ class VocabularyController extends Controller
                 "message" => "Lấy chi tiết topic thành công !"
             ]);
         } catch (\Exception $e) {
-             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -314,7 +312,14 @@ class VocabularyController extends Controller
             ]);
 
             $dataQuestion = ($request->dataQuestion);
-            dd($dataQuestion);
+            $questionVocab = $vocabulary->QuestitonVocabulary()->get()->toArray();
+            
+            $toDelete = collect($questionVocab)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
+            if (count($toDelete)) {
+                foreach($toDelete as $item) {
+                    QuestionVocabulary::whereId($item['id'])->delete();
+                }
+            }
             foreach ($dataQuestion as $key => $value) {
                 $check =QuestionVocabulary::whereId($value['id'])->exists();
                 if (!$check) {
@@ -352,56 +357,13 @@ class VocabularyController extends Controller
                         QuestionVocabulary::whereId($value['id'])->first()->answers()
                             ->create([
                                 'id' => $valueAns['idAns'],
-                                'question_id' => $valueAns['question_id'],
+                                'question_id' => $value['id'],
                                 'text' => $valueAns['text'],
                                 "answer_id" => $valueAns['idAns'],
                             ]);
                     }
                 }
             }
-            // $res = QuestionVocabulary::where('id', $request->id)->first();
-            // $res->update(
-            //     [
-            //         "question" => $request->question,
-            //         "level" => $request->level,
-
-            //     ]
-            // );
-            // if ($request->type == 1) {
-            //     foreach ($request->dataAns as $keyAds => $item) {
-            //         $ans = $res->answers()->find($item['id']);
-            //         if (isset($ans)) {
-
-            //             $ans->update([
-            //                 "text" => $item['text']
-            //             ]);
-            //         } else {
-            //             $res->answers()->create([
-            //                 "id" => $item['id'],
-            //                 "answer_id" => $item['id'],
-            //                 "text" => $item['text']
-            //             ]);
-            //         }
-
-
-            //     }
-            // } else {
-            //     $res->answers()->delete();
-            //     foreach ($request->dataAns as $keyAds => $item) {
-            //         $res->answers()->create([
-            //             "id" => $item['id'],
-            //             "answer_id" => $item['id'],
-            //             "text" => $item['text']
-            //         ]);
-
-
-            //     }
-            // }
-            // if ($request->type == 1) {
-            //     $res->right_answers()->find($request->right_answers["id"])->update([
-            //         "answer_id" => $request->right_answers["answer_id"]
-            //     ]);
-            // }
             DB::commit();
             return [
                 "status" => 200,

@@ -34,6 +34,10 @@
           </el-form-item>
         </el-form>
       </div>
+      <div class="mb-3 mt-3">
+        <span class="font-semibold text-[15px]  mb-2 mr-2">Exam</span>
+        <el-switch v-model="detailTopic.isExam"></el-switch>
+      </div>
       <editor
           v-model="detailTopic.description"
           api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
@@ -57,10 +61,7 @@
             paste_data_images: true,
           }"
         />
-      <div>
-      <span class="font-semibold text-[15px] mt-4 mb-2 mr-2">Exam</span>
-      <el-switch v-model="detailTopic.isExam"></el-switch>
-    </div>
+    
     <!-- <div class="mt-4">
       <editor
         v-model="detailTopic.description"
@@ -68,11 +69,6 @@
         :init="init()"
       />
     </div> -->
-    <div class="flex items-center justify-center mt-4">
-      <el-button @click="saveChangeTitle(detailTopic.id)"
-        >Change description</el-button
-      >
-    </div>
     <p class="font-semibold text-[15px] mt-4 mb-2">Statistical</p>
     <div
       class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-4 text-[14px] font-semibold flex flex-col items-start"
@@ -253,13 +249,12 @@
                       <span class="text-[13px] font-semibold mr-2"
                         >Anwser:</span
                       >
-                      <el-select v-model="alphabet[getAlphabet(data.dataAns, data.answer)]" placeholder="Select">
+                      <el-select v-model="data.answer" placeholder="Select">
                         <el-option
                           v-for="item in data.dataAns"
                           :key="item.idAns"
                           :label="item.alphabet"
                           :value="item.idAns"
-                          :selected="data.answer == item.idAns"
                         >
                         </el-option>
                       </el-select>
@@ -686,8 +681,14 @@ export default {
       }
     },
     deleteAns(idQues, idAns) {
+      console.log('--------------------deleteAns---------------------------');
+      console.log(idQues);
+      console.log(idAns);
+      console.log(this.dataQuestion);
       let dataQues = this.dataQuestion.find((item) => item.id == idQues);
+      console.log(dataQues);
       dataQues.dataAns = dataQues.dataAns.filter((item) => item.idAns != idAns);
+      console.log(dataQues.dataAns);
       if (dataQues.type == 1) {
         let data = dataQues.dataAns;
         let temp = [];
@@ -741,6 +742,7 @@ export default {
       // }
     },
     getAlphabet(data, idAnswer) {
+      console.log(data, idAnswer)
       let index = data.findIndex((item) => {
         return item.idAns == idAnswer;
       });
@@ -788,7 +790,6 @@ export default {
               alphabet: this.alphabet[index].toLocaleUpperCase(),
             })),
           }))
-          console.log(this.dataQuestion);
         }
       } catch (e) {
         console.log(e);
@@ -863,7 +864,6 @@ export default {
           dataQuestion: this.dataQuestion,
           id: this.param,
         };
-        console.log(dataTemp);
         let result = await baseRequest.post(
             `/admin/update-question-vocabulary`,
             dataTemp
@@ -874,9 +874,9 @@ export default {
             message: data.message,
             type: "success",
           });
-          // setTimeout(() => {
-          //   window.location.href = `${$Api.baseUrl}/admin/lesson/topic-detail/${this.param}`;
-          // }, 1000);
+          setTimeout(() => {
+            window.location.href = `${$Api.baseUrl}/admin/lesson/topic-detail/${this.param}`;
+          }, 1000);
         } else {
           this.$message({
             message: data.message,

@@ -251,11 +251,8 @@ export default {
       try {
         this.isLoading = true;
         let result = await baseRequest.get(`/admin/list-topic-vocabulary?page=${this.current}`);
-        console.log(result.data);
         if (result.data.status == 200) {
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1000);
+          this.isLoading = false;
           this.listTopic = result.data.data.data;
           this.total = result.data.data.total;
           this.current = result.data.data.current_page;

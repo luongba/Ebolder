@@ -458,7 +458,7 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/list-topic-lesson`);
         if (rs.data.status == 200) {
-          this.listTopicLesson = rs.data.data
+          this.listTopicLesson = rs.data.data.data
             .map((item) => ({
               id: item.id,
               name: item.name,
@@ -506,7 +506,7 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/list-topic-reading`);
         if (rs.data.status == 200) {
-          this.listTopicReading = rs.data.data
+          this.listTopicReading = rs.data.data.data
             .map((item) => ({
               id: item.id,
               name: item.name,
@@ -554,7 +554,7 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/list-topic-pronunciation`);
         if (rs.data.status == 200) {
-          this.listTopicTalking = rs.data.data
+          this.listTopicTalking = rs.data.data.data
             .map((item) => ({
               id: item.id,
               name: item.name,

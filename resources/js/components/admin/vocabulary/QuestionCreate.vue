@@ -531,7 +531,6 @@ export default {
                     topicData: this.topicData,
                     dataQuestion: this.dataQuestion,
                 };
-                console.log(requestData);
                 try {
                     let result = await baseRequest.post(
                         `/admin/store-question-vocabulary`,

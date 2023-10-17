@@ -50,22 +50,19 @@
                 </div>
             </div>
         </div>
-        <!-- <editor
-            api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-            :init="{
-                height: 500,
-                menubar: false,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount',
-                ],
-                toolbar:
-                    'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | \
-           bullist numlist outdent indent | removeformat | help',
-            }"
-        /> -->
+        <div class="mt-3 flex items-center justify-center"> 
+            <el-pagination
+                background
+                layout="prev, pager, next"
+                :total="total"
+                :current-page.sync="current"
+                :page-size="perPage"
+                @prev-click="paginateClick"
+                @next-click="paginateClick"
+                @current-change="paginateClick"
+            >
+            </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -107,6 +104,10 @@ export default {
             baseApi: $Api.baseUrl,
             isplay: false,
             isLoading: false,
+            total: 1,
+            current: 1,
+            pageSize: 1,
+            perPage: 1,
         };
     },
     computed: {},
@@ -145,15 +146,21 @@ export default {
                 }
             });
         },
+        paginateClick(curentPage) {
+            this.current = curentPage;
+            this.getAllTopic();
+        },
         async getAllTopic() {
             try {
                 this.isLoading = true;
-                let rs = await baseRequest.get(`/admin/list-topic-pronunciation`);
+                let rs = await baseRequest.get(`/admin/list-topic-pronunciation?page=${this.current}`);
                 if (rs.data.status == 200) {
-                    setTimeout(() => {
                     this.isLoading = false;
-                }, 1000);
-                    this.listTopic = rs.data.data.map((item) => ({
+                    this.total = rs.data.data.total;
+                    this.current = rs.data.data.current_page;
+                    this.pageSize = rs.data.data.last_page;
+                    this.perPage = rs.data.data.per_page;
+                    this.listTopic = rs.data.data.data.map((item) => ({
                         id: item.id,
                         name: item.name,
                         is_exam: item.is_exam
