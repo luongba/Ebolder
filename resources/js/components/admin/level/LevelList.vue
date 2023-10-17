@@ -400,18 +400,14 @@ export default {
     async getAllLevel() {
       try {
         this.isLoading = true;
-        let rs = await baseRequest.get(`/admin/get-all-level`);
+        let rs = await baseRequest.get(`/admin/get-levels`);
         if (rs.data.status == 200) {
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1000);
           this.listLevel = rs.data.data
             .map((item) => ({
               id: item.id,
               name: item.name,
               is_exam: item.is_exam || null,
-            }))
-            .reverse();
+            }));
         }
       } catch (e) {
         console.log(e);
