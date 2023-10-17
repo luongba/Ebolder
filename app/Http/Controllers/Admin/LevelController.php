@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\models\Learn\ExamResult;
 use App\models\LevelTesting\Level;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -47,12 +48,33 @@ class LevelController extends Controller
 
     }
 
+
+    public function all() {
+        try {
+            $levels = Level::query()
+                ->orderBy('name', 'asc')
+                ->get();
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "data" => $levels,
+                "message" => "Successful"
+            ]);
+        } catch(Exception $e) {
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => $e->getMessage()
+            ]);
+        }
+    }
+
     public function getAllLevel(Request $request)
     {
         try {
             DB::beginTransaction();
             $userID = Auth::user()->id;
-            $level = Level::with('Reading')
+            $level = Level::query()
              ->with(array('Vocabulary' => function($query) {
                 $query->orderByRaw("CAST(REGEXP_REPLACE(name, '[^0-9]', '') AS UNSIGNED), name");
             }))
@@ -79,12 +101,12 @@ class LevelController extends Controller
                 "data" => $level,
                 "message" => "Lấy danh sách level Thành công!"
             ]);
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Lấy danh sách level Thất bại!"
+                "message" => $e->getMessage()
             ]);
         }
 
