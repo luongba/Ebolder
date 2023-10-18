@@ -81,7 +81,7 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-topic-grammar', 'Admin\GrammarController@deleteTopic')->name('delete-topic-grammar');
         Route::post('/store-question-grammar', 'Admin\GrammarController@store')->name('store-grammar');
         Route::get('/list-question-grammar', 'Admin\GrammarController@getAllInfoQuestion')->name('list-grammar');
-        Route::put('/update-question-grammar', 'Admin\GrammarController@update')->name('update-grammar');
+        Route::post('/update-question-grammar', 'Admin\GrammarController@update')->name('update-grammar');
         Route::post('/delete-answer-grammar', 'Admin\GrammarController@destroyAns')->name('delete-grammar');
         Route::post('/delete-question-grammar', 'Admin\GrammarController@destroyQues')->name('delete-question-grammar');
         //speaking 
