@@ -23,7 +23,7 @@ class GrammarController extends Controller
     public function ListTopic()
     {
         try {
-            $data = Grammar::all();
+            $data = Grammar::orderBy('id', 'DESC')->paginate(10);
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -69,21 +69,52 @@ class GrammarController extends Controller
     public function createTopic(Request $request)
     {
         try {
-            Grammar::create([
+            DB::beginTransaction();
+            $grammar = Grammar::create([
                 "name" => $request->name,
                 "description" => $request->description,
                 "is_exam" => $request->isExam
             ]);
+            $dataQuestion = $request->dataQuestion;
+            foreach ($dataQuestion as $key => $value) {
+                $res = QuestionGrammar::create([
+                    "id" => $value['id'],
+                    "question" => $value['question'],
+                    "level" => $value['level'],
+                    "type" => $value['type']
+                ]);
+                $query = new Grammar();
+                $query->find($grammar->id)->QuestitonGrammar()->attach(
+                [
+                    'question_granmmar_id' => $res->id
+                ]);
+                if ($res->type == 1) {
+                    $res->right_answers()->create([
+                        "answer_id" => $value["answer"]
+                    ]);
+                }
+
+                foreach ($dataQuestion[$key]['dataAns'] as $keyAds => $item) {
+                    QuestionGrammar::find($value['id'])->answers()->create([
+                        "id" => $item['idAns'],
+                        "text" => $item['text'],
+                        "answer_id" => $item['idAns'],
+                    ]);
+                }
+            }
+            DB::commit();
+            
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "Thêm topic thành công !"
+                "message" => "Create topic successfully !"
             ]);
         } catch (\Exception $e) {
+            DB::rollback();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thêm topic thất bại !"
+                "message" => "Create topic failed !"
             ]);
         }
 

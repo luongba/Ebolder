@@ -717,29 +717,6 @@ export default {
       this.dataQuestion = this.dataQuestion.filter(
           (item) => item.id != id
       );
-      // try {
-      //   let result = await baseRequest.post(`/admin/delete-question-lesson`, {
-      //     id,
-      //   });
-      //   let { data } = result;
-
-      //   if (data.status == 200) {
-      //     this.getDetailTopic();
-      //     this.$message({
-      //       message: data.message,
-      //       type: "success",
-      //     });
-      //   } else if (data.status == 100) {
-      //     this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
-      //   } else {
-      //     this.$message({
-      //       message: data.message,
-      //       type: "error",
-      //     });
-      //   }
-      // } catch (error) {
-      //   console.log("🚀 ~ ~ error", error);
-      // }
     },
     getAlphabet(data, idAnswer) {
       console.log(data, idAnswer)
@@ -874,9 +851,6 @@ export default {
             message: data.message,
             type: "success",
           });
-          setTimeout(() => {
-            window.location.href = `${$Api.baseUrl}/admin/lesson/topic-detail/${this.param}`;
-          }, 1000);
         } else {
           this.$message({
             message: data.message,

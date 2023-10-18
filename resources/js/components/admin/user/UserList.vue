@@ -51,7 +51,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination layout="prev, pager, next" v-model="page" :page-size="10" :total="total" @current-change="handleChangePage" />
+    <div class="mt-2 flex items-center justify-center"> 
+          <el-pagination background layout="prev, pager, next" v-model="page" :page-size="10" :total="total" @current-change="handleChangePage" />
+        </div>
   </div>
 </template>
 
