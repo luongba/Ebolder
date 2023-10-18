@@ -5,7 +5,7 @@
       <div class="w-full h-full relative z-10 content" v-show="show">
         <div class="absolute w-[70%] h-[60vh] bg-box-lesson rounded-md p-4">
           <span
-            class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer text-[#fff]"
+            class="absolute right-[5px] top-[5px] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] cursor-pointer text-[#fff]"
             @click="dongMoPopup()"
           >
             <i class="lnr-cross"></i>
@@ -46,7 +46,115 @@
         </div>
       </div>
     </transition>
-    <div id="background-wrap" class="content">
+    <div class="w-[90%] h-[90%] mx-auto">
+      <el-carousel height="700px" indicator-position="none" :autoplay="false" v-show="!show">
+        <el-carousel-item v-for="(item, index) in listLevel" :key="index">
+          <div class="w-full h-full flex items-center justify-center">
+            <div class="flex justify-center flex-col items-center">
+              <h2 class="title">{{ item.name }}</h2>
+              <div class="mt-4">
+                <div class="flex justify-center mt-4">
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="WRITING"
+                    placement="top"
+                  >
+                    <div
+                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                      @click="x(item, 'WRITING')"
+                    >
+                      <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="PRONUNCIATION"
+                    placement="top"
+                  >
+                    <div
+                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                      @click="x(item, 'PRONUNCIATION')"
+                    >
+                      <i class="fa-solid fa-microphone"></i>
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="SPEAKING"
+                    placement="top"
+                  >
+                    <div
+                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                      @click="x(item, 'SPEAKING')"
+                    >
+                      <i class="fa-solid fa-head-side-cough"></i>
+                    </div>
+                  </el-tooltip>
+                </div>
+              </div>
+              <div class="flex justify-center mt-4">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="LISTEN"
+                  placement="bottom"
+                >
+                  <div
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    @click="x(item, 'LISTEN')"
+                  >
+                    <i class="fa-solid fa-ear-listen"></i>
+                  </div>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="READ"
+                  placement="bottom"
+                >
+                  <div
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    @click="x(item, 'READ')"
+                  >
+                    <i class="fa-solid fa-book-open-reader"></i>
+                  </div>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="VOCABULARY"
+                  placement="bottom"
+                >
+                  <div
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    @click="x(item, 'VOCABULARY')"
+                  >
+                    <i class="fa-solid fa-spell-check"></i>
+                  </div>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="GRAMMAR"
+                  placement="bottom"
+                >
+                  <div
+                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                    @click="x(item, 'GRAMMAR')"
+                  >
+                    <i class="fa-solid fa-gears"></i>
+                  </div>
+                </el-tooltip>
+              </div>
+            </div>
+          </div>
+        </el-carousel-item>
+      </el-carousel>
+    </div>
+    <!-- <div id="background-wrap" class="content">
       <div class="cloud-box px-2" id="cloud-box" v-show="!show">
         <div
           class="box-landing"
@@ -62,19 +170,47 @@
                 <div class="w-full border relative mt-2 mb-4"></div>
                 <div class="flex justify-center flex-col items-center">
                   <div class="mt-2">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      content="Học"
-                      placement="right"
-                    >
-                      <div
-                        class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm"
-                        @click="openListLesson(item, 'LESSON')"
+                    <div class="flex justify-center mt-4">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        content="Viết"
+                        placement="right"
                       >
-                        <i class="fa-solid fa-graduation-cap"></i>
-                      </div>
-                    </el-tooltip>
+                        <div
+                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                          @click="x(item, 'WRITING')"
+                        >
+                          <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </div>
+                      </el-tooltip>
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        content="Luyện âm"
+                        placement="right"
+                      >
+                        <div
+                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                          @click="x(item, 'SPEAKING')"
+                        >
+                          <i class="fa-solid fa-head-side-cough"></i>
+                        </div>
+                      </el-tooltip>
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        content="Luyện nói"
+                        placement="right"
+                      >
+                        <div
+                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
+                          @click="x(item, 'PRONUNCIATION')"
+                        >
+                        <i class="fa-solid fa-microphone"></i>
+                        </div>
+                      </el-tooltip>
+                    </div>
                   </div>
                   <div class="flex justify-center mt-4">
                     <el-tooltip
@@ -84,8 +220,8 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        @click="openListLesson(item, 'LISTEN')"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        @click="x(item, 'LISTEN')"
                       >
                         <i class="fa-solid fa-ear-listen"></i>
                       </div>
@@ -97,8 +233,8 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        @click="openListLesson(item, 'READ')"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        @click="x(item, 'READ')"
                       >
                         <i class="fa-solid fa-book-open-reader"></i>
                       </div>
@@ -110,8 +246,8 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        @click="openListLesson(item, 'VOCABULARY')"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        @click="x(item, '')"
                       >
                         <i class="fa-solid fa-spell-check"></i>
                       </div>
@@ -123,8 +259,8 @@
                       placement="bottom"
                     >
                       <div
-                        class="p-3 border text-[#fff] text-[20px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        @click="openListLesson(item, 'GRAMMAR')"
+                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
+                        @click="x(item, 'GRAMMAR')"
                       >
                         <i class="fa-solid fa-gears"></i>
                       </div>
@@ -154,10 +290,10 @@
           @click="cloudDown"
         ></el-button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
-<script>
+  <script>
 import baseRequest from "../../../utils/baseRequest";
 import "./learn.css";
 export default {
@@ -203,12 +339,12 @@ export default {
     dongMoPopup() {
       this.show = !this.show;
     },
-    openListLesson(itemLevel, type) {
+    x(itemLevel, type) {
       this.listLesson = [];
       this.keyUrl = type;
       this.idLevel = itemLevel.id;
       switch (type) {
-        case "LESSON": {
+        case "WRITING": {
           this.listLesson = this.listLevel.find(
             (item) => item.id === itemLevel.id
           ).lessons;
@@ -238,6 +374,18 @@ export default {
           ).grammars;
           break;
         }
+        case "SPEAKING": {
+          this.listLesson = this.listLevel.find(
+            (item) => item.id === itemLevel.id
+          ).speaks;
+          break;
+        }
+        case "PRONUNCIATION": {
+          this.listLesson = this.listLevel.find(
+            (item) => item.id === itemLevel.id
+          ).pronunciations;
+          break;
+        }
         default: {
           break;
         }
@@ -245,6 +393,12 @@ export default {
       this.show = true;
     },
     async getAllLevel() {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
       try {
         let rs = await baseRequest.get(`/admin/get-all-level`);
         if (rs.data.status == 200) {
@@ -256,10 +410,14 @@ export default {
             vocabularies: item.vocabulary,
             grammars: item.grammar,
             lessons: item.learn || [],
+            speaks: item.speak || [],
+            pronunciations: item.pronunciation || [],
           }));
         }
       } catch (e) {
         console.log(e);
+      } finally {
+        loading.close();
       }
     },
     async checkPassedLevel() {
@@ -312,6 +470,15 @@ export default {
         case "GRAMMAR":
           window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${id}&levelId=${this.idLevel}`;
           break;
+        case "WRITING":
+          window.location.href = `${$Api.baseUrl}/english-level-test/Writing?testId=${id}&levelId=${this.idLevel}`;
+          break;
+        case "SPEAKING":
+          window.location.href = `${$Api.baseUrl}/english-level-test/Speaking?testId=${id}&levelId=${this.idLevel}`;
+          break;
+        case "PRONUNCIATION":
+          window.location.href = `${$Api.baseUrl}/english-level-test/Pronunciation?testId=${id}&levelId=${this.idLevel}`;
+          break;
         default:
           window.location.href = `${$Api.baseUrl}/lesson/${id}`;
       }
@@ -344,6 +511,12 @@ export default {
         case "GRAMMAR":
           temp = "Grammar";
           break;
+        case "PRONUNCIATION":
+          temp = "Pronunciation";
+          break;
+        case "WRITING":
+          temp = "Writing";
+          break;
         default:
           temp = "Lesson";
       }
@@ -353,14 +526,8 @@ export default {
       let rs;
       if (dataArrTemp.length > 0) {
         rs = dataArrTemp.findIndex((itemHistory, id) => {
-          let score = itemHistory.scores;
-          score = score.split("/");
-          let toltalScore = (parseInt(score[0]) / parseInt(score[1])) * 100;
-
           return (
-            itemHistory.test_type == temp &&
-            itemHistory.exam_id == item.id &&
-            toltalScore >= this.targetScore
+            itemHistory.test_type == temp && itemHistory.exam_id == item.id
           );
         });
       } else {
@@ -372,7 +539,7 @@ export default {
   async created() {
     await this.getAllLevel();
     await this.getFullHistory();
-    this.checkPassedLevel();
+    // this.checkPassedLevel();
   },
   mounted() {
     setTimeout(() => {
@@ -381,7 +548,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+  <style scoped>
 .title {
   font-size: 40px;
   text-align: center;
@@ -444,7 +611,7 @@ export default {
 .bg-box-lesson {
   width: 80%;
   left: 50%;
-  top: 50%;
+  top: 35%;
   transform: translate(-50%, -50%);
   /* z-index: 6; */
   background: linear-gradient(
@@ -469,7 +636,6 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  font-size: 16px;
   font-weight: 600;
 }
 
@@ -481,4 +647,36 @@ export default {
 .exam.active > .exam-pass {
   display: flex;
 }
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 18px;
+  opacity: 0.75;
+  line-height: 300px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: linear-gradient(
+    96.6deg,
+    rgba(0, 115, 121, 0.112) 11.23%,
+    rgba(0, 95, 100, 0) 115.9%
+  );
+  border-radius: 20px;
+  border: 1px solid rgba(95, 95, 95, 0.1);
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: linear-gradient(
+    96.6deg,
+    rgba(0, 115, 121, 0.542) 11.23%,
+    rgba(0, 95, 100, 0) 115.9%
+  );
+  border-radius: 20px;
+  border: 1px solid rgba(95, 95, 95, 0.1);
+}
 </style>
+  

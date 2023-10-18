@@ -11,6 +11,12 @@
 |
 */
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+Route::group(['prefix' => 'laravel-filemanager', 'middleware'], function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
+
 //frontEnd
 Route::prefix('/')->group(function () {
     Route::post('/upload-image', 'HomeController@uploadImage');
@@ -50,13 +56,19 @@ Route::prefix('/')->group(function () {
     Route::prefix('/english-level-test')->group(function () {
         Route::get('/', 'HomeController@testPage')->name('test-page')->middleware('checkLogin');
         Route::get('/Vocabulary', 'HomeController@vocabularyTest')->name('vocabulary-test-page')->middleware('checkLogin');
+        Route::get('/Writing', 'HomeController@lessonPage')->name('writing-test-page')->middleware('checkLogin');
         Route::get('/Grammar', 'HomeController@grammarTest')->name('grammar-test-page')->middleware('checkLogin');
         Route::get('/Reading', 'HomeController@readingTest')->name('reading-test-page')->middleware('checkLogin');
+        Route::get('/Pronunciation', 'HomeController@pronunciationTest')->name('pronunciation-test-page')->middleware('checkLogin');
         Route::get('/Listening', 'HomeController@listeningTest')->name('listening-test-page')->middleware('checkLogin');
+        Route::get('/Talking', 'HomeController@speakingTestTypeSecond')->name('speaking-test-page')->middleware('checkLogin');
         Route::get('/Speaking', 'HomeController@speakingTest')->name('speaking-test-page')->middleware('checkLogin');
+
     });
-    Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page')->middleware('checkLogin');
+    // Route::get('/lesson/{id}', 'HomeController@lessonPage')->name('lesson-page')->middleware('checkLogin');
     Route::get('/history', 'HomeController@historyPage')->name('history-page')->middleware('checkLogin');
+
+    Route::get('/history-learn', 'HomeController@historyLearnPage')->name('history-learn-page')->middleware('checkLogin');
 
     Route::get('/choose-action', 'HomeController@chooseAction')->name('choose-action')->middleware('checkLogin');
 
@@ -70,6 +82,7 @@ Route::middleware(['checkLogin'])->group(function () {
     //exam
     Route::prefix('/exam')->name('exam.')->group(function () {
         Route::get('/', 'Admin\ExamController@renderExamList')->name('list');
+        Route::get('/result/{id}', 'Admin\ExamController@renderResultView')->name('result');
     });
 
     //admin
@@ -91,6 +104,10 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/reading-level-test/topic-list', 'Admin\ReadController@listTopic')->name('reading-topic-list')->middleware('can:Reading_List');
         Route::get('/reading-level-test/topic-create', 'Admin\ReadController@createTopic')->name('reading-topic-create')->middleware('can:Reading_Create');
         Route::get('/reading-level-test/topic-detail/{id}', 'Admin\ReadController@detailTopic')->name('reading-topic-detail')->middleware('can:Reading_Detail');
+        //pronunciation
+        Route::get('/pronunciation-level-test/topic-list', 'Admin\PronunciationController@listTopic')->name('pronunciation-topic-list')->middleware('can:Reading_List');
+        Route::get('/pronunciation-level-test/topic-create', 'Admin\PronunciationController@createTopic')->name('pronunciation-topic-create')->middleware('can:Reading_Create');
+        Route::get('/pronunciation-level-test/topic-detail/{id}', 'Admin\PronunciationController@detailTopic')->name('pronunciation-topic-detail')->middleware('can:Reading_Detail');
         //grammar
         Route::get('/grammar-level-test', 'Admin\GrammarController@index')->name('grammar-list')->middleware('can:Grammar_List');
         Route::get('/grammar-level-test/detail/{id}', 'Admin\GrammarController@detailTopic')->name('grammar-detail')->middleware('can:Grammar_Detail');
@@ -98,20 +115,21 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/grammar-level-test/question-create', 'Admin\GrammarController@create')->name('grammar-question-create')->middleware('can:Question_Grammar_Create');
 
         //speaking
-        Route::get('/speaking-level-test', 'Admin\SpeakController@index')->name('speak-list');
-        Route::get('/speaking-level-test/detail/{id}', 'Admin\SpeakController@detailTopic')->name('speak-detail');
-        Route::get('/speaking-level-test/question-list', 'Admin\SpeakController@questionlist')->name('speak-question-list');
-        Route::get('/speaking-level-test/question-create', 'Admin\SpeakController@create')->name('speak-question-create');
-        Route::get('/speaking-level-test/question-luyen-am', 'Admin\SpeakController@pageQuestionSpeak')->name('speak-question-luyen-am');
+        Route::get('/speaking-level-test', 'Admin\SpeakController@index')->name('speak-list')->middleware('can:Speaking_List');;
+        Route::get('/speaking-level-test/detail/{id}', 'Admin\SpeakController@detailTopic')->name('speak-detail')->middleware('can:Speaking_Detail');
+        Route::get('/speaking-level-test/question-list', 'Admin\SpeakController@questionlist')->name('speak-question-list')->middleware('can:Question_Speaking_List');
+        Route::get('/speaking-level-test/question-create', 'Admin\SpeakController@create')->name('speak-question-create')->middleware('can:Question_Speaking_Create');
+        Route::get('/speaking-level-test/question-luyen-am', 'Admin\SpeakController@pageQuestionSpeak')->name('speak-question-luyen-am')->middleware('can:Talking_List');
 
         //exam
-        Route::get('/exam-administration', 'Admin\ExamController@index')->name('exam-list');
+        Route::get('/exam-administration', 'Admin\ExamController@index')->name('exam-list')->middleware('can:Exam_List');;
 
         //user
         Route::get('/users', 'Admin\UserController@index')->name('user-list')->middleware('can:User_List');
         Route::get('/user/create', 'Admin\UserController@create')->name('user-create')->middleware('can:User_Create');
         Route::get('/user/edit/{id}', 'Admin\UserController@edit')->name('user-edit')->middleware('can:User_Edit');
         Route::get('/user/exam-history/{id}', 'Admin\UserController@history')->name('user-history');
+        Route::get('/user/learn-history/{id}', 'Admin\UserController@historyLearn')->name('user-history');
         //role
         Route::get('/roles', 'Admin\RoleController@index')->name('role-list')->middleware('can:Role_List');
         Route::get('/role/create', 'Admin\RoleController@create')->name('role-create')->middleware('can:Role_Create');
@@ -126,4 +144,5 @@ Route::middleware(['checkLogin'])->group(function () {
         Route::get('/level', 'Admin\LevelController@index')->name('level-list')->middleware('can:Level_List');
 
     });
+    
 });

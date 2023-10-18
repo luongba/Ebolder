@@ -179,7 +179,8 @@ class VocabularyController extends Controller
             $vocabulary = Vocabulary::find($request->id);
             $vocabulary->update(
                 [
-                    "name" => $request->name
+                    "name" => $request->name,
+                    "description" => $request->description
                 ]
             );
             DB::commit();

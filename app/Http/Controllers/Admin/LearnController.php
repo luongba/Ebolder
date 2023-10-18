@@ -118,7 +118,8 @@ class LearnController extends Controller
                     'name' => $request->name,
                     'content' => $request->contentReading,
                     'url_media' => $_SERVER['SERVER_NAME'] . ':8000/upload/video/' . $file_name,
-                    'type_video' => 'upload'
+                    'type_video' => 'upload',
+                    'is_exam' => $request->is_exam
                 ]);
                 $dataQuestion = json_decode($request->dataQuestion);
                 foreach ($dataQuestion as $key => $value) {
@@ -148,7 +149,8 @@ class LearnController extends Controller
                     'name' => $request->name,
                     'content' => $request->contentReading,
                     'url_media' => $request->linkMedia,
-                    'type_video' => 'social'
+                    'type_video' => 'social',
+                    'is_exam' => $request->is_exam
                 ]);
                 $dataQuestion = ($request->dataQuestion);
                 foreach ($dataQuestion as $key => $value) {
@@ -316,28 +318,14 @@ class LearnController extends Controller
     public function deleteQuestionData(Request $request)
     {
         try {
-            DB::beginTransaction();
-            $query = new QuestionLesson();
-            $question = $query->where('id', $request->id)->first();
-            if (isset($question)) {
-                $question->delete();
-                AnswerLesson::where('question_id', $question->id)->delete();
+            QuestionLesson::destroy($request->id);
                 return response()->json([
                     "status" => 200,
                     "errorCode" => 0,
                     "message" => "Xóa Question thành công !"
                 ]);
-            } else {
-                DB::commit();
-                return response()->json([
-                    "status" => 100,
-                    "errorCode" => 0,
-                    "message" => "Question Xóa không tồn tại !"
-                ]);
-            }
 
         } catch (\Exception $e) {
-             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -345,7 +333,6 @@ class LearnController extends Controller
             ]);
         }
 
-//        return view('pages.admin.vocabulary.topic.detail');
     }
 
     public function addQuestionMultiple(Request $request)
@@ -362,7 +349,8 @@ class LearnController extends Controller
                     'name' => $request->name,
                     'content' => $request->contentReading,
                     'url_media' => $_SERVER['SERVER_NAME'] . ':8000/upload/video/' . $file_name,
-                    'type_video' => $request->type_video
+                    'type_video' => $request->type_video,
+                    'is_exam' => $request->is_exam
                 ]);
                 $dataQuestion = json_decode($request->dataQuestion, true);
 
@@ -371,7 +359,8 @@ class LearnController extends Controller
                     'name' => $request->name,
                     'content' => $request->contentReading,
                     'url_media' => $request->linkMedia,
-                    'type_video' => $request->type_video
+                    'type_video' => $request->type_video,
+                    'is_exam' => $request->is_exam
                 ]);
             }
 

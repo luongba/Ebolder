@@ -92,6 +92,18 @@
       <span class="font-semibold text-[15px] mt-4 mb-2 mr-2">Exam</span>
       <el-switch v-model="detailTopic.isExam"></el-switch>
     </div>
+    <div class="mt-4">
+      <editor
+        v-model="detailTopic.description"
+        api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
+        :init="init()"
+      />
+    </div>
+    <div class="flex items-center justify-center mt-4">
+      <el-button @click="saveChangeTitle(detailTopic.id)"
+        >Change description</el-button
+      >
+    </div>
     <p class="font-semibold text-[15px] mt-4 mb-2">Statistical</p>
     <div
       class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-4 text-[14px] font-semibold flex flex-col items-start"
@@ -177,14 +189,16 @@
     </div>
   </div>
 </template>
-
-<script>
+  
+  <script>
 import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   components: {
     StarRating,
+    Editor,
   },
   data() {
     return {
@@ -195,6 +209,7 @@ export default {
         name: null,
         description: null,
         question: [],
+        content: "",
       },
       dataQuestion: [],
       take: 5,
@@ -232,13 +247,56 @@ export default {
     },
   },
   watch: {
-    "detailTopic.isExam"(value) {
-      if (typeof value == "boolean") {
-        this.setStatusExam(value);
-      }
+    "detailTopic.isExam": {
+      handler(value) {
+        if (typeof value == "boolean") {
+          this.setStatusExam(value);
+        }
+      },
+      immediate: false,
     },
   },
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 600,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+      };
+    },
     resetFeild() {
       this.show = false;
       this.topicData = {
@@ -346,10 +404,15 @@ export default {
         let { data } = await baseRequest.post(`/admin/edit-topic-grammar`, {
           id,
           name: this.detailTopic.name,
+          description: this.detailTopic.description,
         });
         if (data.status == 200) {
           this.isEditTitle = false;
           this.getDetailTopic();
+          this.$message({
+            type: "success",
+            message: "cập nhật thành công!",
+          });
         }
       } catch (error) {
         console.log(error);
@@ -381,9 +444,10 @@ export default {
   },
 };
 </script>
-<style scoped>
+  <style scoped>
 .bg-blur {
   background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
 }
 
 .fade-enter-active,
@@ -395,3 +459,4 @@ export default {
   opacity: 0;
 }
 </style>
+  

@@ -36,7 +36,8 @@ class ListenController extends Controller
             }
             $audio = AudioListening::create([
                 'name' => $file->getClientOriginalName(),
-                'audio' => $file_name
+                'audio' => $file_name,
+                'content' =>$request->content
             ]);
             return response()->json([
                 "status" => 200,
@@ -249,18 +250,25 @@ class ListenController extends Controller
     public function updateAudio(Request $request, $id)
     {
         try {
+            $audio = AudioListening::whereId($id)->first();
             if ($request->has('file')) {
                 $file = $request->file;
                 $file_name = time() . '_' . $file->getClientOriginalName();
                 $file->move(public_path('upload/audio'), $file_name);
+                $audio->update([
+                    'name' => $file->getClientOriginalName(),
+                    'audio' => $file_name,
+                    'content' =>$request->content
+                ]);
 
+            }else {
+                $audio->update([
+                    'content' =>$request->content
+                ]);
             }
-            $audio = AudioListening::whereId($id)->first();
+            
 
-            $audio->update([
-                'name' => $file->getClientOriginalName(),
-                'audio' => $file_name,
-            ]);
+            
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

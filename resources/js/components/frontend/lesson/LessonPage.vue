@@ -36,9 +36,40 @@
                 "
               ></el-progress>
             </div>
+            <h2
+              class="text-[24px] font-semibold leading-[120%] text-center mt-4"
+            >
+              <VueCountdown
+                :auto-start="false"
+                :time="timerun"
+                @progress="handleCountdownProgress"
+              >
+                <template slot-scope="props"
+                  >Your time： {{ props.minutes }} minutes,
+                  {{ props.seconds }} seconds.</template
+                >
+              </VueCountdown>
+            </h2>
           </div>
         </transition>
         <div class="bg-blur-f p-[8px] lg:px-[48px] lg:py-[48px]">
+          <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
+            <p>WRITING</p>
+          </h2>
+          <h2
+            class="text-[24px] font-semibold leading-[120%] text-center mt-4 mb-4"
+          >
+            <VueCountdown
+              :time="timeWork"
+              @progress="handleCountdownProgress"
+              ref="countdown"
+            >
+              <template slot-scope="props"
+                >Time Remaining： {{ props.minutes }} minutes,
+                {{ props.seconds }} seconds.</template
+              >
+            </VueCountdown>
+          </h2>
           <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
             <p>{{ topic.name }}</p>
           </h2>
@@ -296,9 +327,11 @@
                 :class="[
                   answerData[index].dataChoose[
                     getIndexSharp(question, indexAns)
-                  ].radioValue ==
+                  ].radioValue?.trim()
+                  ?.toLowerCase() ==
                   answerData[index].dataRight[getIndexSharp(question, indexAns)]
-                    .right_answer
+                    .right_answer?.trim()
+                  ?.toLowerCase()
                     ? 'right-ans'
                     : 'wrong-ans',
                 ]"
@@ -313,121 +346,7 @@
               class="w-full"
               v-for="(item, indexItem) in question.dataAns"
               :key="item.id"
-            >
-              <!-- <input
-                                type="radio"
-                                :id="`test${item.id}`"
-                                :name="`radio-group${index}`"
-                                checked
-                                v-model="answerData[index].radioValue"
-                                :value="item.id"
-                                hidden
-                                :disabled="isShowLabel == false"
-                            />
-                            <label
-                                :for="`test${item.id}`"
-                                class="
-                                    flex
-                                    justify-between
-                                    items-center
-                                    w-full
-                                    py-2
-                                    px-4
-                                    border-2
-                                    rounded-lg
-                                    border-answer
-                                    min-h-[70px]
-                                "
-                                :class="[
-                                    answerData[index].radioValue == item.id
-                                        ? `active`
-                                        : '',
-                                    answerData[index].radioValue ==
-                                    answerData[index].right_answer
-                                        ? `right`
-                                        : 'wrong',
-                                    item.id == answerData[index].right_answer
-                                        ? `right_wait`
-                                        : '',
-                                    item.id == answerData[index].right_answer &&
-                                    item.id == answerData[index].radioValue
-                                        ? 'bgright'
-                                        : '',
-                                ]"
-                            >
-                                <div
-                                    class="text-[16px] font-semibold text-answer"
-                                    :class="[
-                                        answerData[index].radioValue == item.id
-                                            ? `active`
-                                            : '',
-                                        answerData[index].radioValue ==
-                                        answerData[index].right_answer
-                                            ? `right`
-                                            : 'wrong',
-                                        item.id == answerData[index].right_answer
-                                            ? `right_wait`
-                                            : '',
-                                        item.id == answerData[index].right_answer &&
-                                        item.id == answerData[index].radioValue
-                                            ? 'bgright'
-                                            : '',
-                                    ]"
-                                >
-                                    {{ item.text }}
-                                </div>
-                                <div>
-                                    <el-button
-                                        v-if="
-                                            item.id ==
-                                            answerData[index].right_answer
-                                        "
-                                        type="success"
-                                        icon="el-icon-check"
-                                        circle
-                                        size="mini"
-                                    ></el-button>
-                                    <div v-else>
-                                        <AVue
-                                            :isActive="
-                                                answerData[index].radioValue ==
-                                                item.id
-                                                    ? true
-                                                    : false
-                                            "
-                                            v-if="indexItem == 0"
-                                        />
-                                        <BVue
-                                            :isActive="
-                                                answerData[index].radioValue ==
-                                                item.id
-                                                    ? true
-                                                    : false
-                                            "
-                                            v-if="indexItem == 1"
-                                        />
-                                        <CVue
-                                            :isActive="
-                                                answerData[index].radioValue ==
-                                                item.id
-                                                    ? true
-                                                    : false
-                                            "
-                                            v-if="indexItem == 2"
-                                        />
-                                        <DVue
-                                            :isActive="
-                                                answerData[index].radioValue ==
-                                                item.id
-                                                    ? true
-                                                    : false
-                                            "
-                                            v-if="indexItem == 3"
-                                        />
-                                    </div>
-                                </div>
-                            </label> -->
-            </div>
+            ></div>
           </div>
         </div>
 
@@ -449,7 +368,7 @@
           </button>
           <button
             v-show="
-              indexPage == topic.questions.length - 1 && isShowLabel == true
+              topic.questions.length > 0 && indexPage == topic.questions.length - 1 && isShowLabel == true || (topic.questions.length === 0 && request.exam)
             "
             @click="submit"
             class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
@@ -471,7 +390,7 @@ import DVue from "../alphabet/D.vue";
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import baseRequest from "../../../utils/baseRequest";
 export default {
-  props: ["data", "user"],
+  props: ["data", "user", "query", "request"],
   data() {
     return {
       answerData: [],
@@ -481,7 +400,7 @@ export default {
       arrWrongAns: [],
       total: 0,
       isShowLabel: true,
-      timeWork: 20 * 60 * 1000,
+      timeWork: 45 * 60 * 1000,
       timerun: 0,
       indexPage: 0,
       linkMedia: "",
@@ -497,6 +416,7 @@ export default {
   computed: {},
   methods: {
     async submit() {
+      this.$refs.countdown.abort();
       this.topic.questions.forEach((item, index) => {
         this.answerData[index].right_answer = item.right_answer;
       });
@@ -510,13 +430,60 @@ export default {
             item.dataChoose.length === item.dataRight.length &&
             item.dataChoose.every(
               (value, index) =>
-                value.radioValue === item.dataRight[index].right_answer
+                value.radioValue?.trim()?.toLowerCase() === item.dataRight[index].right_answer?.trim()?.toLowerCase()
             );
           if (sameArray) {
             this.arrRightAns.push(item);
           }
         }
       });
+      let data_exam = {
+        answerData: this.answerData,
+        arrRightAns: this.arrRightAns,
+      };
+      data_exam = JSON.stringify(data_exam);
+      let dataHistory = {
+        test_type: "Writing",
+        topic_name: this.data.name,
+        scores: `${this.arrRightAns.length}/${this.topic.questions.length}`,
+        completion_time: this.timerun,
+        content_exam: data_exam,
+        exam_id: this.data.id,
+        level_id: this.query.levelId,
+      };
+      if (this.request.exam) {
+        dataHistory.exam_final_id = this.request.examId;
+        dataHistory.no_exam = false;
+        try {
+          let result = await baseRequest.post("/admin/save-history", dataHistory);
+        } catch (e) {
+          console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
+        }
+      }else {
+        dataHistory.no_exam = true;
+        try {
+          let result = await baseRequest.post("/admin/save-history", dataHistory);
+        } catch (e) {
+          console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
+        }
+      }
+
+      if (this.request.exam) {
+        try {
+          let result = await baseRequest.post(
+            "/admin/save-exam-history-final",
+            {
+              id: this.request.historyId,
+              result_writing: `${this.arrRightAns.length}/${this.topic.questions.length}`,
+              time: this.timerun,
+            }
+          );
+
+          if (result.data.status === 200) {
+            window.location.href = `${$Api.baseUrl}/exam/result/${this.request.historyId}&l=${this.request.l}&s=${this.request.s}&w=${this.request.w}&r=${this.request.r}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
+          }
+        } catch (error) {}
+      }
 
       window.scrollTo({ top: 0, behavior: "smooth" });
       setTimeout(() => {
@@ -546,6 +513,12 @@ export default {
       let arr = question.question.split(" ").splice(0, index + 1);
       return arr.filter((e) => e == "#").length - 1;
     },
+    handleCountdownProgress(data) {
+      this.timerun = this.timeWork - data.totalMilliseconds + 1000;
+      if (this.timerun === this.timeWork) {
+        this.submit();
+      }
+    },
     renderInput(question, index) {
       let sum = 0;
       let arrQuestion = question.question.split(" ");
@@ -569,8 +542,44 @@ export default {
       }
       return arrQuestion.join(" ");
     },
+    async checkHistoryExam() {
+      try {
+        let config = {
+          type: "Writing",
+          exam_id: this.data.id,
+        };
+        if (this.request.exam) {
+          config.exam_final_id = this.request.examId;
+          config.status = "exam";
+        } else {
+          config.level_id = this.query.levelId;
+          config.status = "learn";
+        }
+        let result = await baseRequest.post(
+          "/admin/check-history-exam",
+          config
+        );
+        result = result.data;
+        if (result.status === 200 && result.data !== null) {
+          this.$refs.countdown.abort();
+          this.timerun = parseInt(result.data.completion_time);
+          let data_exam = JSON.parse(result.data.content_exam);
+          this.answerData = data_exam.answerData;
+          this.arrRightAns = data_exam.arrRightAns;
+          this.isShowLabel = false;
+        }
+      } catch (error) {
+        console.log(
+          "🚀 ~ file: VocabularyTest.vue:456 ~ checkHistoryExam ~ error:",
+          error
+        );
+      }
+    },
   },
   created() {
+    if (this.request.exam) {
+      this.checkHistoryExam();
+    }
     this.topic = {
       content: this.data.content,
       name: this.data.name,
@@ -666,7 +675,9 @@ export default {
 .wrong-ans {
   border: 2px solid red;
 }
-table, th, td {
+table,
+th,
+td {
   border: 1px solid #fff;
   border-collapse: collapse;
   padding: 5px;

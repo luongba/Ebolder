@@ -53,6 +53,11 @@
                   }"
                 />
               </div>
+              <div class="">
+                <el-form-item label="Exam" prop="isExam">
+                  <el-switch v-model="form.isExam"></el-switch>
+                </el-form-item>
+              </div>
               <div class="flex justify-end items-center mt-4">
                 <el-button plain @click="resetFeild">Cancel</el-button>
                 <el-button type="primary" @click="createQuestion('ruleForm')">{{
@@ -71,7 +76,7 @@
             <i class="lnr-book icon-gradient bg-mean-fruit"></i>
           </div>
           <div>
-            <p>SPEAKING LEVEL TEST</p>
+            <p>SPEAKING </p>
           </div>
         </div>
         <div
@@ -106,7 +111,15 @@
         >
           <el-table-column prop="name" label="Name" sortable width="240">
           </el-table-column>
-          <el-table-column prop="content" label="Content"> </el-table-column>
+          <el-table-column prop="is_exam" label="is exam">
+            <template slot-scope="scope">
+              <el-tag
+                :type="scope.row.is_exam == 0 ? 'danger' : 'success'"
+                disable-transitions
+                >{{ scope.row.is_exam == 0 ? 'Disable' : "Enable" }}</el-tag
+              >
+            </template>
+          </el-table-column>
           <el-table-column width="160" label="Action">
             <template slot-scope="scope">
               <el-button
@@ -164,6 +177,7 @@ export default {
       form: {
         name: "",
         content: "",
+        isExam: false,
       },
       rules: {
         name: [
@@ -202,6 +216,7 @@ export default {
       this.form = {
         name: row.name,
         content: row.content,
+        isExam: row.is_exam === 0 ? false : true,
       };
     },
     resetFeild() {
@@ -228,7 +243,11 @@ export default {
               try {
                 let result = await baseRequest.post(
                   `/admin/create-question-luyen-am/`,
-                  this.form
+                  {
+                    name: this.form.name,
+                    content: this.form.content,
+                    isExam: this.form.isExam ? 1 : 0,
+                  }
                 );
                 if (result.data.status === 200) {
                   this.$message({
@@ -257,7 +276,11 @@ export default {
       try {
         let result = await baseRequest.post(
           `/admin/update-question-luyen-am/${this.ids}`,
-          this.form
+          {
+            name: this.form.name,
+            content: this.form.content,
+            isExam: this.form.isExam ? 1 : 0,
+          }
         );
         if (result.data.status === 200) {
           this.$message({
@@ -315,7 +338,7 @@ export default {
         .then(async () => {
           try {
             let rs = await baseRequest.post(
-              `/admin/delete-question-luyen-am/${row.id}`,
+              `/admin/delete-question-luyen-am/${row.id}`
             );
             if (rs.data.status == 200) {
               this.getAllData();

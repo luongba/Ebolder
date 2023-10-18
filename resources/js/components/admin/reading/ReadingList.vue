@@ -17,12 +17,13 @@
                         text-[14px]
                         font-semibold
                     "
+                    :style="item.is_exam == 1 ? 'border: 4px solid #3f6ad8 !important' : ''"
                     v-for="item in listTopic"
                     :key="item.id"
                 >
                     <span class="w-[60%] overflow-hidden mr-2">{{
                         item.name
-                    }}</span>
+                    }} </span>
                     <div class="flex items-center">
                         <a
                             :href="`${ApiUrl}/admin/reading-level-test/topic-detail/${item.id}`"
@@ -155,6 +156,7 @@ export default {
                     this.listTopic = rs.data.data.map((item) => ({
                         id: item.id,
                         name: item.name,
+                        is_exam: item.is_exam
                     }));
                 }
             } catch (e) {

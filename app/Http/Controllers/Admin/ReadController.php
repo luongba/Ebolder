@@ -112,7 +112,7 @@ class ReadController extends Controller
 
     public function detailTopic($id)
     {
-        return view('pages.admin.Reading.detail', compact('id'));
+        return view('pages.admin.reading.detail', compact('id'));
     }
 
     public function detailTopicData(Request $request, $id)
@@ -300,55 +300,11 @@ class ReadController extends Controller
 
         try {
             $read = Reading::whereId($request->id)->first();
-            $dataQuestion = ($request->dataQuestion);
             $read->update([
                 "name" => $request->name,
                 "content" => $request->contentReading,
                 "is_exam" => $request->isExam
             ]);
-            foreach ($dataQuestion as $key => $value) {
-                $check = QuestionReading::whereId($value['id'])->exists();
-                if (!$check) {
-                    $res = $read->QuestionReading()->create([
-                        "question" => $value['question'],
-                        "level" => $value['level'],
-                        'type' => $value['type']
-                    ]);
-                    if ($value['answer']) {
-                        $res->RightAnswerReading()->create([
-                            "answer_id" => $value["answer"]
-                        ]);
-                    }
-                    foreach ($value['dataAns'] as $keyAds => $item) {
-                        QuestionReading::whereId($value['id'])->first()->AnswerReading()->create([
-                            "id" => $item['idAns'],
-                            "text" => $item['text'],
-                            'answer_id' => $item['idAns'],
-                        ]);
-                    }
-                } else {
-                    QuestionReading::whereId($value['id'])->first()->update([
-                        "id" => $value['id'],
-                        "reading_id" => $read->id,
-                        "question" => $value['question'],
-                        "level" => $value['level'],
-                        "type" => $value['type']
-                    ]);
-
-                    QuestionReading::whereId($value['id'])->first()->RightAnswerReading()->update([
-                        "answer_id" => $value["answer"]
-                    ]);
-                    QuestionReading::whereId($value['id'])->first()->AnswerReading()->delete();
-                    foreach ($dataQuestion[$key]['dataAns'] as $keyAds => $item) {
-                        QuestionReading::whereId($value['id'])->first()->AnswerReading()
-                            ->create([
-                                'id' => $item['idAns'],
-                                'answer_id' => $item['idAns'],
-                                'text' => $item['text']
-                            ]);
-                    }
-                }
-            }
 
             return response()->json([
                 "status" => 200,

@@ -131,5 +131,23 @@ class AuthServiceProvider extends ServiceProvider
             return $user->checkPermisionAccess('Level_Edit');
         });
         //
+        Gate::define('Exam_List', function ($user){
+            return $user->checkPermisionAccess('Exam_List');
+        });
+        Gate::define('Speaking_List', function ($user){
+            return $user->checkPermisionAccess('Speaking_List');
+        });
+        Gate::define('Speaking_Detail', function ($user){
+            return $user->checkPermisionAccess('Speaking_Detail');
+        });
+        Gate::define('Question_Speaking_List', function ($user){
+            return $user->checkPermisionAccess('Question_Speaking_List');
+        });
+        Gate::define('Question_Speaking_Create', function ($user){
+            return $user->checkPermisionAccess('Question_Speaking_Create');
+        });
+        Gate::define('Talking_List', function ($user){
+            return $user->checkPermisionAccess('Talking_List');
+        });
     }
 }

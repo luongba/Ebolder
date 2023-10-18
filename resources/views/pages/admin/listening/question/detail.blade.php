@@ -9,7 +9,7 @@
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div>
-                        LISTENING LEVEL TEST
+                        LISTENING 
                     </div>
                 </div>
             </div>

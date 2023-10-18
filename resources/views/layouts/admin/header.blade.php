@@ -34,7 +34,7 @@
     <div class="app-header__content">
         <div class="app-header-left">
             <!---------------------     Start Search  section     --------------------->
-            <div class="search-wrapper">
+            {{-- <div class="search-wrapper">
                 <div class="input-holder">
                     <input type="text" class="search-input" placeholder="Search Campaigns">
                     <button class="search-icon">
@@ -42,7 +42,7 @@
                     </button>
                 </div>
                 <button class="close"></button>
-            </div>
+            </div> --}}
             <!---------------------     End Search  section     --------------------->
         </div>
         <div class="app-header-right">

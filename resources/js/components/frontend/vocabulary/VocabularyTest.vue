@@ -7,21 +7,8 @@
         v-show="isShowLabel"
       >
         <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>ENGLISH VOCABULARY LEVEL TEST</p>
+          <p>VOCABULARY</p>
         </h2>
-        <ul>
-          <li class="list-disc text-[16px] mb-2">
-            There are 40 questions in this vocabulary test.
-          </li>
-          <li class="list-disc text-[16px] mb-2">
-            They cover all levels from elementary (A1) to advanced (C1) in a
-            random order. You will get your score at the end
-          </li>
-
-          <li class="list-disc text-[16px]">
-            Don’t use a dictionary – the idea is to find your natural level
-          </li>
-        </ul>
         <h2 class="text-[24px] font-semibold leading-[120%] text-center mt-4">
           <VueCountdown
             :time="timeWork"
@@ -34,8 +21,13 @@
             >
           </VueCountdown>
         </h2>
+        <div v-html="data.description"></div>
       </div>
-      <a href="/learn" style="text-decoration: none" v-show="!isShowLabel || !request.exam">
+      <a
+        href="/learn"
+        style="text-decoration: none"
+        v-show="!isShowLabel && !request.exam"
+      >
         <button
           class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
         >
@@ -295,9 +287,9 @@
               "
               :class="[
                 answerData[index].dataChoose[getIndexSharp(question, indexAns)]
-                  .radioValue ==
+                  .radioValue?.trim()?.toLowerCase() ==
                 answerData[index].dataRight[getIndexSharp(question, indexAns)]
-                  .right_answer
+                  .right_answer?.trim()?.toLowerCase()
                   ? 'right-ans'
                   : 'wrong-ans',
               ]"
@@ -309,7 +301,7 @@
         </div>
       </div>
       <button
-        v-show="isShowLabel"
+        v-show="isShowLabel && questions.length > 0"
         @click="submit"
         class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80 mt-4 ml-auto"
       >
@@ -320,7 +312,7 @@
     <!-- <footer-component /> -->
   </div>
 </template>
-<script>
+  <script>
 import AVue from "../alphabet/A.vue";
 import BVue from "../alphabet/B.vue";
 import CVue from "../alphabet/C.vue";
@@ -337,7 +329,7 @@ export default {
       arrWrongAns: [],
       total: 0,
       isShowLabel: true,
-      timeWork: 20 * 60 * 1000,
+      timeWork: 45 * 60 * 1000,
       timerun: 0,
     };
   },
@@ -364,7 +356,7 @@ export default {
             item.dataChoose.length === item.dataRight.length &&
             item.dataChoose.every(
               (value, index) =>
-                value.radioValue === item.dataRight[index].right_answer
+                value.radioValue?.trim()?.toLowerCase() === item.dataRight[index].right_answer?.trim()?.toLowerCase()
             );
           if (sameArray) {
             this.arrRightAns.push(item);
@@ -383,25 +375,22 @@ export default {
         completion_time: this.timerun,
         content_exam: data_exam,
         exam_id: this.data.id,
-        level_id: this.query.levelId
+        level_id: this.query.levelId,
       };
-      try {
-        let result = await baseRequest.post("/admin/save-history", dataHistory);
-      } catch (e) {
-        console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
-      }
-      if (
-        this.query.testId &&
-        this.query.levelId &&
-        (this.arrRightAns.length / this.answerData.length) * 100 > 10
-      ) {
+      if (this.request.exam) {
+        dataHistory.exam_final_id = this.request.examId;
+        dataHistory.no_exam = false;
         try {
-          let rs = await baseRequest.post("/admin/save-exam-result", {
-            levelId: this.query.levelId,
-            type: 3,
-          });
+          let result = await baseRequest.post("/admin/save-history", dataHistory);
         } catch (e) {
-          console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
+          console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
+        }
+      }else {
+        dataHistory.no_exam = true;
+        try {
+          let result = await baseRequest.post("/admin/save-history", dataHistory);
+        } catch (e) {
+          console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
         }
       }
       if (this.request.exam) {
@@ -415,7 +404,7 @@ export default {
             }
           );
           if (result.data.status === 200) {
-            window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${this.request.g}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&exam=true`;
+            window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${this.request.g}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&p=${this.request.p}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
           }
         } catch (error) {}
       }
@@ -444,40 +433,48 @@ export default {
         if (arrQuestion[i] == "#") {
           sum++;
           arrQuestion[i] = `<input
-                            style="color:black;
-                                border: none;
-                                outline:none;
-                                border-radius:
-                                5px; padding: 2px .5em;
-                                background: #e2e7ed;
-                                display: inline-block;
-                                width: 100px"
-                                v-model='${
-                                  this.answerData[index].dataChoose[sum - 1]
-                                    .radioValue
-                                }'>`;
+                              style="color:black;
+                                  border: none;
+                                  outline:none;
+                                  border-radius:
+                                  5px; padding: 2px .5em;
+                                  background: #e2e7ed;
+                                  display: inline-block;
+                                  width: 100px"
+                                  v-model='${
+                                    this.answerData[index].dataChoose[sum - 1]
+                                      .radioValue
+                                  }'>`;
         }
       }
       return arrQuestion.join(" ");
     },
     async checkHistoryExam() {
       try {
-        let result = await baseRequest.post("/admin/check-history-exam", {
-          type: 'Vocabulary',
+        let config = {
+          type: "Vocabulary",
           exam_id: this.data.id,
-          level_id: this.query.levelId
-        });
-        result = result.data;
-        if(result.status === 200 && result.data !== null){
-            this.$refs.countdown.abort();
-            this.timerun = parseInt(result.data.completion_time);
-            let data_exam = JSON.parse(result.data.content_exam);
-            this.answerData = data_exam.answerData;
-            this.arrRightAns = data_exam.arrRightAns;
-            this.isShowLabel = false;
-
+        };
+        if (this.request.exam) {
+          config.exam_final_id = this.request.examId;
+          config.status = "exam";
+        } else {
+          config.level_id = this.query.levelId;
+          config.status = "learn";
         }
-        
+        let result = await baseRequest.post(
+          "/admin/check-history-exam",
+          config
+        );
+        result = result.data;
+        if (result.status === 200 && result.data !== null) {
+          this.$refs.countdown.abort();
+          this.timerun = parseInt(result.data.completion_time);
+          let data_exam = JSON.parse(result.data.content_exam);
+          this.answerData = data_exam.answerData;
+          this.arrRightAns = data_exam.arrRightAns;
+          this.isShowLabel = false;
+        }
       } catch (error) {
         console.log(
           "🚀 ~ file: VocabularyTest.vue:456 ~ checkHistoryExam ~ error:",
@@ -520,11 +517,13 @@ export default {
         });
       }
     });
-    this.checkHistoryExam();
+    if (this.request.exam) {
+      this.checkHistoryExam();
+    }
   },
 };
 </script>
-<style>
+  <style scoped>
 .border-answer {
   border-color: #eee;
 }
@@ -566,3 +565,4 @@ export default {
   color: #fff;
 }
 </style>
+  

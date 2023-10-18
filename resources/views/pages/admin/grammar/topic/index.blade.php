@@ -9,7 +9,7 @@
                         <i class="lnr-book icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div>
-                        GRAMMAR LEVEL TEST
+                        GRAMMAR 
                     </div>
                 </div>
             </div>

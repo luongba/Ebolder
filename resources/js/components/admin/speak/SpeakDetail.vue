@@ -25,7 +25,6 @@
               </div>
               <div
                 class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-2 text-[14px] font-semibold mb-4"
-                
                 v-for="itemQues in dataQuestion"
                 :key="itemQues.id"
                 v-else
@@ -93,6 +92,43 @@
       <span class="font-semibold text-[15px] mt-4 mb-2 mr-2">Exam</span>
       <el-switch v-model="detailTopic.isExam"></el-switch>
     </div>
+    <div class="mt-4">
+      <editor
+        style="z-index: -1"
+        v-model="detailTopic.description"
+        api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
+        :init="init()"
+      />
+    </div>
+    <div class="flex items-center justify-center mt-4">
+      <el-button @click="saveChangeTitle(detailTopic.id)"
+        >Change description</el-button
+      >
+    </div>
+    <!-- <div class="mt-4">
+      <div
+        class="w-full p-4 rounded-sm border-dashed bg-white flex items-center justify-center cursor-pointer mt-4"
+        style="border-width: 2px"
+        @click="uploadAudio"
+      >
+        <div class="flex flex-col items-center">
+          <i class="el-icon-upload text-[50px]"></i>
+          <p class="mt-2 text-[15px] font-semibold">Click to upload</p>
+        </div>
+      </div>
+      <input
+        type="file"
+        ref="fileAudio"
+        @change="getChangeAudio($event)"
+        hidden
+      />
+    </div>
+    <div class="mt-4">
+      <audio id="audio-preview" class="w-full" controls />
+    </div>
+    <div class="flex items-center justify-center" v-if="file">
+      <el-button @click="update">Change</el-button>
+    </div> -->
     <p class="font-semibold text-[15px] mt-4 mb-2">Statistical</p>
     <div
       class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-4 text-[14px] font-semibold flex flex-col items-start"
@@ -178,14 +214,16 @@
     </div>
   </div>
 </template>
-
-<script>
+  
+  <script>
 import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   components: {
     StarRating,
+    Editor,
   },
   data() {
     return {
@@ -200,6 +238,7 @@ export default {
       dataQuestion: [],
       take: 5,
       isEditTitle: false,
+      file: null,
     };
   },
   props: ["param"],
@@ -233,13 +272,56 @@ export default {
     },
   },
   watch: {
-    "detailTopic.isExam"(value) {
-      if (typeof value == "boolean") {
-        this.setStatusExam(value);
-      }
+    "detailTopic.isExam": {
+      handler(value) {
+        if (typeof value == "boolean") {
+          this.setStatusExam(value);
+        }
+      },
+      immediate: false,
     },
   },
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 600,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+      };
+    },
     resetFeild() {
       this.show = false;
       this.topicData = {
@@ -269,11 +351,16 @@ export default {
         );
         if (rs.data.status == 200) {
           let data = rs.data.data;
+          console.log(
+            "🚀 ~ file: SpeakDetail.vue:305 ~ getDetailTopic ~ data:",
+            data
+          );
           this.detailTopic = {
             id: data.id,
             name: data.name,
             description: data.description,
-            isExam: data.is_exam,
+            path_url: data.path_url,
+            isExam: data.is_exam === 1 ? true : false,
             question: data.questiton_speak?.map((item) => {
               return {
                 idQues: item.id,
@@ -297,6 +384,42 @@ export default {
         console.log(e);
       }
     },
+    async update() {
+      try {
+        let formData = new FormData();
+        formData.append("file", this.file);
+        formData.append("name", this.detailTopic.name);
+        formData.append("description", this.detailTopic.description);
+        formData.append("isExam", this.detailTopic.isExam);
+        const headers = {
+          "Content-Type": "multipart/form-data",
+        };
+        let rs = await baseRequest.post(
+          `/admin/update-topic-speak/${this.detailTopic.id}`,
+          formData,
+          {
+            headers,
+          }
+        );
+        if (rs.data.status == 200) {
+          this.getDetailTopic();
+          this.$message({
+            type: "success",
+            message: "update successful topics",
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: "update error topics",
+          });
+        }
+      } catch (e) {
+        this.$message({
+          type: "error",
+          message: "Add error topics",
+        });
+      }
+    },
     async getAllQuestion() {
       try {
         let { data } = await baseRequest.get(`/admin/list-question-speak`);
@@ -307,6 +430,30 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    uploadAudio() {
+      this.$refs.fileAudio.click();
+    },
+    getChangeAudio(event) {
+      if (event.target.files[0].type == "audio/mpeg") {
+        this.file = event.target.files[0];
+        this.previewAudio();
+        this.isEditFile = true;
+      } else {
+        this.$message({
+          message: "The file is not in the correct format",
+          type: "error",
+        });
+      }
+    },
+    previewAudio() {
+      let audio = document.getElementById("audio-preview");
+      let reader = new FileReader();
+
+      reader.readAsDataURL(this.file);
+      reader.addEventListener("load", function () {
+        audio.src = reader.result;
+      });
     },
     async addTopic(id) {
       try {
@@ -347,10 +494,15 @@ export default {
         let { data } = await baseRequest.post(`/admin/edit-topic-speak`, {
           id,
           name: this.detailTopic.name,
+          description: this.detailTopic.description,
         });
         if (data.status == 200) {
           this.isEditTitle = false;
           this.getDetailTopic();
+          this.$message({
+            type: "success",
+            message: "cập nhật thành công!",
+          });
         }
       } catch (error) {
         console.log(error);
@@ -380,11 +532,18 @@ export default {
     this.getDetailTopic();
     this.getAllQuestion();
   },
+  mounted() {
+    let audio = document.getElementById("audio-preview");
+    setTimeout(() => {
+      audio.src = `${$Api.baseUrl}/${this.detailTopic.path_url}`;
+    }, 500);
+  },
 };
 </script>
-<style scoped>
+  <style scoped>
 .bg-blur {
   background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
 }
 
 .fade-enter-active,
@@ -396,3 +555,4 @@ export default {
   opacity: 0;
 }
 </style>
+  

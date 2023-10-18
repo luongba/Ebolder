@@ -7,21 +7,13 @@
         v-show="isShowLabel"
       >
         <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>ENGLISH SPEAKING LEVEL TEST</p>
+          <p>ENGLISH TALKING </p>
         </h2>
         <ul>
           <li class="list-disc text-[16px] mb-2">
             Read the text, then try to answer the questions
           </li>
 
-          <li class="list-disc text-[16px] mb-2">
-            Some questions are easier; some are more difficult. Don’t worry if
-            you don’t know the answer!
-          </li>
-          <li class="list-disc text-[16px]">
-            Try not to use a dictionary – the idea is to find your natural
-            level.
-          </li>
         </ul>
         <!-- <h2 class="text-[24px] font-semibold leading-[120%] text-center mt-4">
           <VueCountdown
@@ -187,14 +179,14 @@
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import baseRequest from "../../../utils/baseRequest";
 export default {
-  props: ["data", "query", "user"],
+  props: ["data", "query", "user", "request"],
   data() {
     return {
       answerData: [],
       topic: {},
       total: 0,
       isShowLabel: true,
-      timeWork: 20 * 60 * 1000,
+      timeWork: 45 * 60 * 1000,
       timerun: 0,
       indexPage: 0,
       isRecord: false,
@@ -276,9 +268,13 @@ export default {
       let formData = new FormData();
       formData.append("file", this.file);
       formData.append("user_id", this.user.id);
-      formData.append("level_id", this.query.levelId);
       formData.append("test_id", this.query.testId);
       formData.append("email", this.user.email);
+      if(!this.request.exam){
+        formData.append("level_id", this.query.levelId);
+      }else {
+        formData.append("exam_id", this.request.examId);
+      }
       const headers = {
         "Content-Type": "multipart/form-data",
       };
@@ -294,7 +290,7 @@ export default {
             message: rs.data.message,
           });
           await this.saveHistory();
-          await this.checkHistoryExam()
+          await this.checkHistoryExam();
         }
       } catch (e) {
         console.log(e);
@@ -313,13 +309,31 @@ export default {
     },
     async saveHistory() {
       let dataHistory = {
-        test_type: "Speaking-2",
+        test_type: "Talking",
         topic_name: this.data.name,
         scores: `5/5`,
         completion_time: "not require",
         exam_id: this.query.testId,
         level_id: this.query.levelId,
       };
+      if (this.request.exam) {
+        dataHistory.exam_final_id = this.request.examId;
+        if (this.request.exam) {
+          try {
+            let result = await baseRequest.post(
+              "/admin/save-exam-history-final",
+              {
+                id: this.request.historyId,
+                result_talking: `Done`,
+                time: this.timerun,
+              }
+            );
+            if (result.data.status === 200) {
+              window.location.href = `${$Api.baseUrl}/exam/result/${this.request.historyId}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
+            }
+          } catch (error) {}
+        }
+      }
       try {
         let result = await baseRequest.post("/admin/save-history", dataHistory);
       } catch (e) {
@@ -328,11 +342,21 @@ export default {
     },
     async checkHistoryExam() {
       try {
-        let result = await baseRequest.post("/admin/check-history-exam", {
-          type: "Speaking-2",
+        let config = {
+          type: "Talking",
           exam_id: this.query.testId,
-          level_id: this.query.levelId,
-        });
+        };
+        if (this.request.exam) {
+          config.exam_final_id = this.request.examId;
+          config.status = "exam";
+        } else {
+          config.level_id = this.query.levelId;
+          config.status = "learn";
+        }
+        let result = await baseRequest.post(
+          "/admin/check-history-exam",
+          config
+        );
         result = result.data;
         if (result.status === 200 && result.data !== null) {
           const startBtn = document.getElementById("startBtn");
@@ -356,11 +380,18 @@ export default {
     },
     async getAudioSaved() {
       try {
-        let result = await baseRequest.post("/admin/get-result-exam-luyen-am", {
-          user_id: this.user.id,
-          exam_id: this.query.testId,
-          level_id: this.query.levelId,
-        });
+        const config = {
+            user_id: this.user.id,
+            exam_id: this.query.testId,
+        }
+
+        if (this.request.exam) {
+            config.exam_final_id = this.request.examId
+        
+        }else {
+            config.level_id = this.query.levelId
+        }
+        let result = await baseRequest.post("/admin/get-result-exam-luyen-am", config);
         if (result.data.status === 200) {
           this.audio_src = result.data.data.url_audio;
         }

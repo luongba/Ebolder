@@ -27,14 +27,14 @@
                     ></el-input>
                   </el-form-item>
                 </div>
+
                 <div class="">
                   <el-form-item label="Description" prop="description">
-                    <el-input
-                      type="textarea"
-                      placeholder="Description"
-                      rows="3"
+                    <editor
                       v-model="topicData.description"
-                    ></el-input>
+                      api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
+                      :init="init()"
+                    />
                   </el-form-item>
                 </div>
                 <div class="">
@@ -57,7 +57,9 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
-          :style="item.is_exam == 1 ? 'border: 4px solid #8bca4a !important' : ''"
+          :style="
+            item.is_exam == 1 ? 'border: 4px solid #3f6ad8 !important' : ''
+          "
           v-for="item in listTopic"
           :key="item.id"
         >
@@ -103,10 +105,12 @@
 <script>
 import LoadingVue from "../loading/Loading.vue";
 import baseRequest from "../../../utils/baseRequest";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   components: {
     LoadingVue,
+    Editor,
   },
   data() {
     return {
@@ -114,7 +118,7 @@ export default {
       topicData: {
         name: null,
         description: null,
-        isExam: false
+        isExam: false,
       },
       listTopic: [],
       ApiUrl: $Api.baseUrl,
@@ -140,11 +144,52 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 400,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+      };
+    },
     resetFeild() {
       this.show = false;
       this.topicData = {
         name: null,
         description: null,
+        isExam: false,
       };
     },
     async createTopic(formName) {

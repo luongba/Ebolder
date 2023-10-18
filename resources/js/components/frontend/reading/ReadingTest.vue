@@ -7,22 +7,8 @@
         v-show="isShowLabel"
       >
         <h2 class="text-[28px] font-semibold leading-[120%] text-center mb-4">
-          <p>ENGLISH READING LEVEL TEST</p>
+          <p>READING</p>
         </h2>
-        <ul>
-          <li class="list-disc text-[16px] mb-2">
-            Read the text, then try to answer the questions
-          </li>
-
-          <li class="list-disc text-[16px] mb-2">
-            Some questions are easier; some are more difficult. Don’t worry if
-            you don’t know the answer!
-          </li>
-          <li class="list-disc text-[16px]">
-            Try not to use a dictionary – the idea is to find your natural
-            level.
-          </li>
-        </ul>
         <h2 class="text-[24px] font-semibold leading-[120%] text-center mt-4">
           <VueCountdown
             :time="timeWork"
@@ -36,7 +22,11 @@
           </VueCountdown>
         </h2>
       </div>
-      <a href="/learn" style="text-decoration: none" v-show="!isShowLabel && !request.exam">
+      <a
+        href="/learn"
+        style="text-decoration: none"
+        v-show="!isShowLabel && !request.exam"
+      >
         <button
           class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
         >
@@ -312,10 +302,16 @@
                   .radioValue
               "
               :class="[
-                answerData[index].dataChoose[getIndexSharp(question, indexAns)]
-                  .radioValue ==
-                answerData[index].dataRight[getIndexSharp(question, indexAns)]
-                  .right_answer
+                answerData[index].dataChoose[
+                  getIndexSharp(question, indexAns)
+                ].radioValue
+                  ?.trim()
+                  ?.toLowerCase() ==
+                answerData[index].dataRight[
+                  getIndexSharp(question, indexAns)
+                ].right_answer
+                  .trim()
+                  ?.toLowerCase()
                   ? 'right-ans'
                   : 'wrong-ans',
               ]"
@@ -457,7 +453,7 @@
           Prev
         </button>
         <button
-          v-show="indexPage != topic.questions.length - 1"
+          v-show="indexPage != topic.questions.length - 1 && topic.questions.length > 0"
           @click="movePage(1)"
           class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
         >
@@ -465,7 +461,7 @@
         </button>
         <button
           v-show="
-            indexPage == topic.questions.length - 1 && isShowLabel == true
+            topic.questions.length > 0 && indexPage == topic.questions.length - 1 && isShowLabel == true || (topic.questions.length === 0 && request.exam)
           "
           @click="submit"
           class="cursor-pointer px-4 py-2 text-center uppercase leading-[28px] flex items-center justify-center font-light rounded-md bg-button text-[19px] text-white hover:opacity-80"
@@ -496,7 +492,7 @@ export default {
       arrWrongAns: [],
       total: 0,
       isShowLabel: true,
-      timeWork: 20 * 60 * 1000,
+      timeWork: 45 * 60 * 1000,
       timerun: 0,
       indexPage: 0,
     };
@@ -524,7 +520,8 @@ export default {
             item.dataChoose.length === item.dataRight.length &&
             item.dataChoose.every(
               (value, index) =>
-                value.radioValue === item.dataRight[index].right_answer
+                value.radioValue?.trim()?.toLowerCase() ===
+                item.dataRight[index].right_answer?.trim()?.toLowerCase()
             );
           if (sameArray) {
             this.arrRightAns.push(item);
@@ -545,23 +542,20 @@ export default {
         exam_id: this.data.id,
         level_id: this.query.levelId,
       };
-      try {
-        await baseRequest.post("/admin/save-history", dataHistory);
-      } catch (e) {
-        console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
-      }
-      if (
-        this.query.testId &&
-        this.query.levelId &&
-        (this.arrRightAns.length / this.answerData.length) * 100 > 10
-      ) {
+      if (this.request.exam) {
+        dataHistory.exam_final_id = this.request.examId;
+        dataHistory.no_exam = false;
         try {
-          let rs = await baseRequest.post("/admin/save-exam-result", {
-            levelId: this.query.levelId,
-            type: 2,
-          });
+          await baseRequest.post("/admin/save-history", dataHistory);
         } catch (e) {
-          console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
+          console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
+        }
+      }else {
+        dataHistory.no_exam = true;
+        try {
+          await baseRequest.post("/admin/save-history", dataHistory);
+        } catch (e) {
+          console.log("🚀 ~ file: ReadingTest.vue:471 ~ submit ~ e", e);
         }
       }
       if (this.request.exam) {
@@ -575,7 +569,7 @@ export default {
             }
           );
           if (result.data.status === 200) {
-            window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${this.request.v}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&exam=true`;
+            window.location.href = `${$Api.baseUrl}/english-level-test/Writing?testId=${this.request.w}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
           }
         } catch (error) {}
       }
@@ -628,7 +622,7 @@ export default {
                                 background: #e2e7ed;
                                 display: inline-block;
                                 width: 100px"
-                                v-model='${
+                                v-model.trim='${
                                   this.answerData[index].dataChoose[sum - 1]
                                     .radioValue
                                 }'>`;
@@ -638,11 +632,21 @@ export default {
     },
     async checkHistoryExam() {
       try {
-        let result = await baseRequest.post("/admin/check-history-exam", {
+        let config = {
           type: "Reading",
           exam_id: this.data.id,
-          level_id: this.query.levelId,
-        });
+        };
+        if (this.request.exam) {
+          config.exam_final_id = this.request.examId;
+          config.status = "exam";
+        } else {
+          config.level_id = this.query.levelId;
+          config.status = "learn";
+        }
+        let result = await baseRequest.post(
+          "/admin/check-history-exam",
+          config
+        );
         result = result.data;
         if (result.status === 200 && result.data !== null) {
           this.$refs.countdown.abort();
@@ -663,6 +667,7 @@ export default {
   created() {
     this.topic = {
       content: this.data.content,
+
       questions: this.data.question_reading.map((reading) => ({
         id: reading.id,
         question: reading.question,
@@ -696,7 +701,9 @@ export default {
         });
       }
     });
-    this.checkHistoryExam();
+    if (this.request.exam) {
+      this.checkHistoryExam();
+    }
   },
 };
 </script>

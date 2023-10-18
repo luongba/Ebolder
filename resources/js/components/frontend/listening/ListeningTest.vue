@@ -12,24 +12,8 @@
                         mb-4
                     "
                 >
-                <p>About The Listening Test</p>
+                <p>Listening</p>
                 </h2>
-                <ul>
-                    <li class="list-disc text-[16px] mb-2">
-                        There are six parts in this listening test, and four questions for each part.
-                    </li>
-                    <li class="list-disc text-[16px] mb-2">
-                        You can listen to the recordings more than once if you need to. However, you shouldn’t listen more than three times. The test is here to find your natural listening level. Ideally, you should listen only once or twice.
-                    </li>
-
-                    <li class="list-disc text-[16px] mb-2">
-                        Some questions are easier; some are more difficult.
-                        Don’t worry if you don’t know the answer!
-                    </li>
-                    <li class="list-disc text-[16px]">
-                        You will get your results after you have answered all the questions.
-                    </li>
-                </ul>
                 <h2
                     class="
                         text-[24px]
@@ -51,7 +35,7 @@
                     </VueCountdown>
                 </h2>
             </div>
-            <a href="/learn" style="text-decoration: none;"  v-show="!isShowLabel">
+            <a href="/learn" style="text-decoration: none;"  v-show="!isShowLabel && !request.exam">
 
                 <button
                         class="
@@ -134,6 +118,8 @@
                 :key="topicItem.id"
                 v-if="indexAudio == indexPage"
             >
+            <div v-html="topicItem.content" class="bg-blur-f p-[8px] mt-4">
+                    </div>
                 <p class="text-[16px] mt-4">
                     Audio: <strong>{{ indexAudio + 1 }}</strong> of
                     <strong>{{ topic.length }}</strong>
@@ -308,7 +294,7 @@
                                 py-1
                             "
                             v-model="
-                                answerData[index].dataChoose[
+                                answerData.find(item => item.id === question.id).dataChoose[
                                     getIndexSharp(question, indexAns)
                                 ].radioValue
                             "
@@ -521,17 +507,17 @@
                                 py-1
                             "
                             v-model="
-                                answerData[index].dataChoose[
+                                answerData.find(item => item.id === question.id).dataChoose[
                                     getIndexSharp(question, indexAns)
                                 ].radioValue
                             "
                             :class="[
-                                answerData[index].dataChoose[
+                                answerData.find(item => item.id === question.id).dataChoose[
                                     getIndexSharp(question, indexAns)
-                                ].radioValue ==
-                                answerData[index].dataRight[
+                                ].radioValue?.trim()?.toLowerCase() ==
+                                answerData.find(item => item.id === question.id).dataRight[
                                     getIndexSharp(question, indexAns)
-                                ].right_answer
+                                ].right_answer?.trim()?.toLowerCase()
                                     ? 'right-ans'
                                     : 'wrong-ans',
                             ]"
@@ -569,7 +555,7 @@
                     Prev
                 </button>
                 <button
-                    v-show="indexPage != topic.length - 1"
+                    v-show="indexPage != topic.length - 1 && topic.length > 0"
                     @click="movePage(1)"
                     class="
                         cursor-pointer
@@ -591,7 +577,7 @@
                     Next
                 </button>
                 <button
-                    v-if="isShowLabel == true && indexPage == topic.length - 1"
+                    v-if="isShowLabel == true && indexPage == topic.length - 1 || (topic.length === 0 && request.exam)"
                     @click="submit"
                     class="
                         cursor-pointer
@@ -636,7 +622,7 @@ export default {
       arrWrongAns: [],
       total: 0,
       isShowLabel: true,
-      timeWork: 20 * 60 * 1000,
+      timeWork: 45 * 60 * 1000,
       timerun: 0,
       indexPage: 0,
       baseURl: $Api.baseUrl,
@@ -677,7 +663,7 @@ export default {
             item.dataChoose.length === item.dataRight.length &&
             item.dataChoose.every(
               (value, index) =>
-                value.radioValue === item.dataRight[index].right_answer
+                value.radioValue?.trim()?.toLowerCase() === item.dataRight[index].right_answer?.trim()?.toLowerCase()
             );
           if (sameArray) {
             this.arrRightAns.push(item);
@@ -696,24 +682,26 @@ export default {
         completion_time: this.timerun,
         content_exam: data_exam,
         exam_id: this.data.id,
-        level_id: this.query.levelId
+        level_id: this.query.levelId,
       };
-      try {
-        let result = await baseRequest.post("/admin/save-history", dataHistory);
-      } catch (e) {
-        console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
-      }
-
-      if (
-        this.query.testId &&
-        this.query.levelId &&
-        (this.arrRightAns.length / this.answerData.length) * 100 > 10
-      ) {
+      if (this.request.exam) {
+        dataHistory.exam_final_id = this.request.examId;
+        dataHistory.no_exam = false;
         try {
-          let rs = await baseRequest.post("/admin/save-exam-result", {
-            levelId: this.query.levelId,
-            type: 1,
-          });
+          let result = await baseRequest.post(
+            "/admin/save-history",
+            dataHistory
+          );
+        } catch (e) {
+          console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
+        }
+      }else {
+        dataHistory.no_exam = true;
+        try {
+          let result = await baseRequest.post(
+            "/admin/save-history",
+            dataHistory
+          );
         } catch (e) {
           console.log("🚀 ~ file: ListeningTest.vue:679 ~ submit ~ e", e);
         }
@@ -729,7 +717,7 @@ export default {
             }
           );
           if (result.data.status === 200) {
-            window.location.href = `${$Api.baseUrl}/english-level-test/Speaking?testId=${this.request.s}&v=${this.request.v}&g=${this.request.g}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&historyId=${this.request.historyId}&exam=true`;
+            window.location.href = `${$Api.baseUrl}/english-level-test/Speaking?testId=${this.request.s}&l=${this.request.l}&s=${this.request.s}&r=${this.request.r}&w=${this.request.w}&historyId=${this.request.historyId}&examId=${this.request.examId}&exam=true`;
           }
         } catch (error) {}
       }
@@ -842,7 +830,7 @@ export default {
                                 display: inline-block;
                                 width: 100px"
                                 v-model='${
-                                  this.answerData[index].dataChoose[sum - 1]
+                                  this.answerData.find(item => item.id === question.id).dataChoose[sum - 1]
                                     .radioValue
                                 }'>`;
         }
@@ -851,11 +839,21 @@ export default {
     },
     async checkHistoryExam() {
       try {
-        let result = await baseRequest.post("/admin/check-history-exam", {
+        let config = {
           type: "Listening",
           exam_id: this.data.id,
-          level_id: this.query.levelId
-        });
+        };
+        if (this.request.exam) {
+          config.exam_final_id = this.request.examId;
+          config.status = "exam";
+        } else {
+          config.level_id = this.query.levelId;
+          config.status = "learn";
+        }
+        let result = await baseRequest.post(
+          "/admin/check-history-exam",
+          config
+        );
         result = result.data;
         if (result.status === 200 && result.data !== null) {
           this.$refs.countdown.abort();
@@ -877,6 +875,7 @@ export default {
     this.topic = this.data.topic_audio_listen.map((audio) => ({
       id: audio.id,
       audio: audio.audio,
+      content: audio.content,
       questions: audio.question_listening.map((question) => ({
         id: question.id,
         question: question.question,
@@ -913,7 +912,9 @@ export default {
           });
         }
       });
-      this.checkHistoryExam();
+      if (this.request.exam) {
+        this.checkHistoryExam();
+      }
     });
   },
   mounted() {

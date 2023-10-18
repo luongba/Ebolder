@@ -27,18 +27,18 @@
               <el-form :model="topicData" :rules="rules" ref="ruleForm">
                 <div class="w-full h-[60vh] overflow-y-scroll">
                   <div class="my-2">
-                    <el-form-item label="Tên cấp độ" prop="name">
+                    <el-form-item label="Level name" prop="name">
                       <el-input
-                        placeholder="Tên cấp độ"
+                        placeholder="Level name"
                         v-model="topicData.name"
                       ></el-input>
                     </el-form-item>
                   </div>
-                  <el-form-item label="Bài học" prop="valueLesson">
+                  <el-form-item label="Writing" prop="valueLesson">
                     <el-select
                       v-model="topicData.valueLesson"
                       multiple
-                      placeholder="Chọn bài học"
+                      placeholder="Writing"
                       style="width: 100%"
                     >
                       <el-option
@@ -51,10 +51,10 @@
                     </el-select>
                   </el-form-item>
                   <div class="grid grid-cols-1 md:grid-cols-1 md:gap-4 gap-1">
-                    <el-form-item label="Phần đọc" prop="reading">
+                    <el-form-item label="Reading" prop="valueReading">
                       <el-select
                         v-model="topicData.valueReading"
-                        placeholder="Chọn đề"
+                        placeholder="Reading"
                         style="width: 100%"
                         multiple
                       >
@@ -67,10 +67,10 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần từ vựng" prop="vocabulary">
+                    <el-form-item label="Vocabulary" prop="valueVocabulary">
                       <el-select
                         v-model="topicData.valueVocabulary"
-                        placeholder="Chọn đề"
+                        placeholder="Vocabulary"
                         style="width: 100%"
                         multiple
                       >
@@ -83,10 +83,10 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần nghe" prop="listening">
+                    <el-form-item label="Listening" prop="valueListening">
                       <el-select
                         v-model="topicData.valueListening"
-                        placeholder="Chọn đề"
+                        placeholder="Listening"
                         style="width: 100%"
                         multiple
                       >
@@ -99,15 +99,47 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="Phần ngữ pháp" prop="grammar">
+                    <el-form-item label="Grammar" prop="valueGrammar">
                       <el-select
                         v-model="topicData.valueGrammar"
-                        placeholder="Chọn đề"
+                        placeholder="Grammar"
                         style="width: 100%"
                         multiple
                       >
                         <el-option
                           v-for="item in listTopicGrammar"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        >
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="Speaking" prop="valueSpeaking">
+                      <el-select
+                        v-model="topicData.valueSpeaking"
+                        placeholder="Speaking"
+                        style="width: 100%"
+                        multiple
+                      >
+                        <el-option
+                          v-for="item in listTopicSpeaking"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        >
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="Pronunciation" prop="valueTalking">
+                      <el-select
+                        v-model="topicData.valueTalking"
+                        placeholder="Pronunciation"
+                        style="width: 100%"
+                        multiple
+                      >
+                        <el-option
+                          v-for="item in listTopicTalking"
                           :key="item.id"
                           :label="item.name"
                           :value="item.id"
@@ -149,6 +181,8 @@
               valueReading: null,
               valueVocabulary: null,
               valueListening: null,
+              valueSpeaking: null,
+              valueTalking: null
             };
           "
         ></el-button>
@@ -182,22 +216,6 @@
         </div>
       </div>
     </div>
-    <!-- <editor
-            api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-            :init="{
-                height: 500,
-                menubar: false,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount',
-                ],
-                toolbar:
-                    'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | \
-           bullist numlist outdent indent | removeformat | help',
-            }"
-        /> -->
   </div>
 </template>
 
@@ -221,6 +239,8 @@ export default {
         valueReading: null,
         valueVocabulary: null,
         valueListening: null,
+        valueSpeaking: null,
+        valueTalking: null,
       },
       listLevel: [],
       ApiUrl: $Api.baseUrl,
@@ -232,38 +252,52 @@ export default {
             trigger: "blur",
           },
         ],
-        lesson: [
+        valueLesson: [
           {
-            required: true,
+            required: false,
             message: "Please select lesson",
             trigger: "blur",
           },
         ],
-        vocabulary: [
+        valuevocabulary: [
           {
             required: false,
             message: "Please select vocabulary",
             trigger: "blur",
           },
         ],
-        reading: [
+        valueReading: [
           {
             required: false,
             message: "Please select reading",
             trigger: "blur",
           },
         ],
-        grammar: [
+        valueGrammar: [
           {
             required: false,
             message: "Please select grammar",
             trigger: "blur",
           },
         ],
-        listening: [
+        valueListening: [
           {
             required: false,
             message: "Please select listening",
+            trigger: "blur",
+          },
+        ],
+        valueSpeaking: [
+          {
+            required: false,
+            message: "Please select speaking",
+            trigger: "blur",
+          },
+        ],
+        valueTalking: [
+          {
+            required: false,
+            message: "Please select speaking",
             trigger: "blur",
           },
         ],
@@ -274,6 +308,8 @@ export default {
       listTopicVocabulary: [],
       listTopicListening: [],
       listTopicLesson: [],
+      listTopicSpeaking: [],
+      listTopicTalking: [],
       state: "create",
       idTemp: null,
       isLoading: false,
@@ -293,6 +329,8 @@ export default {
               readings: this.topicData.valueReading,
               vocabularies: this.topicData.valueVocabulary,
               grammars: this.topicData.valueGrammar,
+              speakings: this.topicData.valueSpeaking,
+              talkings: this.topicData.valueTalking,
             };
             let rs = await baseRequest.post(`/admin/create-level`, dataTemp);
             if (rs.data.status == 200) {
@@ -330,6 +368,8 @@ export default {
               reading_id: this.topicData.valueReading,
               vocabulary_id: this.topicData.valueVocabulary,
               grammar_id: this.topicData.valueGrammar,
+              speakings: this.topicData.valueSpeaking,
+              talkings: this.topicData.valueTalking,
               id: this.idTemp,
             };
             let rs = await baseRequest.post(`/admin/update-level`, dataTemp);
@@ -369,6 +409,7 @@ export default {
             .map((item) => ({
               id: item.id,
               name: item.name,
+              is_exam: item.is_exam || null,
             }))
             .reverse();
         }
@@ -387,6 +428,7 @@ export default {
       try {
         let rs = await baseRequest.post(`/admin/detail-level`, { id });
         let { data } = rs;
+
         if (data.status == 200) {
           this.topicData = {
             name: data.data.name || null,
@@ -395,6 +437,8 @@ export default {
             valueReading: data.data.reading.map((item) => item.id) || [],
             valueListening: data.data.listen.map((item) => item.id) || [],
             valueLesson: data.data.learn.map((item) => item.id) || [],
+            valueSpeaking: data.data.speak.map((item) => item.id) || [],
+            valueTalking: data.data.pronunciation.map((item) => item.id) || [],
           };
           this.show = !this.show;
         }
@@ -409,7 +453,9 @@ export default {
           this.listTopicLesson = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);
@@ -422,7 +468,9 @@ export default {
           this.listTopicVocabulary = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);
@@ -435,7 +483,9 @@ export default {
           this.listTopicGrammar = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);
@@ -448,7 +498,9 @@ export default {
           this.listTopicReading = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);
@@ -461,7 +513,39 @@ export default {
           this.listTopicListening = rs.data.data.map((item) => ({
             id: item.id,
             name: item.name,
-          }));
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllTopicSpeaking() {
+      try {
+        let rs = await baseRequest.get(`/admin/list-topic-speak`);
+        if (rs.data.status == 200) {
+          this.listTopicSpeaking = rs.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllTopicTalking() {
+      try {
+        let rs = await baseRequest.get(`/admin/list-topic-pronunciation`);
+        if (rs.data.status == 200) {
+          this.listTopicTalking = rs.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => !itemTopic.is_exam);
         }
       } catch (e) {
         console.log(e);
@@ -527,6 +611,8 @@ export default {
     this.getAllTopicGrammar();
     this.getAllTopicListening();
     this.getAllLevel();
+    this.getAllTopicSpeaking()
+    this.getAllTopicTalking()
   },
 };
 </script>

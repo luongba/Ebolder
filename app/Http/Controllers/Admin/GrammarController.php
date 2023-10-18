@@ -17,7 +17,7 @@ class GrammarController extends Controller
 {
     public function index()
     {
-        return view('pages.admin.Grammar.topic.index');
+        return view('pages.admin.grammar.topic.index');
     }
 
     public function ListTopic()
@@ -41,7 +41,7 @@ class GrammarController extends Controller
 
     public function detailTopic($id)
     {
-        return view('pages.admin.Grammar.topic.detail', compact('id'));
+        return view('pages.admin.grammar.topic.detail', compact('id'));
     }
 
     public function detailTopicData(Request $request, $id)
@@ -164,7 +164,8 @@ class GrammarController extends Controller
             $grammar = Grammar::find($request->id);
             $grammar->update(
                 [
-                    "name" => $request->name
+                    "name" => $request->name,
+                    "description" => $request->description
                 ]
             );
             return response()->json([
@@ -185,7 +186,7 @@ class GrammarController extends Controller
 
     public function questionlist()
     {
-        return view('pages.admin.Grammar.question.index');
+        return view('pages.admin.grammar.question.index');
     }
 
     public function getAllInfoQuestion(Request $request)
@@ -215,7 +216,7 @@ class GrammarController extends Controller
 
     public function create()
     {
-        return view('pages.admin.Grammar.question.create');
+        return view('pages.admin.grammar.question.create');
     }
 
     public function store(Request $request)

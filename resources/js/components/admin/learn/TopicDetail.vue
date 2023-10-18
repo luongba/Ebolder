@@ -7,12 +7,16 @@
             <i class="fa-solid fa-swatchbook icon-gradient bg-mean-fruit"></i>
           </div>
           <div class="flex justify-between">
-            <p>Quản lý bài học</p>
+            <p>WRITING</p>
           </div>
         </div>
       </div>
     </div>
     <div class="container">
+      <div class="flex justify-center">
+        <span class="font-semibold text-[15px] mb-2 mr-2">Exam</span>
+        <el-switch v-model="dataTopic.isExam"></el-switch>
+      </div>
       <div class="mb-4">
         <el-form ref="ruleFormItem" :model="dataTopic" class="w-full">
           <el-form-item
@@ -37,27 +41,9 @@
       <editor
         v-model="dataTopic.content"
         api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-        :init="{
-          height: 600,
-          menubar: false,
-          plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount',
-          ],
-          toolbar:
-            'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | \
-           bullist numlist outdent indent | removeformat | help',
-          visual: false,
-          content_style: `
-		table, th, td {
-    		border: 1px solid #000 !important;
-		}	`,
-          paste_data_images: true,
-        }"
+        :init="init()"
       />
-      <el-button type="primary" class="mt-4" @click="chooseType(1)">
+      <!-- <el-button type="primary" class="mt-4" @click="chooseType(1)">
         Tải lên Video
       </el-button>
       <el-button type="primary" class="mt-4" @click="chooseType(2)">
@@ -113,7 +99,7 @@
           :src="linkMedia"
           v-show="dataTopic.type_video == 'social'"
         ></video-embed>
-      </div>
+      </div> -->
       <div class="flex flex-col justify-center w-full items-center">
         <div
           class="card w-full mt-3"
@@ -481,7 +467,7 @@
             </el-button>
           </el-popover>
           <el-button @click="saveChangeTopic" type="primary" plain
-            >Lưu
+            >Save
           </el-button>
         </div>
       </div>
@@ -513,6 +499,7 @@ export default {
       dataTopic: {
         name: null,
         content: "hello",
+        isExam: false
       },
 
       dataQuestion: [],
@@ -539,6 +526,46 @@ export default {
     };
   },
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 600,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+      };
+    },
     uploadAudio() {
       this.$refs.fileAudio.click();
     },
@@ -844,6 +871,7 @@ export default {
             id: data.data.id,
             url_media: data.data.url_media,
             type_video: data.data.type_video,
+            isExam: data.data.is_exam === 1 ? true : false,
             questions: data.data.question_lesson?.map((ques) => ({
               id: ques.id,
               question: ques.question,
@@ -864,6 +892,7 @@ export default {
             name: temp.name,
             content: temp.content,
             type_video: temp.type_video,
+            isExam: temp.isExam
           };
           this.dataQuestion = temp.questions.map((question) => ({
             id: question.id,
@@ -927,10 +956,6 @@ export default {
           let data = this.dataQuestion.find((item) => {
             return item.id == id;
           });
-          console.log(
-            "🚀 ~ file: TopicDetail.vue ~ line 676 ~ SaveQuestion ~ data",
-            data
-          );
 
           let temp = {
             learn_id: this.param,
@@ -950,10 +975,6 @@ export default {
           let result = await baseRequest.post(
             `/admin/add-or-update-question-lesson`,
             temp
-          );
-          console.log(
-            "🚀 ~ file: TopicDetail.vue ~ line 698 ~ SaveQuestion ~ result",
-            result
           );
           if (result.data.status == 200) {
             this.getDetailTopic();
@@ -994,6 +1015,7 @@ export default {
           linkMedia: this.linkMedia,
           id: this.param,
           type_video: this.dataTopic.type_video,
+          is_exam: this.dataTopic.isExam ? 1 : 0
         };
         let result;
         if (this.typeUpload == 1) {

@@ -14,6 +14,9 @@ class Level extends Model
     public function Reading(){
         return $this->belongsToMany('App\models\Read\Reading','level_readings');
     }
+    public function Pronunciation(){
+        return $this->belongsToMany('App\models\Pronunciation\Pronunciation','level_pronunciations');
+    }
     public function Vocabulary(){
         return $this->belongsToMany('App\models\Vocabulary\Vocabulary','level_vocabularies');
     }
@@ -24,7 +27,14 @@ class Level extends Model
         return $this->belongsToMany('App\models\Listen\Listening','level_listens');
     }
 
+    public function Speak(){
+        return $this->belongsToMany('App\models\Speak\Speak','level_speaks');
+    }
+
     public function ExamResult(){
         return $this->hasOne('App\models\Learn\ExamResult');
+    }
+    public function QuestionLuyenAm(){
+        return $this->belongsToMany('App\models\Speak\QuestionLuyenAm','level_question_luyen_ams');
     }
 }

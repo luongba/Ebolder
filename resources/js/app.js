@@ -78,6 +78,20 @@ Vue.component(
     "topic-reading-detail",
     require("./components/admin/reading/TopicDetail.vue").default
 );
+
+// Pronunciation
+Vue.component(
+    "topic-pronunciation-list",
+    require("./components/admin/pronunciation/PronunciationList.vue").default
+);
+Vue.component(
+    "topic-pronunciation-create",
+    require("./components/admin/pronunciation/TopicCreate.vue").default
+);
+Vue.component(
+    "topic-pronunciation-detail",
+    require("./components/admin/pronunciation/TopicDetail.vue").default
+);
 //grammar
 Vue.component(
     "question-grammar-create",
@@ -138,6 +152,11 @@ Vue.component(
 Vue.component(
     "history-exam",
     require("./components/admin/user/History.vue").default
+);
+
+Vue.component(
+    "history-learn-admin",
+    require("./components/admin/user/HistoryLearn.vue").default
 );
 
 //role
@@ -201,10 +220,21 @@ Vue.component(
     "reading-test",
     require("./components/frontend/reading/ReadingTest.vue").default
 );
+
+//Pronunciation
+Vue.component(
+    "pronunciation-test",
+    require("./components/frontend/pronunciation/PronunciationTest.vue").default
+);
 //listening
 Vue.component(
     "listening-test",
     require("./components/frontend/listening/ListeningTest.vue").default
+);
+
+Vue.component(
+    "speaking-test",
+    require("./components/frontend/speaking/SpeakingTest.vue").default
 );
 //error page
 Vue.component(
@@ -248,12 +278,22 @@ Vue.component(
     require("./components/frontend/history/History.vue").default
 );
 
+Vue.component(
+    "history-learn-page",
+    require("./components/frontend/history/HistoryLearn.vue").default
+);
+
 //choose-action 
 
 Vue.component(
     "choose-action",
     require("./components/frontend/chooseAction/ChooseAction.vue").default
 );
+//result
+Vue.component(
+    "result-exam",
+    require("./components/frontend/result/Result.vue").default
+); 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

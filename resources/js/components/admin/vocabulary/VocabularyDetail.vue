@@ -92,6 +92,18 @@
       <span class="font-semibold text-[15px] mt-4 mb-2 mr-2">Exam</span>
       <el-switch v-model="detailTopic.isExam"></el-switch>
     </div>
+    <div class="mt-4">
+      <editor
+        v-model="detailTopic.description"
+        api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
+        :init="init()"
+      />
+    </div>
+    <div class="flex items-center justify-center mt-4">
+      <el-button @click="saveChangeTitle(detailTopic.id)"
+        >Change description</el-button
+      >
+    </div>
     <p class="font-semibold text-[15px] mt-4 mb-2">Statistical</p>
     <div
       class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-2 px-4 text-[14px] font-semibold flex flex-col items-start"
@@ -181,215 +193,260 @@
 <script>
 import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
-    components: {
-        StarRating,
-    },
-    data() {
-        return {
-            show: false,
-            listTopic: [],
-            detailTopic: {
-                id: null,
-                name: null,
-                description: null,
-                question: [],
-                isExam: false
-            },
-            dataQuestion: [],
-            take: 5,
-            isEditTitle: false,
-        };
-    },
-    props: ["param"],
-    computed: {
-        levelEasy() {
-            return this.detailTopic.question.reduce((sum, item) => {
-                if (item.level == 1) {
-                    return (sum += 1);
-                } else {
-                    return (sum += 0);
-                }
-            }, 0);
-        },
-        levelMedium() {
-            return this.detailTopic.question.reduce((sum, item) => {
-                if (item.level == 2) {
-                    return (sum += 1);
-                } else {
-                    return (sum += 0);
-                }
-            }, 0);
-        },
-        levelhard() {
-            return this.detailTopic.question.reduce((sum, item) => {
-                if (item.level == 3) {
-                    return (sum += 1);
-                } else {
-                    return (sum += 0);
-                }
-            }, 0);
-        },
-    },
-    watch: {
-        'detailTopic.isExam'(value){
-            if(typeof(value) == 'boolean'){
-               this.setStatusExam(value)
-            }
+  components: {
+    StarRating,
+    Editor,
+  },
+  data() {
+    return {
+      show: false,
+      listTopic: [],
+      detailTopic: {
+        id: null,
+        name: null,
+        description: null,
+        question: [],
+        isExam: false,
+      },
+      dataQuestion: [],
+      take: 5,
+      isEditTitle: false,
+    };
+  },
+  props: ["param"],
+  computed: {
+    levelEasy() {
+      return this.detailTopic.question.reduce((sum, item) => {
+        if (item.level == 1) {
+          return (sum += 1);
+        } else {
+          return (sum += 0);
         }
+      }, 0);
     },
-    methods: {
-        resetFeild() {
-            this.show = false;
-            this.topicData = {
-                name: null,
-                description: null,
-            };
-        },
-        async setStatusExam(value){
-            try {
-                let rs = await baseRequest.post(
-                    `/admin/update-status-exam`,
-                    {
-                        is_exam: value,
-                        class: "vocabulary",
-                        model: "vocabulary",
-                        id: this.detailTopic.id
-                    }
-                );
-                if (rs.data.status == 200) {
-                    this.$message({
-                    type: "success",
-                    message: "Thay đổi trạng thái thành công!",
-                });
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        },
-        async createTopic() {
-            try {
-                let rs = await baseRequest.post(
-                    `/admin/store-topic-vocabulary`,
-                    this.topicData
-                );
-                if (rs.data.status == 200) {
-                    this.getAllTopic();
+    levelMedium() {
+      return this.detailTopic.question.reduce((sum, item) => {
+        if (item.level == 2) {
+          return (sum += 1);
+        } else {
+          return (sum += 0);
+        }
+      }, 0);
+    },
+    levelhard() {
+      return this.detailTopic.question.reduce((sum, item) => {
+        if (item.level == 3) {
+          return (sum += 1);
+        } else {
+          return (sum += 0);
+        }
+      }, 0);
+    },
+  },
+  watch: {
+    "detailTopic.isExam"(value) {
+      if (typeof value == "boolean") {
+        this.setStatusExam(value);
+      }
+    },
+  },
+  methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 600,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
 
-                    this.resetFeild();
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        },
-        async getDetailTopic() {
-            try {
-                let rs = await baseRequest.get(
-                    `/admin/detail-topic-vocabulary/${this.param}`
-                );
-                if (rs.data.status == 200) {
-                    let data = rs.data.data;
-                    this.detailTopic = {
-                        id: data.id,
-                        name: data.name,
-                        description: data.description,
-                        isExam: data.is_exam == 1 ? true : false,
-                        question: data.questiton_vocabulary?.map((item) => {
-                            return {
-                                idQues: item.id,
-                                level: item.level,
-                                question: item.question,
-                            };
-                        }),
-                    };
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        },
-        async deleteTopic(id) {
-            try {
-                let rs = await baseRequest.post(`/admin/delete-topic-vocabulary`, { id });
-                if (rs.data.status == 200) {
-                    this.getAllTopic();
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        },
-        async getAllQuestion() {
-            try {
-                let { data } = await baseRequest.get(`/admin/list-question-vocabulary`);
-                this.dataQuestion = data.data.filter(
-                    (elem) =>
-                        !this.detailTopic.question.find(
-                            ({ idQues }) => elem.id === idQues
-                        )
-                );
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        async addTopic(id) {
-            try {
-                let { data } = await baseRequest.post(
-                    `/admin/add-question-to-topic-vocabulary`,
-                    {
-                        idTopic: this.detailTopic.id,
-                        idQues: id,
-                    }
-                );
-                if (data.status == 200) {
-                    this.getDetailTopic();
-                    this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        async removeTopic(id) {
-            try {
-                let { data } = await baseRequest.post(
-                    `/admin/remove-question-from-topic-vocabulary`,
-                    {
-                        idTopic: this.detailTopic.id,
-                        idQues: id,
-                    }
-                );
-                if (data.status == 200) {
-                    this.getDetailTopic();
-                    this.getAllQuestion();
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        async saveChangeTitle(id) {
-            try {
-                let { data } = await baseRequest.post(`/admin/edit-topic-vocabulary`, {
-                    id,
-                    name: this.detailTopic.name,
-                });
-                if (data.status == 200) {
-                    this.isEditTitle = false;
-                    this.getDetailTopic();
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
-    },
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
 
-    created() {
-        this.getDetailTopic();
-        this.getAllQuestion();
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+        content_style: `
+		table, th, td {
+    		border: 1px solid #000 !important;
+		}	`,
+      };
     },
+    resetFeild() {
+      this.show = false;
+      this.topicData = {
+        name: null,
+        description: null,
+      };
+    },
+    async setStatusExam(value) {
+      try {
+        let rs = await baseRequest.post(`/admin/update-status-exam`, {
+          is_exam: value,
+          class: "Vocabulary",
+          model: "Vocabulary",
+          id: this.detailTopic.id,
+        });
+        if (rs.data.status == 200) {
+          this.$message({
+            type: "success",
+            message: "Thay đổi trạng thái thành công!",
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async createTopic() {
+      try {
+        let rs = await baseRequest.post(
+          `/admin/store-topic-vocabulary`,
+          this.topicData
+        );
+        if (rs.data.status == 200) {
+          this.getAllTopic();
+
+          this.resetFeild();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getDetailTopic() {
+      try {
+        let rs = await baseRequest.get(
+          `/admin/detail-topic-vocabulary/${this.param}`
+        );
+        if (rs.data.status == 200) {
+          let data = rs.data.data;
+          this.detailTopic = {
+            id: data.id,
+            name: data.name,
+            description: data.description,
+            isExam: data.is_exam == 1 ? true : false,
+            question: data.questiton_vocabulary?.map((item) => {
+              return {
+                idQues: item.id,
+                level: item.level,
+                question: item.question,
+              };
+            }),
+          };
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async deleteTopic(id) {
+      try {
+        let rs = await baseRequest.post(`/admin/delete-topic-vocabulary`, {
+          id,
+        });
+        if (rs.data.status == 200) {
+          this.getAllTopic();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getAllQuestion() {
+      try {
+        let { data } = await baseRequest.get(`/admin/list-question-vocabulary`);
+        this.dataQuestion = data.data.filter(
+          (elem) =>
+            !this.detailTopic.question.find(({ idQues }) => elem.id === idQues)
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async addTopic(id) {
+      try {
+        let { data } = await baseRequest.post(
+          `/admin/add-question-to-topic-vocabulary`,
+          {
+            idTopic: this.detailTopic.id,
+            idQues: id,
+          }
+        );
+        if (data.status == 200) {
+          this.getDetailTopic();
+          this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async removeTopic(id) {
+      try {
+        let { data } = await baseRequest.post(
+          `/admin/remove-question-from-topic-vocabulary`,
+          {
+            idTopic: this.detailTopic.id,
+            idQues: id,
+          }
+        );
+        if (data.status == 200) {
+          this.getDetailTopic();
+          this.getAllQuestion();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async saveChangeTitle(id) {
+      try {
+        let { data } = await baseRequest.post(`/admin/edit-topic-vocabulary`, {
+          id,
+          name: this.detailTopic.name,
+          description: this.detailTopic.description,
+        });
+        if (data.status == 200) {
+          this.isEditTitle = false;
+          this.getDetailTopic();
+          this.$message({
+            type: "success",
+            message: "cập nhật thành công!",
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+
+  created() {
+    this.getDetailTopic();
+    this.getAllQuestion();
+  },
 };
 </script>
 <style scoped>
 .bg-blur {
   background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
 }
 
 .fade-enter-active,
