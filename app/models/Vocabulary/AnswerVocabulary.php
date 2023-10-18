@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class AnswerVocabulary extends Model
 {
     protected $table = "answers_vocabulary";
-    protected $guarded = [];
+    protected $keyType = 'string';
 }

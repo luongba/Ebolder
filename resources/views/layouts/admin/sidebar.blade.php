@@ -38,15 +38,6 @@
                                 </a>
                             </li>
                         @endcan
-                        @can('Question_Vocabulary_List')
-                            <li>
-                                <a class="{{ request()->is(['admin/volabulary-level-test/question-list']) ? 'mm-active' : '' }}"
-                                    href="{{ route('admin.vocabulary-question-list') }}">
-                                    <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
-                                    Question Management
-                                </a>
-                            </li>
-                        @endcan
                     </ul>
                 </li>
             @endif

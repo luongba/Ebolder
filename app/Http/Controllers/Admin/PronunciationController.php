@@ -73,8 +73,7 @@ class PronunciationController extends Controller
     public function listTopicApi()
     {
         try {
-            $query = new Pronunciation();
-            $dataAll = $query->get();
+            $dataAll = Pronunciation::orderBy('id', 'DESC')->paginate(10);
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

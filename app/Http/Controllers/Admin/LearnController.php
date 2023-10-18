@@ -55,7 +55,7 @@ class LearnController extends Controller
     public function ListTopic()
     {
         try {
-            $data = Learn::all();
+            $data = Learn::orderBy('id', 'DESC')->paginate(10);
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

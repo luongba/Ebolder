@@ -8,6 +8,7 @@ use App\models\Vocabulary\QuestionVocabulary;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use mysql_xdevapi\Exception;
 
 class VocabularyController extends Controller
@@ -20,7 +21,7 @@ class VocabularyController extends Controller
     public function ListTopic()
     {
         try {
-            $data = Vocabulary::all();
+            $data = Vocabulary::orderBy('id', 'DESC')->paginate(10);
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -28,6 +29,7 @@ class VocabularyController extends Controller
                 "message" => "Lấy danh sách topic thành công !"
             ]);
         } catch (\Exception $e) {
+            Log::error($e);
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -44,9 +46,11 @@ class VocabularyController extends Controller
     public function detailTopicData(Request $request, $id)
     {
         try {
-            DB::beginTransaction();
             $query = new Vocabulary();
-            $data = $query->where('id', $id)->with('questitonVocabulary')->first();
+            $data = $query->where('id', $id)->with(['QuestitonVocabulary' => function ($question) {
+                $question->with('answers')->with('right_answers');
+            
+            }])->first();
             DB::commit();
             return response()->json([
                 "status" => 200,
@@ -55,7 +59,6 @@ class VocabularyController extends Controller
                 "message" => "Lấy chi tiết topic thành công !"
             ]);
         } catch (\Exception $e) {
-             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
@@ -238,16 +241,29 @@ class VocabularyController extends Controller
 
     public function store(Request $request)
     {
-
         try {
             DB::beginTransaction();
             $data = $request->all();
-            foreach ($data as $key => $value) {
+            $dataTopic = $data['topicData'];
+            $voca = Vocabulary::create([
+                "name" => $dataTopic['name'],
+                "description" => $dataTopic['description'] ?? '',
+                "is_exam" => $dataTopic['isExam'],
+            ]);
+            
+
+            $dataQuestion = $data['dataQuestion'];
+            foreach ($dataQuestion as $key => $value) {
                 $res = QuestionVocabulary::create([
                     "id" => $value['id'],
                     "question" => $value['question'],
                     "level" => $value['level'],
                     "type" => $value['type']
+                ]);
+                $query = new Vocabulary();
+                $query->find($voca->id)->questitonVocabulary()->attach(
+                [
+                    'question_vocabulary_id' => $res->id
                 ]);
                 if ($res->type == 1) {
                     $res->right_answers()->create([
@@ -256,7 +272,7 @@ class VocabularyController extends Controller
                 }
 
 
-                foreach ($data[$key]['dataAns'] as $keyAds => $item) {
+                foreach ($dataQuestion[$key]['dataAns'] as $keyAds => $item) {
                     QuestionVocabulary::find($value['id'])->answers()->create([
                         "id" => $item['idAns'],
                         "text" => $item['text'],
@@ -271,6 +287,7 @@ class VocabularyController extends Controller
                 "message" => "Thêm câu hỏi thành công !"
             ];
         } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
             return [
                 "status" => 400,
@@ -287,48 +304,65 @@ class VocabularyController extends Controller
 
         try {
             DB::beginTransaction();
-            $res = QuestionVocabulary::where('id', $request->id)->first();
-            $res->update(
-                [
-                    "question" => $request->question,
-                    "level" => $request->level,
+            $vocabulary = Vocabulary::whereId($request->id)->first();
+            $vocabulary->update([
+                'name' => $request->name,
+                'description' => $request->contentReading,
+                'is_exam' => $request->is_exam,
+            ]);
 
-                ]
-            );
-            if ($request->type == 1) {
-                foreach ($request->dataAns as $keyAds => $item) {
-                    $ans = $res->answers()->find($item['id']);
-                    if (isset($ans)) {
-
-                        $ans->update([
-                            "text" => $item['text']
-                        ]);
-                    } else {
-                        $res->answers()->create([
-                            "id" => $item['id'],
-                            "answer_id" => $item['id'],
-                            "text" => $item['text']
-                        ]);
-                    }
-
-
-                }
-            } else {
-                $res->answers()->delete();
-                foreach ($request->dataAns as $keyAds => $item) {
-                    $res->answers()->create([
-                        "id" => $item['id'],
-                        "answer_id" => $item['id'],
-                        "text" => $item['text']
-                    ]);
-
-
+            $dataQuestion = ($request->dataQuestion);
+            $questionVocab = $vocabulary->QuestitonVocabulary()->get()->toArray();
+            
+            $toDelete = collect($questionVocab)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
+            if (count($toDelete)) {
+                foreach($toDelete as $item) {
+                    QuestionVocabulary::whereId($item['id'])->delete();
                 }
             }
-            if ($request->type == 1) {
-                $res->right_answers()->find($request->right_answers["id"])->update([
-                    "answer_id" => $request->right_answers["answer_id"]
-                ]);
+            foreach ($dataQuestion as $key => $value) {
+                $check =QuestionVocabulary::whereId($value['id'])->exists();
+                if (!$check) {
+                    $question = $vocabulary->QuestitonVocabulary()->create([
+                        'question' => $value['question'],
+                        'level' => $value['level'],
+                        'type' => $value['type']
+                    ]);
+                    foreach ($value['dataAns'] as $keyAns => $valueAns) {
+                        $question->answers()->create([
+                            'id' => $valueAns['idAns'],
+                            'question_id' => $question->id,
+                            'text' => $valueAns['text'],
+                            "answer_id" => $valueAns['idAns'],
+                        ]);
+                    }
+                    if ($value['answer']) {
+                        $question->right_answers()->create([
+                            'answer_id' => $value['answer']
+                        ]);
+                    }
+                } else {
+                    QuestionVocabulary::whereId($value['id'])->first()->update([
+                        "question" => $value['question'],
+                        "level" => $value['level'],
+                        "type" => $value['type']
+                    ]);
+                    if ($value['answer']) {
+                        QuestionVocabulary::whereId($value['id'])->first()->right_answers()->update([
+                            "answer_id" => $value["answer"]
+                        ]);
+                    }
+                    QuestionVocabulary::whereId($value['id'])->first()->answers()->delete();
+                    foreach ($value['dataAns'] as $keyAds => $valueAns) {
+                        QuestionVocabulary::whereId($value['id'])->first()->answers()
+                            ->create([
+                                'id' => $valueAns['idAns'],
+                                'question_id' => $value['id'],
+                                'text' => $valueAns['text'],
+                                "answer_id" => $valueAns['idAns'],
+                            ]);
+                    }
+                }
             }
             DB::commit();
             return [
@@ -337,6 +371,7 @@ class VocabularyController extends Controller
                 "message" => "Sửa câu hỏi thành công !"
             ];
         } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
             return [
                 "status" => 400,

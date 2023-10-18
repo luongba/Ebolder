@@ -73,8 +73,7 @@ class ReadController extends Controller
     public function listTopicApi()
     {
         try {
-            $query = new Reading();
-            $dataAll = $query->get();
+            $dataAll = Reading::orderBy('id', 'DESC')->paginate(10);
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
