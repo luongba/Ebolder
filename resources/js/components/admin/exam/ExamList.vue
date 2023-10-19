@@ -12,8 +12,8 @@
                 <h1 class="font-semibold uppercase text-[14px]">
                   {{
                     state == "create"
-                      ? "Tạo mới đề kiểm tra"
-                      : "Cập nhật đề kiểm tra"
+                      ? "Create exam"
+                      : "Update exam"
                   }}
                 </h1>
                 <span
@@ -149,7 +149,7 @@
                   </div>
                 </div>
                 <div class="flex justify-end items-center mt-4">
-                  <el-button plain @click="resetFeild">Thoát</el-button>
+                  <el-button plain @click="resetFeild">Cancel</el-button>
                   <el-button
                     type="primary"
                     @click="
@@ -157,7 +157,7 @@
                         ? createTopic('ruleForm')
                         : updateLevel('ruleForm')
                     "
-                    >{{ state == "create" ? "Tạo mới" : "Cập nhật" }}</el-button
+                    >{{ state == "create" ? "Create" : "Update" }}</el-button
                   >
                 </div>
               </el-form>
@@ -341,19 +341,19 @@ export default {
               this.resetFeild();
               this.$message({
                 type: "success",
-                message: "Thêm đề kiểm tra thành công",
+                message: "Created successfully",
               });
               this.getAllExam();
             } else {
               this.$message({
                 type: "error",
-                message: "Thêm cấp đề kiểm tra thất bại",
+                message: "Created failed",
               });
             }
           } catch (e) {
             this.$message({
               type: "error",
-              message: "Thêm cấp đề kiểm tra thất bại",
+              message: "Created failed",
             });
           }
         } else {
@@ -384,19 +384,19 @@ export default {
               this.resetFeild();
               this.$message({
                 type: "success",
-                message: "Sửa đề kiểm tra thành công",
+                message: "Updated successfully",
               });
               this.getAllExam();
             } else {
               this.$message({
                 type: "error",
-                message: "Sửa đề kiểm tra thất bại",
+                message: "Updated failed",
               });
             }
           } catch (e) {
             this.$message({
               type: "error",
-              message: "Sửa đề kiểm tra thất bại",
+              message: "Updated failed",
             });
           }
         } else {

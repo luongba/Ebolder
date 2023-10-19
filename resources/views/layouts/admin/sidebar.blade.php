@@ -1,12 +1,12 @@
 <div class="scrollbar-sidebar">
     <div class="app-sidebar__inner" style="overflow-y: scroll; height: 100%">
         <ul class="vertical-nav-menu">
-            <li class="app-sidebar__heading">Đề kiểm tra</li>
+            <li class="app-sidebar__heading">Exam</li>
             <li class="mm-parent">
                 <a class="{{ request()->is(['admin/exam-administration']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.exam-list') }}">
                     <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
-                    Quản lý đề kiểm tra
+                    Exam Management
                 </a>
             </li>
             @can('Level_List')
