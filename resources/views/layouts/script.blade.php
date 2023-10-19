@@ -11,6 +11,9 @@
     window.onload = function() {
         let itemActive = document.querySelectorAll('.mm-active');
         if (itemActive[0].parentElement) {
+            if(itemActive[0].parentElement.parentElement && itemActive[0].parentElement.parentElement.className == 'vertical-nav-menu') {
+                return;
+            }
             itemActive[0].parentElement.parentElement.classList.add('mm-show')
             itemActive[0].parentElement.parentElement.parentElement.classList.add('mm-active')
         }

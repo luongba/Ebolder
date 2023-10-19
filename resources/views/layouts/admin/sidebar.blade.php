@@ -2,7 +2,7 @@
     <div class="app-sidebar__inner" style="overflow-y: scroll; height: 100%">
         <ul class="vertical-nav-menu">
             <li class="app-sidebar__heading">Đề kiểm tra</li>
-            <li>
+            <li class="mm-parent">
                 <a class="{{ request()->is(['admin/exam-administration']) ? 'mm-active' : '' }}"
                    href="{{ route('admin.exam-list') }}">
                     <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
@@ -11,7 +11,7 @@
             </li>
             @can('Level_List')
                 <li class="app-sidebar__heading">Levels</li>
-                <li>
+                <li class="mm-parent">
                     <a class="{{ request()->is(['admin/level']) ? 'mm-active' : '' }}"
                         href="{{ route('admin.level-list') }}">
                         <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
