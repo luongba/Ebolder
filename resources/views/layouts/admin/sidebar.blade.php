@@ -233,7 +233,23 @@
                 </li>
             @endcan
             <li>
+                <li>
+                    <a class="{{ request()->is(['admin/users']) ? 'mm-active' : '' }}"
+                        href="{{ route('logout') }}">
+                        <i class="metismenu-icon fas fa-sign-out-alt"></i>
+                        Logout
+    
+                    </a>
+                </li>
 
-        </ul>
+        </ul> 
     </div>
 </div>
+@if (session('token'))
+<input type="text" id="section" value="{{ session('token') }}" hidden>
+@endif
+
+<script>
+    let section = document.getElementById('section');
+    localStorage.setItem('token', section.value);
+</script>
