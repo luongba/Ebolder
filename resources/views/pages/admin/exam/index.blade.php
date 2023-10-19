@@ -11,7 +11,7 @@
                         <i class="fa-solid fa-chart-simple icon-gradient bg-mean-fruit"></i>
                     </div>
                     <div>
-                        <p>Quản lý đề kiểm tra</p>
+                        <p>Exam Management</p>
                     </div>
 
                 </div>

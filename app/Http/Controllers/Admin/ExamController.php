@@ -31,14 +31,14 @@ class ExamController extends Controller
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "Thêm đề kiểm tra Thành công!"
+                "message" => "Created successfully!"
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thêm đề kiểm tra Thất bại!"
+                "message" => "Created failed!"
             ]);
         }
     }
@@ -50,13 +50,13 @@ class ExamController extends Controller
                 "status" => 200,
                 "errorCode" => 0,
                 "data"=> $exam,
-                "message" => "Thêm đề kiểm tra Thành công!"
+                "message" => "Created successfully!"
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thêm đề kiểm tra Thất bại!"
+                "message" => "Created failed!"
             ]);
         }
     }
@@ -68,13 +68,13 @@ class ExamController extends Controller
                 "status" => 200,
                 "errorCode" => 0,
                 "data"=> $exam,
-                "message" => "Thêm đề kiểm tra Thành công!"
+                "message" => "Created successfully!"
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thêm đề kiểm tra Thất bại!"
+                "message" => "Created failed!"
             ]);
         }
     }
@@ -97,14 +97,14 @@ class ExamController extends Controller
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "Cập nhật đề kiểm tra Thành công!"
+                "message" => "Updated successfully!"
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Cập nhật đề kiểm tra Thất bại!"
+                "message" => "Updated failed!"
             ]);
         }
     }
@@ -117,14 +117,14 @@ class ExamController extends Controller
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "Xóa đề kiểm tra Thành công!"
+                "message" => "Deleted successfully!"
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Xóa đề kiểm tra Thất bại!"
+                "message" => "Deleted failed!"
             ]);
         }
     }
