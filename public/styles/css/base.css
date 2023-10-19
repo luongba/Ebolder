@@ -7649,7 +7649,7 @@ button,
   padding-top: 60px;
   transition: all .2s; }
   .app-sidebar .app-sidebar__inner {
-    padding: 2px 1.5rem 1.5rem; }
+    padding: 2px 10px 10px; }
   .app-sidebar .scrollbar-sidebar {
     z-index: 15;
     width: 100%; }
@@ -7934,7 +7934,8 @@ button,
   .closed-sidebar .app-sidebar .app-sidebar__inner ul.mm-show {
     padding: 0; }
     .closed-sidebar .app-sidebar .app-sidebar__inner ul.mm-show > li > a {
-      height: 0; }
+      height: 0;
+    }
   .closed-sidebar .app-sidebar:hover {
     flex: 0 0 280px !important;
     width: 280px !important; }
@@ -24629,9 +24630,8 @@ div .email-template-main:hover{
   padding: 0rem !important;
 }
 .activity .timeline-icon {
-  border:none !important
+  border:none !important;
   border-style: none !important;
-
 }
 .activity .scroll-area-lg{
   height: 80vh !important;
@@ -24641,4 +24641,10 @@ div .email-template-main:hover{
 }
 .metrics .btn-actions-pane-right{
   cursor: pointer;
+}
+
+li.mm-active > a {
+  color: #3f6ad8;
+  background: #e0f3ff;
+  font-weight: bold;
 }
