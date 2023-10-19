@@ -1,17 +1,5 @@
 <template>
   <div>
-    <div class="app-page-title flex justify-between items-center">
-      <div class="page-title-wrapper">
-        <div class="page-title-heading">
-          <div class="page-title-icon">
-            <i class="fa-solid fa-swatchbook icon-gradient bg-mean-fruit"></i>
-          </div>
-          <div class="flex justify-between">
-            <p>GRAMMAR</p>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="container">
       <div class="flex justify-center">
         <span class="font-semibold text-[15px] mb-2 mr-2">Exam</span>

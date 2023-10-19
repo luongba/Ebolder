@@ -66,17 +66,8 @@
         >
           <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
           <div class="flex items-center">
-            <el-button
-              size="small"
-              type="danger"
-              plain
-              icon="el-icon-delete"
-              circle
-              @click="deleteTopic(item.id)"
-            ></el-button>
             <a
               :href="`${ApiUrl}/admin/volabulary-level-test/detail/${item.id}`"
-              class="ml-2"
             >
               <el-button
                 size="small"
@@ -86,6 +77,15 @@
                 circle
               ></el-button>
             </a>
+            <el-button
+              size="small"
+              type="danger"
+              class="ml-2"
+              plain
+              icon="el-icon-delete"
+              circle
+              @click="deleteTopic(item.id)"
+            ></el-button>
           </div>
         </div>
         <!-- <div

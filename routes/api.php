@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/auth/loginApi', 'AuthController@loginApi')->name('auth.login-api');
+Route::get('/get-levels', 'Admin\LevelController@all')->name('get-levels');
 Route::middleware('auth:api')->group(function (){
     Route::get('/auth/user', 'AuthController@getUser')->name('auth.user');
     Route::prefix('/admin')->name('admin.')->group(function () {
@@ -137,7 +138,6 @@ Route::middleware('auth:api')->group(function (){
         //level admin
         Route::post('/create-level', 'Admin\LevelController@createLevel')->name('create-level');
         Route::get('/get-all-level', 'Admin\LevelController@getAllLevel')->name('get-all-level');
-        Route::get('/get-levels', 'Admin\LevelController@all')->name('get-levels');
         Route::post('/detail-level', 'Admin\LevelController@detailLevel')->name('detail-level');
         Route::post('/delete-level', 'Admin\LevelController@deleteLevel')->name('delete-level');
         Route::post('/update-level', 'Admin\LevelController@updateLevel')->name('update-level');
