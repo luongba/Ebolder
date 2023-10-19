@@ -11,6 +11,7 @@ use App\models\Speak\QuestionLuyenAm;
 use App\models\Speak\SaveResultExamSpeaking;
 use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Exception;
+use Illuminate\Support\Facades\Log;
 class SpeakController extends Controller
 {
     public function index(){
@@ -20,7 +21,7 @@ class SpeakController extends Controller
     public function ListTopic()
     {
         try {
-            $data = Speak::all();
+            $data = Speak::orderBy('id', 'DESC')->paginate(10);
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -45,7 +46,9 @@ class SpeakController extends Controller
     {
         try {
             $query = new Speak();
-            $data = $query->where('id', $id)->with('QuestitonSpeak')->first();
+            $data = $query->where('id', $id)->with(['QuestitonSpeak' => function ($question) {
+                $question->with('answers')->with('right_answers');
+            }])->first();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -273,12 +276,23 @@ class SpeakController extends Controller
         try {
             DB::beginTransaction();
             $data = $request->all();
-            foreach ($data as $key => $value) {
+            $speak = Speak::create([
+                "name" => $data['name'],
+                "description" => $data['description'] ?? '',
+                "is_exam" => $data['isExam'],
+            ]);
+            $dataQuestions = $data['dataQuestion'];
+            foreach ($dataQuestions as $key => $value) {
                 $res = QuestionSpeak::create([
                     "id" => $value['id'],
                     "question" => $value['question'],
                     "level" => $value['level'],
                     "type" => $value['type']
+                ]);
+                $query = new Speak();
+                $query->find($speak->id)->QuestitonSpeak()->attach(
+                [
+                    'question_speak_id' => $res->id
                 ]);
                 if ($res->type == 1) {
                     $res->right_answers()->create([
@@ -286,8 +300,7 @@ class SpeakController extends Controller
                     ]);
                 }
 
-
-                foreach ($data[$key]['dataAns'] as $keyAds => $item) {
+                foreach ($value['dataAns'] as $keyAds => $item) {
                     QuestionSpeak::find($value['id'])->answers()->create([
                         "id" => $item['idAns'],
                         "text" => $item['text'],
@@ -299,9 +312,10 @@ class SpeakController extends Controller
             return [
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "Thêm câu hỏi thành công !"
+                "message" => "Create question successfully !"
             ];
         } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
             return [
                 "status" => 400,
@@ -317,61 +331,79 @@ class SpeakController extends Controller
     {
         try {
             DB::beginTransaction();
-            $res = QuestionSpeak::where('id', $request->id)->first();
-            $res->update(
-                [
-                    "question" => $request->question,
-                    "level" => $request->level,
+            $speak = Speak::whereId($request->id)->first();
+            $speak->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'is_exam' => $request->is_exam,
+            ]);
+            $dataQuestion = ($request->dataQuestion);
+            $questionList = $speak->QuestitonSpeak()->get()->toArray();
+            $toDelete = collect($questionList)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
 
-                ]
-            );
-            if ($request->type == 1) {
-                foreach ($request->dataAns as $keyAds => $item) {
-                    $ans = $res->answers()->find($item['id']);
-                    if (isset($ans)) {
-
-                        $ans->update([
-                            "text" => $item['text']
-                        ]);
-                    } else {
-                        $res->answers()->create([
-                            "id" => $item['id'],
-                            "answer_id" => $item['id'],
-                            "text" => $item['text']
+            if (count($toDelete)) {
+                foreach($toDelete as $item) {
+                    QuestionSpeak::whereId($item['id'])->delete();
+                }
+            }
+            foreach ($dataQuestion as $key => $value) {
+                $check = QuestionSpeak::whereId($value['id'])->exists();
+                if (!$check) {
+                    $question = $speak->QuestitonSpeak()->create([
+                        'question' => $value['question'],
+                        'level' => $value['level'],
+                        'type' => $value['type']
+                    ]);
+                    foreach ($value['dataAns'] as $keyAns => $valueAns) {
+                        $question->answers()->create([
+                            'id' => $valueAns['idAns'],
+                            'question_id' => $question->id,
+                            'text' => $valueAns['text'],
+                            "answer_id" => $valueAns['idAns'],
                         ]);
                     }
-
-
-                }
-            } else {
-                $res->answers()->delete();
-                foreach ($request->dataAns as $keyAds => $item) {
-                    $res->answers()->create([
-                        "id" => $item['id'],
-                        "answer_id" => $item['id'],
-                        "text" => $item['text']
+                    if ($value['answer']) {
+                        $question->right_answers()->create([
+                            'answer_id' => $value['answer']
+                        ]);
+                    }
+                } else {
+                    QuestionSpeak::whereId($value['id'])->first()->update([
+                        "question" => $value['question'],
+                        "level" => $value['level'],
+                        "type" => $value['type']
                     ]);
-
-
+                    if ($value['answer']) {
+                        QuestionSpeak::whereId($value['id'])->first()->right_answers()->update([
+                            "answer_id" => $value["answer"]
+                        ]);
+                    }
+                    QuestionSpeak::whereId($value['id'])->first()->answers()->delete();
+                    foreach ($value['dataAns'] as $keyAds => $valueAns) {
+                        QuestionSpeak::whereId($value['id'])->first()->answers()
+                            ->create([
+                                'id' => $valueAns['idAns'],
+                                'question_id' => $value['id'],
+                                'text' => $valueAns['text'],
+                                "answer_id" => $valueAns['idAns'],
+                            ]);
+                    }
                 }
             }
-            if ($request->type == 1) {
-                $res->right_answers()->find($request->right_answers["id"])->update([
-                    "answer_id" => $request->right_answers["answer_id"]
-                ]);
-            }
+            
             DB::commit();
             return [
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "Sửa câu hỏi thành công !"
+                "message" => "Update successfully"
             ];
         } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
             return [
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Sửa câu hỏi thất bại !"
+                "message" => "Update failed !"
             ];
         }
 

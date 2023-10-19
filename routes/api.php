@@ -95,7 +95,7 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-topic-speak', 'Admin\SpeakController@deleteTopic')->name('delete-topic-speak');
         Route::post('/store-question-speak', 'Admin\SpeakController@store')->name('store-speak');
         Route::get('/list-question-speak', 'Admin\SpeakController@getAllInfoQuestion')->name('list-speak');
-        Route::put('/update-question-speak', 'Admin\SpeakController@update')->name('update-speak');
+        Route::post('/update-question-speak', 'Admin\SpeakController@update')->name('update-speak');
         Route::post('/delete-answer-speak', 'Admin\SpeakController@destroyAns')->name('delete-speak');
         Route::post('/delete-question-speak', 'Admin\SpeakController@destroyQues')->name('delete-question-speak');
         Route::post('/create-question-luyen-am', 'Admin\SpeakController@createQuestionLuyenAm')->name('create-question-luyen-am');

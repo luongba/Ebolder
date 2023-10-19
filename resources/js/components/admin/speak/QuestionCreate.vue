@@ -1,28 +1,55 @@
 <template>
   <div>
-    <div class="app-page-title">
+    <div class="app-page-title flex justify-between items-center">
       <div class="page-title-wrapper">
         <div class="page-title-heading">
           <div class="page-title-icon">
             <i class="lnr-book icon-gradient bg-mean-fruit"></i>
           </div>
-          <div>
+          <div class="flex justify-between">
             <p>SPEAKING </p>
           </div>
         </div>
-        <div class="page-title-actions" @click="createQuestion">
-          <span class="btn-icon-wrapper pr-2">
-            <p
-              class="btn-icon btn dev-button btn-primary"
-              style="padding: 10px 15px"
-            >
-              SAVE
-            </p>
-          </span>
-        </div>
       </div>
+      <p
+        href=""
+        class="font-semibold text-[16px] text-[#3f6ad8] cursor-pointer mr-2"
+        @click="createTopic"
+      >
+        SAVE
+      </p>
     </div>
     <div class="container">
+      <div class="flex justify-center">
+        <span class="font-semibold text-[15px] mb-2 mr-2">Exam</span>
+        <el-switch v-model="dataTopic.isExam"></el-switch>
+      </div>
+      <div class="mb-4">
+        <el-form ref="ruleFormItem" :model="dataTopic" class="w-full">
+          <el-form-item
+            label="Name"
+            prop="name"
+            :rules="[
+              {
+                required: true,
+                message: 'Please enter your answer',
+              },
+            ]"
+            class="w-full m-0"
+          >
+            <el-input
+              v-model="dataTopic.name"
+              placeholder="Please enter name..."
+            >
+            </el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <editor
+        v-model="dataTopic.content"
+        api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
+        :init="init()"
+      />
       <div class="flex flex-col justify-center w-full items-center">
         <div
           class="card w-full mt-3"
@@ -83,9 +110,9 @@
                         class="w-full m-0"
                       >
                         <Input v-model="item.text">
-                          <template slot="prepend">{{
-                            item.alphabet
-                          }}</template>
+                          <template slot="prepend"
+                            >{{ item.alphabet }}
+                          </template>
                         </Input>
                       </el-form-item>
                     </el-form>
@@ -273,9 +300,9 @@
 
 <script>
 import baseRequest from "../../../utils/baseRequest";
-
 import StarRating from "vue-star-rating";
 import { Input, Button, Select, Form } from "element-ui";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   components: {
@@ -284,9 +311,16 @@ export default {
     Button,
     Select,
     Form,
+    Editor,
   },
   data() {
     return {
+      dataTopic: {
+        name: null,
+        content: "",
+        isExam: false,
+      },
+
       dataQuestion: [],
       alphabet: ["a", "b", "c", "d", "e", "f", "g", "h"],
       maxAns: 4,
@@ -301,19 +335,92 @@ export default {
           },
         ],
       },
+      file: null,
     };
   },
   methods: {
+    init() {
+      return {
+        plugins: "image media link tinydrive code imagetools",
+        height: 600,
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | \
+               alignleft aligncenter alignright alignjustify | \
+               bullist numlist outdent indent | removeformat",
+        paste_data_images: true,
+        tinydrive_token_provider:
+          "df155c9e0a586dc631aa78a2434aa960bb71a67b960e892f50bec0345f1444fc",
+        file_picker_callback: function (callback, value, meta) {
+          let x =
+            window.innerWidth ||
+            document.documentElement.clientWidth ||
+            document.getElementsByTagName("body")[0].clientWidth;
+          let y =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.getElementsByTagName("body")[0].clientHeight;
+
+          let type = "image" === meta.filetype ? "Images" : "Files",
+            url = "/laravel-filemanager?editor=tinymce5&type=" + type;
+
+          tinymce.activeEditor.windowManager.openUrl({
+            url: url,
+            title: "Filemanager",
+            width: x * 0.8,
+            height: y * 0.8,
+            onMessage: (api, message) => {
+              callback(message.content);
+            },
+          });
+        },
+        content_style: `
+        table, th, td {
+            border: 1px solid #000 !important;
+        }	`,
+      };
+    },
+    async createTopic() {
+      try {
+        let dataTemp = {
+          name: this.dataTopic.name,
+          description: this.dataTopic.content,
+          isExam: this.dataTopic.isExam,
+          dataQuestion: this.dataQuestion,
+        };
+        let result = await baseRequest.post(
+          `/admin/store-question-speak`,
+          dataTemp
+        );
+        let { data } = result;
+        if (data.status == 200) {
+          this.$message({
+            message: data.message,
+            type: "success",
+          });
+          setTimeout(() => {
+            window.location.href = `${$Api.baseUrl}/admin/speaking-level-test`;
+          }, 1000);
+        } else {
+          this.$message({
+            message: data.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.log("🚀 ~ ~ error", error);
+      }
+    },
+
     pushAns(id) {
       let dataQues = this.dataQuestion.find((item) => item.id == id);
       dataQues.dataAns.push({
-        idAns: Date.now(),
+        idAns: $Helper.randomId(),
         text: null,
         alphabet: this.alphabet[dataQues.dataAns.length].toUpperCase(),
       });
     },
     validate(formNameItem, formNameData) {
-      if (this.$refs[formNameItem] || this.$refs[formNameData]) {
+      if (this.$refs[formNameItem] && this.$refs[formNameData]) {
         let isCheck = true;
 
         this.$refs[formNameItem].forEach((item) => {
@@ -350,10 +457,9 @@ export default {
       if (isCheck) {
         if (type == 1) {
           this.dataQuestion.push({
-            id: Date.now(),
+            id: Date.now() + 1,
             question: null,
             level: 1,
-            type: 1,
             dataAns: [
               {
                 idAns: $Helper.randomId(),
@@ -362,6 +468,7 @@ export default {
               },
             ],
             answer: null,
+            type: type,
           });
         } else if (type == 2) {
           this.dataQuestion.push({
@@ -378,47 +485,32 @@ export default {
     deleteAns(idQues, idAns) {
       let dataQues = this.dataQuestion.find((item) => item.id == idQues);
       dataQues.dataAns = dataQues.dataAns.filter((item) => item.idAns != idAns);
-      let data = dataQues.dataAns;
-      let temp = [];
-      for (let i = 0; i < data.length; i++) {
-        temp.push({
-          idAns: data[i].idAns,
-          text: data[i].text,
-          alphabet: this.alphabet[i].toUpperCase(),
-        });
+      if (dataQues.type == 1) {
+        let data = dataQues.dataAns;
+        let temp = [];
+        for (let i = 0; i < data.length; i++) {
+          temp.push({
+            idAns: data[i].idAns,
+            text: data[i].text,
+            alphabet: this.alphabet[i].toUpperCase(),
+          });
+        }
+        dataQues.dataAns = temp;
+      } else if (dataQues.type == 2) {
+        let data = dataQues.dataAns;
+        let temp = [];
+        for (let i = 0; i < data.length; i++) {
+          temp.push({
+            idAns: data[i].idAns,
+            text: data[i].text,
+            alphabet: i + 1,
+          });
+        }
+        dataQues.dataAns = temp;
       }
-      dataQues.dataAns = temp;
     },
     deleteQues(id) {
       this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
-    },
-    async createQuestion() {
-      let isCheck = this.validate("ruleFormData", "ruleFormItem");
-      if (isCheck) {
-        try {
-          let result = await baseRequest.post(
-            `/admin/store-question-speak`,
-            this.dataQuestion
-          );
-          let { data } = result;
-          if (data.status == 200) {
-            this.$message({
-              message: data.message,
-              type: "success",
-            });
-            setTimeout(() => {
-              window.location.href = `${$Api.baseUrl}/admin/speaking-level-test/question-list`;
-            }, 1000);
-          } else {
-            this.$message({
-              message: data.message,
-              type: "error",
-            });
-          }
-        } catch (error) {
-          console.log("🚀 ~ ~ error", error);
-        }
-      }
     },
     renderAnswer(data, index) {
       let question = data.question;

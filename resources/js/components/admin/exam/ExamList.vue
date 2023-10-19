@@ -538,7 +538,7 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/list-topic-speak`);
         if (rs.data.status == 200) {
-          this.listTopicSpeaking = rs.data.data
+          this.listTopicSpeaking = rs.data.data.data
             .map((item) => ({
               id: item.id,
               name: item.name,
