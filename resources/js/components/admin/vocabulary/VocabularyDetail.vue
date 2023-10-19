@@ -1,17 +1,5 @@
 <template>
   <div>
-    <div class="app-page-title flex justify-between items-center">
-      <div class="page-title-wrapper">
-        <div class="page-title-heading">
-          <div class="page-title-icon">
-            <i class="fa-solid fa-swatchbook icon-gradient bg-mean-fruit"></i>
-          </div>
-          <div class="flex justify-between">
-            <p>Quản lý đề</p>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="container">
       <div class="mb-4">
         <el-form ref="ruleFormItem" :model="detailTopic" class="w-full">
