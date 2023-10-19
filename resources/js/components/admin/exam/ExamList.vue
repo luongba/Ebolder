@@ -490,7 +490,7 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/list-topic-grammar`);
         if (rs.data.status == 200) {
-          this.listTopicGrammar = rs.data.data
+          this.listTopicGrammar = rs.data.data.data
             .map((item) => ({
               id: item.id,
               name: item.name,
