@@ -65,17 +65,8 @@
         >
           <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
           <div class="flex items-center">
-            <el-button
-              size="small"
-              type="danger"
-              plain
-              icon="el-icon-delete"
-              circle
-              @click="deleteTopic(item.id)"
-            ></el-button>
             <a
               :href="`${ApiUrl}/admin/grammar-level-test/detail/${item.id}`"
-              class="ml-2"
             >
               <el-button
                 size="small"
@@ -85,9 +76,18 @@
                 circle
               ></el-button>
             </a>
+            <el-button
+              size="small"
+              type="danger"
+              class="ml-2"
+              plain
+              icon="el-icon-delete"
+              circle
+              @click="deleteTopic(item.id)"
+            ></el-button>
           </div>
         </div>
-        <div
+        <!-- <div
           class="bg-white shadow-sm flex items-center justify-center cursor-pointer py-4 px-4 text-[14px] font-semibold"
           @click="show = !show"
         >
@@ -96,8 +96,21 @@
               <i class="el-icon-plus text-[20px]"></i>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
+      <div class="mt-2 flex items-center justify-center"> 
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              :total="total"
+              :current-page.sync="current"
+              :page-size="perPage"
+              @prev-click="paginateClick"
+              @next-click="paginateClick"
+              @current-change="paginateClick"
+            >
+          </el-pagination>
+        </div>
     </div>
   </div>
 </template>
@@ -139,6 +152,10 @@ export default {
         ],
       },
       isLoading: false,
+      total: 1,
+      current: 1,
+      pageSize: 1,
+      perPage: 1,
     };
   },
   computed: {},
@@ -225,16 +242,21 @@ export default {
         }
       });
     },
+    paginateClick(curentPage) {
+      this.current = curentPage;
+      this.getAllTopic();
+    },
     async getAllTopic() {
       try {
         this.isLoading = true;
-        let rs = await baseRequest.get(`/admin/list-topic-grammar`);
+        let rs = await baseRequest.get(`/admin/list-topic-grammar?page=${this.current}`);
         if (rs.data.status == 200) {
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1000);
-
-          this.listTopic = rs.data.data;
+          this.isLoading = false;
+          this.listTopic = rs.data.data.data;
+          this.total = rs.data.data.total;
+          this.current = rs.data.data.current_page;
+          this.pageSize = rs.data.data.last_page;
+          this.listTopic = rs.data.data.data;
         }
       } catch (e) {
         setTimeout(() => {

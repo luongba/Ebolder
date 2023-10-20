@@ -12,8 +12,8 @@
                 <h1 class="font-semibold uppercase text-[14px]">
                   {{
                     state == "create"
-                      ? "Tạo mới cấp độ bài học"
-                      : "Cập nhật cấp độ bài học"
+                      ? "Create level"
+                      : "Update Level"
                   }}
                 </h1>
                 <span
@@ -150,7 +150,7 @@
                   </div>
                 </div>
                 <div class="flex justify-end items-center mt-4">
-                  <el-button plain @click="resetFeild">Thoát</el-button>
+                  <el-button plain @click="resetFeild">Cancel</el-button>
                   <el-button
                     type="primary"
                     @click="
@@ -158,7 +158,7 @@
                         ? createTopic('ruleForm')
                         : updateLevel('ruleForm')
                     "
-                    >{{ state == "create" ? "Tạo mới" : "Cập nhật" }}</el-button
+                    >{{ state == "create" ? "Create" : "Update" }}</el-button
                   >
                 </div>
               </el-form>
@@ -337,19 +337,19 @@ export default {
               this.resetFeild();
               this.$message({
                 type: "success",
-                message: "Thêm cấp độ bài học thành công",
+                message: "Created successfully",
               });
               this.getAllLevel();
             } else {
               this.$message({
                 type: "error",
-                message: "Thêm cấp độ bài học thất bại",
+                message: "Created failed",
               });
             }
           } catch (e) {
             this.$message({
               type: "error",
-              message: "Thêm cấp độ bài học thất bại",
+              message: "Created failed",
             });
           }
         } else {
@@ -374,22 +374,20 @@ export default {
             };
             let rs = await baseRequest.post(`/admin/update-level`, dataTemp);
             if (rs.data.status == 200) {
-              this.resetFeild();
               this.$message({
                 type: "success",
-                message: "Sửa cấp độ bài học thành công",
+                message: "Updated successfully",
               });
-              this.getAllLevel();
             } else {
               this.$message({
                 type: "error",
-                message: "Sửa cấp độ bài học thất bại",
+                message: "Update failed",
               });
             }
           } catch (e) {
             this.$message({
               type: "error",
-              message: "Sửa cấp độ bài học thất bại",
+              message: "Update failed",
             });
           }
         } else {
@@ -400,18 +398,14 @@ export default {
     async getAllLevel() {
       try {
         this.isLoading = true;
-        let rs = await baseRequest.get(`/admin/get-all-level`);
+        let rs = await baseRequest.get(`/admin/get-levels`);
         if (rs.data.status == 200) {
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1000);
           this.listLevel = rs.data.data
             .map((item) => ({
               id: item.id,
               name: item.name,
               is_exam: item.is_exam || null,
-            }))
-            .reverse();
+            }));
         }
       } catch (e) {
         console.log(e);
@@ -450,7 +444,7 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/list-topic-lesson`);
         if (rs.data.status == 200) {
-          this.listTopicLesson = rs.data.data.map((item) => ({
+          this.listTopicLesson = rs.data.data.data.map((item) => ({
             id: item.id,
             name: item.name,
             is_exam: item.is_exam || null,
@@ -465,7 +459,7 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/list-topic-vocabulary`);
         if (rs.data.status == 200) {
-          this.listTopicVocabulary = rs.data.data.map((item) => ({
+          this.listTopicVocabulary = rs.data.data.data.map((item) => ({
             id: item.id,
             name: item.name,
             is_exam: item.is_exam || null,
@@ -480,7 +474,7 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/list-topic-grammar`);
         if (rs.data.status == 200) {
-          this.listTopicGrammar = rs.data.data.map((item) => ({
+          this.listTopicGrammar = rs.data.data.data.map((item) => ({
             id: item.id,
             name: item.name,
             is_exam: item.is_exam || null,
@@ -495,7 +489,7 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/list-topic-reading`);
         if (rs.data.status == 200) {
-          this.listTopicReading = rs.data.data.map((item) => ({
+          this.listTopicReading = rs.data.data.data.map((item) => ({
             id: item.id,
             name: item.name,
             is_exam: item.is_exam || null,
@@ -540,7 +534,7 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/list-topic-pronunciation`);
         if (rs.data.status == 200) {
-          this.listTopicTalking = rs.data.data.map((item) => ({
+          this.listTopicTalking = rs.data.data.data.map((item) => ({
             id: item.id,
             name: item.name,
             is_exam: item.is_exam || null,
@@ -605,12 +599,12 @@ export default {
   },
 
   created() {
+    this.getAllLevel();
     this.getAllTopicReading();
     this.getAllTopicLesson();
     this.getAllTopicVocabulary();
     this.getAllTopicGrammar();
     this.getAllTopicListening();
-    this.getAllLevel();
     this.getAllTopicSpeaking()
     this.getAllTopicTalking()
   },

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/auth/loginApi', 'AuthController@loginApi')->name('auth.login-api');
+Route::get('/get-levels', 'Admin\LevelController@all')->name('get-levels');
 Route::middleware('auth:api')->group(function (){
     Route::get('/auth/user', 'AuthController@getUser')->name('auth.user');
     Route::prefix('/admin')->name('admin.')->group(function () {
@@ -27,7 +28,7 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-topic-vocabulary', 'Admin\VocabularyController@deleteTopic')->name('delete-topic-vobulary');
         Route::post('/store-question-vocabulary', 'Admin\VocabularyController@store')->name('store-vobulary');
         Route::get('/list-question-vocabulary', 'Admin\VocabularyController@getAllInfoQuestion')->name('list-vocabulary');
-        Route::put('/update-question-vocabulary', 'Admin\VocabularyController@update')->name('update-vocabulary');
+        Route::post('/update-question-vocabulary', 'Admin\VocabularyController@update')->name('update-vocabulary');
         Route::post('/delete-answer-vocabulary', 'Admin\VocabularyController@destroyAns')->name('delete-vocabulary');
         Route::post('/delete-question-vocabulary', 'Admin\VocabularyController@destroyQues')->name('delete-question-vocabulary');
 
@@ -81,7 +82,7 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/delete-topic-grammar', 'Admin\GrammarController@deleteTopic')->name('delete-topic-grammar');
         Route::post('/store-question-grammar', 'Admin\GrammarController@store')->name('store-grammar');
         Route::get('/list-question-grammar', 'Admin\GrammarController@getAllInfoQuestion')->name('list-grammar');
-        Route::put('/update-question-grammar', 'Admin\GrammarController@update')->name('update-grammar');
+        Route::post('/update-question-grammar', 'Admin\GrammarController@update')->name('update-grammar');
         Route::post('/delete-answer-grammar', 'Admin\GrammarController@destroyAns')->name('delete-grammar');
         Route::post('/delete-question-grammar', 'Admin\GrammarController@destroyQues')->name('delete-question-grammar');
         //speaking 

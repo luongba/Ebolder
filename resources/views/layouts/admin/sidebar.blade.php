@@ -1,29 +1,17 @@
 <div class="scrollbar-sidebar">
     <div class="app-sidebar__inner" style="overflow-y: scroll; height: 100%">
         <ul class="vertical-nav-menu">
-            <!---------------------     Start Dashbroad section     --------------------->
-            <li class="app-sidebar__heading">Dashboard</li>
-            <!--            --><?php //dd(request()->routeIs('home'))
-            ?>
-            <li>
-                <a class="{{ request()->routeIs('admin/home') ? 'mm-active' : '' }}" href="{{ route('admin.home') }}">
-                    <i class="metismenu-icon pe-7s-rocket"></i>
-                    Dashboard
+            <li class="app-sidebar__heading">Exam</li>
+            <li class="mm-parent">
+                <a class="{{ request()->is(['admin/exam-administration']) ? 'mm-active' : '' }}"
+                   href="{{ route('admin.exam-list') }}">
+                    <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
+                    Exam Management
                 </a>
             </li>
-            @can('Exam_List')
-                <li class="app-sidebar__heading">Test</li>
-                <li>
-                    <a class="{{ request()->is(['admin/exam-administration']) ? 'mm-active' : '' }}"
-                        href="{{ route('admin.exam-list') }}">
-                        <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
-                        Test management
-                    </a>
-                </li>
-            @endcan
             @can('Level_List')
                 <li class="app-sidebar__heading">Levels</li>
-                <li>
+                <li class="mm-parent">
                     <a class="{{ request()->is(['admin/level']) ? 'mm-active' : '' }}"
                         href="{{ route('admin.level-list') }}">
                         <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
@@ -42,20 +30,16 @@
                     </a>
                     <ul class="mm-collapse">
                         @can('Vocabulary_List')
+                            @php
+                                $isActiveVocab = request()->is(['admin/volabulary-level-test', 
+                                'admin/volabulary-level-test/question-create',
+                                'admin/volabulary-level-test/detail/*']);
+                            @endphp
                             <li>
-                                <a class="{{ request()->is(['admin/volabulary-level-test']) ? 'mm-active' : '' }}"
+                                <a class="{{ $isActiveVocab ? 'mm-active' : '' }}"
                                     href="{{ route('admin.vocabulary-list') }}">
                                     <i class="metismenu-icon fa-solid fa-laptop-file"></i>
                                     Topics Management
-                                </a>
-                            </li>
-                        @endcan
-                        @can('Question_Vocabulary_List')
-                            <li>
-                                <a class="{{ request()->is(['admin/volabulary-level-test/question-list']) ? 'mm-active' : '' }}"
-                                    href="{{ route('admin.vocabulary-question-list') }}">
-                                    <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
-                                    Question Management
                                 </a>
                             </li>
                         @endcan
@@ -71,8 +55,13 @@
                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>
                     <ul class="mm-collapse">
+                        @php
+                            $isActivePronun = request()->is(['admin/pronunciation-level-test/topic-list', 
+                            'admin/pronunciation-level-test/topic-create',
+                            'admin/pronunciation-level-test/topic-detail/*']);
+                        @endphp
                         <li>
-                            <a class="{{ request()->is(['admin/pronunciation-level-test/topic-list']) ? 'mm-active' : '' }}"
+                            <a class="{{ $isActivePronun ? 'mm-active' : '' }}"
                                 href="{{ route('admin.pronunciation-topic-list') }}">
                                 <i class="metismenu-icon fa-solid fa-laptop-file"></i>
                                 Topics Management
@@ -91,20 +80,16 @@
                     </a>
                     <ul class="mm-collapse">
                         @can('Grammar_List')
+                            @php
+                                $isActiveGrammar = request()->is(['admin/grammar-level-test', 
+                                'admin/grammar-level-test/question-create',
+                                'admin/grammar-level-test/detail/*']);
+                            @endphp
                             <li>
-                                <a class="{{ request()->is(['admin/grammar-level-test']) ? 'mm-active' : '' }}"
+                                <a class="{{ $isActiveGrammar ? 'mm-active' : '' }}"
                                     href="{{ route('admin.grammar-list') }}">
                                     <i class="metismenu-icon fa-solid fa-laptop-file"></i>
                                     Topics Management
-                                </a>
-                            </li>
-                        @endcan
-                        @can('Question_Grammar_List')
-                            <li>
-                                <a class="{{ request()->is(['admin/grammar-level-test/question-list']) ? 'mm-active' : '' }}"
-                                    href="{{ route('admin.grammar-question-list') }}">
-                                    <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
-                                    Question Management
                                 </a>
                             </li>
                         @endcan
@@ -181,9 +166,14 @@
                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>
                     <ul class="mm-collapse">
+                        @php
+                            $isActiveReading = request()->is(['admin/reading-level-test/topic-list', 
+                            'admin/reading-level-test/topic-create',
+                            'admin/reading-level-test/topic-detail/*']);
+                        @endphp
                         @can('Reading_List')
                             <li>
-                                <a class="{{ request()->is(['admin/reading-level-test/topic-list']) ? 'mm-active' : '' }}"
+                                <a class="{{ $isActiveReading ? 'mm-active' : '' }}"
                                     href="{{ route('admin.reading-topic-list') }}">
                                     <i class="metismenu-icon fa-solid fa-laptop-file"></i>
                                     Topics Management
@@ -202,9 +192,14 @@
                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>
                     <ul class="mm-collapse">
+                        @php
+                            $isActiveLesson = request()->is(['admin/lesson', 
+                            'admin/lesson/topic-create',
+                            'admin/lesson/topic-detail/*']);
+                        @endphp
                         @can('Lesson_List')
                             <li>
-                                <a class="{{ request()->is(['admin/lesson']) ? 'mm-active' : '' }}"
+                                <a class="{{ $isActiveLesson ? 'mm-active' : '' }}"
                                     href="{{ route('admin.lesson-list') }}">
                                     <i class="metismenu-icon fa-solid fa-swatchbook"></i>
                                     Topics Management

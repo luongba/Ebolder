@@ -2,6 +2,15 @@ import axios from 'axios'
 import { Api } from "./Api";
 const apiUrl = Api.baseUrlApi;
 
+const instance = axios.create({
+    baseURL: "http://127.0.0.1:8000/api",
+    "Content-Type": "application/json",
+})
+let token = window.localStorage.getItem("token");
+if(token) {
+    instance.defaults.headers['Authorization'] =  "Bearer " + token;
+}
+
 export default {
     getHeaders() {
         let token = window.localStorage.getItem("token");
@@ -12,18 +21,12 @@ export default {
     },
 
     get(url) {
-        return axios.get(apiUrl + url, {
-            headers: this.getHeaders(),
-        });
+        return instance.get(url);
     },
     post(url, data) {
-        return axios.post(apiUrl + url, data, {
-            headers: this.getHeaders(),
-        });
+        return instance.post(url, data);
     },
     put(url, data) {
-        return axios.put(apiUrl + url, data, {
-            headers: this.getHeaders(),
-        });
+        return instance.put(url, data);
     },
 };

@@ -23,7 +23,7 @@ class GrammarController extends Controller
     public function ListTopic()
     {
         try {
-            $data = Grammar::all();
+            $data = Grammar::orderBy('id', 'DESC')->paginate(10);
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -48,7 +48,9 @@ class GrammarController extends Controller
     {
         try {
             $query = new Grammar();
-            $data = $query->where('id', $id)->with('QuestitonGrammar')->first();
+            $data = $query->where('id', $id)->with(['QuestitonGrammar' => function ($question) {
+                $question->with('answers')->with('right_answers');
+            }])->first();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -69,21 +71,52 @@ class GrammarController extends Controller
     public function createTopic(Request $request)
     {
         try {
-            Grammar::create([
+            DB::beginTransaction();
+            $grammar = Grammar::create([
                 "name" => $request->name,
                 "description" => $request->description,
                 "is_exam" => $request->isExam
             ]);
+            $dataQuestion = $request->dataQuestion;
+            foreach ($dataQuestion as $key => $value) {
+                $res = QuestionGrammar::create([
+                    "id" => $value['id'],
+                    "question" => $value['question'],
+                    "level" => $value['level'],
+                    "type" => $value['type']
+                ]);
+                $query = new Grammar();
+                $query->find($grammar->id)->QuestitonGrammar()->attach(
+                [
+                    'question_granmmar_id' => $res->id
+                ]);
+                if ($res->type == 1) {
+                    $res->right_answers()->create([
+                        "answer_id" => $value["answer"]
+                    ]);
+                }
+
+                foreach ($dataQuestion[$key]['dataAns'] as $keyAds => $item) {
+                    QuestionGrammar::find($value['id'])->answers()->create([
+                        "id" => $item['idAns'],
+                        "text" => $item['text'],
+                        "answer_id" => $item['idAns'],
+                    ]);
+                }
+            }
+            DB::commit();
+            
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "Thêm topic thành công !"
+                "message" => "Create topic successfully !"
             ]);
         } catch (\Exception $e) {
+            DB::rollback();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thêm topic thất bại !"
+                "message" => "Create topic failed !"
             ]);
         }
 
@@ -268,48 +301,64 @@ class GrammarController extends Controller
     {
         try {
             DB::beginTransaction();
-            $res = QuestionGrammar::where('id', $request->id)->first();
-            $res->update(
-                [
-                    "question" => $request->question,
-                    "level" => $request->level,
+            $grammar = Grammar::whereId($request->id)->first();
+            $grammar->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'is_exam' => $request->is_exam,
+            ]);
+            $dataQuestion = ($request->dataQuestion);
+            $questionVocab = $grammar->QuestitonGrammar()->get()->toArray();
+            $toDelete = collect($questionVocab)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
 
-                ]
-            );
-            if ($request->type == 1) {
-                foreach ($request->dataAns as $keyAds => $item) {
-                    $ans = $res->answers()->find($item['id']);
-                    if (isset($ans)) {
-
-                        $ans->update([
-                            "text" => $item['text']
-                        ]);
-                    } else {
-                        $res->answers()->create([
-                            "id" => $item['id'],
-                            "answer_id" => $item['id'],
-                            "text" => $item['text']
-                        ]);
-                    }
-
-
-                }
-            } else {
-                $res->answers()->delete();
-                foreach ($request->dataAns as $keyAds => $item) {
-                    $res->answers()->create([
-                        "id" => $item['id'],
-                        "answer_id" => $item['id'],
-                        "text" => $item['text']
-                    ]);
-
-
+            if (count($toDelete)) {
+                foreach($toDelete as $item) {
+                    QuestionGrammar::whereId($item['id'])->delete();
                 }
             }
-            if ($request->type == 1) {
-                $res->right_answers()->find($request->right_answers["id"])->update([
-                    "answer_id" => $request->right_answers["answer_id"]
-                ]);
+            foreach ($dataQuestion as $key => $value) {
+                $check = QuestionGrammar::whereId($value['id'])->exists();
+                if (!$check) {
+                    $question = $grammar->QuestitonGrammar()->create([
+                        'question' => $value['question'],
+                        'level' => $value['level'],
+                        'type' => $value['type']
+                    ]);
+                    foreach ($value['dataAns'] as $keyAns => $valueAns) {
+                        $question->answers()->create([
+                            'id' => $valueAns['idAns'],
+                            'question_id' => $question->id,
+                            'text' => $valueAns['text'],
+                            "answer_id" => $valueAns['idAns'],
+                        ]);
+                    }
+                    if ($value['answer']) {
+                        $question->right_answers()->create([
+                            'answer_id' => $value['answer']
+                        ]);
+                    }
+                } else {
+                    QuestionGrammar::whereId($value['id'])->first()->update([
+                        "question" => $value['question'],
+                        "level" => $value['level'],
+                        "type" => $value['type']
+                    ]);
+                    if ($value['answer']) {
+                        QuestionGrammar::whereId($value['id'])->first()->right_answers()->update([
+                            "answer_id" => $value["answer"]
+                        ]);
+                    }
+                    QuestionGrammar::whereId($value['id'])->first()->answers()->delete();
+                    foreach ($value['dataAns'] as $keyAds => $valueAns) {
+                        QuestionGrammar::whereId($value['id'])->first()->answers()
+                            ->create([
+                                'id' => $valueAns['idAns'],
+                                'question_id' => $value['id'],
+                                'text' => $valueAns['text'],
+                                "answer_id" => $valueAns['idAns'],
+                            ]);
+                    }
+                }
             }
             DB::commit();
             return [
