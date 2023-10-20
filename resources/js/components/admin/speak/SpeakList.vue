@@ -18,54 +18,6 @@
                   <i class="lnr-cross"></i>
                 </span>
               </div>
-              <el-form :model="topicData" :rules="rules" ref="ruleForm">
-                <div class="my-2">
-                  <el-form-item label="Name Topic" prop="name">
-                    <el-input
-                      placeholder="Name Topic"
-                      v-model="topicData.name"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-                <div class="">
-                  <el-form-item label="Content" prop="description">
-                    <editor
-                      v-model="topicData.description"
-                      api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-                      :init="init()"
-                    />
-                  </el-form-item>
-                </div>
-                <!-- <div>
-                  <el-form-item label="Audio file" prop="description">
-                    <el-upload
-                      class="upload-demo"
-                      action="#"
-                      :on-change="handleChange"
-                      :auto-upload="false"
-                      :file-list="fileList"
-                    >
-                      <el-button size="small" type="primary"
-                        >Chosse file</el-button
-                      >
-                      <div slot="tip" class="el-upload__tip">
-                        audio size less than 500kb
-                      </div>
-                    </el-upload>
-                  </el-form-item>
-                </div> -->
-                <div class="">
-                  <el-form-item label="Exam" prop="isExam">
-                    <el-switch v-model="topicData.isExam"></el-switch>
-                  </el-form-item>
-                </div>
-                <div class="flex justify-end items-center mt-4">
-                  <el-button plain @click="resetFeild">Cancel</el-button>
-                  <el-button type="primary" @click="createTopic('ruleForm')"
-                    >Create</el-button
-                  >
-                </div>
-              </el-form>
             </div>
           </div>
         </div>
@@ -104,16 +56,20 @@
             ></el-button>
           </div>
         </div>
-        <div
-          class="bg-white shadow-sm flex items-center justify-center cursor-pointer py-4 px-4 text-[14px] font-semibold"
-          @click="show = !show"
+      </div>
+      
+      <div class="mt-2 flex items-center justify-center"> 
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="total"
+          :current-page.sync="current"
+          :page-size="perPage"
+          @prev-click="paginateClick"
+          @next-click="paginateClick"
+          @current-change="paginateClick"
         >
-          <div class="flex items-center">
-            <div class="w-[32px] h-[32px] flex items-center justify-center">
-              <i class="el-icon-plus text-[20px]"></i>
-            </div>
-          </div>
-        </div>
+        </el-pagination>
       </div>
     </div>
   </div>
@@ -151,6 +107,10 @@ export default {
       isLoading: false,
       fileList: [],
       file: null,
+      total: 1,
+      current: 1,
+      pageSize: 1,
+      perPage: 1,
     };
   },
   computed: {},
@@ -204,61 +164,21 @@ export default {
         isExam: false,
       };
     },
-    async createTopic(formName) {
-      this.$refs[formName].validate(async (valid) => {
-        if (valid) {
-          try {
-            let formData = new FormData();
-            if (this.file) {
-              formData.append("file", this.file.raw);
-            }
-            formData.append("name", this.topicData.name);
-            formData.append("description", this.topicData.description);
-            formData.append("isExam", this.topicData.isExam ? 1 : 0);
-            const headers = {
-              "Content-Type": "multipart/form-data",
-            };
-            let rs = await baseRequest.post(
-              `/admin/store-topic-speak`,
-              formData,
-              { headers }
-            );
-            if (rs.data.status == 200) {
-              this.getAllTopic();
-
-              this.resetFeild();
-              this.$message({
-                type: "success",
-                message: "Add successful topics",
-              });
-            } else {
-              this.$message({
-                type: "error",
-                message: "Add error topics",
-              });
-            }
-          } catch (e) {
-            console.log(e);
-            this.$message({
-              type: "error",
-              message: "Add error topics",
-            });
-          }
-        } else {
-          return false;
-        }
-      });
+    paginateClick(curentPage) {
+      this.current = curentPage;
+      this.getAllTopic();
     },
     async getAllTopic() {
       try {
         this.isLoading = true;
-        let rs = await baseRequest.get(`/admin/list-topic-speak`);
+        let rs = await baseRequest.get(`/admin/list-topic-speak?page=${this.current}`);
         if (rs.data.status == 200) {
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1000);
-
-          this.listTopic = rs.data.data;
+          this.isLoading = false;
+          this.listTopic = rs.data.data.data;
+          this.total = rs.data.data.total;
+          this.current = rs.data.data.current_page;
+          this.pageSize = rs.data.data.last_page;
+          this.perPage = rs.data.data.per_page;
         }
       } catch (e) {
         setTimeout(() => {

@@ -135,22 +135,17 @@
                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>
                     <ul class="mm-collapse">
+                        @php
+                            $isActiveSpeaking = request()->is(['admin/speaking-level-test', 
+                            'admin/speaking-level-test/question-create',
+                            'admin/speaking-level-test/detail/*']);
+                        @endphp
                         @can('Speaking_List')
                             <li>
-                                <a class="{{ request()->is(['admin/speaking-level-test']) ? 'mm-active' : '' }}"
+                                <a class="{{ $isActiveSpeaking ? 'mm-active' : '' }}"
                                     href="{{ route('admin.speak-list') }}">
                                     <i class="metismenu-icon fa-solid fa-laptop-file"></i>
                                     Topics Management
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('Question_Speaking_List')
-                            <li>
-                                <a class="{{ request()->is(['admin/speaking-level-test/question-list']) ? 'mm-active' : '' }}"
-                                    href="{{ route('admin.speak-question-list') }}">
-                                    <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
-                                    Question Management
                                 </a>
                             </li>
                         @endcan
