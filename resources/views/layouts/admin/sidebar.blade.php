@@ -229,7 +229,7 @@
             @endcan
             <li>
                 <li>
-                    <a class="{{ request()->is(['admin/users']) ? 'mm-active' : '' }}"
+                    <a
                         href="{{ route('logout') }}">
                         <i class="metismenu-icon fas fa-sign-out-alt"></i>
                         Logout
