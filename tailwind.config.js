@@ -16,9 +16,10 @@ module.exports = {
           },
           screens: {
               DEFAULT: '100%',
-              sm: '100%',
-              lg: '1232px',
-              xl: '1232px',
+              sm: '640px',
+              md: '768px',
+              lg: '1024px',
+              xl: '1280px',
           },
       },
     extend: {

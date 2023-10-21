@@ -6,10 +6,8 @@
         font-family: lexend;
     }
     .bg-app {
-        background-image: url('/images/bg/landing_page_bg.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        color: #fff;
+        background-color: #fff;
+        color: #141416;
     }
 </style>
 <body>
