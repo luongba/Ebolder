@@ -22,15 +22,6 @@
             </button>
         </div>
     </div>
-    <div class="app-header__menu ">
-        <span>
-            <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav bg-blue-800">
-                <span class="btn-icon-wrapper ">
-                    <i class="fa fa-ellipsis-v fa-w-6"></i>
-                </span>
-            </button>
-        </span>
-    </div>
     <div class="app-header__content">
         <div class="app-header-left">
             <!---------------------     Start Search  section     --------------------->
