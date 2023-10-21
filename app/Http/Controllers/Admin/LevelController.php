@@ -137,28 +137,15 @@ class LevelController extends Controller
 
     public function detailLevel(Request $request)
     {
-
-
-        try {
-            DB::beginTransaction();
-            $level = new Level();
-            $level = $level->where('id', $request->id)->with('Learn')->with('Reading')->with('Vocabulary')->with('Grammar')->with('Listen')->with('Speak')->with('Pronunciation')->first();
-            DB::commit();
-            return response()->json([
-                "status" => 200,
-                "errorCode" => 0,
-                "data" => $level,
-                "message" => "Lấy level Thành công!"
-            ]);
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return response()->json([
-                "status" => 400,
-                "errorCode" => 400,
-                "message" => "Lấy level Thất bại!"
-            ]);
-        }
-
+        ini_set('memory_limit', '-1');
+        $level = new Level();
+        $level = $level->where('id', $request->id)->with('Learn')->with('Reading')->with('Vocabulary')->with('Grammar')->with('Listen')->with('Speak')->with('Pronunciation')->first();
+        return response()->json([
+            "status" => 200,
+            "errorCode" => 0,
+            "data" => $level,
+            "message" => "Lấy level Thành công!"
+        ]);
     }
 
     public function updateLevel(Request $request)

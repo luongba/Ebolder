@@ -140,7 +140,7 @@
                 </div>
             </div>
             <div
-                class="absolute bottom-[-75px] block rounded-[60px] bg-[#fff] xl:p-12 p-6 shadow p-[24px] md:p-[48px]">
+                class="absolute bottom-[-75px] block rounded-[60px] bg-[#fff] xl:p-12 p-6 shadow p-[24px] md:p-[48px] listening">
                 <div class="flex">
                     <div class="flex items-center px-4 py-2 me-6 rounded-[100px] bg-[#E6E8EC]">
                         <img :src="timer" />
@@ -226,6 +226,9 @@ export default {
 };
 </script>
 <style scoped>
+body {
+    overflow-x: hidden;
+}
 .strong {
     -webkit-text-fill-color: transparent;
     background: -webkit-linear-gradient(45deg, #5ebbff -33%, #a174ff 69%);
@@ -280,5 +283,33 @@ export default {
 
 .icon-shadow {
     box-shadow: 0px 40px 80px -20px #1313131A;
+}
+
+@media only screen and (min-width: 1280px) {
+  .listening {
+    right: -22%;
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 1279px) {
+  .listening {
+    right: -200px;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .listening {
+    right: -100px;
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .listening {
+    position: static;
+    margin-left: 15%;
+    width: 100%;
+  }
 }
 </style>
