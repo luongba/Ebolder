@@ -162,6 +162,7 @@ export default {
             return {
                 backgroundImage: `url(${require('../../../../../public/images/landing/background.svg')})`,
                 backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain'
             };
         }
     },
