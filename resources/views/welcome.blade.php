@@ -4,6 +4,9 @@
 
 <body>
 <div class="app-container app-theme-white body-tabs-shadow fixed-header fixed-sidebar" id="app">
+    @if (session('token'))
+        <input type="text" id="section" value="{{ session('token') }}" hidden>
+    @endif
     <!---------------------     Start header section section     --------------------->
     @include('layouts.admin.header')
 
