@@ -41,10 +41,15 @@
             <div
                 class="relative flex flex-col min-w-0 break-words w-full mb-6 bg-white rounded-br-[16px] rounded-bl-[16px] rounded-tr-[16px]">
                 <div class="px-4 py-4 flex-auto">
-                    <div class="tab-content tab-space">
+                    <div class="tab-content tab-space flex">
                         <div v-bind:class="{ 'hidden': openTab !== 1, 'block': openTab === 1 }" class=" pb-4">
                             <div class="rounded-lg p-3 bg-[#F4F5F6] w-fit">
                                 A2-B1
+                            </div>
+                        </div>
+                        <div v-bind:class="{ 'hidden': openTab !== 1, 'block': openTab === 1 }" class=" pb-4">
+                            <div class="rounded-lg p-3 bg-[#F4F5F6] w-fit">
+                                B1-B2
                             </div>
                         </div>
                     </div>

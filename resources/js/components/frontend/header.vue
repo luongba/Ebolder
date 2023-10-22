@@ -14,22 +14,27 @@
             <ul class="hidden sm:flex list-none ml-auto flex-row">
               <li class="nav-item">
                 <div class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
-                  Home
+                  <a href="/">Home</a>
                 </div>
               </li>
               <li class="nav-item">
-                <div class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
-                  Contact us
-                </div>
+                <a href="/exam" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
+                  Exam
+                </a>
               </li>
               <li class="nav-item">
-                <div class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
-                  About
-                </div>
+                <a href="/learn" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
+                  Learn
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/tools" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
+                  Tools
+                </a>
               </li>
             </ul>
           </div>
-          <div class="w-fit rounded-[100px] bg-white px-4 py-2 cursor-pointer" @click="openLink">
+          <div class="w-fit rounded-[100px] bg-white px-4 py-2 cursor-pointer" @click="openLink" v-show="!user">
             <div class="text-lg leading-relaxed inline-block">
               Sign in
             </div>
