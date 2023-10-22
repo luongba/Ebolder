@@ -140,34 +140,8 @@
                 </div>
             </div>
             <div
-                class="absolute bottom-[-75px] block rounded-[60px] bg-[#fff] xl:p-12 p-6 shadow p-[24px] md:p-[48px] listening">
-                <div class="flex">
-                    <div class="flex items-center px-4 py-2 me-6 rounded-[100px] bg-[#E6E8EC]">
-                        <img :src="timer" />
-                        <span class="md:text-sm text-[8px] font-bold">00:45:20</span>
-                    </div>
-                    <div class="flex items-center ">
-                        <img :src="volume" />
-                        <span class="text md:text-2xl text-xs font-bold">Listening</span>
-                    </div>
-                </div>
-                <div class="relative rounded-[30px] mt-6 md:mt-12">
-                    <div class="w-1/2 xl:w-full">
-                        <img :src="easiestWay" />
-                    </div>
-                    <div
-                        class="rounded-full bg-[#fff] absolute icon-shadow md:p-[18px] p-3 transform -translate-y-1/2 top-0 right-[15%] ">
-                        <div class="md:p-6 p-2.5 rounded-full bg-[#2162FF]">
-                            <img :src="calendar" />
-                        </div>
-                    </div>
-                    <div
-                        class="rounded-full bg-[#fff] absolute icon-shadow md:p-[18px] p-3 top-1/2 transform -translate-y-1/2 left-[-15%]">
-                        <div class="md:p-6 p-2.5 rounded-full bg-[#24B24C]">
-                            <img :src="arrowUp" />
-                        </div>
-                    </div>
-                </div>
+                class="absolute  block  listening">
+                <img :src="listening" />
             </div>
         </div>
         <div class="md:mt-[100px] mt-[80px]">
@@ -193,6 +167,7 @@ export default {
     },
     data() {
         return {
+            listening: require('../../../../../public/images/landing/listening.png'),
             easiestWay: require('../../../../../public/images/landing/easiest-way.svg'),
             timer: require('../../../../../public/images/landing/timer.svg'),
             volume: require('../../../../../public/images/landing/volume.svg'),
@@ -289,27 +264,27 @@ body {
   .listening {
     right: -22%;
     width: 70%;
+    bottom: -15%;
   }
 }
 
 @media only screen and (max-width: 1279px) {
   .listening {
-    right: -200px;
+    right: 0px;
+    bottom: -25%;
+  }
+  .listening img {
+    height: 400px;
   }
 }
 
-@media only screen and (max-width: 1200px) {
-  .listening {
-    right: -100px;
-    width: 70%;
-  }
-}
-
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 900px) {
   .listening {
     position: static;
-    margin-left: 15%;
     width: 100%;
+  }
+  .listening img {
+    height: auto;
   }
 }
 </style>
