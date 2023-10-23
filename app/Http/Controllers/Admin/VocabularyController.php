@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\models\Vocabulary\AnswerVocabulary;
+use App\models\Vocabulary\LevelVocabulary;
 use App\models\Vocabulary\QuestionVocabulary;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
@@ -18,10 +19,14 @@ class VocabularyController extends Controller
         return view('pages.admin.vocabulary.topic.index');
     }
 
-    public function ListTopic()
+    public function ListTopic(Request $request)
     {
         try {
-            $data = Vocabulary::orderBy('id', 'DESC')->paginate(10);
+            if ($request->is_exam) {
+                $data = Vocabulary::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $data = Vocabulary::orderBy('id', 'DESC')->paginate(10);
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -250,6 +255,9 @@ class VocabularyController extends Controller
                 "description" => $dataTopic['description'] ?? '',
                 "is_exam" => $dataTopic['isExam'],
             ]);
+            if (!$request->is_exam) {
+                LevelVocabulary::where('vocabulary_id', $request->id)->delete();
+            }
             
 
             $dataQuestion = $data['dataQuestion'];

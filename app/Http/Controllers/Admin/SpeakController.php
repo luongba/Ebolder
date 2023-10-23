@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\models\Speak\AnswerSpeak;
+use App\models\Speak\LevelSpeak;
 use App\models\Speak\Speak;
 use App\models\Speak\QuestionSpeak;
 use App\models\Speak\QuestionLuyenAm;
@@ -18,10 +19,14 @@ class SpeakController extends Controller
         return view('pages.admin.speak.topic.index');
     }
 
-    public function ListTopic()
+    public function ListTopic(Request $request)
     {
         try {
-            $data = Speak::orderBy('id', 'DESC')->paginate(10);
+            if ($request->is_exam) {
+                $data = Speak::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $data = Speak::orderBy('id', 'DESC')->paginate(10);
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -337,6 +342,9 @@ class SpeakController extends Controller
                 'description' => $request->description,
                 'is_exam' => $request->is_exam,
             ]);
+            if (!$request->is_exam) {
+                LevelSpeak::where('grammar_id', $request->id)->delete();
+            }
             $dataQuestion = ($request->dataQuestion);
             $questionList = $speak->QuestitonSpeak()->get()->toArray();
             $toDelete = collect($questionList)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();

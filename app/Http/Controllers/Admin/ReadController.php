@@ -70,10 +70,14 @@ class ReadController extends Controller
 
     }
 
-    public function listTopicApi()
+    public function listTopicApi(Request $request)
     {
         try {
-            $dataAll = Reading::orderBy('id', 'DESC')->paginate(10);
+            if ($request->is_exam) {
+                $dataAll = Reading::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $dataAll = Reading::orderBy('id', 'DESC')->paginate(10);
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

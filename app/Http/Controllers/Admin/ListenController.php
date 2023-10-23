@@ -308,10 +308,14 @@ class ListenController extends Controller
         return view('pages.admin.listening.topic.index');
     }
 
-    public function ListTopic()
+    public function ListTopic(Request $request)
     {
         try {
-            $data = Listening::all();
+            if ($request->is_exam) {
+                $data = Listening::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $data = Listening::all();
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

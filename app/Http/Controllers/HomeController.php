@@ -14,6 +14,7 @@ use App\models\HistoryLearn;
 use App\models\Speak\Speak;
 use App\models\Vocabulary\Vocabulary;
 use App\models\Exam\ExamHistoryFinal;
+use App\models\Listen\LevelListen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -354,6 +355,11 @@ class HomeController extends Controller
         $data->whereId($request->id)->update([
             'is_exam' => $request->is_exam
         ]);
+        if (!$request->is_exam) {
+            if ($request->class == 'Listening') {
+                LevelListen::where('listening_id', $request->id)->delete();
+            }
+        }
         return response()->json([
             "status" => 200,
             "errorCode" => 0,

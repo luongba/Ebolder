@@ -737,7 +737,7 @@ export default {
                         idAns: ans.id,
                         text: ans.text,
                         question_id: ans.question_id,
-                        alphabet: this.alphabet[index].toLocaleUpperCase(),
+                        alphabet: item.type == 1 ? this.alphabet[index].toLocaleUpperCase() : 'A',
                       })),
                   };
               }),
@@ -752,7 +752,7 @@ export default {
               idAns: ans.id,
               text: ans.text,
               question_id: ans.question_id,
-              alphabet: this.alphabet[index].toLocaleUpperCase(),
+              alphabet: item.type == 1 ? this.alphabet[index].toLocaleUpperCase() : 'A',
             })),
           }))
         }

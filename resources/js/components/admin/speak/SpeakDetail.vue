@@ -633,7 +633,6 @@ export default {
         );
         let { data } = rs;
         if (data.status == 200) {
-          console.log(data);
           let temp = {
             id: data.data.id,
             name: data.data.name,
@@ -667,7 +666,7 @@ export default {
               idAns: ans.id,
               text: ans.text,
               question_id: ans.question_id,
-              alphabet: this.alphabet[index].toLocaleUpperCase(),
+              alphabet: question.type == 1 ? this.alphabet[index].toLocaleUpperCase() : 'A',
             })),
             answer: question.right_answer,
             type: question.type,
