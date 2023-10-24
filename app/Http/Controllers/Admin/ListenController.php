@@ -100,24 +100,19 @@ class ListenController extends Controller
 
     public function getAllAudio(Request $request)
     {
-        try {
-            $query = new AudioListening();
-            $dataAll = $query->with('questionListening')->get();
-            return response()->json([
-                "status" => 200,
-                "errorCode" => 0,
-                "data" => $dataAll,
+        $params = $request->all();
+        $params['page_size'] = $params['page_size'] ?? 10;
+        $dataAll = AudioListening::query()->with('questionListening')
+            ->paginate($params['page_size'], ['*'], 'page', $params['page_number'] ?? 1);
+            
+        return response()->json([
+            "status" => 200,
+            "errorCode" => 0,
+            "data" => $dataAll,
 
 
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                "status" => $e->getCode(),
-                "errorCode" => $e->getCode(),
-                "data" => null,
-                "message" => $e->getMessage()
-            ]);
-        }
+        ]);
+       
 
     }
 
