@@ -322,6 +322,25 @@
       </div>
     </div>
     <div>
+      <el-form :model="detailAudio" class="w-full mb-3 ">
+        <el-form-item
+          label="Title"
+          prop="name"
+          :rules="[
+            {
+              required: true,
+              message: 'Please enter title',
+            },
+          ]"
+          class="w-full m-0"
+        >
+          <el-input
+            v-model="detailAudio.name"
+            placeholder="Please enter title..."
+          >
+          </el-input>
+        </el-form-item>
+      </el-form>
       <editor
         v-model="detailAudio.content"
         api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
@@ -1257,7 +1276,7 @@ export default {
           debugger
           const formData = new FormData();
           formData.append("content", this.detailAudio.content);
-          formData.append("name", "");
+          formData.append("name", this.detailAudio.name);
           if(this.file && typeof this.file == 'object') {
             formData.append("file", this.file);
             formData.append("file_type", this.fileType);

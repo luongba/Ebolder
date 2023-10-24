@@ -257,7 +257,7 @@ class ListenController extends Controller
                 $file_name = time() . '_' . preg_replace('/\s+/', '', $file->getClientOriginalName());
                 $file->move(public_path('upload/audio'), $file_name);
                 $audio->update([
-                    'name' => $file->getClientOriginalName(),
+                    'name' => $request->name,
                     'audio' => $file_name,
                     'content' => $request->content,
                     'file_type' => $request->file_type
@@ -265,6 +265,7 @@ class ListenController extends Controller
 
             }else {
                 $audio->update([
+                    'name' => $request->name,
                     'content' =>$request->content
                 ]);
             }
