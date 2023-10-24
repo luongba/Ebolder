@@ -69,8 +69,8 @@
         @change="getChangeAudio($event)"
         hidden
       />
-      <audio id="audio-preview"  class="w-full" controls v-show="file && file != ''" />
-      <video id="video-preview"  class="w-full" controls v-show="fileVideo && fileVideo != ''" />
+      <audio id="audio-preview"  class="w-full" controls v-show="file && file != '' && fileType === 'audio' " />
+      <video id="video-preview"  class="w-full" controls v-show="file && file != '' && fileType === 'video'" />
       <div class="flex flex-col justify-center w-full items-center">
         <div
           class="card w-full mt-3"
@@ -353,7 +353,7 @@ export default {
         ],
       },
       file: null,
-      fileVideo: null,
+      fileType: 'audio',
       content: null
     };
   },
@@ -399,7 +399,7 @@ export default {
       };
     },
     async submitFile() {
-      if (this.file == null && this.fileVideo == null) {
+      if (this.file == null) {
         this.$message({
           type: "error",
           message: "Please upload the file",
@@ -410,10 +410,10 @@ export default {
         if (isCheck) {
           try {
             const formData = new FormData();
-            formData.append("file", this.file || this.fileVideo);
+            formData.append("file", this.file);
             formData.append("content", this.content);
             formData.append("name", this.dataTopic.name);
-            formData.append("file_type", this.file ? 'audio' : 'video');
+            formData.append("file_type", this.fileType);
             const headers = {
               "Content-Type": "multipart/form-data",
             };
@@ -451,7 +451,7 @@ export default {
       });
       } else {
         file = document.getElementById("video-preview");
-        const videoURL = URL.createObjectURL(this.fileVideo);
+        const videoURL = URL.createObjectURL(this.file);
         file.src = videoURL;
       }
     },
@@ -462,12 +462,14 @@ export default {
       const maxSize = 10 * 1024 * 1024; // 10MB
       if (event.target.files[0].type == "audio/mpeg") {
         this.file = event.target.files[0];
+        this.fileType = 'audio';
         this.preview('audio');
       } else if(
         event.target.files[0].type == "video/mp4" ||
         event.target.files[0].type == "video/quicktime"
       ) {
-        this.fileVideo = event.target.files[0];
+        this.file = event.target.files[0];
+        this.fileType = 'video';
         this.preview('video');
       } else {
          this.$message({
