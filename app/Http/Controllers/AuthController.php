@@ -55,7 +55,7 @@ class AuthController extends Controller
                 return redirect()->back()->with('status', 'Email hoặc Password không chính xác');
             }
         }catch (\Exception $e){
-            print_r($e);
+            return redirect()->back()->with('status', $e->getMessage());
         }
 
     }

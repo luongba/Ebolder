@@ -30,26 +30,27 @@ class ListenController extends Controller
         try {
             if ($request->has('file')) {
                 $file = $request->file;
-                $file_name = time() . '_' . $file->getClientOriginalName();
+                $file_name = time() . '_' . preg_replace('/\s+/', '', $file->getClientOriginalName());
                 $file->move(public_path('upload/audio'), $file_name);
 
             }
             $audio = AudioListening::create([
-                'name' => $file->getClientOriginalName(),
+                'name' => $request->name,
                 'audio' => $file_name,
-                'content' =>$request->content
+                'content' =>$request->content,
+                'file_type' => $request->file_type
             ]);
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "audio_id" => $audio->id,
-                "message" => "Thêm media Thành công!"
+                "message" => "Uploaded file media successfully!"
             ]);
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thêm media Thất bại!"
+                "message" => $e->getMessage()
             ]);
         }
     }
@@ -158,7 +159,7 @@ class ListenController extends Controller
                 "errorCode" => 0,
                 "message" => "Xóa câu trả lời thành công !"
             ];
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return [
                 "status" => 400,
                 "errorCode" => 400,
@@ -238,7 +239,7 @@ class ListenController extends Controller
                 "errorCode" => 0,
                 "message" => "Xóa câu hỏi thành công !"
             ];
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return [
                 "status" => 400,
                 "errorCode" => 400,
@@ -253,16 +254,18 @@ class ListenController extends Controller
             $audio = AudioListening::whereId($id)->first();
             if ($request->has('file')) {
                 $file = $request->file;
-                $file_name = time() . '_' . $file->getClientOriginalName();
+                $file_name = time() . '_' . preg_replace('/\s+/', '', $file->getClientOriginalName());
                 $file->move(public_path('upload/audio'), $file_name);
                 $audio->update([
-                    'name' => $file->getClientOriginalName(),
+                    'name' => $request->name,
                     'audio' => $file_name,
-                    'content' =>$request->content
+                    'content' => $request->content,
+                    'file_type' => $request->file_type
                 ]);
 
             }else {
                 $audio->update([
+                    'name' => $request->name,
                     'content' =>$request->content
                 ]);
             }

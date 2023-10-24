@@ -31,7 +31,7 @@
                     v-if="dataQuestion.length > 1"
                     class="text-red-600 text-[14px] font-semibold cursor-pointer"
                     @click="deleteQuesMore(data.id)"
-                    >Xóa</span
+                    >Delete</span
                   >
                 </div>
 
@@ -322,6 +322,25 @@
       </div>
     </div>
     <div>
+      <el-form :model="detailAudio" class="w-full mb-3 ">
+        <el-form-item
+          label="Title"
+          prop="name"
+          :rules="[
+            {
+              required: true,
+              message: 'Please enter title',
+            },
+          ]"
+          class="w-full m-0"
+        >
+          <el-input
+            v-model="detailAudio.name"
+            placeholder="Please enter title..."
+          >
+          </el-input>
+        </el-form-item>
+      </el-form>
       <editor
         v-model="detailAudio.content"
         api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
@@ -350,7 +369,8 @@
       hidden
     />
     <div class="flex justify-between items-center">
-      <audio id="audio-preview" class="w-full" controls />
+      <audio id="audio-preview" class="w-full" controls v-show="file && file != '' && fileType == 'audio' " />
+      <video id="video-preview"  class="w-full" controls v-show="file && file != '' && fileType == 'video' " />
       <div class="flex-1">
         <el-button
           v-if="isEditFile"
@@ -419,7 +439,7 @@
             >
               <el-input
                 type="textarea"
-                placeholder="Nhập câu hỏi..."
+                placeholder="enter your question..."
                 v-model="data.question"
                 rows="3"
               ></el-input>
@@ -736,6 +756,7 @@ export default {
       take: 5,
       isEditFile: false,
       file: null,
+      fileType: '',
       audio: null,
       alphabet: ["a", "b", "c", "d", "e", "f", "g", "h"],
       maxAns: 4,
@@ -953,31 +974,58 @@ export default {
         (item) => item.answer_id == data.right_answers.answer_id
       );
     },
-    previewAudio() {
-      let audio = document.getElementById("audio-preview");
-      let reader = new FileReader();
 
-      reader.readAsDataURL(this.file);
-      reader.addEventListener("load", function () {
-        audio.src = reader.result;
-      });
-    },
     uploadAudio() {
       this.$refs.fileAudio.click();
     },
+
+    preview(type) {
+      let file;
+      if(type == 'audio') {
+        let reader = new FileReader();
+        file = document.getElementById("audio-preview");
+        reader.readAsDataURL(this.file);
+        reader.addEventListener("load", function () {
+        file.src = reader.result;
+      });
+      } else {
+        file = document.getElementById("video-preview");
+        const videoURL = URL.createObjectURL(this.file);
+        file.src = videoURL;
+      }
+    },
+
     getChangeAudio(event) {
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      debugger
       if (event.target.files[0].type == "audio/mpeg") {
         this.file = event.target.files[0];
-        this.detailAudio.name = event.target.files[0].name;
-        this.previewAudio();
-        this.isEditFile = true;
+        this.fileType = 'audio'
+        this.preview('audio');
+      } else if(
+        event.target.files[0].type == "video/mp4" ||
+        event.target.files[0].type == "video/quicktime"
+      ) {
+        this.file = event.target.files[0];
+        this.fileType = 'video'
+        this.preview('video');
       } else {
-        this.$message({
+         this.$message({
           message: "The file is not in the correct format",
           type: "error",
         });
+        return;
+      }
+
+      if(event.target.files[0].size > maxSize) {
+        this.$message({
+          message: "The file is larger than 10MB",
+          type: "error",
+        });
+        return;
       }
     },
+    
     resetFeild() {
       this.show = false;
       this.topicData = {
@@ -1029,9 +1077,29 @@ export default {
             }),
           };
           this.audio = data.audio;
+          if(data.file_type === 'video') {
+            let video = document.getElementById("video-preview");
+            video.src = `${$Api.baseUrl}/upload/audio/${data.audio}`
+            this.file = data.audio
+            this.fileType = "video"
+          } else {
+            let audio = document.getElementById("audio-preview");
+            audio.src = `${$Api.baseUrl}/upload/audio/${data.audio}`
+            this.file = data.audio;
+            this.fileType = "audio"
+          }
+        } else {
+          this.$message({
+            message: "Get information failed",
+            type: "error",
+          });
         }
+        
       } catch (e) {
-        console.log(e);
+        this.$message({
+            message: e.message,
+            type: "error",
+          });
       }
     },
     async deleteTopic(id) {
@@ -1202,23 +1270,32 @@ export default {
     },
     async saveEditContentAudio() {
         try {
-          
+          const headers = {
+            "Content-Type": "multipart/form-data",
+          };
+          debugger
+          const formData = new FormData();
+          formData.append("content", this.detailAudio.content);
+          formData.append("name", this.detailAudio.name);
+          if(this.file && typeof this.file == 'object') {
+            formData.append("file", this.file);
+            formData.append("file_type", this.fileType);
+          }
           let result = await baseRequest.post(
             `/admin/update-audio-listening/${this.param}`,
-           {
-            content: this.detailAudio.content
-           },
+            formData,
+            { headers }
           );
           let { data } = result;
           if (data.status == 200) {
             this.$message({
               type: "success",
-              message: "update successful Audio",
+              message: "Updated successfully ",
             });
           } else {
             this.$message({
               type: "error",
-              message: "update error Audio",
+              message: "Updated failed",
             });
           }
         } catch (error) {
@@ -1246,12 +1323,12 @@ export default {
             this.isEditFile = false;
             this.$message({
               type: "success",
-              message: "update successful Audio",
+              message: "Updated successfully",
             });
           } else {
             this.$message({
               type: "error",
-              message: "update error Audio",
+              message: "Updated falied",
             });
           }
         } catch (error) {
@@ -1313,13 +1390,13 @@ export default {
               this.getDetailAudio();
               this.$message({
                 type: "success",
-                message: "Delete completed",
+                message: "Deleted successfully",
               });
             }
           } catch (e) {
             this.$message({
               type: "error",
-              message: "Delete error",
+              message: "Deleted failed",
             });
           }
         })
@@ -1351,12 +1428,6 @@ export default {
 
   created() {
     this.getDetailAudio();
-  },
-  mounted() {
-    let audio = document.getElementById("audio-preview");
-    setTimeout(() => {
-      audio.src = `${$Api.baseUrl}/upload/audio/${this.audio}`;
-    }, 500);
   },
 };
 </script>
