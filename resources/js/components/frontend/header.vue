@@ -3,8 +3,8 @@
     <div class="flex items-center cursor-pointer" @click="backToHome">
       <img src="/images/landing/logo.svg" alt="" />
       <div class="p-0 text-[16px] font-bold uppercase hidden md:block ml-2">
-        <p>If You Don’t Walk Today</p>
-        <p>You’ll Have To Run Tomorrow.</p>
+        <p class="whitespace-nowrap	">If You Don’t Walk Today</p>
+        <p class="whitespace-nowrap	">You’ll Have To Run Tomorrow.</p>
       </div>
     </div>
     <div class="flex flex-wrap py-2">
@@ -14,50 +14,56 @@
             <ul class="hidden sm:flex list-none ml-auto flex-row">
               <li class="nav-item">
                 <div class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
-                  Home
+                  <a href="/">Home</a>
                 </div>
               </li>
               <li class="nav-item">
-                <div class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
-                  Contact us
-                </div>
+                <a href="/exam" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
+                  Exam
+                </a>
               </li>
               <li class="nav-item">
-                <div class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
-                  About
-                </div>
+                <a href="/learn" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
+                  Learn
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/tools" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
+                  Tools
+                </a>
               </li>
             </ul>
           </div>
-          <div class="w-fit rounded-[100px] bg-white px-4 py-2 cursor-pointer" @click="openLink">
-            <div class="text-lg leading-relaxed inline-block">
+          <div class="w-fit rounded-[100px] bg-white px-4 py-2 cursor-pointer" @click="openLink" v-show="!user">
+            <div class="text-lg leading-relaxed inline-block whitespace-nowrap	">
               Sign in
             </div>
           </div>
+          <el-dropdown trigger="click" v-if="user">
+            <div class="flex items-center justify-center cursor-pointer">
+              <span class="mr-2 text-[16px] text-white">{{
+                user ? user.name : ""
+              }}</span>
+              <el-avatar shape="square"> {{ user ? user.name[0] : "" }} </el-avatar>
+            </div>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>
+                  <span @click="learn()">Lịch sử học</span>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <span @click="history()">Lịch sử làm bài thi</span>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <span @click="logout()">Đăng xuất</span>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </nav>
     </div>
-    <el-dropdown trigger="click" v-if="user">
-      <div class="flex items-center justify-center cursor-pointer">
-        <span class="mr-2 text-[16px] text-white">{{
-          user ? user.name : ""
-        }}</span>
-        <el-avatar shape="square"> {{ user ? user.name[0] : "" }} </el-avatar>
-      </div>
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item>
-            <span @click="learn()">Lịch sử học</span>
-          </el-dropdown-item>
-          <el-dropdown-item>
-            <span @click="history()">Lịch sử làm bài thi</span>
-          </el-dropdown-item>
-          <el-dropdown-item>
-            <span @click="logout()">Đăng xuất</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
+
   </div>
 </template>
 <script>

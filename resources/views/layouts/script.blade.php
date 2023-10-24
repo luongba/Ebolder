@@ -9,6 +9,8 @@
 {{-- <script type="text/javascript" src="{{asset('/js/form-components/form-validation.js')}}"></script> --}}
 <script type="text/javascript">
     window.onload = function() {
+        let section = document.getElementById('section');
+        section && localStorage.setItem('token', section?.value);
         let itemActive = document.querySelectorAll('.mm-active');
         if (itemActive[0].parentElement) {
             if(itemActive[0].parentElement.parentElement && itemActive[0].parentElement.parentElement.className == 'vertical-nav-menu') {

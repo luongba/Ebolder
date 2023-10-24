@@ -33,7 +33,6 @@
                     </li>
                 </ul>
                 <div class="sm:w-[219px] w-[56px]">
-
                 </div>
             </div>
 
@@ -41,10 +40,15 @@
             <div
                 class="relative flex flex-col min-w-0 break-words w-full mb-6 bg-white rounded-br-[16px] rounded-bl-[16px] rounded-tr-[16px]">
                 <div class="px-4 py-4 flex-auto">
-                    <div class="tab-content tab-space">
-                        <div v-bind:class="{ 'hidden': openTab !== 1, 'block': openTab === 1 }" class=" pb-4">
-                            <div class="rounded-lg p-3 bg-[#F4F5F6] w-fit">
-                                A2-B1
+                    <div class="tab-content tab-space flex flex-row" 
+                    >
+                        <div 
+                            v-bind:class="{ 'hidden': openTab !== 1, 'block': openTab === 1 }" class=" pb-4"
+                            v-for="level in levels"
+                            :key="level.id"
+                        >
+                            <div class="rounded-lg px-3 py-2 bg-[#F4F5F6] w-fit me-3">
+                                {{ level.name }}
                             </div>
                         </div>
                     </div>
@@ -76,6 +80,7 @@ import ReadingSVG from '../../../svg/ReadingSVG.vue';
 import WritingSVG from '../../../svg/WritingSVG.vue';
 
 export default {
+    props: ["levels"],
     components: {
         BookSVG,
         GraduationCapSVG,
