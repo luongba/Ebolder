@@ -463,11 +463,11 @@
               icon="el-icon-circle-plus-outline"
               plain
               slot="reference"
-              >Thêm câu hỏi
+              >More questions
             </el-button>
           </el-popover>
           <el-button @click="saveChangeTopic" type="primary" plain
-            >Lưu
+            >Save
           </el-button>
         </div>
       </div>
@@ -669,36 +669,38 @@ export default {
       }
     },
     deleteAns(idQues, idAns) {
-      console.log('--------------------deleteAns---------------------------');
-      console.log(idQues);
-      console.log(idAns);
-      console.log(this.dataQuestion);
       let dataQues = this.dataQuestion.find((item) => item.id == idQues);
-      console.log(dataQues);
-      dataQues.dataAns = dataQues.dataAns.filter((item) => item.idAns != idAns);
-      console.log(dataQues.dataAns);
-      if (dataQues.type == 1) {
-        let data = dataQues.dataAns;
-        let temp = [];
-        for (let i = 0; i < data.length; i++) {
-          temp.push({
-            idAns: data[i].idAns,
-            text: data[i].text,
-            alphabet: this.alphabet[i].toUpperCase(),
-          });
+      if (dataQues.answer == idAns) {
+        this.$message({
+          message:
+            "The deleted answer matches the answer. Please change your answer before deleting !",
+          type: "error",
+        });
+      } else {
+        dataQues.dataAns = dataQues.dataAns.filter((item) => item.idAns != idAns);
+        if (dataQues.type == 1) {
+          let data = dataQues.dataAns;
+          let temp = [];
+          for (let i = 0; i < data.length; i++) {
+            temp.push({
+              idAns: data[i].idAns,
+              text: data[i].text,
+              alphabet: this.alphabet[i].toUpperCase(),
+            });
+          }
+          dataQues.dataAns = temp;
+        } else if (dataQues.type == 2) {
+          let data = dataQues.dataAns;
+          let temp = [];
+          for (let i = 0; i < data.length; i++) {
+            temp.push({
+              idAns: data[i].idAns,
+              text: data[i].text,
+              alphabet: i + 1,
+            });
+          }
+          dataQues.dataAns = temp;
         }
-        dataQues.dataAns = temp;
-      } else if (dataQues.type == 2) {
-        let data = dataQues.dataAns;
-        let temp = [];
-        for (let i = 0; i < data.length; i++) {
-          temp.push({
-            idAns: data[i].idAns,
-            text: data[i].text,
-            alphabet: i + 1,
-          });
-        }
-        dataQues.dataAns = temp;
       }
     },
     async deleteQues(id) {
@@ -707,7 +709,6 @@ export default {
       );
     },
     getAlphabet(data, idAnswer) {
-      console.log(data, idAnswer)
       let index = data.findIndex((item) => {
         return item.idAns == idAnswer;
       });
@@ -737,7 +738,7 @@ export default {
                         idAns: ans.id,
                         text: ans.text,
                         question_id: ans.question_id,
-                        alphabet: this.alphabet[index].toLocaleUpperCase(),
+                        alphabet: item.type == 1 ? this.alphabet[index].toLocaleUpperCase() : 'A',
                       })),
                   };
               }),
@@ -752,7 +753,7 @@ export default {
               idAns: ans.id,
               text: ans.text,
               question_id: ans.question_id,
-              alphabet: this.alphabet[index].toLocaleUpperCase(),
+              alphabet: item.type == 1 ? this.alphabet[index].toLocaleUpperCase() : 'A',
             })),
           }))
         }

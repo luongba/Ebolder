@@ -43,11 +43,6 @@
         api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
         :init="init()"
       />
-      <div class="flex items-center justify-center mt-4">
-        <el-button @click="saveChangeTopic" type="primary" plain
-          >Save info topic
-        </el-button>
-      </div>
       <div class="flex flex-col justify-center w-full items-center">
         <div
           class="card w-full mt-3"
@@ -405,6 +400,9 @@
               >More questions
             </el-button>
           </el-popover>
+          <el-button @click="saveChangeTopic" type="primary" plain
+            >Save
+          </el-button>
         </div>
       </div>
     </div>
@@ -531,7 +529,7 @@ export default {
               idAns: ans.id,
               text: ans.text,
               question_id: ans.question_id,
-              alphabet: this.alphabet[index].toLocaleUpperCase(),
+              alphabet: question.type == 1 ? this.alphabet[index].toLocaleUpperCase() : 'A',
             })),
             answer: question.right_answer,
             type: question.type,
@@ -569,39 +567,6 @@ export default {
         }
       }
       return;
-    },
-    async saveChangeTopic() {
-      try {
-        let dataTemp = {
-          id: this.param,
-          name: this.dataTopic.name,
-          contentPronunciation: this.dataTopic.content,
-          isExam: this.dataTopic.isExam,
-          dataQuestion: this.dataQuestion,
-        };
-        let result = await baseRequest.post(
-          `/admin/update-question-pronunciation`,
-          dataTemp
-        );
-        let { data } = result;
-        if (data.status == 200) {
-          this.getDetailTopic();
-          this.$message({
-            message: data.message,
-            type: "success",
-          });
-          setTimeout(() => {
-            window.location.href = `${$Api.baseUrl}/admin/pronunciation-level-test/topic-detail/${this.param}`;
-          }, 1000);
-        } else {
-          this.$message({
-            message: data.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.log("🚀 ~ ~ error", error);
-      }
     },
 
     pushAns(id) {
@@ -678,125 +643,47 @@ export default {
         }, 100);
       }
     },
-    async deleteAns({ id, answer_id }, idAns) {
-      if (answer_id == idAns) {
+    async deleteAns(idQues, idAns) {
+      let dataQues = this.dataQuestion.find((item) => item.id == idQues);
+      if (dataQues.answer == idAns) {
         this.$message({
           message:
-            "Câu trả lời xóa trùng với đáp án. Vui lòng đổi đáp án trước khi xóa !",
+            "The deleted answer matches the answer. Please change your answer before deleting !",
           type: "error",
         });
       } else {
-        try {
-          let result = await baseRequest.post(`/admin/delete-answer-pronunciation`, {
-            id: idAns,
-          });
-          let { data } = result;
-
-          if (data.status == 200) {
-            this.getDetailTopic();
-            this.$message({
-              message: data.message,
-              type: "success",
-            });
-          } else if (data.status == 100) {
-            let dataQues = this.dataQuestion.find((item) => item.id == id);
-            dataQues.dataAns = dataQues.dataAns.filter(
-              (item) => item.idAns != idAns
-            );
-            if (dataQues.type == 1) {
-              let data = dataQues.dataAns;
-              let temp = [];
-              for (let i = 0; i < data.length; i++) {
-                temp.push({
-                  idAns: data[i].idAns,
-                  text: data[i].text,
-                  alphabet: this.alphabet[i].toUpperCase(),
-                });
-              }
-              dataQues.dataAns = temp;
-            } else if (dataQues.type == 2) {
-              let data = dataQues.dataAns;
-              let temp = [];
-              for (let i = 0; i < data.length; i++) {
-                temp.push({
-                  idAns: data[i].idAns,
-                  text: data[i].text,
-                  alphabet: i + 1,
-                });
-              }
-              dataQues.dataAns = temp;
-            }
-          } else {
-            this.$message({
-              message: data.message,
-              type: "error",
+        dataQues.dataAns = dataQues.dataAns.filter(
+          (item) => item.idAns != idAns
+        );
+        if (dataQues.type == 1) {
+          let data = dataQues.dataAns;
+          let temp = [];
+          for (let i = 0; i < data.length; i++) {
+            temp.push({
+              idAns: data[i].idAns,
+              text: data[i].text,
+              alphabet: this.alphabet[i].toUpperCase(),
             });
           }
-        } catch (error) {
-          console.log("🚀 ~ ~ error", error);
+          dataQues.dataAns = temp;
+        } else if (dataQues.type == 2) {
+          let data = dataQues.dataAns;
+          let temp = [];
+          for (let i = 0; i < data.length; i++) {
+            temp.push({
+              idAns: data[i].idAns,
+              text: data[i].text,
+              alphabet: i + 1,
+            });
+          }
+          dataQues.dataAns = temp;
         }
       }
     },
     async deleteQues(id) {
-      // this.dataQuestion = this.dataQuestion.filter(
-      //     (item) => item.id != id
-      // );
-      try {
-        let result = await baseRequest.post(`/admin/delete-question-pronunciation`, {
-          id,
-        });
-        let { data } = result;
-
-        if (data.status == 200) {
-          this.getDetailTopic();
-          this.$message({
-            message: data.message,
-            type: "success",
-          });
-        } else if (data.status == 100) {
-          this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
-        } else {
-          this.$message({
-            message: data.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.log("🚀 ~ ~ error", error);
-      }
-    },
-    async createQuestion(id) {
-      let dataTemp = this.dataQuestion.map((item) => ({
-        id: item.id,
-        audio_id: id,
-        question: item.question,
-        level: item.level,
-        dataAns: item.dataAns,
-        answer: item.answer,
-      }));
-      try {
-        let result = await baseRequest.post(
-          `/admin/add-question-to-audio-listening`,
-          dataTemp
-        );
-        let { data } = result;
-        if (data.status == 200) {
-          this.$message({
-            message: data.message,
-            type: "success",
-          });
-          setTimeout(() => {
-            window.location.href = `${$Api.baseUrl}/admin/listening-level-test/question-list`;
-          }, 1000);
-        } else {
-          this.$message({
-            message: data.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.log("🚀 ~ ~ error", error);
-      }
+      this.dataQuestion = this.dataQuestion.filter(
+          (item) => item.id != id
+      );
     },
     getAlphabet(data, idAnswer) {
       let index = data.findIndex((item) => {
@@ -839,47 +726,42 @@ export default {
           let data = this.dataQuestion.find((item) => {
             return item.id == id;
           });
-
-          let temp = {
-            pronunciation_id: this.param,
-            right_answers: data.answer || "",
-            id: data.id || null,
-            question: data.question || "",
-            level: data.level,
-            type: data.type,
-            dataAns: data.dataAns.map((itemAns) => {
-              return {
-                id: itemAns.idAns || "",
-                question_id: itemAns.question_id || "",
-                text: itemAns.text || "",
-              };
-            }),
-          };
-          let result = await baseRequest.post(
-            `/admin/add-or-update-question-pronunciation`,
-            temp
-          );
-          console.log(
-            "🚀 ~ file: TopicDetail.vue ~ line 698 ~ SaveQuestion ~ result",
-            result
-          );
-          if (result.data.status == 200) {
-            this.getDetailTopic();
-            this.closeEditQuestion(index);
-            this.$message({
-              type: "success",
-              message: "Edit success",
-            });
-          } else {
-            this.$message({
-              type: "error",
-              message: "Edit error",
-            });
-          }
-          // console.log(result);
+          this.closeEditQuestion(index);
         } catch (e) {
           console.log(e);
         }
+      }
+    },
+    async saveChangeTopic() {
+      try {
+        let formData = new FormData();
+
+        let dataTemp = {
+          name: this.dataTopic.name,
+          is_exam: this.dataTopic.isExam,
+          content: this.dataTopic.content,
+          dataQuestion: this.dataQuestion,
+          id: this.param,
+        };
+        console.log(dataTemp);
+        let result = await baseRequest.post(
+          `/admin/update-question-pronunciation`,
+          dataTemp
+        );
+        let { data } = result;
+        if (data.status == 200) {
+          this.$message({
+            message: data.message,
+            type: "success",
+          });
+        } else {
+          this.$message({
+            message: data.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.log("🚀 ~ ~ error", error);
       }
     },
   },

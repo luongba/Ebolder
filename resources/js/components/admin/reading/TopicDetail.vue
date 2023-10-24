@@ -405,6 +405,9 @@
               >More questions
             </el-button>
           </el-popover>
+          <el-button @click="saveChangeTopic" type="primary" plain
+            >Save
+          </el-button>
         </div>
       </div>
     </div>
@@ -531,7 +534,7 @@ export default {
               idAns: ans.id,
               text: ans.text,
               question_id: ans.question_id,
-              alphabet: this.alphabet[index].toLocaleUpperCase(),
+              alphabet: question.type == 1 ? this.alphabet[index].toLocaleUpperCase() : 'A',
             })),
             answer: question.right_answer,
             type: question.type,
@@ -678,92 +681,47 @@ export default {
         }, 100);
       }
     },
-    async deleteAns({ id, answer_id }, idAns) {
-      if (answer_id == idAns) {
+    async deleteAns(idQues, idAns) {     
+      let dataQues = this.dataQuestion.find((item) => item.id == idQues);
+      if (dataQues.answer == idAns) {
         this.$message({
           message:
-            "Câu trả lời xóa trùng với đáp án. Vui lòng đổi đáp án trước khi xóa !",
+            "The deleted answer matches the answer. Please change your answer before deleting !",
           type: "error",
         });
       } else {
-        try {
-          let result = await baseRequest.post(`/admin/delete-answer-reading`, {
-            id: idAns,
-          });
-          let { data } = result;
-
-          if (data.status == 200) {
-            this.getDetailTopic();
-            this.$message({
-              message: data.message,
-              type: "success",
-            });
-          } else if (data.status == 100) {
-            let dataQues = this.dataQuestion.find((item) => item.id == id);
-            dataQues.dataAns = dataQues.dataAns.filter(
-              (item) => item.idAns != idAns
-            );
-            if (dataQues.type == 1) {
-              let data = dataQues.dataAns;
-              let temp = [];
-              for (let i = 0; i < data.length; i++) {
-                temp.push({
-                  idAns: data[i].idAns,
-                  text: data[i].text,
-                  alphabet: this.alphabet[i].toUpperCase(),
-                });
-              }
-              dataQues.dataAns = temp;
-            } else if (dataQues.type == 2) {
-              let data = dataQues.dataAns;
-              let temp = [];
-              for (let i = 0; i < data.length; i++) {
-                temp.push({
-                  idAns: data[i].idAns,
-                  text: data[i].text,
-                  alphabet: i + 1,
-                });
-              }
-              dataQues.dataAns = temp;
-            }
-          } else {
-            this.$message({
-              message: data.message,
-              type: "error",
+        dataQues.dataAns = dataQues.dataAns.filter(
+          (item) => item.idAns != idAns
+        );
+        if (dataQues.type == 1) {
+          let data = dataQues.dataAns;
+          let temp = [];
+          for (let i = 0; i < data.length; i++) {
+            temp.push({
+              idAns: data[i].idAns,
+              text: data[i].text,
+              alphabet: this.alphabet[i].toUpperCase(),
             });
           }
-        } catch (error) {
-          console.log("🚀 ~ ~ error", error);
+          dataQues.dataAns = temp;
+        } else if (dataQues.type == 2) {
+          let data = dataQues.dataAns;
+          let temp = [];
+          for (let i = 0; i < data.length; i++) {
+            temp.push({
+              idAns: data[i].idAns,
+              text: data[i].text,
+              alphabet: i + 1,
+            });
+          }
+          dataQues.dataAns = temp;
         }
       }
     },
     async deleteQues(id) {
-      // this.dataQuestion = this.dataQuestion.filter(
-      //     (item) => item.id != id
-      // );
-      try {
-        let result = await baseRequest.post(`/admin/delete-question-reading`, {
-          id,
-        });
-        let { data } = result;
-
-        if (data.status == 200) {
-          this.getDetailTopic();
-          this.$message({
-            message: data.message,
-            type: "success",
-          });
-        } else if (data.status == 100) {
-          this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
-        } else {
-          this.$message({
-            message: data.message,
-            type: "error",
-          });
-        }
-      } catch (error) {
-        console.log("🚀 ~ ~ error", error);
-      }
+      this.dataQuestion = this.dataQuestion.filter(
+          (item) => item.id != id
+      );
     },
     async createQuestion(id) {
       let dataTemp = this.dataQuestion.map((item) => ({
@@ -835,51 +793,7 @@ export default {
     async SaveQuestion(id, index) {
       let isCheck = this.validate("ruleFormData", "ruleFormItem");
       if (isCheck) {
-        try {
-          let data = this.dataQuestion.find((item) => {
-            return item.id == id;
-          });
-
-          let temp = {
-            reading_id: this.param,
-            right_answers: data.answer || "",
-            id: data.id || null,
-            question: data.question || "",
-            level: data.level,
-            type: data.type,
-            dataAns: data.dataAns.map((itemAns) => {
-              return {
-                id: itemAns.idAns || "",
-                question_id: itemAns.question_id || "",
-                text: itemAns.text || "",
-              };
-            }),
-          };
-          let result = await baseRequest.post(
-            `/admin/add-or-update-question-reading`,
-            temp
-          );
-          console.log(
-            "🚀 ~ file: TopicDetail.vue ~ line 698 ~ SaveQuestion ~ result",
-            result
-          );
-          if (result.data.status == 200) {
-            this.getDetailTopic();
-            this.closeEditQuestion(index);
-            this.$message({
-              type: "success",
-              message: "Edit success",
-            });
-          } else {
-            this.$message({
-              type: "error",
-              message: "Edit error",
-            });
-          }
-          // console.log(result);
-        } catch (e) {
-          console.log(e);
-        }
+        this.closeEditQuestion(index);
       }
     },
   },

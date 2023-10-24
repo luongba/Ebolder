@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\models\Vocabulary\AnswerVocabulary;
+use App\models\Vocabulary\LevelVocabulary;
 use App\models\Vocabulary\QuestionVocabulary;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
@@ -18,10 +19,14 @@ class VocabularyController extends Controller
         return view('pages.admin.vocabulary.topic.index');
     }
 
-    public function ListTopic()
+    public function ListTopic(Request $request)
     {
         try {
-            $data = Vocabulary::orderBy('id', 'DESC')->paginate(10);
+            if ($request->is_exam) {
+                $data = Vocabulary::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $data = Vocabulary::orderBy('id', 'DESC')->paginate(10);
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -250,8 +255,9 @@ class VocabularyController extends Controller
                 "description" => $dataTopic['description'] ?? '',
                 "is_exam" => $dataTopic['isExam'],
             ]);
-            
-
+            if (!$request->is_exam) {
+                LevelVocabulary::where('vocabulary_id', $request->id)->delete();
+            }
             $dataQuestion = $data['dataQuestion'];
             foreach ($dataQuestion as $key => $value) {
                 $res = QuestionVocabulary::create([
@@ -310,6 +316,9 @@ class VocabularyController extends Controller
                 'description' => $request->contentReading,
                 'is_exam' => $request->is_exam,
             ]);
+            if (!$request->is_exam) {
+                LevelVocabulary::where('vocabulary_id', $request->id)->delete();
+            }
 
             $dataQuestion = ($request->dataQuestion);
             $questionVocab = $vocabulary->QuestitonVocabulary()->get()->toArray();
@@ -368,7 +377,7 @@ class VocabularyController extends Controller
             return [
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "Sửa câu hỏi thành công !"
+                "message" => "Edit question successfully!"
             ];
         } catch (\Exception $e) {
             Log::error($e);
@@ -376,7 +385,7 @@ class VocabularyController extends Controller
             return [
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Sửa câu hỏi thất bại !"
+                "message" => "Failed action !"
             ];
         }
 

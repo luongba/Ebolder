@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\models\Grammar\AnswerGrammar;
 use App\models\Grammar\Grammar;
+use App\models\Grammar\LevelGrammar;
 use App\models\Grammar\QuestionGrammar;
 use App\models\Vocabulary\AnswerVocabulary;
 use App\models\Vocabulary\QuestionVocabulary;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use mysql_xdevapi\Exception;
 
 class GrammarController extends Controller
@@ -20,10 +22,14 @@ class GrammarController extends Controller
         return view('pages.admin.grammar.topic.index');
     }
 
-    public function ListTopic()
+    public function ListTopic(Request $request)
     {
         try {
-            $data = Grammar::orderBy('id', 'DESC')->paginate(10);
+            if ($request->is_exam) {
+                $data = Grammar::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $data = Grammar::orderBy('id', 'DESC')->paginate(10);
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -307,6 +313,9 @@ class GrammarController extends Controller
                 'description' => $request->description,
                 'is_exam' => $request->is_exam,
             ]);
+            if (!$request->is_exam) {
+                LevelGrammar::where('grammar_id', $request->id)->delete();
+            }
             $dataQuestion = ($request->dataQuestion);
             $questionVocab = $grammar->QuestitonGrammar()->get()->toArray();
             $toDelete = collect($questionVocab)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
@@ -367,6 +376,7 @@ class GrammarController extends Controller
                 "message" => "Sửa câu hỏi thành công !"
             ];
         } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
             return [
                 "status" => 400,

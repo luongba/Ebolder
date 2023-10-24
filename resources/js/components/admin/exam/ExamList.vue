@@ -42,9 +42,12 @@
                   <div class="grid grid-cols-1 md:grid-cols-1 md:gap-4 gap-1">
                     <el-form-item label="Listening" prop="valueListening">
                       <el-select
+                        class="listening"
                         v-model="topicData.valueListening"
                         placeholder="Listening"
                         style="width: 100%"
+                        @visible-change="(visible) => handleDropdownVisibleChange(visible, '.listening-select')"
+                        popper-class="listening-select"
                       >
                         <el-option
                           v-for="item in listTopicListening"
@@ -57,9 +60,12 @@
                     </el-form-item>
                     <el-form-item label="Speaking" prop="valueSpeaking">
                       <el-select
+                        class="speaking"
                         v-model="topicData.valueSpeaking"
                         placeholder="Speaking"
                         style="width: 100%"
+                        @visible-change="(visible) => handleDropdownVisibleChange(visible, '.speaking-select')"
+                        popper-class="speaking-select"
                       >
                         <el-option
                           v-for="item in listTopicSpeaking"
@@ -72,9 +78,12 @@
                     </el-form-item>
                     <el-form-item label="Reading" prop="valueReading">
                       <el-select
+                        class="reading"
                         v-model="topicData.valueReading"
                         placeholder="Reading"
                         style="width: 100%"
+                        @visible-change="(visible) => handleDropdownVisibleChange(visible, '.reading-select')"
+                        popper-class="reading-select"
                       >
                         <el-option
                           v-for="item in listTopicReading"
@@ -118,9 +127,12 @@
 
                     <el-form-item label="Writing" prop="valueLesson">
                       <el-select
+                        class="writing"
                         v-model="topicData.valueLesson"
                         placeholder="Writing"
                         style="width: 100%"
+                        @visible-change="(visible) => handleDropdownVisibleChange(visible, '.writing-select')"
+                        popper-class="writing-select"
                       >
                         <el-option
                           v-for="item in listTopicLesson"
@@ -316,11 +328,66 @@ export default {
       state: "create",
       idTemp: null,
       isLoading: false,
+      // isAtEndOfOptionsGammar: false,
+      isAtEndOfOptionsReading: false,
+      // isAtEndOfOptionsVocabulary: false,
+      isAtEndOfOptionsListening: false,
+      isAtEndOfOptionsLesson: false,
+      isAtEndOfOptionsSpeaking: false,
+      // isAtEndOfOptionsPronuncation: false,
+      isAtEndOfOptions: false,
+      // pageGrammar: 1,
+      pageReading: 1,
+      // pageVocabulary: 1,
+      pageListening: 1,
+      pageLesson: 1,
+      pageSpeaking: 1,
+      // pagePronunciation: 1,
     };
   },
   computed: {},
   watch: {},
   methods: {
+    handleDropdownVisibleChange(visible, className) {
+      if (visible) {
+        const dropdownList = document.querySelector(className + ' .el-scrollbar .el-scrollbar__wrap');
+        dropdownList.addEventListener('scroll', this.handleScroll);
+      } else {
+        const dropdownList = document.querySelector('.el-select-dropdown .el-scrollbar__wrap');
+        dropdownList.removeEventListener('scroll', this.handleScroll);
+      }
+    },
+    async handleScroll(event) {
+      const elSelect = event.target;
+      const ul = elSelect.querySelector('ul');
+      const totalItems = ul.childElementCount;
+      const lastVisibleItemIndex = Math.floor((elSelect.scrollTop + elSelect.clientHeight) / ul.firstElementChild.clientHeight);
+      if (lastVisibleItemIndex == totalItems) {
+          const typeTopic = elSelect.parentElement.parentElement.classList;
+          if (Object.values(typeTopic).includes('pronunciation-select') && !this.isAtEndOfOptionsPronuncation && this.pagePronunciation * 10 <= totalItems) {
+            this.pagePronunciation++;
+            await this.getAllTopicTalking();
+          } else if (Object.values(typeTopic).includes('grammar-select') && !this.isAtEndOfOptionsGammar && this.pageGrammar * 10 <= totalItems) {
+            this.pageGrammar++;
+            await this.getAllTopicGrammar();
+          } else if (Object.values(typeTopic).includes('reading-select') && !this.isAtEndOfOptionsReading && this.pageReading * 10 <= totalItems) {
+            this.pageReading++;
+            await this.getAllTopicReading();
+          } else if (Object.values(typeTopic).includes('vocabulary-select') && !this.isAtEndOfOptionsVocabulary && this.pageVocabulary * 10 <= totalItems) {
+            this.pageVocabulary++;
+            await this.getAllTopicVocabulary();
+          } else if (Object.values(typeTopic).includes('listening-select') && !this.isAtEndOfOptionsListening && this.pageListening * 10 <= totalItems) {
+            this.pageListening++;
+            await this.getAllTopicListening();
+          } else if (Object.values(typeTopic).includes('writing-select') && !this.isAtEndOfOptionsLesson && this.pageLesson * 10 <= totalItems) {
+            this.pageLesson++;
+            await this.getAllTopicLesson();
+          } else if (Object.values(typeTopic).includes('speaking-select') && !this.isAtEndOfOptionsSpeaking && this.pageSpeaking * 10 <= totalItems) {
+            this.pageSpeaking++;
+            await this.getAllTopicSpeaking();
+          }
+      }
+    },
     async createTopic(formName) {
       this.$refs[formName].validate(async (valid, err) => {
         if (valid) {
@@ -448,6 +515,10 @@ export default {
 
             isExam: data.data.status === 1 ? true : false,
           };
+          this.listTopicReading = data.data.reading_id;
+          this.listTopicListening = data.data.listening_id;
+          this.listTopicLesson = data.data.writing_id;
+          this.listTopicSpeaking = data.data.speaking_id;
           this.show = !this.show;
         }
       } catch (e) {
@@ -456,15 +527,21 @@ export default {
     },
     async getAllTopicLesson() {
       try {
-        let rs = await baseRequest.get(`/admin/list-topic-lesson`);
+        let rs = await baseRequest.get(`/admin/list-topic-lesson?page=${this.pageLesson}&is_exam=true`);
         if (rs.data.status == 200) {
-          this.listTopicLesson = rs.data.data.data
+          if (rs.data.data.data.length == 0) {
+            this.isAtEndOfOptionsLesson = true;
+          }
+          const lesson = rs.data.data.data
             .map((item) => ({
               id: item.id,
               name: item.name,
               is_exam: item.is_exam || null,
             }))
-            .filter((itemTopic) => itemTopic.is_exam);
+            .filter((itemTopic) => {
+              return !this.listTopicLesson.some(existingItem => existingItem.id === itemTopic.id);
+            });
+            this.listTopicLesson.push(...lesson);
         }
       } catch (e) {
         console.log(e);
@@ -472,15 +549,20 @@ export default {
     },
     async getAllTopicVocabulary() {
       try {
-        let rs = await baseRequest.get(`/admin/list-topic-vocabulary`);
+        let rs = await baseRequest.get(`/admin/list-topic-vocabulary?page=${this.pageVocabulary}&is_exam=true`);
         if (rs.data.status == 200) {
-          this.listTopicVocabulary = rs.data.data.data
-            .map((item) => ({
-              id: item.id,
-              name: item.name,
-              is_exam: item.is_exam || null,
-            }))
-            .filter((itemTopic) => itemTopic.is_exam);
+          if (rs.data.data.data.length == 0) {
+            this.isAtEndOfOptionsVocabulary = true;
+          }
+          const vocab = rs.data.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => {
+            return !this.listTopicVocabulary.some(existingItem => existingItem.id === itemTopic.id);
+          });
+          this.listTopicVocabulary.push(...vocab);
         }
       } catch (e) {
         console.log(e);
@@ -488,15 +570,20 @@ export default {
     },
     async getAllTopicGrammar() {
       try {
-        let rs = await baseRequest.get(`/admin/list-topic-grammar`);
+        let rs = await baseRequest.get(`/admin/list-topic-grammar?page=${this.pageGrammar}&is_exam=true`);
         if (rs.data.status == 200) {
-          this.listTopicGrammar = rs.data.data.data
-            .map((item) => ({
-              id: item.id,
-              name: item.name,
-              is_exam: item.is_exam || null,
-            }))
-            .filter((itemTopic) => itemTopic.is_exam);
+          if (rs.data.data.data.length == 0) {
+            this.isAtEndOfOptionsGammar = true;
+          }
+          const grammar = rs.data.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => {
+            return !this.listTopicGrammar.some(existingItem => existingItem.id === itemTopic.id);
+          });
+          this.listTopicGrammar.push(...grammar);
         }
       } catch (e) {
         console.log(e);
@@ -504,15 +591,20 @@ export default {
     },
     async getAllTopicReading() {
       try {
-        let rs = await baseRequest.get(`/admin/list-topic-reading`);
+        let rs = await baseRequest.get(`/admin/list-topic-reading?page=${this.pageReading}&is_exam=true`);
         if (rs.data.status == 200) {
-          this.listTopicReading = rs.data.data.data
-            .map((item) => ({
-              id: item.id,
-              name: item.name,
-              is_exam: item.is_exam || null,
-            }))
-            .filter((itemTopic) => itemTopic.is_exam);
+          if (rs.data.data.data.length == 0) {
+            this.isAtEndOfOptionsReading = true;
+          }
+          const reading = rs.data.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => {
+              return !this.listTopicReading.some(existingItem => existingItem.id === itemTopic.id);
+            });
+          this.listTopicReading.push(...reading);
         }
       } catch (e) {
         console.log(e);
@@ -520,15 +612,20 @@ export default {
     },
     async getAllTopicListening() {
       try {
-        let rs = await baseRequest.get(`/admin/topic-list-listening`);
+        let rs = await baseRequest.get(`/admin/topic-list-listening?page=${this.pageListening}&is_exam=true`);
         if (rs.data.status == 200) {
-          this.listTopicListening = rs.data.data
-            .map((item) => ({
-              id: item.id,
-              name: item.name,
-              is_exam: item.is_exam || null,
-            }))
-            .filter((itemTopic) => itemTopic.is_exam);
+          if (rs.data.data.data.length == 0) {
+            this.isAtEndOfOptionsListening = true;
+          }
+          const listening = rs.data.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => {
+            return !this.listTopicListening.some(existingItem => existingItem.id === itemTopic.id);
+          });
+          this.listTopicListening.push(...listening);
         }
       } catch (e) {
         console.log(e);
@@ -536,15 +633,20 @@ export default {
     },
     async getAllTopicSpeaking() {
       try {
-        let rs = await baseRequest.get(`/admin/list-topic-speak`);
+        let rs = await baseRequest.get(`/admin/list-topic-speak?page=${this.pageSpeaking}&is_exam=true`);
         if (rs.data.status == 200) {
-          this.listTopicSpeaking = rs.data.data.data
-            .map((item) => ({
-              id: item.id,
-              name: item.name,
-              is_exam: item.is_exam || null,
-            }))
-            .filter((itemTopic) => itemTopic.is_exam);
+          if (rs.data.data.data.length == 0) {
+            this.isAtEndOfOptionsSpeaking = true;
+          }
+          const speaking = rs.data.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) =>  {
+            return !this.listTopicSpeaking.some(existingItem => existingItem.id === itemTopic.id);
+          });
+          this.listTopicSpeaking.push(...speaking);
         }
       } catch (e) {
         console.log(e);
@@ -552,15 +654,20 @@ export default {
     },
     async getAllTopicTalking() {
       try {
-        let rs = await baseRequest.get(`/admin/list-topic-pronunciation`);
+        let rs = await baseRequest.get(`/admin/list-topic-pronunciation?page=${this.pagePronunciation}&is_exam=true`);
         if (rs.data.status == 200) {
-          this.listTopicTalking = rs.data.data.data
-            .map((item) => ({
-              id: item.id,
-              name: item.name,
-              is_exam: item.is_exam || null,
-            }))
-            .filter((itemTopic) => itemTopic.is_exam);
+          if (rs.data.data.data.length == 0) {
+            this.isAtEndOfOptionsPronuncation = true;
+          }
+          const talking = rs.data.data.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            is_exam: item.is_exam || null,
+          }))
+          .filter((itemTopic) => {
+            return !this.listTopicTalking.some(existingItem => existingItem.id === itemTopic.id);
+          });
+          this.listTopicTalking.push(...talking);
         }
       } catch (e) {
         console.log(e);
