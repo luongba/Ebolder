@@ -3,7 +3,7 @@ import { Api } from "./Api";
 const apiUrl = Api.baseUrlApi;
 
 const instance = axios.create({
-    baseURL: "http://127.0.0.1:8000/api",
+    baseURL: apiUrl,
     "Content-Type": "application/json",
 })
 let token = window.localStorage.getItem("token");

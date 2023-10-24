@@ -10,19 +10,39 @@
             <p>LISTENING</p>
           </div>
         </div>
-        <div class="page-title-actions" @click="submitFile">
-          <span class="btn-icon-wrapper pr-2">
-            <p
+        <div class="page-title-actions btn-icon-wrapper pr-2"  >
+            <button @click="submitFile" :disabled="!dataTopic.name || !content"
               class="btn-icon btn dev-button btn-primary"
               style="padding: 10px 15px"
             >
               SAVE
-            </p>
-          </span>
+            </button>
         </div>
       </div>
     </div>
     <div class="container">
+      <div class="mb-4">
+        <el-form :model="dataTopic" class="w-full">
+          <el-form-item
+            label="Title"
+            prop="name"
+            :rules="[
+              {
+                required: true,
+                message: 'Please enter title',
+              },
+            ]"
+            class="w-full m-0"
+          >
+            <el-input
+              v-model="dataTopic.name"
+              placeholder="Please enter title..."
+            >
+            </el-input>
+          </el-form-item>
+        </el-form>
+        
+      </div>
       <div>
         <editor
           v-model="content"
@@ -49,7 +69,8 @@
         @change="getChangeAudio($event)"
         hidden
       />
-      <audio id="audio-preview" class="w-full" controls v-show="file != ''" />
+      <audio id="audio-preview"  class="w-full" controls v-show="file && file != ''" />
+      <video id="video-preview"  class="w-full" controls v-show="fileVideo && fileVideo != ''" />
       <div class="flex flex-col justify-center w-full items-center">
         <div
           class="card w-full mt-3"
@@ -315,11 +336,13 @@ export default {
   },
   data() {
     return {
+      dataTopic: {
+        name: null,
+      },
       dataQuestion: [],
       alphabet: ["a", "b", "c", "d", "e", "f", "g", "h"],
       maxAns: 4,
       level: "Easy",
-
       rules: {
         name: [
           {
@@ -330,6 +353,7 @@ export default {
         ],
       },
       file: null,
+      fileVideo: null,
       content: null
     };
   },
@@ -375,10 +399,10 @@ export default {
       };
     },
     async submitFile() {
-      if (this.file == null) {
+      if (this.file == null && this.fileVideo == null) {
         this.$message({
           type: "error",
-          message: "Please select file",
+          message: "Please upload the file",
         });
         this.$refs.fileAudio.click();
       } else {
@@ -386,8 +410,10 @@ export default {
         if (isCheck) {
           try {
             const formData = new FormData();
-            formData.append("file", this.file);
+            formData.append("file", this.file || this.fileVideo);
             formData.append("content", this.content);
+            formData.append("name", this.dataTopic.name);
+            formData.append("file_type", this.file ? 'audio' : 'video');
             const headers = {
               "Content-Type": "multipart/form-data",
             };
@@ -399,6 +425,11 @@ export default {
             let { data } = result;
             if (data.status == 200) {
               this.createQuestion(data.audio_id);
+            } else {
+              this.$message({
+                message: data.message,
+                type: "error",
+              });
             }
           } catch (error) {
             console.log(
@@ -409,27 +440,49 @@ export default {
         }
       }
     },
-    previewAudio() {
-      let audio = document.getElementById("audio-preview");
-      let reader = new FileReader();
-
-      reader.readAsDataURL(this.file);
-      reader.addEventListener("load", function () {
-        audio.src = reader.result;
+    preview(type) {
+      let file;
+      if(type == 'audio') {
+        let reader = new FileReader();
+        file = document.getElementById("audio-preview");
+        reader.readAsDataURL(this.file);
+        reader.addEventListener("load", function () {
+        file.src = reader.result;
       });
+      } else {
+        file = document.getElementById("video-preview");
+        const videoURL = URL.createObjectURL(this.fileVideo);
+        file.src = videoURL;
+      }
     },
     uploadAudio() {
       this.$refs.fileAudio.click();
     },
     getChangeAudio(event) {
+      const maxSize = 10 * 1024 * 1024; // 10MB
       if (event.target.files[0].type == "audio/mpeg") {
         this.file = event.target.files[0];
-        this.previewAudio();
+        this.preview('audio');
+      } else if(
+        event.target.files[0].type == "video/mp4" ||
+        event.target.files[0].type == "video/quicktime"
+      ) {
+        this.fileVideo = event.target.files[0];
+        this.preview('video');
       } else {
-        this.$message({
+         this.$message({
           message: "The file is not in the correct format",
           type: "error",
         });
+        return;
+      }
+
+      if(event.target.files[0].size > maxSize) {
+        this.$message({
+          message: "The file is larger than 10MB",
+          type: "error",
+        });
+        return;
       }
     },
     pushAns(id) {
@@ -551,7 +604,10 @@ export default {
           });
         }
       } catch (error) {
-        console.log("🚀 ~ ~ error", error);
+        this.$message({
+          message: "Created failed",
+          type: "error",
+        });
       }
     },
     renderAnswer(data, index) {
