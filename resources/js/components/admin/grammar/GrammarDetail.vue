@@ -394,7 +394,7 @@
               icon="el-icon-circle-plus-outline"
               plain
               slot="reference"
-              >Thêm câu hỏi
+              >More questions
             </el-button>
           </el-popover>
           <el-button @click="saveChangeTopic" type="primary" plain

@@ -258,8 +258,6 @@ class VocabularyController extends Controller
             if (!$request->is_exam) {
                 LevelVocabulary::where('vocabulary_id', $request->id)->delete();
             }
-            
-
             $dataQuestion = $data['dataQuestion'];
             foreach ($dataQuestion as $key => $value) {
                 $res = QuestionVocabulary::create([
@@ -318,6 +316,9 @@ class VocabularyController extends Controller
                 'description' => $request->contentReading,
                 'is_exam' => $request->is_exam,
             ]);
+            if (!$request->is_exam) {
+                LevelVocabulary::where('vocabulary_id', $request->id)->delete();
+            }
 
             $dataQuestion = ($request->dataQuestion);
             $questionVocab = $vocabulary->QuestitonVocabulary()->get()->toArray();
@@ -376,7 +377,7 @@ class VocabularyController extends Controller
             return [
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "Sửa câu hỏi thành công !"
+                "message" => "Edit question successfully!"
             ];
         } catch (\Exception $e) {
             Log::error($e);
@@ -384,7 +385,7 @@ class VocabularyController extends Controller
             return [
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Sửa câu hỏi thất bại !"
+                "message" => "Failed action !"
             ];
         }
 

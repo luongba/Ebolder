@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\models\Pronunciation\AnswerPronunciation;
+use App\models\Pronunciation\LevelPronunciation;
 use App\models\Pronunciation\Pronunciation;
 use App\models\Pronunciation\QuestionPronunciation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PronunciationController extends Controller
 {
@@ -299,27 +301,85 @@ class PronunciationController extends Controller
 
     public function addQuestionMultiple(Request $request)
     {
-
-
         try {
-            $read = Pronunciation::whereId($request->id)->first();
-            $read->update([
+            DB::beginTransaction();
+            $pronun = Pronunciation::whereId($request->id)->first();
+            $pronun->update([
                 "name" => $request->name,
-                "content" => $request->contentPronunciation,
-                "is_exam" => $request->isExam
+                "content" => $request->content,
+                "is_exam" => $request->is_exam
             ]);
+            if (!$request->is_exam) {
+                LevelPronunciation::where('pronunciation_id', $request->id)->delete();
+            }
 
+            $dataQuestion = ($request->dataQuestion);
+            $questionPronun = $pronun->QuestionPronunciation()->get()->toArray();
+            
+            $toDelete = collect($questionPronun)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
+            if (count($toDelete)) {
+                foreach($toDelete as $item) {
+                    QuestionPronunciation::whereId($item['id'])->delete();
+                }
+            }
+            foreach ($dataQuestion as $key => $value) {
+                $check =QuestionPronunciation::whereId($value['id'])->exists();
+                if (!$check) {
+                    $question = $pronun->QuestionPronunciation()->create([
+                        'question' => $value['question'],
+                        'level' => $value['level'],
+                        'type' => $value['type']
+                    ]);
+                    foreach ($value['dataAns'] as $keyAns => $valueAns) {
+                        $question->AnswerPronunciation()->create([
+                            'id' => $valueAns['idAns'],
+                            'question_id' => $question->id,
+                            'text' => $valueAns['text'],
+                            "answer_id" => $valueAns['idAns'],
+                        ]);
+                    }
+                    if ($value['answer']) {
+                        $question->RightAnswerPronunciation()->create([
+                            'answer_id' => $value['answer']
+                        ]);
+                    }
+                } else {
+                    QuestionPronunciation::whereId($value['id'])->first()->update([
+                        "question" => $value['question'],
+                        "level" => $value['level'],
+                        "type" => $value['type']
+                    ]);
+                    if ($value['answer']) {
+                        QuestionPronunciation::whereId($value['id'])->first()->RightAnswerPronunciation()->update([
+                            "answer_id" => $value["answer"]
+                        ]);
+                    }
+                    QuestionPronunciation::whereId($value['id'])->first()->AnswerPronunciation()->delete();
+                    foreach ($value['dataAns'] as $keyAds => $valueAns) {
+                        QuestionPronunciation::whereId($value['id'])->first()->AnswerPronunciation()
+                            ->create([
+                                'id' => $valueAns['idAns'],
+                                'question_id' => $value['id'],
+                                'text' => $valueAns['text'],
+                                "answer_id" => $valueAns['idAns'],
+                            ]);
+                    }
+                }
+            }
+            DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "thao tác thành công !"
+                "message" => "Edit question successfully!"
             ]);
 
         } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thao tác thất bại !"
+                "message" => "Failed action !"
             ]);
         }
 

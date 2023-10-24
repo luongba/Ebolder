@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\models\Read\AnswerReading;
+use App\models\Read\LevelReading;
 use Illuminate\Http\Request;
 use App\models\Read\Reading;
 use App\models\Read\QuestionReading;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReadController extends Controller
 {
@@ -299,16 +301,72 @@ class ReadController extends Controller
 
     public function addQuestionMultiple(Request $request)
     {
-
-
         try {
+            DB::beginTransaction();
             $read = Reading::whereId($request->id)->first();
             $read->update([
                 "name" => $request->name,
                 "content" => $request->contentReading,
                 "is_exam" => $request->isExam
             ]);
+            if (!$request->isExam) {
+                LevelReading::where('reading_id', $request->id)->delete();
+            }
 
+            $dataQuestion = ($request->dataQuestion);
+            $questionRead = $read->QuestionReading()->get()->toArray();
+            
+            $toDelete = collect($questionRead)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
+            if (count($toDelete)) {
+                foreach($toDelete as $item) {
+                    QuestionReading::whereId($item['id'])->delete();
+                }
+            }
+            foreach ($dataQuestion as $key => $value) {
+                $check =QuestionReading::whereId($value['id'])->exists();
+                if (!$check) {
+                    $question = $read->QuestionReading()->create([
+                        'question' => $value['question'],
+                        'level' => $value['level'],
+                        'type' => $value['type']
+                    ]);
+                    foreach ($value['dataAns'] as $keyAns => $valueAns) {
+                        $question->AnswerReading()->create([
+                            'id' => $valueAns['idAns'],
+                            'question_id' => $question->id,
+                            'text' => $valueAns['text'],
+                            "answer_id" => $valueAns['idAns'],
+                        ]);
+                    }
+                    if ($value['answer']) {
+                        $question->RightAnswerReading()->create([
+                            'answer_id' => $value['answer']
+                        ]);
+                    }
+                } else {
+                    QuestionReading::whereId($value['id'])->first()->update([
+                        "question" => $value['question'],
+                        "level" => $value['level'],
+                        "type" => $value['type']
+                    ]);
+                    if ($value['answer']) {
+                        QuestionReading::whereId($value['id'])->first()->RightAnswerReading()->update([
+                            "answer_id" => $value["answer"]
+                        ]);
+                    }
+                    QuestionReading::whereId($value['id'])->first()->AnswerReading()->delete();
+                    foreach ($value['dataAns'] as $keyAds => $valueAns) {
+                        QuestionReading::whereId($value['id'])->first()->AnswerReading()
+                            ->create([
+                                'id' => $valueAns['idAns'],
+                                'question_id' => $value['id'],
+                                'text' => $valueAns['text'],
+                                "answer_id" => $valueAns['idAns'],
+                            ]);
+                    }
+                }
+            }
+            DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -316,6 +374,8 @@ class ReadController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
