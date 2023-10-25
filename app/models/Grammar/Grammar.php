@@ -8,7 +8,7 @@ class Grammar extends Model
 {
     protected $guarded = [];
 
-    public function QuestitonGrammar(){
+    public function QuestionGrammar(){
         return $this->belongsToMany('App\models\Grammar\QuestionGrammar','question_grammar_relationship' );
     }
 }

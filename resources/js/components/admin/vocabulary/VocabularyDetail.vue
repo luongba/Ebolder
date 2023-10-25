@@ -727,7 +727,7 @@ export default {
               name: result.name,
               description: result.description,
               isExam: result.is_exam == 1 ? true : false,
-              question: result.questiton_vocabulary?.map((item) => {
+              question: result.question_vocabulary?.map((item) => {
                   return {
                       id: item.id,
                       level: item.level,
@@ -743,7 +743,7 @@ export default {
                   };
               }),
           };
-          this.dataQuestion = result.questiton_vocabulary?.map((item) => ({
+          this.dataQuestion = result.question_vocabulary?.map((item) => ({
             id: item.id,
             level: item.level,
             question: item.question,

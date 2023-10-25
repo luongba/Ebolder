@@ -484,7 +484,7 @@ export default {
     },
   },
   created() {
-    this.questions = this.data.questiton_vocabulary.map((vocabulary) => ({
+    this.questions = this.data.question_vocabulary.map((vocabulary) => ({
       id: vocabulary.id,
       question: vocabulary.question,
       type: vocabulary.type,

@@ -51,7 +51,7 @@ class SpeakController extends Controller
     {
         try {
             $query = new Speak();
-            $data = $query->where('id', $id)->with(['QuestitonSpeak' => function ($question) {
+            $data = $query->where('id', $id)->with(['QuestionSpeak' => function ($question) {
                 $question->with('answers')->with('right_answers');
             }])->first();
             return response()->json([
@@ -151,7 +151,7 @@ class SpeakController extends Controller
     {
         try {
             $query = new Speak();
-            $query->find($request->idTopic)->QuestitonSpeak()->attach(
+            $query->find($request->idTopic)->QuestionSpeak()->attach(
                 [
                     'question_speak_id' => $request->idQues
                 ]
@@ -174,7 +174,7 @@ class SpeakController extends Controller
     {
         try {
             $query = new Speak();
-            $query->find($request->idTopic)->QuestitonSpeak()->detach(
+            $query->find($request->idTopic)->QuestionSpeak()->detach(
                 [
                     'question_speak_id' => $request->idQues
                 ]
@@ -198,7 +198,7 @@ class SpeakController extends Controller
     {
         try {
             $speak = Speak::find($request->id);
-            $speak->QuestitonSpeak()->detach();
+            $speak->QuestionSpeak()->detach();
             $speak->delete();
             return response()->json([
                 "status" => 200,
@@ -295,7 +295,7 @@ class SpeakController extends Controller
                     "type" => $value['type']
                 ]);
                 $query = new Speak();
-                $query->find($speak->id)->QuestitonSpeak()->attach(
+                $query->find($speak->id)->QuestionSpeak()->attach(
                 [
                     'question_speak_id' => $res->id
                 ]);
@@ -346,7 +346,7 @@ class SpeakController extends Controller
                 LevelSpeak::where('grammar_id', $request->id)->delete();
             }
             $dataQuestion = ($request->dataQuestion);
-            $questionList = $speak->QuestitonSpeak()->get()->toArray();
+            $questionList = $speak->QuestionSpeak()->get()->toArray();
             $toDelete = collect($questionList)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
 
             if (count($toDelete)) {
@@ -357,7 +357,7 @@ class SpeakController extends Controller
             foreach ($dataQuestion as $key => $value) {
                 $check = QuestionSpeak::whereId($value['id'])->exists();
                 if (!$check) {
-                    $question = $speak->QuestitonSpeak()->create([
+                    $question = $speak->QuestionSpeak()->create([
                         'question' => $value['question'],
                         'level' => $value['level'],
                         'type' => $value['type']

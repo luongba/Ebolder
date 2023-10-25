@@ -54,7 +54,7 @@ class GrammarController extends Controller
     {
         try {
             $query = new Grammar();
-            $data = $query->where('id', $id)->with(['QuestitonGrammar' => function ($question) {
+            $data = $query->where('id', $id)->with(['QuestionGrammar' => function ($question) {
                 $question->with('answers')->with('right_answers');
             }])->first();
             return response()->json([
@@ -92,7 +92,7 @@ class GrammarController extends Controller
                     "type" => $value['type']
                 ]);
                 $query = new Grammar();
-                $query->find($grammar->id)->QuestitonGrammar()->attach(
+                $query->find($grammar->id)->QuestionGrammar()->attach(
                 [
                     'question_granmmar_id' => $res->id
                 ]);
@@ -133,7 +133,7 @@ class GrammarController extends Controller
     {
         try {
             $query = new Grammar();
-            $query->find($request->idTopic)->QuestitonGrammar()->attach(
+            $query->find($request->idTopic)->QuestionGrammar()->attach(
                 [
                     'question_grammar_id' => $request->idQues
                 ]
@@ -156,7 +156,7 @@ class GrammarController extends Controller
     {
         try {
             $query = new Grammar();
-            $query->find($request->idTopic)->QuestitonGrammar()->detach(
+            $query->find($request->idTopic)->QuestionGrammar()->detach(
                 [
                     'question_grammar_id' => $request->idQues
                 ]
@@ -180,7 +180,7 @@ class GrammarController extends Controller
     {
         try {
             $grammar = Grammar::find($request->id);
-            $grammar->QuestitonGrammar()->detach();
+            $grammar->QuestionGrammar()->detach();
             $grammar->delete();
             return response()->json([
                 "status" => 200,
@@ -317,7 +317,7 @@ class GrammarController extends Controller
                 LevelGrammar::where('grammar_id', $request->id)->delete();
             }
             $dataQuestion = ($request->dataQuestion);
-            $questionVocab = $grammar->QuestitonGrammar()->get()->toArray();
+            $questionVocab = $grammar->QuestionGrammar()->get()->toArray();
             $toDelete = collect($questionVocab)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
 
             if (count($toDelete)) {
@@ -328,7 +328,7 @@ class GrammarController extends Controller
             foreach ($dataQuestion as $key => $value) {
                 $check = QuestionGrammar::whereId($value['id'])->exists();
                 if (!$check) {
-                    $question = $grammar->QuestitonGrammar()->create([
+                    $question = $grammar->QuestionGrammar()->create([
                         'question' => $value['question'],
                         'level' => $value['level'],
                         'type' => $value['type']
