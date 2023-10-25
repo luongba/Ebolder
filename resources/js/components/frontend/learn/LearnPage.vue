@@ -1,303 +1,53 @@
 <template>
-  <div class="wrapper">
-    <header-component :user="user" />
-    <transition name="fade">
-      <div class="w-full h-full relative z-10 content" v-show="show">
-        <div class="absolute w-[70%] h-[60vh] bg-box-lesson rounded-md p-4">
-          <span
-            class="absolute right-[5px] top-[5px] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] cursor-pointer text-[#fff]"
-            @click="dongMoPopup()"
-          >
-            <i class="lnr-cross"></i>
-          </span>
-          <h2 class="text-[26px] text-center text-white uppercase">
-            Danh sách bài học
-          </h2>
-          <div class="w-full border relative mt-2 mb-4"></div>
-          <div
-            class="w-full overflow-y-scroll h-full"
-            v-if="listLesson.length > 0"
-          >
-            <div
-              class="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4 mt-4"
-            >
-              <div
-                class="p-3 border text-[#fff] text-[18px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 text-center font-thin cursor-pointer exam relative"
-                :class="checkPassExam(keyUrl, itemLesson) ? 'active' : ''"
-                @click="openExamPage(keyUrl, itemLesson.id)"
-                v-for="itemLesson in listLesson"
-                :key="itemLesson.id"
-              >
-                <div
-                  class="absolute top-[50%] translate-y-[-50%] right-[8px] bg-[green] border rounded-full w-5 h-5 p-2 hidden justify-center items-center exam-pass"
-                >
-                  <i class="fa-solid fa-check text-sm"></i>
-                </div>
-                {{ itemLesson.name }}
-              </div>
-            </div>
-          </div>
-          <div
-            v-else
-            class="p-3 text-[#fff] text-[18px] leading-[1] mx-2 text-center font-thin"
-          >
-            Không có bài học nào
+  <div class="wrapper h-screen">
+    <div class="sticky inset-x-0 top-0 bg-white z-50">
+      <header-component :user="user" />
+    </div>
+    <div class="grid grid-cols-5">
+      <div class="flex relative">
+        <!-- Sidebar -->
+        <div class="absolute flex top-0 z-20" :class="[right ? 'right-0 flex-row' : 'left-0 flex-row-reverse']">
+          <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
+            class="p-3 focus:outline-none transition-color duration-300 bg-white rounded-br-2xl h-fit">
+            <span class="block transform origin-center font-bold">
+              <img src="/images/learn/right.svg" alt="" />
+            </span>
+          </button>
+          <!-- Sidebar Content -->
+          <div ref="content" class="transition-all duration-700 bg-white overflow-hidden"
+            :class="[open ? 'w-[350px]' : 'w-0']">
+            <ListLesson :data="listLevel" :lessonType="lessonType" v-model="open" :onGetLessonDetail="getLessonDetail" />
+            <slot></slot>
           </div>
         </div>
+
+        <transition name="fade">
+          <div v-if="dimmer && open" @click="toggle()"
+            class="flex-1 bg-gray-400 bg-opacity-75 active:outline-none z-10" />
+        </transition>
       </div>
-    </transition>
-    <div class="w-[90%] h-[90%] mx-auto">
-      <el-carousel height="700px" indicator-position="none" :autoplay="false" v-show="!show">
-        <el-carousel-item v-for="(item, index) in listLevel" :key="index">
-          <div class="w-full h-full flex items-center justify-center">
-            <div class="flex justify-center flex-col items-center">
-              <h2 class="title">{{ item.name }}</h2>
-              <div class="mt-4">
-                <div class="flex justify-center mt-4">
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="WRITING"
-                    placement="top"
-                  >
-                    <div
-                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
-                      @click="x(item, 'WRITING')"
-                    >
-                      <i class="fa fa-pencil" aria-hidden="true"></i>
-                    </div>
-                  </el-tooltip>
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="PRONUNCIATION"
-                    placement="top"
-                  >
-                    <div
-                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
-                      @click="x(item, 'PRONUNCIATION')"
-                    >
-                      <i class="fa-solid fa-microphone"></i>
-                    </div>
-                  </el-tooltip>
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="SPEAKING"
-                    placement="top"
-                  >
-                    <div
-                      class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
-                      @click="x(item, 'SPEAKING')"
-                    >
-                      <i class="fa-solid fa-head-side-cough"></i>
-                    </div>
-                  </el-tooltip>
-                </div>
-              </div>
-              <div class="flex justify-center mt-4">
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="LISTEN"
-                  placement="bottom"
-                >
-                  <div
-                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                    @click="x(item, 'LISTEN')"
-                  >
-                    <i class="fa-solid fa-ear-listen"></i>
-                  </div>
-                </el-tooltip>
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="READ"
-                  placement="bottom"
-                >
-                  <div
-                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                    @click="x(item, 'READ')"
-                  >
-                    <i class="fa-solid fa-book-open-reader"></i>
-                  </div>
-                </el-tooltip>
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="VOCABULARY"
-                  placement="bottom"
-                >
-                  <div
-                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                    @click="x(item, 'VOCABULARY')"
-                  >
-                    <i class="fa-solid fa-spell-check"></i>
-                  </div>
-                </el-tooltip>
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="GRAMMAR"
-                  placement="bottom"
-                >
-                  <div
-                    class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                    @click="x(item, 'GRAMMAR')"
-                  >
-                    <i class="fa-solid fa-gears"></i>
-                  </div>
-                </el-tooltip>
-              </div>
-            </div>
-          </div>
-        </el-carousel-item>
-      </el-carousel>
-    </div>
-    <!-- <div id="background-wrap" class="content">
-      <div class="cloud-box px-2" id="cloud-box" v-show="!show">
-        <div
-          class="box-landing"
-          :id="`cloud-${listLevel.length - index}`"
-          v-for="(item, index) in listLevel"
-          :key="index"
-        >
-          <div class="box-landing-inner">
-            <div class="box-filter"></div>
-            <div class="box-content">
-              <h2 class="title">{{ item.name }}</h2>
-              <div>
-                <div class="w-full border relative mt-2 mb-4"></div>
-                <div class="flex justify-center flex-col items-center">
-                  <div class="mt-2">
-                    <div class="flex justify-center mt-4">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        content="Viết"
-                        placement="right"
-                      >
-                        <div
-                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
-                          @click="x(item, 'WRITING')"
-                        >
-                          <i class="fa fa-pencil" aria-hidden="true"></i>
-                        </div>
-                      </el-tooltip>
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        content="Luyện âm"
-                        placement="right"
-                      >
-                        <div
-                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
-                          @click="x(item, 'SPEAKING')"
-                        >
-                          <i class="fa-solid fa-head-side-cough"></i>
-                        </div>
-                      </el-tooltip>
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        content="Luyện nói"
-                        placement="right"
-                      >
-                        <div
-                          class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2"
-                          @click="x(item, 'PRONUNCIATION')"
-                        >
-                        <i class="fa-solid fa-microphone"></i>
-                        </div>
-                      </el-tooltip>
-                    </div>
-                  </div>
-                  <div class="flex justify-center mt-4">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      content="Nghe"
-                      placement="bottom"
-                    >
-                      <div
-                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        @click="x(item, 'LISTEN')"
-                      >
-                        <i class="fa-solid fa-ear-listen"></i>
-                      </div>
-                    </el-tooltip>
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      content="Đọc"
-                      placement="bottom"
-                    >
-                      <div
-                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        @click="x(item, 'READ')"
-                      >
-                        <i class="fa-solid fa-book-open-reader"></i>
-                      </div>
-                    </el-tooltip>
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      content="Từ vựng"
-                      placement="bottom"
-                    >
-                      <div
-                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        @click="x(item, '')"
-                      >
-                        <i class="fa-solid fa-spell-check"></i>
-                      </div>
-                    </el-tooltip>
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      content="Ngữ pháp"
-                      placement="bottom"
-                    >
-                      <div
-                        class="p-3 border text-[#fff] text-[20px] xl:text-[45px] flex justify-center items-center w-[55px] h-[55px] xl:w-[80px] xl:h-[80px] leading-[1] hover:bg-white hover:text-[#000] rounded-sm mx-2 exam relative"
-                        @click="x(item, 'GRAMMAR')"
-                      >
-                        <i class="fa-solid fa-gears"></i>
-                      </div>
-                    </el-tooltip>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="col-span-3 bg-white">
+        <Lesson :content="lessonContent" />
+      </div>
+      <div class="col">
+        QUESTIONS
       </div>
     </div>
-    <div class="absolute bottom-[5%] right-[5%] z-10" v-show="!show">
-      <div class="mb-4">
-        <el-button
-          :disabled="!(level < listLevel.length)"
-          icon="el-icon-arrow-up"
-          circle
-          @click="cloudUp"
-        ></el-button>
-      </div>
-      <div>
-        <el-button
-          :disabled="!(level > 1)"
-          icon="el-icon-arrow-down"
-          circle
-          @click="cloudDown"
-        ></el-button>
-      </div>
-    </div> -->
   </div>
 </template>
-  <script>
+<script>
 import baseRequest from "../../../utils/baseRequest";
 import "./learn.css";
+import ListLesson from "./ListLesson.vue"
+import Lesson from './Lesson.vue'
+
 export default {
-  props: ["user"],
+  props: ["user", "query"],
+
+  components: {
+    ListLesson,
+    Lesson
+  },
 
   data() {
     return {
@@ -308,36 +58,20 @@ export default {
       levelCountPassed: 1,
       examResult: [],
       keyUrl: "",
-      idLevel: null,
+      idLevel: 29,
       dataHistory: [],
       targetScore: 20,
+      open: true,
+      dimmer: true,
+      right: false,
+      lessonType: 'grammar',
+      lessonContent: '',
+      lessonQuestions: null
     };
   },
   methods: {
-    cloudUp() {
-      if (this.level < this.listLevel.length) {
-        this.level++;
-        this.scrollToCloud();
-      }
-      return;
-    },
-    cloudDown() {
-      if (this.level > 1) {
-        this.level--;
-        this.scrollToCloud();
-      }
-      return;
-    },
-    scrollToCloud() {
-      let cloud = document.getElementById(`cloud-${this.level}`);
-      cloud.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center",
-      });
-    },
-    dongMoPopup() {
-      this.show = !this.show;
+    toggle() {
+      this.open = !this.open;
     },
     x(itemLevel, type) {
       this.listLesson = [];
@@ -535,42 +269,87 @@ export default {
       }
       return rs != -1;
     },
+    async getDetailLevel() {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      try {
+        let rs = await baseRequest.post(`/admin/detail-level`, { id: this.idLevel });
+        if (rs.data.status == 200) {
+          const data = rs.data.data;
+          if (data) {
+            this.listLevel = data[this.lessonType]
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        loading.close();
+      }
+    },
+    async getLessonDetail(lessonId) {
+      this.selectedLessonId = lessonId;
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      try {
+        let rs = await baseRequest.get(`/admin/detail-topic-${this.lessonType}/${this.selectedLessonId}`);
+        if (rs.data.status == 200) {
+          const data = rs.data.data;
+          if (data) {
+            this.lessonContent = data.description;
+            this.lessonQuestions = data[`question_${this.lessonType}`];
+            console.log('this.lessonType', this.lessonType);
+            console.log('data[`question_${this.lessonType}`]', data[`question_${this.lessonType}`]);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        loading.close();
+      }
+    }
   },
   async created() {
     await this.getAllLevel();
     await this.getFullHistory();
-    // this.checkPassedLevel();
+    await this.getDetailLevel();
+    await this.getLessonDetail(this.listLevel[0]?.id)
   },
   mounted() {
-    setTimeout(() => {
-      this.scrollToCloud();
-    }, 1000);
   },
 };
 </script>
-  <style scoped>
+<style scoped>
 .title {
   font-size: 40px;
   text-align: center;
   z-index: 3;
   color: #fff;
 }
+
 ::-webkit-scrollbar {
   display: none;
 }
+
 .box-content {
   width: 100%;
   position: relative;
   padding: 40px;
   z-index: 6;
-  background: linear-gradient(
-    96.6deg,
-    rgba(0, 115, 121, 0.112) 11.23%,
-    rgba(0, 95, 100, 0) 115.9%
-  );
+  background: linear-gradient(96.6deg,
+      rgba(0, 115, 121, 0.112) 11.23%,
+      rgba(0, 95, 100, 0) 115.9%);
 
   box-sizing: border-box;
 }
+
 .box-filter {
   position: absolute;
   inset: 0;
@@ -578,10 +357,12 @@ export default {
   -webkit-filter: blur(8px);
   z-index: 5;
 }
+
 .box-disable {
   cursor: not-allowed;
   position: relative;
 }
+
 .box-disable::before {
   content: "";
   position: absolute;
@@ -592,6 +373,7 @@ export default {
   background: #fff;
   transform: rotate(45deg);
 }
+
 .box-disable::after {
   content: "";
   position: absolute;
@@ -614,21 +396,26 @@ export default {
   top: 35%;
   transform: translate(-50%, -50%);
   /* z-index: 6; */
-  background: linear-gradient(
-    96.6deg,
-    rgba(0, 115, 121, 0.112) 11.23%,
-    rgba(0, 95, 100, 0) 115.9%
-  );
+  background: linear-gradient(96.6deg,
+      rgba(0, 115, 121, 0.112) 11.23%,
+      rgba(0, 95, 100, 0) 115.9%);
   box-sizing: border-box;
 }
+
 .bg-blur {
   background: rgba(0, 0, 0, 0.3);
 }
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
 
@@ -644,39 +431,8 @@ export default {
   color: #fff;
 }
 
-.exam.active > .exam-pass {
+.exam.active>.exam-pass {
   display: flex;
-}
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 18px;
-  opacity: 0.75;
-  line-height: 300px;
-  margin: 0;
-}
-
-.el-carousel__item:nth-child(2n) {
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  background: linear-gradient(
-    96.6deg,
-    rgba(0, 115, 121, 0.112) 11.23%,
-    rgba(0, 95, 100, 0) 115.9%
-  );
-  border-radius: 20px;
-  border: 1px solid rgba(95, 95, 95, 0.1);
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  background: linear-gradient(
-    96.6deg,
-    rgba(0, 115, 121, 0.542) 11.23%,
-    rgba(0, 95, 100, 0) 115.9%
-  );
-  border-radius: 20px;
-  border: 1px solid rgba(95, 95, 95, 0.1);
 }
 </style>
   
