@@ -58,6 +58,9 @@
           </div>
         </div>
       </div>
+      <div class="mt-2 flex items-center justify-center"> 
+        <el-pagination background layout="prev, pager, next" v-model="page" :page-size="10" :total="total" @current-change="handleChangePage" />
+      </div>
       <div class="absolute bottom-2 left-[50%] bg-white w-[500px]">
         <audio
           hidden
@@ -69,22 +72,6 @@
         />
       </div>
     </div>
-    <!-- <editor
-            api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
-            :init="{
-                height: 500,
-                menubar: false,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount',
-                ],
-                toolbar:
-                    'undo redo | formatselect | bold italic backcolor | \
-           alignleft aligncenter alignright alignjustify | \
-           bullist numlist outdent indent | removeformat | help',
-            }"
-        /> -->
   </div>
 </template>
 
@@ -127,6 +114,8 @@ export default {
       baseApi: $Api.baseUrl,
       isplay: false,
       isLoading: false,
+      total : 0,
+      page: 1,
     };
   },
   computed: {},
@@ -188,22 +177,24 @@ export default {
         }
       });
     },
+    async handleChangePage (page) {
+      this.page = page
+      await this.getAllAudio()
+    },
     async getAllAudio() {
       try {
         this.isLoading = true;
-        let rs = await baseRequest.get(`/admin/get-audio-listening`);
-        if (rs.data.status == 200) {
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1000);
-          console.log(rs.data.data);
-          this.listAudio = rs.data.data;
+        const { data } = await baseRequest.get(`/admin/get-audio-listening?page_number=${this.page}`);
+        debugger
+
+        if (data.status == 200) {
+          this.isLoading = false;
+          this.listAudio = data.data.data;
+          this.total = data?.data?.total;
+          this.page = data?.data?.current_page
         }
       } catch (e) {
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 1000);
-        console.log(e);
+        this.isLoading = false;
       }
     },
     async deleteAudio(id) {
@@ -245,6 +236,8 @@ export default {
           return;
         });
     },
+
+    
   },
 
   created() {
