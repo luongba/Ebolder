@@ -102,18 +102,20 @@ class ListenController extends Controller
     {
         $params = $request->all();
         $params['page_size'] = $params['page_size'] ?? 10;
-        $dataAll = AudioListening::query()->with('questionListening')
-            ->paginate($params['page_size'], ['*'], 'page', $params['page_number'] ?? 1);
-            
+
+        $dataAll = AudioListening::query()->with('questionListening');
+
+        if(isset($request->search) && $request->search) {
+            $dataAll = $dataAll->where('name', 'like', '%'. $request->search .'%');
+        }
+        $dataAll = $dataAll->paginate($params['page_size'], ['*'], 'page', $params['page_number'] ?? 1);
+
         return response()->json([
             "status" => 200,
             "errorCode" => 0,
             "data" => $dataAll,
 
-
         ]);
-       
-
     }
 
     public function editQuestion($id)
