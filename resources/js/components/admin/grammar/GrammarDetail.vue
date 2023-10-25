@@ -394,7 +394,7 @@
               icon="el-icon-circle-plus-outline"
               plain
               slot="reference"
-              >Thêm câu hỏi
+              >More questions
             </el-button>
           </el-popover>
           <el-button @click="saveChangeTopic" type="primary" plain
@@ -638,7 +638,7 @@ export default {
             name: data.data.name,
             content: data.data.description,
             isExam: data.data.is_exam === 1 ? true : false,
-            questions: data.data.questiton_grammar?.map((ques) => ({
+            questions: data.data.question_grammar?.map((ques) => ({
               id: ques.id,
               question: ques.question,
               level: ques.level,
@@ -666,7 +666,7 @@ export default {
               idAns: ans.id,
               text: ans.text,
               question_id: ans.question_id,
-              alphabet: this.alphabet[index].toLocaleUpperCase(),
+              alphabet: question.type == 1 ? this.alphabet[index].toLocaleUpperCase() : 'A',
             })),
             answer: question.right_answer,
             type: question.type,

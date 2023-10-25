@@ -9,7 +9,9 @@ use App\models\Listen\Listening;
 use App\models\Listen\QuestionListening;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use mysql_xdevapi\Exception;
 
 class ListenController extends Controller
@@ -30,26 +32,27 @@ class ListenController extends Controller
         try {
             if ($request->has('file')) {
                 $file = $request->file;
-                $file_name = time() . '_' . $file->getClientOriginalName();
+                $file_name = time() . '_' . preg_replace('/\s+/', '', $file->getClientOriginalName());
                 $file->move(public_path('upload/audio'), $file_name);
 
             }
             $audio = AudioListening::create([
-                'name' => $file->getClientOriginalName(),
+                'name' => $request->name,
                 'audio' => $file_name,
-                'content' =>$request->content
+                'content' =>$request->content,
+                'file_type' => $request->file_type
             ]);
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "audio_id" => $audio->id,
-                "message" => "Thêm media Thành công!"
+                "message" => "Uploaded file media successfully!"
             ]);
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thêm media Thất bại!"
+                "message" => $e->getMessage()
             ]);
         }
     }
@@ -99,25 +102,22 @@ class ListenController extends Controller
 
     public function getAllAudio(Request $request)
     {
-        try {
-            $query = new AudioListening();
-            $dataAll = $query->with('questionListening')->get();
-            return response()->json([
-                "status" => 200,
-                "errorCode" => 0,
-                "data" => $dataAll,
+        $params = $request->all();
+        $params['page_size'] = $params['page_size'] ?? 10;
 
+        $dataAll = AudioListening::query()->with('questionListening');
 
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                "status" => $e->getCode(),
-                "errorCode" => $e->getCode(),
-                "data" => null,
-                "message" => $e->getMessage()
-            ]);
+        if(isset($request->search) && $request->search) {
+            $dataAll = $dataAll->where('name', 'like', '%'. $request->search .'%');
         }
+        $dataAll = $dataAll->paginate($params['page_size'], ['*'], 'page', $params['page_number'] ?? 1);
 
+        return response()->json([
+            "status" => 200,
+            "errorCode" => 0,
+            "data" => $dataAll,
+
+        ]);
     }
 
     public function editQuestion($id)
@@ -158,7 +158,7 @@ class ListenController extends Controller
                 "errorCode" => 0,
                 "message" => "Xóa câu trả lời thành công !"
             ];
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return [
                 "status" => 400,
                 "errorCode" => 400,
@@ -238,7 +238,7 @@ class ListenController extends Controller
                 "errorCode" => 0,
                 "message" => "Xóa câu hỏi thành công !"
             ];
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return [
                 "status" => 400,
                 "errorCode" => 400,
@@ -250,35 +250,91 @@ class ListenController extends Controller
     public function updateAudio(Request $request, $id)
     {
         try {
+            DB::beginTransaction();
+            $dataQuestion = json_decode($request->question);
+            
             $audio = AudioListening::whereId($id)->first();
             if ($request->has('file')) {
                 $file = $request->file;
-                $file_name = time() . '_' . $file->getClientOriginalName();
+                $file_name = time() . '_' . preg_replace('/\s+/', '', $file->getClientOriginalName());
                 $file->move(public_path('upload/audio'), $file_name);
                 $audio->update([
-                    'name' => $file->getClientOriginalName(),
+                    'name' => $request->name,
                     'audio' => $file_name,
-                    'content' =>$request->content
+                    'content' => $request->content,
+                    'file_type' => $request->file_type
                 ]);
-
             }else {
                 $audio->update([
+                    'name' => $request->name,
                     'content' =>$request->content
                 ]);
             }
-            
+            $questionListening = $audio->questionListening()->get()->toArray();
+            $toDelete = collect($questionListening)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
+            if (count($toDelete)) {
+                foreach($toDelete as $item) {
+                    QuestionListening::whereId($item['id'])->delete();
+                }
+            }
+            foreach ($dataQuestion as $value) {
+                $check = QuestionListening::whereId($value->id)->exists();
+                if (!$check) {
+                    $question = $audio->questionListening()->create([
+                        'question' => $value->question,
+                        'level' => $value->level,
+                        'type' => $value->type
+                    ]);
+                    foreach ($value->answers as $keyAns => $valueAns) {
+                        $question->answerListening()->create([
+                            'id' => $valueAns->id,
+                            'question_id' => $question->id,
+                            'text' => $valueAns->text,
+                            "answer_id" => $valueAns->id,
+                        ]);
+                    }
+                    if ($value->right_answers) {
+                        $question->rightAnswers()->create([
+                            'answer_id' => $value->right_answers
+                        ]);
+                    }
+                } else {
+                    QuestionListening::whereId($value->id)->first()->update([
+                        "question" => $value->question,
+                        "level" => $value->level,
+                        "type" => $value->type
+                    ]);
+                    if ($value->answers) {
+                        QuestionListening::whereId($value->id)->first()->rightAnswers()->update([
+                            "answer_id" => $value->right_answers
+                        ]);
+                    }
+                    QuestionListening::whereId($value->id)->first()->answerListening()->delete();
+                    foreach ($value->answers as $keyAds => $valueAns) {
+                        QuestionListening::whereId($value->id)->first()->answerListening()
+                            ->create([
+                                'id' => $valueAns->id,
+                                'question_id' => $value->id,
+                                'text' => $valueAns->text,
+                                "answer_id" => $valueAns->id,
+                            ]);
+                    }
+                }
+            }
 
-            
+            DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "update media Thành công!"
+                "message" => "Update question successfully!"
             ]);
         } catch (\Throwable $th) {
+            Log::error($th);
+            DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "update media Thất bại!"
+                "message" => "Update question failed!"
             ]);
         }
     }
@@ -308,10 +364,14 @@ class ListenController extends Controller
         return view('pages.admin.listening.topic.index');
     }
 
-    public function ListTopic()
+    public function ListTopic(Request $request)
     {
         try {
-            $data = Listening::all();
+            if ($request->is_exam) {
+                $data = Listening::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $data = Listening::all();
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

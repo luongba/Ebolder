@@ -3,7 +3,7 @@
       <transition name="fade">
         <div class="w-full h-full" v-if="show">
           <div
-            class="md:absolute fixed inset-0 bg-blur flex items-center justify-center"
+            class="md:absolute fixed inset-0 bg-blur flex items-center justify-center z-10"
           >
             <div
               class="w-[95%] md:w-[70%] bg-white shadow-sm px-4 py-4 max-h-[540px] overflow-y-scroll"
@@ -19,7 +19,9 @@
                   <i class="lnr-cross"></i>
                 </span>
               </div>
+              <hr />
               <div class="my-2">
+                <el-input class="mb-2" v-model="searchValue" placeholder="Search" />
                 <div v-if="dataAudio.length == 0">
                   <el-empty description="No question"></el-empty>
                 </div>
@@ -207,37 +209,12 @@
         baseApi: $Api.baseUrl,
         file: null,
         idPlay: null,
+        timeOut: null,
+        searchValue: ''
       };
     },
     props: ["param"],
     computed: {
-      // levelEasy() {
-      //     return this.detailTopic.question.reduce((sum, item) => {
-      //         if (item.level == 1) {
-      //             return (sum += 1);
-      //         } else {
-      //             return (sum += 0);
-      //         }
-      //     }, 0);
-      // },
-      // levelMedium() {
-      //     return this.detailTopic.question.reduce((sum, item) => {
-      //         if (item.level == 2) {
-      //             return (sum += 1);
-      //         } else {
-      //             return (sum += 0);
-      //         }
-      //     }, 0);
-      // },
-      // levelhard() {
-      //     return this.detailTopic.question.reduce((sum, item) => {
-      //         if (item.level == 3) {
-      //             return (sum += 1);
-      //         } else {
-      //             return (sum += 0);
-      //         }
-      //     }, 0);
-      // },
     },
     watch: {
       "detailTopic.isExam": {
@@ -247,6 +224,14 @@
           }
         },
         immediate: false
+      },
+      "searchValue" : {
+        handler(value) {
+          clearTimeout(this.timeOut)
+          this.timeOut = setTimeout(async() => {
+              await this.getAllAudio()
+          }, 300);
+        }
       }
     },
     methods: {
@@ -305,7 +290,7 @@
       },
       async deleteTopic(id) {
         try {
-          let rs = await baseRequest.post(`/admin/delete-topic-vocabulary`, {
+          let rs = await baseRequest.post(`/admin/delete-topic-vocabulary?search=${this.searchValue || ''}`, {
             id,
           });
           if (rs.data.status == 200) {
@@ -317,7 +302,8 @@
       },
       async getAllAudio() {
         try {
-          let { data } = await baseRequest.get(`/admin/get-audio-listening`);
+          let { data } = await baseRequest.get(`/admin/get-audio-listening${this.searchValue && '?search=' + this.searchValue}`);
+          data = data.data;
           this.dataAudio = data.data.filter(
             (elem) =>
               !this.detailTopic.audioList.find(
@@ -356,7 +342,6 @@
           );
           if (data.status == 200) {
             this.getDetailTopic();
-            this.getAllAudio();
           }
         } catch (error) {
           console.log(error);

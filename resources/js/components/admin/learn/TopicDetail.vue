@@ -463,7 +463,7 @@
               icon="el-icon-circle-plus-outline"
               plain
               slot="reference"
-              >Thêm câu hỏi
+              >More questions
             </el-button>
           </el-popover>
           <el-button @click="saveChangeTopic" type="primary" plain
@@ -902,7 +902,7 @@ export default {
               idAns: ans.id,
               text: ans.text,
               question_id: ans.question_id,
-              alphabet: this.alphabet[index].toLocaleUpperCase(),
+              alphabet: question.type == 1 ? this.alphabet[index].toLocaleUpperCase() : 'A',
             })),
             answer: question.right_answer,
             type: question.type,

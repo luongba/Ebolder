@@ -8,7 +8,7 @@ class Speak extends Model
 {
     protected $guarded = [];
 
-    public function QuestitonSpeak(){
+    public function QuestionSpeak(){
         return $this->belongsToMany('App\models\Speak\QuestionSpeak','question_speak_relationship' );
     }
 }

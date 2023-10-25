@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <Skills />
+        <Skills :levels="levels"/>
 
         <div class="xl:w-[62.5%] w-[95%] mx-auto my-[16px] xl:my-[48px]">
             <h2 class="text-[28px] font-semibold leading-[120%] col-span-3  my-[16px] xl:my-[48px]">
@@ -151,6 +151,7 @@
 </template>
 <script>
 import Skills from './Skills.vue';
+import baseRequest from "../../../utils/baseRequest";
 
 export default {
     props: ["user"],
@@ -189,9 +190,23 @@ export default {
             background: require('../../../../../public/images/landing/background.svg'),
             openTab: 1,
             activeColor: "#2162FF",
+            levels: []
         };
     },
     methods: {
+        async getAllLevels()  {
+            this.isLoading = true;
+            try {
+                let response = await baseRequest.get(`/get-levels`);
+                if (response.data.status == 200) {
+                    this.levels = response.data.data
+                    console.log(this.levels)
+                }
+                this.isLoading = false;
+            } catch (error) {
+                this.isLoading = false;
+            }
+        },
         openLink() {
             window.location.href = `${$Api.baseUrl}/sign-in`;
         },
@@ -199,6 +214,9 @@ export default {
             this.openTab = tabNumber
         }
     },
+    created() {
+        this.getAllLevels()
+    }
 };
 </script>
 <style scoped>

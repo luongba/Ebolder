@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\models\Vocabulary\AnswerVocabulary;
+use App\models\Vocabulary\LevelVocabulary;
 use App\models\Vocabulary\QuestionVocabulary;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
@@ -18,10 +19,14 @@ class VocabularyController extends Controller
         return view('pages.admin.vocabulary.topic.index');
     }
 
-    public function ListTopic()
+    public function ListTopic(Request $request)
     {
         try {
-            $data = Vocabulary::orderBy('id', 'DESC')->paginate(10);
+            if ($request->is_exam) {
+                $data = Vocabulary::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $data = Vocabulary::orderBy('id', 'DESC')->paginate(10);
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -47,7 +52,7 @@ class VocabularyController extends Controller
     {
         try {
             $query = new Vocabulary();
-            $data = $query->where('id', $id)->with(['QuestitonVocabulary' => function ($question) {
+            $data = $query->where('id', $id)->with(['QuestionVocabulary' => function ($question) {
                 $question->with('answers')->with('right_answers');
             
             }])->first();
@@ -101,7 +106,7 @@ class VocabularyController extends Controller
         try {
             DB::beginTransaction();
             $query = new Vocabulary();
-            $query->find($request->idTopic)->questitonVocabulary()->attach(
+            $query->find($request->idTopic)->QuestionVocabulary()->attach(
                 [
                     'question_vocabulary_id' => $request->idQues
                 ]
@@ -128,7 +133,7 @@ class VocabularyController extends Controller
         try {
             DB::beginTransaction();
             $query = new Vocabulary();
-            $query->find($request->idTopic)->questitonVocabulary()->detach(
+            $query->find($request->idTopic)->QuestionVocabulary()->detach(
                 [
                     'question_vocabulary_id' => $request->idQues
                 ]
@@ -155,7 +160,7 @@ class VocabularyController extends Controller
         try {
             DB::beginTransaction();
             $vocabulary = Vocabulary::find($request->id);
-            $vocabulary->questitonVocabulary()->detach();
+            $vocabulary->QuestionVocabulary()->detach();
             $vocabulary->delete();
             DB::commit();
             return response()->json([
@@ -250,8 +255,9 @@ class VocabularyController extends Controller
                 "description" => $dataTopic['description'] ?? '',
                 "is_exam" => $dataTopic['isExam'],
             ]);
-            
-
+            if (!$request->is_exam) {
+                LevelVocabulary::where('vocabulary_id', $request->id)->delete();
+            }
             $dataQuestion = $data['dataQuestion'];
             foreach ($dataQuestion as $key => $value) {
                 $res = QuestionVocabulary::create([
@@ -261,7 +267,7 @@ class VocabularyController extends Controller
                     "type" => $value['type']
                 ]);
                 $query = new Vocabulary();
-                $query->find($voca->id)->questitonVocabulary()->attach(
+                $query->find($voca->id)->QuestionVocabulary()->attach(
                 [
                     'question_vocabulary_id' => $res->id
                 ]);
@@ -310,9 +316,12 @@ class VocabularyController extends Controller
                 'description' => $request->contentReading,
                 'is_exam' => $request->is_exam,
             ]);
+            if (!$request->is_exam) {
+                LevelVocabulary::where('vocabulary_id', $request->id)->delete();
+            }
 
             $dataQuestion = ($request->dataQuestion);
-            $questionVocab = $vocabulary->QuestitonVocabulary()->get()->toArray();
+            $questionVocab = $vocabulary->QuestionVocabulary()->get()->toArray();
             
             $toDelete = collect($questionVocab)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
             if (count($toDelete)) {
@@ -323,7 +332,7 @@ class VocabularyController extends Controller
             foreach ($dataQuestion as $key => $value) {
                 $check =QuestionVocabulary::whereId($value['id'])->exists();
                 if (!$check) {
-                    $question = $vocabulary->QuestitonVocabulary()->create([
+                    $question = $vocabulary->QuestionVocabulary()->create([
                         'question' => $value['question'],
                         'level' => $value['level'],
                         'type' => $value['type']
@@ -368,7 +377,7 @@ class VocabularyController extends Controller
             return [
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "Sửa câu hỏi thành công !"
+                "message" => "Edit question successfully!"
             ];
         } catch (\Exception $e) {
             Log::error($e);
@@ -376,7 +385,7 @@ class VocabularyController extends Controller
             return [
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Sửa câu hỏi thất bại !"
+                "message" => "Failed action !"
             ];
         }
 

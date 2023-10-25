@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\models\Grammar\AnswerGrammar;
 use App\models\Grammar\Grammar;
+use App\models\Grammar\LevelGrammar;
 use App\models\Grammar\QuestionGrammar;
 use App\models\Vocabulary\AnswerVocabulary;
 use App\models\Vocabulary\QuestionVocabulary;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use mysql_xdevapi\Exception;
 
 class GrammarController extends Controller
@@ -20,10 +22,14 @@ class GrammarController extends Controller
         return view('pages.admin.grammar.topic.index');
     }
 
-    public function ListTopic()
+    public function ListTopic(Request $request)
     {
         try {
-            $data = Grammar::orderBy('id', 'DESC')->paginate(10);
+            if ($request->is_exam) {
+                $data = Grammar::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $data = Grammar::orderBy('id', 'DESC')->paginate(10);
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
@@ -48,7 +54,7 @@ class GrammarController extends Controller
     {
         try {
             $query = new Grammar();
-            $data = $query->where('id', $id)->with(['QuestitonGrammar' => function ($question) {
+            $data = $query->where('id', $id)->with(['QuestionGrammar' => function ($question) {
                 $question->with('answers')->with('right_answers');
             }])->first();
             return response()->json([
@@ -86,7 +92,7 @@ class GrammarController extends Controller
                     "type" => $value['type']
                 ]);
                 $query = new Grammar();
-                $query->find($grammar->id)->QuestitonGrammar()->attach(
+                $query->find($grammar->id)->QuestionGrammar()->attach(
                 [
                     'question_granmmar_id' => $res->id
                 ]);
@@ -127,7 +133,7 @@ class GrammarController extends Controller
     {
         try {
             $query = new Grammar();
-            $query->find($request->idTopic)->QuestitonGrammar()->attach(
+            $query->find($request->idTopic)->QuestionGrammar()->attach(
                 [
                     'question_grammar_id' => $request->idQues
                 ]
@@ -150,7 +156,7 @@ class GrammarController extends Controller
     {
         try {
             $query = new Grammar();
-            $query->find($request->idTopic)->QuestitonGrammar()->detach(
+            $query->find($request->idTopic)->QuestionGrammar()->detach(
                 [
                     'question_grammar_id' => $request->idQues
                 ]
@@ -174,7 +180,7 @@ class GrammarController extends Controller
     {
         try {
             $grammar = Grammar::find($request->id);
-            $grammar->QuestitonGrammar()->detach();
+            $grammar->QuestionGrammar()->detach();
             $grammar->delete();
             return response()->json([
                 "status" => 200,
@@ -307,8 +313,11 @@ class GrammarController extends Controller
                 'description' => $request->description,
                 'is_exam' => $request->is_exam,
             ]);
+            if (!$request->is_exam) {
+                LevelGrammar::where('grammar_id', $request->id)->delete();
+            }
             $dataQuestion = ($request->dataQuestion);
-            $questionVocab = $grammar->QuestitonGrammar()->get()->toArray();
+            $questionVocab = $grammar->QuestionGrammar()->get()->toArray();
             $toDelete = collect($questionVocab)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
 
             if (count($toDelete)) {
@@ -319,7 +328,7 @@ class GrammarController extends Controller
             foreach ($dataQuestion as $key => $value) {
                 $check = QuestionGrammar::whereId($value['id'])->exists();
                 if (!$check) {
-                    $question = $grammar->QuestitonGrammar()->create([
+                    $question = $grammar->QuestionGrammar()->create([
                         'question' => $value['question'],
                         'level' => $value['level'],
                         'type' => $value['type']
@@ -367,6 +376,7 @@ class GrammarController extends Controller
                 "message" => "Sửa câu hỏi thành công !"
             ];
         } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
             return [
                 "status" => 400,

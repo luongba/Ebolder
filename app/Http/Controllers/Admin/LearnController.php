@@ -52,10 +52,14 @@ class LearnController extends Controller
 //    }
 
 
-    public function ListTopic()
+    public function ListTopic(Request $request)
     {
         try {
-            $data = Learn::orderBy('id', 'DESC')->paginate(10);
+            if ($request->is_exam) {
+                $data = Learn::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+            } else {
+                $data = Learn::orderBy('id', 'DESC')->paginate(10);
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

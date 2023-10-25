@@ -594,7 +594,7 @@ export default {
     },
   },
   created() {
-    this.questions = this.data.questiton_speak.map((speak) => ({
+    this.questions = this.data.question_speak.map((speak) => ({
       id: speak.id,
       question: speak.question,
       type: speak.type,

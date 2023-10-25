@@ -14,6 +14,7 @@ use App\models\HistoryLearn;
 use App\models\Speak\Speak;
 use App\models\Vocabulary\Vocabulary;
 use App\models\Exam\ExamHistoryFinal;
+use App\models\Listen\LevelListen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,14 +42,14 @@ class HomeController extends Controller
         if (isset($request->testId)) {
             $testId = $request->testId;
             $levelId =$request->levelId;
-            $vocabulary = Vocabulary::whereId($request->testId)->with(['QuestitonVocabulary' => function ($question) {
+            $vocabulary = Vocabulary::whereId($request->testId)->with(['QuestionVocabulary' => function ($question) {
                 $question->with('answers');
                 $question->with('right_answers');
             }])->first();
             return view('pages.frontend.vocabulary', compact(['vocabulary', 'testId', 'levelId']));
         } else {
             $randomVocabulary = Vocabulary::all()->random(1)->first();
-            $vocabulary = $randomVocabulary->with(['QuestitonVocabulary' => function ($question) {
+            $vocabulary = $randomVocabulary->with(['QuestionVocabulary' => function ($question) {
                 $question->with('answers');
                 $question->with('right_answers');
             }])->inRandomOrder()->first();
@@ -61,14 +62,14 @@ class HomeController extends Controller
         if (isset($request->testId)) {
             $testId = $request->testId;
             $levelId =$request->levelId;
-            $grammar = Grammar::whereId($request->testId)->with(['QuestitonGrammar' => function ($question) {
+            $grammar = Grammar::whereId($request->testId)->with(['QuestionGrammar' => function ($question) {
                 $question->with('answers')->with('right_answers')->get();
             }])->first();
             return view('pages.frontend.grammar', compact(['grammar', 'testId', 'levelId']));
         } else {
 
             $randomGrammar = Grammar::all()->random(1)->first();
-            $grammar = $randomGrammar->with(['QuestitonGrammar' => function ($question) {
+            $grammar = $randomGrammar->with(['QuestionGrammar' => function ($question) {
                 $question->with('answers')->with('right_answers')->get();
             }])->inRandomOrder()->first();
             return view('pages.frontend.grammar', compact('grammar'));
@@ -139,14 +140,14 @@ class HomeController extends Controller
         if (isset($request->testId)) {
             $testId = $request->testId;
             $levelId =$request->levelId;
-            $speaking = Speak::whereId($request->testId)->with(['QuestitonSpeak' => function ($question) {
+            $speaking = Speak::whereId($request->testId)->with(['QuestionSpeak' => function ($question) {
                 $question->with('answers')->with('right_answers')->get();
             }])->first();
             return view('pages.frontend.speakingBasic', compact(['speaking', 'testId', 'levelId']));
         } else {
 
             $randomSpeaking = Speak::all()->random(1)->first();
-            $speaking = $randomSpeaking->with(['QuestitonSpeak' => function ($question) {
+            $speaking = $randomSpeaking->with(['QuestionSpeak' => function ($question) {
                 $question->with('answers')->with('right_answers')->get();
             }])->inRandomOrder()->first();
             return view('pages.frontend.speakingBasic', compact('speaking'));
@@ -354,6 +355,11 @@ class HomeController extends Controller
         $data->whereId($request->id)->update([
             'is_exam' => $request->is_exam
         ]);
+        if (!$request->is_exam) {
+            if ($request->class == 'Listening') {
+                LevelListen::where('listening_id', $request->id)->delete();
+            }
+        }
         return response()->json([
             "status" => 200,
             "errorCode" => 0,
