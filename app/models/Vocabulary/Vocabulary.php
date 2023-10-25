@@ -8,7 +8,7 @@ class Vocabulary extends Model
 {
     protected $guarded = [];
 
-    public function QuestitonVocabulary(){
+    public function QuestionVocabulary(){
         return $this->belongsToMany('App\models\Vocabulary\QuestionVocabulary','question_vocabulary_relationship' );
     }
 }

@@ -638,7 +638,7 @@ export default {
             name: data.data.name,
             content: data.data.description,
             isExam: data.data.is_exam === 1 ? true : false,
-            questions: data.data.questiton_grammar?.map((ques) => ({
+            questions: data.data.question_grammar?.map((ques) => ({
               id: ques.id,
               question: ques.question,
               level: ques.level,

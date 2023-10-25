@@ -9,7 +9,9 @@ use App\models\Listen\Listening;
 use App\models\Listen\QuestionListening;
 use App\models\Vocabulary\Vocabulary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use mysql_xdevapi\Exception;
 
 class ListenController extends Controller
@@ -251,6 +253,9 @@ class ListenController extends Controller
     public function updateAudio(Request $request, $id)
     {
         try {
+            DB::beginTransaction();
+            $dataQuestion = json_decode($request->question);
+            
             $audio = AudioListening::whereId($id)->first();
             if ($request->has('file')) {
                 $file = $request->file;
@@ -262,26 +267,77 @@ class ListenController extends Controller
                     'content' => $request->content,
                     'file_type' => $request->file_type
                 ]);
-
             }else {
                 $audio->update([
                     'name' => $request->name,
                     'content' =>$request->content
                 ]);
             }
-            
+            $questionListening = $audio->questionListening()->get()->toArray();
+            $toDelete = collect($questionListening)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
+            if (count($toDelete)) {
+                foreach($toDelete as $item) {
+                    QuestionListening::whereId($item['id'])->delete();
+                }
+            }
+            foreach ($dataQuestion as $value) {
+                $check = QuestionListening::whereId($value->id)->exists();
+                if (!$check) {
+                    $question = $audio->questionListening()->create([
+                        'question' => $value->question,
+                        'level' => $value->level,
+                        'type' => $value->type
+                    ]);
+                    foreach ($value->answers as $keyAns => $valueAns) {
+                        $question->answerListening()->create([
+                            'id' => $valueAns->id,
+                            'question_id' => $question->id,
+                            'text' => $valueAns->text,
+                            "answer_id" => $valueAns->id,
+                        ]);
+                    }
+                    if ($value->right_answers) {
+                        $question->rightAnswers()->create([
+                            'answer_id' => $value->right_answers
+                        ]);
+                    }
+                } else {
+                    QuestionListening::whereId($value->id)->first()->update([
+                        "question" => $value->question,
+                        "level" => $value->level,
+                        "type" => $value->type
+                    ]);
+                    if ($value->answers) {
+                        QuestionListening::whereId($value->id)->first()->rightAnswers()->update([
+                            "answer_id" => $value->right_answers
+                        ]);
+                    }
+                    QuestionListening::whereId($value->id)->first()->answerListening()->delete();
+                    foreach ($value->answers as $keyAds => $valueAns) {
+                        QuestionListening::whereId($value->id)->first()->answerListening()
+                            ->create([
+                                'id' => $valueAns->id,
+                                'question_id' => $value->id,
+                                'text' => $valueAns->text,
+                                "answer_id" => $valueAns->id,
+                            ]);
+                    }
+                }
+            }
 
-            
+            DB::commit();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "update media Thành công!"
+                "message" => "Update question successfully!"
             ]);
         } catch (\Throwable $th) {
+            Log::error($th);
+            DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "update media Thất bại!"
+                "message" => "Update question failed!"
             ]);
         }
     }

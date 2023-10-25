@@ -74,11 +74,6 @@
         api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
         :init="init()"
       />
-      <div class="flex items-center justify-center mt-4">
-        <el-button @click="saveEditContentAudio()"
-          >Change content</el-button
-        >
-      </div>
     </div>
     <div
       class="w-full p-4 rounded-sm border-dashed bg-white flex items-center justify-center cursor-pointer mt-4"
@@ -458,15 +453,10 @@
           >More questions
         </el-button>
       </el-popover>
-      <el-button @click="createQuestionMore()" type="primary" plain
-        >Create
+      <el-button @click="saveEditContentAudio" type="primary" plain
+        >Save
       </el-button>
     </div>
-    <!-- <div
-      class="flex items-center justify-center cursor-pointer my-4 text-[14px] font-semibold"
-    >
-      <el-button @click="show = !show" icon="el-icon-plus"></el-button>
-    </div> -->
   </div>
 </template>
 
@@ -646,43 +636,6 @@ export default {
       let isCheck = this.validate("ruleFormData", "ruleFormItem");
       if (isCheck) {
         this.closeEditQuestion(index);
-        // try {
-        //   let data = this.detailAudio.question.find(
-        //     (item) => item.idQues == id
-        //   );
-        //   let temp = {
-        //     right_answers: data.right_answers || [],
-        //     id: data.idQues || null,
-        //     question: data.question || "",
-        //     level: data.level,
-        //     type: data.type,
-        //     dataAns: data.answers.map((itemAns) => {
-        //       return {
-        //         id: itemAns.id || "",
-        //         answer_id: itemAns.answer_id,
-        //         text: itemAns.text || "",
-        //       };
-        //     }),
-        //   };
-        //   let result = await baseRequest.put(
-        //     `/admin/update-question-listening`,
-        //     temp
-        //   );
-        //   if (result.data.status == 200) {
-        //     this.closeEditQuestion(index);
-        //     this.$message({
-        //       type: "success",
-        //       message: "Edit success",
-        //     });
-        //   } else {
-        //     this.$message({
-        //       type: "error",
-        //       message: "Edit error",
-        //     });
-        //   }
-        // } catch (e) {
-        //   console.log(e);
-        // }
       }
     },
     pushAns(id) {
@@ -699,26 +652,17 @@ export default {
       });
     },
     async deleteAns(idQues, idAns) {
-      try {
-        // let res = await baseRequest.post(`/admin/delete-answer-listening`, {
-        //   id: idAns,
-        // });
-        // let { data } = res;
-        // if (data.status == 200) {
-        //   this.getAllData();
-        // } else {
-        //   let dataQues = this.detailAudio.question.find(
-        //     (item) => item.idQues == idQues
-        //   );
-        //   dataQues.answers = dataQues.answers.filter(
-        //     (item) => item.id != idAns
-        //   );
-        // }
-      } catch (e) {
-        let dataQues = this.detailAudio.question.find(
-          (item) => item.idQues == idQues
+      let dataQues = this.dataQuestion.find((item) => item.id == idQues);
+      if (dataQues.right_answers == idAns) {
+        this.$message({
+          message:
+            "The deleted answer matches the answer. Please change your answer before deleting !",
+          type: "error",
+        });
+      } else {
+        dataQues.answers = dataQues.answers.filter(
+          (item) => item.id != idAns
         );
-        dataQues.answers = dataQues.answers.filter((item) => item.id != idAns);
       }
     },
     getAlphabet(data) {
@@ -750,7 +694,6 @@ export default {
 
     getChangeAudio(event) {
       const maxSize = 10 * 1024 * 1024; // 10MB
-      debugger
       if (event.target.files[0].type == "audio/mpeg") {
         this.file = event.target.files[0];
         this.fileType = 'audio'
@@ -808,7 +751,6 @@ export default {
         );
         if (rs.data.status == 200) {
           let data = rs.data.data;
-          console.log(data);
           this.detailAudio = {
             id: data.id,
             name: data.name,
@@ -830,8 +772,6 @@ export default {
               };
             }),
           };
-          console.log('this.detailAudio');
-          console.log(this.detailAudio);
           this.audio = data.audio;
           if(data.file_type === 'video') {
             let video = document.getElementById("video-preview");
@@ -857,9 +797,6 @@ export default {
             right_answers: question.right_answers,
             type: question.type,
           }));
-          console.log('this.dataQuestion');
-          console.log(this.dataQuestion);
-          console.log('-------------------------');
         } else {
           this.$message({
             message: "Get information failed",
@@ -872,51 +809,6 @@ export default {
             message: e.message,
             type: "error",
           });
-      }
-    },
-    async deleteTopic(id) {
-      try {
-        let rs = await baseRequest.post(`/admin/delete-topic-vocabulary`, {
-          id,
-        });
-        if (rs.data.status == 200) {
-          this.getAllTopic();
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async addTopic(id) {
-      try {
-        let { data } = await baseRequest.post(
-          `/admin/add-question-to-topic-vocabulary`,
-          {
-            idTopic: this.dataQuestion.id,
-            idQues: id,
-          }
-        );
-        if (data.status == 200) {
-          this.getDetailAudio();
-          this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async removeTopic(id) {
-      try {
-        let { data } = await baseRequest.post(
-          `/admin/remove-question-from-topic-vocabulary`,
-          {
-            idTopic: this.dataQuestion.id,
-            idQues: id,
-          }
-        );
-        if (data.status == 200) {
-          this.getDetailAudio();
-        }
-      } catch (error) {
-        console.log(error);
       }
     },
     async saveChangeTitle(id) {
@@ -1048,9 +940,9 @@ export default {
           const headers = {
             "Content-Type": "multipart/form-data",
           };
-          debugger
           const formData = new FormData();
           formData.append("content", this.detailAudio.content);
+          formData.append("question", JSON.stringify(this.dataQuestion));
           formData.append("name", this.detailAudio.name);
           if(this.file && typeof this.file == 'object') {
             formData.append("file", this.file);
@@ -1155,25 +1047,9 @@ export default {
         }
       )
         .then(async () => {
-          try {
-            let res = await baseRequest.post(
-              `/admin/delete-question-listening`,
-              { id: id }
-            );
-            let { data } = res;
-            if (data.status == 200) {
-              this.getDetailAudio();
-              this.$message({
-                type: "success",
-                message: "Deleted successfully",
-              });
-            }
-          } catch (e) {
-            this.$message({
-              type: "error",
-              message: "Deleted failed",
-            });
-          }
+          this.dataQuestion = this.dataQuestion.filter(
+              (item) => item.id != id
+          );
         })
         .catch(() => {
           return;
