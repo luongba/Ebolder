@@ -479,7 +479,7 @@ export default {
     },
   },
   created() {
-    this.questions = this.data.questiton_grammar.map((grammar) => ({
+    this.questions = this.data.question_grammar.map((grammar) => ({
       id: grammar.id,
       question: grammar.question,
       type: grammar.type,

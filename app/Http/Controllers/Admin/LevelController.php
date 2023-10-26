@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LevelController extends Controller
 {
@@ -138,14 +139,31 @@ class LevelController extends Controller
     public function detailLevel(Request $request)
     {
         ini_set('memory_limit', '-1');
-        $level = new Level();
-        $level = $level->where('id', $request->id)->with('Learn')->with('Reading')->with('Vocabulary')->with('Grammar')->with('Listen')->with('Speak')->with('Pronunciation')->first();
-        return response()->json([
-            "status" => 200,
-            "errorCode" => 0,
-            "data" => $level,
-            "message" => "Lấy level Thành công!"
-        ]);
+        try {
+            $level = new Level();
+            $level = $level->where('id', $request->id)
+                ->with('Learn:id,name,is_exam')
+                ->with('Reading:id,name,is_exam')
+                ->with('Vocabulary:id,name,is_exam')
+                ->with('Grammar:id,name,is_exam')
+                ->with('Listen:id,name,is_exam')
+                ->with('Speak:id,name,is_exam')
+                ->with('Pronunciation:id,name,is_exam')
+                ->first();
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "data" => $level,
+                "message" => "Lấy level Thành công!"
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Xóa level Thất bại!"
+            ]);
+        }
     }
 
     public function updateLevel(Request $request)

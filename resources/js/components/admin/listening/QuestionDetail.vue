@@ -1,277 +1,5 @@
 <template>
   <div class="container">
-    <transition name="fade">
-      <div class="w-full h-full" v-if="show">
-        <div
-          class="fixed top-[35px] lg:top-0 inset-0 bg-blur flex items-center justify-center z-[999]"
-        >
-          <div
-            class="w-[95%] md:w-[70%] xl:w-[50%] bg-white shadow-sm px-4 py-4"
-          >
-            <div class="py-2 relative">
-              <h1 class="font-semibold uppercase text-[14px]">
-                Create Question
-              </h1>
-              <span
-                class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer"
-                @click="show = !show"
-              >
-                <i class="lnr-cross"></i>
-              </span>
-            </div>
-            <div class="w-full h-[500px]" style="overflow-y: scroll">
-              <div
-                class="card w-full mt-3 mb-2"
-                v-for="(data, index) in dataQuestion"
-                :key="index"
-              >
-                <div class="card-header flex justify-between items-center">
-                  <span>Question {{ index + 1 }}</span>
-                  <span
-                    v-if="dataQuestion.length > 1"
-                    class="text-red-600 text-[14px] font-semibold cursor-pointer"
-                    @click="deleteQuesMore(data.id)"
-                    >Delete</span
-                  >
-                </div>
-
-                <div class="card-body" v-if="data.type == 1">
-                  <div class="w-full">
-                    <el-form ref="ruleFormData" :model="data" class="w-full">
-                      <el-form-item
-                        prop="question"
-                        :rules="[
-                          {
-                            required: true,
-                            message: 'Please enter your question',
-                          },
-                        ]"
-                        class="w-full m-0"
-                      >
-                        <el-input
-                          type="textarea"
-                          placeholder="Nhập câu hỏi..."
-                          v-model="data.question"
-                          rows="3"
-                        ></el-input>
-                      </el-form-item>
-                      <div
-                        class="w-full mt-2"
-                        v-for="item in data.dataAns"
-                        :key="item.idAns"
-                      >
-                        <div class="mt-4 flex items-start">
-                          <el-form
-                            ref="ruleFormItem"
-                            :model="item"
-                            :rules="rules"
-                            class="w-full"
-                          >
-                            <el-form-item
-                              prop="text"
-                              :rules="[
-                                {
-                                  required: true,
-                                  message: 'Please enter your answer',
-                                },
-                              ]"
-                              class="w-full m-0"
-                            >
-                              <el-input v-model="item.text">
-                                <template slot="prepend">{{
-                                  item.alphabet
-                                }}</template>
-                              </el-input>
-                            </el-form-item>
-                          </el-form>
-
-                          <el-button
-                            v-if="data.dataAns.length > 1"
-                            class="ml-2"
-                            type="danger"
-                            icon="el-icon-delete"
-                            @click="deleteAnsQuestion(data.id, item.idAns)"
-                            plain
-                            circle
-                          ></el-button>
-                        </div>
-                      </div>
-                      <div class="flex justify-between items-start mt-4">
-                        <div class="leading-[40px]">
-                          <span class="text-[13px] font-semibold"
-                            >Level:
-                            {{
-                              data.level == 1
-                                ? "Easy"
-                                : data.level == 2
-                                ? "Medium"
-                                : "Hard"
-                            }}</span
-                          >
-                          <star-rating
-                            :star-size="20"
-                            :animate="true"
-                            v-model="data.level"
-                            :show-rating="false"
-                            :max-rating="3"
-                          />
-                        </div>
-
-                        <div class="w-[180px]">
-                          <el-form-item
-                            :rules="[
-                              {
-                                required: true,
-                                message: 'Please select answer',
-                                trigger: 'blur',
-                              },
-                            ]"
-                            prop="answer"
-                            class="w-full m-0"
-                          >
-                            <span class="text-[13px] font-semibold mr-2"
-                              >Anwser:</span
-                            >
-                            <el-select
-                              v-model="data.answer"
-                              placeholder="Select"
-                            >
-                              <el-option
-                                v-for="item in data.dataAns"
-                                :key="item.idAns"
-                                :label="item.alphabet"
-                                :value="item.idAns"
-                              >
-                              </el-option>
-                            </el-select>
-                          </el-form-item>
-                        </div>
-                      </div>
-                      <div class="mx-auto my-4 lg:my-2 flex justify-center">
-                        <el-button
-                          v-if="data.dataAns.length < maxAns"
-                          @click="pushAnsQuestion(data.id)"
-                          icon="el-icon-plus"
-                          plain
-                        ></el-button>
-                      </div>
-                    </el-form>
-                  </div>
-                </div>
-                <div class="card-body" v-if="data.type == 2">
-                  <div class="w-full">
-                    <el-form ref="ruleFormData" :model="data" class="w-full">
-                      <el-form-item
-                        prop="question"
-                        :rules="[
-                          {
-                            required: true,
-                            message: 'Please enter your question',
-                          },
-                        ]"
-                        class="w-full m-0"
-                      >
-                        <el-input
-                          type="textarea"
-                          placeholder="Nhập câu hỏi..."
-                          v-model="data.question"
-                          rows="3"
-                        ></el-input>
-                      </el-form-item>
-                      <div class="mt-4">
-                        <el-button
-                          icon="el-icon-search"
-                          type="primary"
-                          plain
-                          @click="renderAnswerPopup(data, index)"
-                        >
-                          Xuất câu trả lời
-                        </el-button>
-                      </div>
-
-                      <div
-                        class="w-full mt-2"
-                        v-for="(item, indexAns) in data.dataAns"
-                        :key="item.id"
-                      >
-                        <div class="mt-4 flex items-start">
-                          <el-form
-                            ref="ruleFormItem"
-                            :model="item"
-                            :rules="rules"
-                            class="w-full"
-                          >
-                            <el-form-item
-                              prop="text"
-                              :rules="[
-                                {
-                                  required: true,
-                                  message: 'Please enter your answer',
-                                },
-                              ]"
-                              class="w-full m-0"
-                            >
-                              <el-input v-model="item.text">
-                                <template slot="prepend"
-                                  >{{ indexAns + 1 }}
-                                </template>
-                              </el-input>
-                            </el-form-item>
-                          </el-form>
-                        </div>
-                      </div>
-                      <div class="flex justify-between items-start mt-4">
-                        <div class="leading-[40px]">
-                          <span class="text-[13px] font-semibold"
-                            >Level:
-                            {{
-                              data.level == 1
-                                ? "Easy"
-                                : data.level == 2
-                                ? "Medium"
-                                : "Hard"
-                            }}</span
-                          >
-                          <star-rating
-                            :star-size="20"
-                            :animate="true"
-                            v-model="data.level"
-                            :show-rating="false"
-                            :max-rating="3"
-                          />
-                        </div>
-                      </div>
-                    </el-form>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mx-auto my-4 flex justify-between">
-              <el-popover placement="right" trigger="click">
-                <p class="mb-2 text-[14px] text-bold">Dạng câu hỏi:</p>
-                <el-button type="primary" @click="pushQues(1)" round
-                  >Chọn đáp án
-                </el-button>
-                <el-button type="primary" @click="pushQues(2)" round
-                  >Điền vào chỗ trống
-                </el-button>
-                <el-button
-                  type="success"
-                  icon="el-icon-circle-plus-outline"
-                  plain
-                  slot="reference"
-                  >More questions
-                </el-button>
-              </el-popover>
-              <el-button @click="createQuestionMore()" type="primary" plain
-                >Create
-              </el-button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
     <div class="flex items-center justify-center">
       <p
         class="font-bold lg:text-[30px] text-[20px] uppercase text-center w-full"
@@ -346,11 +74,6 @@
         api-key="hri1xykfk0d1gnrwf70v71zn81p6f7s5e3z1edxly9mansfq"
         :init="init()"
       />
-      <div class="flex items-center justify-center mt-4">
-        <el-button @click="saveEditContentAudio()"
-          >Change content</el-button
-        >
-      </div>
     </div>
     <div
       class="w-full p-4 rounded-sm border-dashed bg-white flex items-center justify-center cursor-pointer mt-4"
@@ -387,7 +110,7 @@
     <p class="font-semibold text-[15px] mt-4 mb-2">Questions of Audio</p>
     <div
       class="card w-full mt-3 mb-3"
-      v-for="(data, index) in detailAudio.question"
+      v-for="(data, index) in dataQuestion"
       :key="index"
       ref="card"
     >
@@ -399,7 +122,7 @@
               size="small"
               type="success"
               icon="el-icon-check"
-              @click="SaveQuestion(data.idQues, index)"
+              @click="SaveQuestion(data.id, index)"
               circle
             ></el-button>
           </div>
@@ -418,7 +141,7 @@
             type="danger"
             icon="el-icon-delete"
             circle
-            @click="deleteQues(data.idQues)"
+            @click="deleteQues(data.id)"
             v-if="detailAudio.question.length > 1"
           ></el-button>
         </div>
@@ -474,7 +197,7 @@
                   class="ml-2"
                   type="danger"
                   icon="el-icon-delete"
-                  @click="deleteAns(data.idQues, item.id)"
+                  @click="deleteAns(data.id, item.id)"
                   circle
                   plain
                 ></el-button>
@@ -509,19 +232,19 @@
                       trigger: 'blur',
                     },
                   ]"
-                  prop="right_answers.answer_id"
+                  prop="right_answers"
                   class="w-full m-0"
                 >
                   <span class="text-[13px] font-semibold mr-2">Anwser:</span>
                   <el-select
-                    v-model="data.right_answers.answer_id"
+                    v-model="data.right_answers"
                     placeholder="Select"
                   >
                     <el-option
                       v-for="(item, index) in data.answers"
                       :key="item.id"
                       :label="alphabet[index].toUpperCase()"
-                      :value="item.answer_id"
+                      :value="item.id"
                     >
                     </el-option>
                   </el-select>
@@ -532,7 +255,7 @@
             <div class="mx-auto my-4 lg:my-2 flex justify-center">
               <el-button
                 v-if="data.answers.length < maxAns"
-                @click="pushAns(data.idQues)"
+                @click="pushAns(data.id)"
                 icon="el-icon-plus"
                 plain
               ></el-button>
@@ -713,10 +436,26 @@
       </div>
     </div>
 
-    <div
-      class="flex items-center justify-center cursor-pointer my-4 text-[14px] font-semibold"
-    >
-      <el-button @click="show = !show" icon="el-icon-plus"></el-button>
+    <div class="mx-auto my-4 flex justify-between">
+      <el-popover placement="right" trigger="click">
+        <p class="mb-2 text-[14px] text-bold">Dạng câu hỏi:</p>
+        <el-button type="primary" @click="pushQues(1)" round
+          >Chọn đáp án
+        </el-button>
+        <el-button type="primary" @click="pushQues(2)" round
+          >Điền vào chỗ trống
+        </el-button>
+        <el-button
+          type="success"
+          icon="el-icon-circle-plus-outline"
+          plain
+          slot="reference"
+          >More questions
+        </el-button>
+      </el-popover>
+      <el-button @click="saveEditContentAudio" type="primary" plain
+        >Save
+      </el-button>
     </div>
   </div>
 </template>
@@ -896,83 +635,41 @@ export default {
     async SaveQuestion(id, index) {
       let isCheck = this.validate("ruleFormData", "ruleFormItem");
       if (isCheck) {
-        try {
-          let data = this.detailAudio.question.find(
-            (item) => item.idQues == id
-          );
-          let temp = {
-            right_answers: data.right_answers || [],
-            id: data.idQues || null,
-            question: data.question || "",
-            level: data.level,
-            type: data.type,
-            dataAns: data.answers.map((itemAns) => {
-              return {
-                id: itemAns.id || "",
-                answer_id: itemAns.answer_id,
-                text: itemAns.text || "",
-              };
-            }),
-          };
-          let result = await baseRequest.put(
-            `/admin/update-question-listening`,
-            temp
-          );
-          if (result.data.status == 200) {
-            this.closeEditQuestion(index);
-            this.$message({
-              type: "success",
-              message: "Edit success",
-            });
-          } else {
-            this.$message({
-              type: "error",
-              message: "Edit error",
-            });
-          }
-        } catch (e) {
-          console.log(e);
-        }
+        this.closeEditQuestion(index);
       }
     },
     pushAns(id) {
-      let dataQues = this.detailAudio.question.find(
-        (item) => item.idQues == id
+      console.log(id);
+      let dataQues = this.dataQuestion.find(
+        (item) => item.id == id
       );
 
       dataQues.answers.push({
-        id: Date.now(),
+        id: $Helper.randomId(),
         question_id: id,
         text: null,
+        alphabet: this.alphabet[dataQues.answers.length].toUpperCase(),
       });
     },
     async deleteAns(idQues, idAns) {
-      try {
-        let res = await baseRequest.post(`/admin/delete-answer-listening`, {
-          id: idAns,
+      let dataQues = this.dataQuestion.find((item) => item.id == idQues);
+      if (dataQues.right_answers == idAns) {
+        this.$message({
+          message:
+            "The deleted answer matches the answer. Please change your answer before deleting !",
+          type: "error",
         });
-        let { data } = res;
-        if (data.status == 200) {
-          this.getAllData();
-        } else {
-          let dataQues = this.detailAudio.question.find(
-            (item) => item.idQues == idQues
-          );
-          dataQues.answers = dataQues.answers.filter(
-            (item) => item.id != idAns
-          );
-        }
-      } catch (e) {
-        let dataQues = this.detailAudio.question.find(
-          (item) => item.idQues == idQues
+      } else {
+        dataQues.answers = dataQues.answers.filter(
+          (item) => item.id != idAns
         );
-        dataQues.answers = dataQues.answers.filter((item) => item.id != idAns);
       }
     },
     getAlphabet(data) {
-      return data.answers.findIndex(
-        (item) => item.answer_id == data.right_answers.answer_id
+      let index = data.answers.findIndex(
+        (item) => { return item.id == data.right_answers}
       );
+      return index;
     },
 
     uploadAudio() {
@@ -1070,7 +767,7 @@ export default {
                   text: itemAns.text,
                   answer_id: itemAns.answer_id,
                 })),
-                right_answers: item.right_answers,
+                right_answers: item.right_answers ? item.right_answers.answer_id : null,
               };
             }),
           };
@@ -1086,6 +783,19 @@ export default {
             this.file = data.audio;
             this.fileType = "audio"
           }
+          this.dataQuestion = this.detailAudio.question.map((question) => ({
+            id: question.idQues,
+            question: question.question,
+            level: question.level,
+            answers: question.answers.map((ans, index) => ({
+              id: ans.id,
+              text: ans.text,
+              question_id: ans.question_id,
+              alphabet: question.type == 1 ? this.alphabet[index].toLocaleUpperCase() : 'A',
+            })),
+            right_answers: question.right_answers,
+            type: question.type,
+          }));
         } else {
           this.$message({
             message: "Get information failed",
@@ -1098,51 +808,6 @@ export default {
             message: e.message,
             type: "error",
           });
-      }
-    },
-    async deleteTopic(id) {
-      try {
-        let rs = await baseRequest.post(`/admin/delete-topic-vocabulary`, {
-          id,
-        });
-        if (rs.data.status == 200) {
-          this.getAllTopic();
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async addTopic(id) {
-      try {
-        let { data } = await baseRequest.post(
-          `/admin/add-question-to-topic-vocabulary`,
-          {
-            idTopic: this.dataQuestion.id,
-            idQues: id,
-          }
-        );
-        if (data.status == 200) {
-          this.getDetailAudio();
-          this.dataQuestion = this.dataQuestion.filter((item) => item.id != id);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async removeTopic(id) {
-      try {
-        let { data } = await baseRequest.post(
-          `/admin/remove-question-from-topic-vocabulary`,
-          {
-            idTopic: this.dataQuestion.id,
-            idQues: id,
-          }
-        );
-        if (data.status == 200) {
-          this.getDetailAudio();
-        }
-      } catch (error) {
-        console.log(error);
       }
     },
     async saveChangeTitle(id) {
@@ -1175,25 +840,28 @@ export default {
             question: null,
             level: 1,
             type: 1,
-            dataAns: [
+            answers: [
               {
-                idAns: $Helper.randomId(),
+                id: $Helper.randomId(),
                 text: null,
                 alphabet: "A",
               },
             ],
-            answer: null,
+            right_answers: null,
           });
         } else if (type == 2) {
           this.dataQuestion.push({
             id: Date.now() + 1,
             question: null,
             level: 1,
-            dataAns: [],
-            answer: null,
+            answers: [],
+            right_answers: null,
             type: type,
           });
         }
+        setTimeout(() => {
+          this.EditQuestion(this.dataQuestion.length - 1);
+        }, 100);
       }
     },
     pushQuesMore() {
@@ -1271,9 +939,9 @@ export default {
           const headers = {
             "Content-Type": "multipart/form-data",
           };
-          debugger
           const formData = new FormData();
           formData.append("content", this.detailAudio.content);
+          formData.append("question", JSON.stringify(this.dataQuestion));
           formData.append("name", this.detailAudio.name);
           if(this.file && typeof this.file == 'object') {
             formData.append("file", this.file);
@@ -1349,13 +1017,13 @@ export default {
     renderAnswer(data, index) {
       if (data.question != null) {
         let sum = 0;
-        this.detailAudio.question[index].answers = [];
+        this.dataQuestion[index].answers = [];
         if (data.question.length > 0) {
           for (let i = 0; i < data.question.length; i++) {
             if (data.question[i] === "#") {
               sum++;
               let idTemp = $Helper.randomId();
-              this.detailAudio.question[index].answers.push({
+              this.dataQuestion[index].answers.push({
                 id: Date.now() + i,
                 answer_id: idTemp,
                 text: null,
@@ -1378,25 +1046,9 @@ export default {
         }
       )
         .then(async () => {
-          try {
-            let res = await baseRequest.post(
-              `/admin/delete-question-listening`,
-              { id: id }
-            );
-            let { data } = res;
-            if (data.status == 200) {
-              this.getDetailAudio();
-              this.$message({
-                type: "success",
-                message: "Deleted successfully",
-              });
-            }
-          } catch (e) {
-            this.$message({
-              type: "error",
-              message: "Deleted failed",
-            });
-          }
+          this.dataQuestion = this.dataQuestion.filter(
+              (item) => item.id != id
+          );
         })
         .catch(() => {
           return;
