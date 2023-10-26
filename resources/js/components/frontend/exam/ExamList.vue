@@ -4,14 +4,14 @@
       <div class="flex justify-between">
         <p class="text-[24px]">Exam List</p>
         <div>
-          <el-input class="border-2" style="border-color: #2162FF; border-radius: 5px;" placeholder="Search"></el-input>
+          <el-input v-model="searchName" class="border-2" style="border-color: #2162FF; border-radius: 5px;" placeholder="Search"></el-input>
         </div>
       </div>
       <el-tabs v-model="activeName">
         <el-tab-pane label="All" name="All">
           <div
             class="exam flex mt-3 justify-between "
-            v-for="item in data"
+            v-for="item in filterData"
             :key="item.id"
             @click="handleClick(item)"
           >
@@ -70,7 +70,9 @@ export default {
       currentClick: null,
       history_id: null,
       isExamDone: false,
-      activeName: "All"
+      activeName: "All",
+      searchName: "",
+      filterData: null
     };
   },
   components: {},
@@ -95,8 +97,18 @@ export default {
     }
   },
   created() {
-    console.log(this.data);
+    this.filterData = this.data
   },
+  watch: {
+    "searchName": {
+      handler(value) {
+          const x = this.data.filter(e => {
+            return !value || e.name.indexOf(value) > 0
+          })
+          this.filterData = x
+        }
+    }
+  }
 };
 </script>
   <style scoped>
