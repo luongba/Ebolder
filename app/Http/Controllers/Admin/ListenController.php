@@ -366,11 +366,12 @@ class ListenController extends Controller
 
     public function ListTopic(Request $request)
     {
+        
         try {
             if ($request->is_exam) {
-                $data = Listening::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+                $data = Listening::where('is_exam', 1)->orderBy('id', 'DESC')->paginate($request->page_size ?? 10);
             } else {
-                $data = Listening::all();
+                $data = Listening::query()->orderBy('name', 'ASC')->paginate($request->page_size ?? 10);
             }
             return response()->json([
                 "status" => 200,
