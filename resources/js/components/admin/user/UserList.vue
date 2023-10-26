@@ -3,9 +3,9 @@
     <LoadingVue v-if="isLoading" />
     <el-table
       :data="tableData"
-      style="width: 100%"
+      style="max-width: 97%"
     >
-      <el-table-column label="Name" prop="name"> </el-table-column>
+      <el-table-column fixed label="Name" prop="name"> </el-table-column>
       <el-table-column label="Email" prop="email"> </el-table-column>
       <el-table-column label="Phone" prop="phone"> </el-table-column>
       <el-table-column align="right">
