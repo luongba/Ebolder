@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuestionListening extends Model
 {
+    protected $table = 'question_listenings';
     protected $guarded = [];
 
     public function answerListening(){

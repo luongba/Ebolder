@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LevelController extends Controller
 {
@@ -138,14 +139,70 @@ class LevelController extends Controller
     public function detailLevel(Request $request)
     {
         ini_set('memory_limit', '-1');
-        $level = new Level();
-        $level = $level->where('id', $request->id)->with('Learn')->with('Reading')->with('Vocabulary')->with('Grammar')->with('Listen')->with('Speak')->with('Pronunciation')->first();
-        return response()->json([
-            "status" => 200,
-            "errorCode" => 0,
-            "data" => $level,
-            "message" => "Lấy level Thành công!"
-        ]);
+        try {
+            $level = new Level();
+            $level = $level->where('id', $request->id)
+                ->with([
+                    'Learn' => function($query) {
+                        $query->select('learns.id', 'learns.name', 'learns.is_exam')
+                            ->withCount('QuestionLesson');
+                    },
+                ])
+                ->with([
+                    'Reading' => function($query) {
+                        $query->select('readings.id', 'readings.name', 'readings.is_exam')
+                            ->withCount('QuestionReading');
+                    },
+                ])
+                ->with([
+                    'Vocabulary' => function($query) {
+                        $query->select('vocabularies.id', 'vocabularies.name', 'vocabularies.is_exam')
+                            ->withCount('QuestionVocabularyRelationship');
+                    },
+                ])
+                ->with([
+                    'Grammar' => function($query) {
+                        $query->select('grammars.id', 'grammars.name', 'grammars.is_exam')
+                            ->withCount('QuestionGrammarRelationship');
+                    },
+                ])
+                ->with([
+                    'Speak' => function($query) {
+                        $query->select('speaks.id', 'speaks.name', 'speaks.is_exam')
+                            ->withCount('QuestionSpeakRelationship');
+                    },
+                ])
+                ->with([
+                    'Pronunciation' => function($query) {
+                        $query->select('pronunciations.id', 'pronunciations.name', 'pronunciations.is_exam')
+                            ->withCount('QuestionPronunciation');
+                    },
+                ])
+                ->with([
+                    'Listen' => function($query) {
+                        $query->select('listenings.id', 'listenings.name', 'listenings.is_exam')
+                            ->with([
+                                'TopicAudioListen' => function ($query) {
+                                    $query->select('id')->withCount('questionListening');
+                                }
+                        ]);
+                    },
+                ])
+                ->first();
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "data" => $level,
+                "message" => "Lấy level Thành công!"
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 400,
+                "message" => "Xóa level Thất bại!"
+            ]);
+        }
     }
 
     public function updateLevel(Request $request)

@@ -694,6 +694,13 @@ export default {
 
     getChangeAudio(event) {
       const maxSize = 10 * 1024 * 1024; // 10MB
+      if(event.target.files[0].size > maxSize) {
+        this.$message({
+          message: "The file is larger than 10MB",
+          type: "error",
+        });
+        return;
+      }
       if (event.target.files[0].type == "audio/mpeg") {
         this.file = event.target.files[0];
         this.fileType = 'audio'
@@ -708,14 +715,6 @@ export default {
       } else {
          this.$message({
           message: "The file is not in the correct format",
-          type: "error",
-        });
-        return;
-      }
-
-      if(event.target.files[0].size > maxSize) {
-        this.$message({
-          message: "The file is larger than 10MB",
           type: "error",
         });
         return;

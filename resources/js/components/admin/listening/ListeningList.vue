@@ -1,102 +1,105 @@
 <template>
-  <div>
-    <div class="container">
-      <LoadingVue v-if="isLoading" />
-      <transition name="fade">
-        <div class="w-full h-full" v-if="show">
-          <div
-            class="absolute inset-0 bg-blur flex items-center justify-center"
-          >
-            <div class="w-[95%] md:w-[70%] bg-white shadow-sm px-4 py-4">
-              <div class="py-2 relative">
-                <h1 class="font-semibold uppercase text-[14px]">
-                  Create new Topic
-                </h1>
-                <span
-                  class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer"
-                  @click="show = !show"
-                >
-                  <i class="lnr-cross"></i>
-                </span>
+  <div class="container">
+    <LoadingVue v-if="isLoading" />
+    <transition name="fade">
+      <div class="w-full h-full" v-if="show">
+        <div
+          class="absolute inset-0 bg-blur flex items-center justify-center"
+        >
+          <div class="w-[95%] md:w-[70%] bg-white shadow-sm px-4 py-4">
+            <div class="py-2 relative">
+              <h1 class="font-semibold uppercase text-[14px]">
+                Create new Topic
+              </h1>
+              <span
+                class="absolute right-[5px] top-[5px] text-[20px] cursor-pointer"
+                @click="show = !show"
+              >
+                <i class="lnr-cross"></i>
+              </span>
+            </div>
+            <el-form :model="topicData" :rules="rules" ref="ruleForm">
+              <div class="my-2">
+                <el-form-item label="Name Topic" prop="name">
+                  <el-input
+                    placeholder="Name Topic"
+                    v-model="topicData.name"
+                  ></el-input>
+                </el-form-item>
               </div>
-              <el-form :model="topicData" :rules="rules" ref="ruleForm">
-                <div class="my-2">
-                  <el-form-item label="Name Topic" prop="name">
-                    <el-input
-                      placeholder="Name Topic"
-                      v-model="topicData.name"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-                <div class="">
-                  <el-form-item label="Description" prop="description">
-                    <el-input
-                      type="textarea"
-                      placeholder="Description"
-                      rows="3"
-                      v-model="topicData.description"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-                <div class="">
-                  <el-form-item label="Exam" prop="isExam">
-                    <el-switch v-model="topicData.isExam"></el-switch>
-                  </el-form-item>
-                </div>
-                <div class="flex justify-end items-center mt-4">
-                  <el-button plain @click="resetFeild">Cancel</el-button>
-                  <el-button type="primary" @click="createTopic('ruleForm')"
-                    >Create</el-button
-                  >
-                </div>
-              </el-form>
-            </div>
-          </div>
-        </div>
-      </transition>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div
-          class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
-          :style="item.is_exam == 1 ? 'border: 4px solid #3f6ad8 !important' : ''"
-          v-for="item in listTopic"
-          :key="item.id"
-        >
-          <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
-          <div class="flex items-center">
-            <a
-              :href="`${ApiUrl}/admin/detail-topic-listening/${item.id}`"
-              class="ml-2"
-            >
-              <el-button
-                size="small"
-                plain
-                type="primary"
-                icon="el-icon-edit"
-                circle
-              ></el-button>
-            </a>
-            <el-button
-              size="small"
-              type="danger"
-              class="ml-2"
-              plain
-              icon="el-icon-delete"
-              circle
-              @click="deleteTopic(item.id)"
-            ></el-button>
-          </div>
-        </div>
-        <div
-          class="bg-white shadow-sm flex items-center justify-center cursor-pointer py-4 px-4 text-[14px] font-semibold"
-          @click="show = !show"
-        >
-          <div class="flex items-center">
-            <div class="w-[32px] h-[32px] flex items-center justify-center">
-              <i class="el-icon-plus text-[20px]"></i>
-            </div>
+              <div class="">
+                <el-form-item label="Description" prop="description">
+                  <el-input
+                    type="textarea"
+                    placeholder="Description"
+                    rows="3"
+                    v-model="topicData.description"
+                  ></el-input>
+                </el-form-item>
+              </div>
+              <div class="">
+                <el-form-item label="Exam" prop="isExam">
+                  <el-switch v-model="topicData.isExam"></el-switch>
+                </el-form-item>
+              </div>
+              <div class="flex justify-end items-center mt-4">
+                <el-button plain @click="resetFeild">Cancel</el-button>
+                <el-button type="primary" @click="createTopic('ruleForm')"
+                  >Create</el-button
+                >
+              </div>
+            </el-form>
           </div>
         </div>
       </div>
+    </transition>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div
+        class="bg-white shadow-sm flex items-center justify-center cursor-pointer py-4 px-4 text-[14px] font-semibold"
+        @click="show = !show"
+      >
+        <div class="flex items-center">
+          <div class="w-[32px] h-[32px] flex items-center justify-center">
+            <i class="el-icon-plus text-[20px]"></i>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
+        :style="item.is_exam == 1 ? 'border: 4px solid #3f6ad8 !important' : ''"
+        v-for="item in listTopic"
+        :key="item.id"
+      >
+        <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
+        <div class="flex items-center">
+          <a
+            :href="`${ApiUrl}/admin/detail-topic-listening/${item.id}`"
+            class="ml-2"
+          >
+            <el-button
+              size="small"
+              plain
+              type="primary"
+              icon="el-icon-edit"
+              circle
+            ></el-button>
+          </a>
+          <el-button
+            size="small"
+            type="danger"
+            class="ml-2"
+            plain
+            icon="el-icon-delete"
+            circle
+            @click="deleteTopic(item.id)"
+          ></el-button>
+        </div>
+      </div>
+      
+    </div>
+    <div class="mt-2 flex items-center justify-center"> 
+      <el-pagination background layout="prev, pager, next" v-model="page" :page-size="page_size" :total="total" @current-change="handleChangePage" />
     </div>
   </div>
 </template>
@@ -136,6 +139,9 @@ export default {
         ],
       },
       isLoading: false,
+      page: 1,
+      total: 0,
+      page_size: 11,
     };
   },
   computed: {},
@@ -181,21 +187,22 @@ export default {
         }
       });
     },
+    async handleChangePage (page) {
+      this.page = page
+      await this.getAllTopic()
+    },
     async getAllTopic() {
       try {
         this.isLoading = true;
-        let rs = await baseRequest.get(`/admin/topic-list-listening`);
-        if (rs.data.status == 200) {
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1000);
-          this.listTopic = rs.data.data;
+        let {data} = await baseRequest.get(`/admin/topic-list-listening?page=${this.page}&page_size=${this.page_size}`);
+        if (data.status == 200) {
+          data = data.data
+          this.isLoading = false;
+          this.listTopic = data.data;
+          this.total = data.total
         }
       } catch (e) {
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 1000);
-        console.log(e);
+        this.isLoading = false;
       }
     },
     async deleteTopic(id) {
@@ -226,7 +233,6 @@ export default {
               });
             }
           } catch (e) {
-            console.log(e);
             this.$message({
               type: "error",
               message: "Delete error",
