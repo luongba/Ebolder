@@ -3,34 +3,29 @@
     <div class="sticky inset-x-0 top-0 bg-white z-50">
       <header-component :user="user" />
     </div>
-    <div class="grid grid-cols-5">
-      <div class="flex relative">
+    <div class="flex w-full h-full overflow-hidden">
+      <div class="flex relative max-h-full w-[350px] overflow-x-auto">
         <!-- Sidebar -->
-        <div class="absolute flex top-0 z-20" :class="[right ? 'right-0 flex-row' : 'left-0 flex-row-reverse']">
+        <div class="absolute flex top-0 z-20 w-full">
           <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
-            class="p-3 focus:outline-none transition-color duration-300 bg-white rounded-br-2xl h-fit">
+            class="p-3 focus:outline-none transition-color duration-700 bg-white rounded-br-2xl h-fit">
             <span class="block transform origin-center font-bold">
               <img src="/images/learn/right.svg" alt="" />
             </span>
           </button>
           <!-- Sidebar Content -->
-          <div ref="content" class="transition-all duration-700 bg-white overflow-hidden"
+          <div ref="content" class="bg-white overflow-hidden"
             :class="[open ? 'w-[350px]' : 'w-0']">
-            <ListLesson :data="listLevel" :lessonType="lessonType" v-model="open" :onGetLessonDetail="getLessonDetail" />
+            <ListLesson :lessons="listLevel" :lessonType="lessonType" v-model="open" :onGetLessonDetail="getLessonDetail" />
             <slot></slot>
           </div>
         </div>
-
-        <transition name="fade">
-          <div v-if="dimmer && open" @click="toggle()"
-            class="flex-1 bg-gray-400 bg-opacity-75 active:outline-none z-10" />
-        </transition>
       </div>
-      <div class="col-span-3 bg-white">
-        <Lesson :content="lessonContent" />
+      <div class="bg-white my-3 rounded mx-5 flex-grow overflow-x-auto">
+        <Lesson :content="lessonContent"/>
       </div>
-      <div class="col">
-        QUESTIONS
+      <div class="w-[350px] my-3 rounded mr-3">
+        <Questions :questions="lessonQuestions"/>
       </div>
     </div>
   </div>
@@ -38,15 +33,16 @@
 <script>
 import baseRequest from "../../../utils/baseRequest";
 import "./learn.css";
-import ListLesson from "./ListLesson.vue"
-import Lesson from './Lesson.vue'
+import ListLesson from "./ListLesson.vue";
+import Lesson from './Lesson.vue';
+import Questions from './Questions.vue';
 
 export default {
   props: ["user", "query"],
-
   components: {
     ListLesson,
-    Lesson
+    Lesson,
+    Questions
   },
 
   data() {
@@ -72,87 +68,6 @@ export default {
   methods: {
     toggle() {
       this.open = !this.open;
-    },
-    x(itemLevel, type) {
-      this.listLesson = [];
-      this.keyUrl = type;
-      this.idLevel = itemLevel.id;
-      switch (type) {
-        case "WRITING": {
-          this.listLesson = this.listLevel.find(
-            (item) => item.id === itemLevel.id
-          ).lessons;
-          break;
-        }
-        case "READ": {
-          this.listLesson = this.listLevel.find(
-            (item) => item.id === itemLevel.id
-          ).reads;
-          break;
-        }
-        case "LISTEN": {
-          this.listLesson = this.listLevel.find(
-            (item) => item.id === itemLevel.id
-          ).listens;
-          break;
-        }
-        case "VOCABULARY": {
-          this.listLesson = this.listLevel.find(
-            (item) => item.id === itemLevel.id
-          ).vocabularies;
-          break;
-        }
-        case "GRAMMAR": {
-          this.listLesson = this.listLevel.find(
-            (item) => item.id === itemLevel.id
-          ).grammars;
-          break;
-        }
-        case "SPEAKING": {
-          this.listLesson = this.listLevel.find(
-            (item) => item.id === itemLevel.id
-          ).speaks;
-          break;
-        }
-        case "PRONUNCIATION": {
-          this.listLesson = this.listLevel.find(
-            (item) => item.id === itemLevel.id
-          ).pronunciations;
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-      this.show = true;
-    },
-    async getAllLevel() {
-      const loading = this.$loading({
-        lock: true,
-        text: "Loading",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)",
-      });
-      try {
-        let rs = await baseRequest.get(`/admin/get-all-level`);
-        if (rs.data.status == 200) {
-          this.listLevel = rs.data.data.map((item) => ({
-            id: item.id,
-            name: item.name,
-            listens: item.listen,
-            reads: item.reading,
-            vocabularies: item.vocabulary,
-            grammars: item.grammar,
-            lessons: item.learn || [],
-            speaks: item.speak || [],
-            pronunciations: item.pronunciation || [],
-          }));
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        loading.close();
-      }
     },
     async checkPassedLevel() {
       //   let temp = this.dataHistory;
@@ -189,36 +104,6 @@ export default {
       } else {
         this.listLevel = this.listLevel.reverse().slice(0, this.level);
       }
-    },
-    openExamPage(type, id) {
-      switch (type) {
-        case "READ":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Reading?testId=${id}&levelId=${this.idLevel}`;
-          break;
-        case "LISTEN":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Listening?testId=${id}&levelId=${this.idLevel}`;
-          break;
-        case "VOCABULARY":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Vocabulary?testId=${id}&levelId=${this.idLevel}`;
-          break;
-        case "GRAMMAR":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Grammar?testId=${id}&levelId=${this.idLevel}`;
-          break;
-        case "WRITING":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Writing?testId=${id}&levelId=${this.idLevel}`;
-          break;
-        case "SPEAKING":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Speaking?testId=${id}&levelId=${this.idLevel}`;
-          break;
-        case "PRONUNCIATION":
-          window.location.href = `${$Api.baseUrl}/english-level-test/Pronunciation?testId=${id}&levelId=${this.idLevel}`;
-          break;
-        default:
-          window.location.href = `${$Api.baseUrl}/lesson/${id}`;
-      }
-    },
-    findLevel(id) {
-      return this.examResult.find((item) => item.level_id === id);
     },
     async getFullHistory() {
       try {
@@ -281,7 +166,8 @@ export default {
         if (rs.data.status == 200) {
           const data = rs.data.data;
           if (data) {
-            this.listLevel = data[this.lessonType]
+            this.listLevel = data[this.lessonType];
+            console.log('this.listLevel learnpage', this.listLevel);
           }
         }
       } catch (e) {
@@ -303,10 +189,8 @@ export default {
         if (rs.data.status == 200) {
           const data = rs.data.data;
           if (data) {
-            this.lessonContent = data.description;
+            this.lessonContent = data;
             this.lessonQuestions = data[`question_${this.lessonType}`];
-            console.log('this.lessonType', this.lessonType);
-            console.log('data[`question_${this.lessonType}`]', data[`question_${this.lessonType}`]);
           }
         }
       } catch (e) {
@@ -317,7 +201,6 @@ export default {
     }
   },
   async created() {
-    await this.getAllLevel();
     await this.getFullHistory();
     await this.getDetailLevel();
     await this.getLessonDetail(this.listLevel[0]?.id)
@@ -327,112 +210,13 @@ export default {
 };
 </script>
 <style scoped>
-.title {
-  font-size: 40px;
-  text-align: center;
-  z-index: 3;
-  color: #fff;
+@media only screen and (min-width: 1280px) {
 }
 
-::-webkit-scrollbar {
-  display: none;
+@media only screen and (max-width: 1279px) {
 }
 
-.box-content {
-  width: 100%;
-  position: relative;
-  padding: 40px;
-  z-index: 6;
-  background: linear-gradient(96.6deg,
-      rgba(0, 115, 121, 0.112) 11.23%,
-      rgba(0, 95, 100, 0) 115.9%);
-
-  box-sizing: border-box;
-}
-
-.box-filter {
-  position: absolute;
-  inset: 0;
-  filter: blur(8px);
-  -webkit-filter: blur(8px);
-  z-index: 5;
-}
-
-.box-disable {
-  cursor: not-allowed;
-  position: relative;
-}
-
-.box-disable::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: #fff;
-  transform: rotate(45deg);
-}
-
-.box-disable::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: #fff;
-  transform: rotate(-45deg);
-}
-
-.box-disable:hover {
-  background: transparent;
-  color: #fff;
-}
-
-.bg-box-lesson {
-  width: 80%;
-  left: 50%;
-  top: 35%;
-  transform: translate(-50%, -50%);
-  /* z-index: 6; */
-  background: linear-gradient(96.6deg,
-      rgba(0, 115, 121, 0.112) 11.23%,
-      rgba(0, 95, 100, 0) 115.9%);
-  box-sizing: border-box;
-}
-
-.bg-blur {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
-}
-
-.fade-enter,
-.fade-leave-to
-
-/* .fade-leave-active below version 2.1.8 */
-  {
-  opacity: 0;
-}
-
-.exam {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  font-weight: 600;
-}
-
-.exam.active {
-  background: green;
-  color: #fff;
-}
-
-.exam.active>.exam-pass {
-  display: flex;
+@media only screen and (max-width: 900px) {
 }
 </style>
   
