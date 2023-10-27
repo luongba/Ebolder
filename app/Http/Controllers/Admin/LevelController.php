@@ -142,13 +142,52 @@ class LevelController extends Controller
         try {
             $level = new Level();
             $level = $level->where('id', $request->id)
-                ->with('Learn:id,name,is_exam')
-                ->with('Reading:id,name,is_exam')
-                ->with('Vocabulary:id,name,is_exam')
-                ->with('Grammar:id,name,is_exam')
-                ->with('Listen:id,name,is_exam')
-                ->with('Speak:id,name,is_exam')
-                ->with('Pronunciation:id,name,is_exam')
+                ->with([
+                    'Learn' => function($query) {
+                        $query->select('learns.id', 'learns.name', 'learns.is_exam')
+                            ->withCount('QuestionLesson');
+                    },
+                ])
+                ->with([
+                    'Reading' => function($query) {
+                        $query->select('readings.id', 'readings.name', 'readings.is_exam')
+                            ->withCount('QuestionReading');
+                    },
+                ])
+                ->with([
+                    'Vocabulary' => function($query) {
+                        $query->select('vocabularies.id', 'vocabularies.name', 'vocabularies.is_exam')
+                            ->withCount('QuestionVocabularyRelationship');
+                    },
+                ])
+                ->with([
+                    'Grammar' => function($query) {
+                        $query->select('grammars.id', 'grammars.name', 'grammars.is_exam')
+                            ->withCount('QuestionGrammarRelationship');
+                    },
+                ])
+                ->with([
+                    'Speak' => function($query) {
+                        $query->select('speaks.id', 'speaks.name', 'speaks.is_exam')
+                            ->withCount('QuestionSpeakRelationship');
+                    },
+                ])
+                ->with([
+                    'Pronunciation' => function($query) {
+                        $query->select('pronunciations.id', 'pronunciations.name', 'pronunciations.is_exam')
+                            ->withCount('QuestionPronunciation');
+                    },
+                ])
+                ->with([
+                    'Listen' => function($query) {
+                        $query->select('listenings.id', 'listenings.name', 'listenings.is_exam')
+                            ->with([
+                                'TopicAudioListen' => function ($query) {
+                                    $query->select('id')->withCount('questionListening');
+                                }
+                        ]);
+                    },
+                ])
                 ->first();
             return response()->json([
                 "status" => 200,

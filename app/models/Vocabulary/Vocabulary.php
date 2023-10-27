@@ -11,4 +11,8 @@ class Vocabulary extends Model
     public function QuestionVocabulary(){
         return $this->belongsToMany('App\models\Vocabulary\QuestionVocabulary','question_vocabulary_relationship' );
     }
+    
+    public function QuestionVocabularyRelationship(){
+        return $this->hasMany('App\models\Vocabulary\QuestionVocabularyRelationship','vocabulary_id' );
+    }
 }

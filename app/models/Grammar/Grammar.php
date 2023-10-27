@@ -11,4 +11,8 @@ class Grammar extends Model
     public function QuestionGrammar(){
         return $this->belongsToMany('App\models\Grammar\QuestionGrammar','question_grammar_relationship' );
     }
+
+    public function QuestionGrammarRelationship(){
+        return $this->hasMany('App\models\Grammar\QuestionGrammarRelationship','grammar_id' );
+    }
 }
