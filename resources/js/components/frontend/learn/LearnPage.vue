@@ -3,29 +3,31 @@
     <div class="sticky inset-x-0 top-0 bg-white z-50">
       <header-component :user="user" />
     </div>
-    <div class="flex w-full h-full overflow-hidden">
-      <div class="flex relative max-h-full w-[350px] overflow-x-auto">
+    <div class="w-full h-full overflow-hidden content">
+      <div class="flex max-h-full w-[350px] overflow-x-auto sidebar">
         <!-- Sidebar -->
-        <div class="absolute flex top-0 z-20 w-full">
+        <div class="flex w-full">
           <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
-            class="p-3 focus:outline-none transition-color duration-700 bg-white rounded-br-2xl h-fit">
+            class="focus:outline-none transition-color duration-700 sidebarButton">
             <span class="block transform origin-center font-bold">
               <img src="/images/learn/right.svg" alt="" />
             </span>
           </button>
           <!-- Sidebar Content -->
-          <div ref="content" class="bg-white overflow-hidden"
+          <div ref="content" class="bg-white overflow-hidden listLesson"
             :class="[open ? 'w-[350px]' : 'w-0']">
-            <ListLesson :lessons="listLevel" :lessonType="lessonType" v-model="open" :onGetLessonDetail="getLessonDetail" />
+            <ListLesson :lessons="listLevel" :lessonType="lessonType" :levelName="levelName" v-model="open" :onGetLessonDetail="getLessonDetail" />
             <slot></slot>
           </div>
         </div>
       </div>
-      <div class="bg-white my-3 rounded mx-5 flex-grow overflow-x-auto">
-        <Lesson :content="lessonContent"/>
-      </div>
-      <div class="w-[350px] my-3 rounded mr-3">
-        <Questions :questions="lessonQuestions"/>
+      <div class="main">
+        <div class="rounded overflow-x-auto lesson">
+          <Lesson :content="lessonContent"/>
+        </div>
+        <div class="w-[350px] rounded  questions">
+          <Questions :questions="lessonQuestions"/>
+        </div>
       </div>
     </div>
   </div>
@@ -54,15 +56,16 @@ export default {
       levelCountPassed: 1,
       examResult: [],
       keyUrl: "",
-      idLevel: 29,
+      levelId: null,
       dataHistory: [],
       targetScore: 20,
       open: true,
       dimmer: true,
       right: false,
-      lessonType: 'grammar',
+      lessonType: '',
       lessonContent: '',
-      lessonQuestions: null
+      lessonQuestions: null,
+      levelName: ''
     };
   },
   methods: {
@@ -140,7 +143,7 @@ export default {
           temp = "Lesson";
       }
       let dataArrTemp = this.dataHistory.filter(
-        (itemH) => itemH.level_id == this.idLevel
+        (itemH) => itemH.level_id == this.levelId
       );
       let rs;
       if (dataArrTemp.length > 0) {
@@ -162,12 +165,19 @@ export default {
         background: "rgba(0, 0, 0, 0.7)",
       });
       try {
-        let rs = await baseRequest.post(`/admin/detail-level`, { id: this.idLevel });
+        let rs = await baseRequest.post(`/admin/detail-level`, { id: this.levelId });
         if (rs.data.status == 200) {
-          const data = rs.data.data;
+          const data = {
+            grammar: rs.data.data?.grammar,
+            writing: rs.data.data?.learn,
+            listening: rs.data.data?.listen,
+            pronunciation: rs.data.data?.pronunciation,
+            reading: rs.data.data?.reading,
+            speaking: rs.data.data?.speak,
+          };
+          console.log(data);
           if (data) {
             this.listLevel = data[this.lessonType];
-            console.log('this.listLevel learnpage', this.listLevel);
           }
         }
       } catch (e) {
@@ -187,7 +197,14 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/detail-topic-${this.lessonType}/${this.selectedLessonId}`);
         if (rs.data.status == 200) {
-          const data = rs.data.data;
+          let data;
+          if(this.lessonType == 'listening') {
+            data = {
+              name: rs.data.data?.name,
+            }
+          } else {
+            data = rs.data.data;
+          }
           if (data) {
             this.lessonContent = data;
             this.lessonQuestions = data[`question_${this.lessonType}`];
@@ -201,6 +218,11 @@ export default {
     }
   },
   async created() {
+    const {skill, levelId, levelName} = this.query;
+    this.lessonType = skill ? skill.toLowerCase() : '';
+    this.levelId = levelId;
+    this.levelName = levelName;
+
     await this.getFullHistory();
     await this.getDetailLevel();
     await this.getLessonDetail(this.listLevel[0]?.id)
@@ -211,12 +233,84 @@ export default {
 </script>
 <style scoped>
 @media only screen and (min-width: 1280px) {
+  .content {
+    display: flex;
+  }
+  .sidebar {
+  }
+  .lesson {
+    flex-grow: 1;
+    margin: 0.75rem 2.25rem;
+  }
+  .questions {
+    width: 350px;
+    margin: 0.75rem 0.75rem 0.75rem 0;
+  }
+  .sidebarButton {
+    border-radius: 0px 0px 24px 0px;
+    border-right: 2px solid var(--color-base-200, #F4F5F6);
+    background: var(--color-white-100, #FFF);
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
+    padding: 0.75rem;
+    height: fit-content;
+  }
+  .main {
+    width: 100%;
+    display: flex;
+  }
 }
 
 @media only screen and (max-width: 1279px) {
+  .content {
+    display: flex;
+  }
+  .sidebarButton  {
+    border-radius: 0px 0px 24px 0px;
+    border-right: 2px solid var(--color-base-200, #F4F5F6);
+    background: var(--color-white-100, #FFF);
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
+    height: 96px;
+  }
+  .main {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 12px;
+  }
+  .sidebar {
+    height: 100%;
+    position: absolute;
+  }
+  .lesson {
+    margin-right: 12px;
+  }
 }
 
 @media only screen and (max-width: 900px) {
+  .content {
+    display: block;
+  }
+  .lesson {
+    width: 100%;
+    flex-grow: 1;
+    margin: 0;
+    border-radius: unset !important;
+  }
+  .questions {
+    width: 100%;
+    border-radius: unset !important;
+  }
+  .sidebar {
+    height: 100%;
+    position: absolute;
+  }
+  .sidebarButton  {
+    border-radius: 0px 0px 24px 0px;
+    border-right: 2px solid var(--color-base-200, #F4F5F6);
+    background: var(--color-white-100, #FFF);
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
+    height: 96px;
+  }
 }
 </style>
   

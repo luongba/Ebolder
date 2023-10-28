@@ -35,7 +35,7 @@
             class="relative flex flex-col min-w-0 break-words w-full mb-6 bg-white rounded-br-[16px] rounded-bl-[16px] rounded-tr-[16px]">
             <div class="flex-auto">
                 <div class="tab-content tab-space flex">
-                    <div v-bind:class="{ 'hidden': openTab !== 1, 'block': openTab === 1 }" class=" pb-4">
+                    <div v-bind:class="{ 'hidden': openTab !== 1, 'block': openTab === 1 }" class=" pb-4 w-full">
                         <div class=" border-b-2 border-[#f4f5f6]" v-for="item in this.lessons" :key="item.id"
                             :class="{ 'bg-[#2162FF] text-white': selectedLessonId == item.id }"
                             @click="getLessonDetail(item.id)">
@@ -44,7 +44,7 @@
                                     <div class="flex flex-row">
                                         <div class="rounded p-1.5  w-fit me-[10px] font-bold text-sm text-white"
                                             :class="{ 'bg-[#447bff]': selectedLessonId == item.id, 'bg-[#141416] ': selectedLessonId != item.id }">
-                                            A1-A2
+                                            {{ levelName }}
                                         </div>
                                         <div class="rounded p-1.5 w-fit me-[10px] font-bold text-sm uppercase flex flex-row items-center"
                                             :class="{ 'text-white bg-[#447bff]': selectedLessonId == item.id, 'text-[#2162FF] bg-[#D3E0FF]': selectedLessonId != item.id }">
@@ -74,7 +74,7 @@
 import BookFill from '../../../svg/BookFill.vue';
 
 export default {
-    props: ["lessons", "lessonType", "value", "onGetLessonDetail"],
+    props: ["lessons", "lessonType", "value", "onGetLessonDetail", "levelName"],
     components: {
         BookFill
     },

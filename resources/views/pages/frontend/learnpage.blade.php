@@ -16,7 +16,7 @@
     <div id="app">
         <div class="w-full h-full bg-app">
 
-            <learn-page :user="{{ json_encode(Auth::user()) }}" />
+            <learn-page :user="{{ json_encode(Auth::user()) }}" :query ="{{ json_encode(['levelName' => $levelName ?? '', 'levelId' => $levelId ?? '', 'skill' => $skill ?? '']) }}"/>
         </div>
 
     </div>

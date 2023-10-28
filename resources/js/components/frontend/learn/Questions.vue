@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white h-full p-3 flex flex-column rounded">
+    <div class="bg-white h-full p-3 flex flex-column md:rounded">
         <div class="font-bold text-2xl mb-4"> Questions</div>
         <div v-show="this.questions?.length > 0">
         <div class="flex flex-row flex-wrap mb-4">
@@ -34,7 +34,7 @@
         <!-- , 'border-[#E6E8EC]': isQuestionAnswered(answer?.id, selectedQuestion?.id) == false -->
         <div class="flex-grow">
             <div v-for="(answer, index) in selectedQuestion?.answers" :key="index" class="rounded-[8px] border-2 p-3 mb-3"
-                :class="{ 'border-[#2162FF]': isQuestionAnswered(answer?.id, selectedQuestion?.id)}"
+                :class="{ 'border-[#2162FF]': isQuestionAnswered(answer?.id, selectedQuestion?.id)} "
                 @click="handleSelectAnswer(answer?.id, selectedQuestion?.id)">
                 <input type="radio" :id="`test${answer?.id}`" :value="answer?.id" :checked="isQuestionAnswered(answer?.id, selectedQuestion?.id)" />
                 <label class="text-lg font-semibold ml-1">
@@ -97,8 +97,6 @@ export default {
             return executed;
         },
         isQuestionAnswered(answerId, questionId) {
-            // console.log("answerId = ", answerId, "questionId=", questionId);
-            // console.log(this.selectedAnswers[questionId] == answerId);
             return this.selectedAnswers[questionId] == answerId;
         }
     },
