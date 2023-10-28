@@ -65,7 +65,7 @@ export default {
   data() {
     return {
       dicsImg: require('../../../../../public/images/landing/dics.svg'),
-      gameImg: require('../../../../../public/images/landing/games.svg'),
+      gameImg: require('../../../../../public/images/landing/game-icon.svg'),
       dics: [
         {
           name: "Oxford Learner's Dictionaries",
