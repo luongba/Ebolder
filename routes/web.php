@@ -72,7 +72,7 @@ Route::prefix('/')->group(function () {
 
     Route::get('/choose-action', 'HomeController@chooseAction')->name('choose-action')->middleware('checkLogin');
 
-
+    Route::get('/features', 'HomeController@features')->name('home.feature')->middleware('checkLogin');
 
 });
 

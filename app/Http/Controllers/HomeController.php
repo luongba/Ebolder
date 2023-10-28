@@ -328,7 +328,6 @@ class HomeController extends Controller
     public function checkHistoryExam(Request $request){
         
         try {
-            $history;
             if($request->status == 'learn'){
                 $history = HistoryExam::where('test_type', $request->type)->where('exam_id', $request->exam_id)->where('user_id', Auth::user()->id)->where('level_id', $request->level_id)->orderBy('id', 'desc')->first();
             }else {
@@ -368,6 +367,10 @@ class HomeController extends Controller
 
     public function chooseAction(){
         return view('pages.frontend.chooseAction');
+    }
+
+    public function features() {
+        return view('pages.frontend.features');
     }
 
 
