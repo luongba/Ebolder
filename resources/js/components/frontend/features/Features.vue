@@ -64,8 +64,8 @@
 export default {
   data() {
     return {
-      dicsImg: require('../../../../../public/images/landing/dics.png'),
-      gameImg: require('../../../../../public/images/landing/games.png'),
+      dicsImg: require('../../../../../public/images/landing/dics.svg'),
+      gameImg: require('../../../../../public/images/landing/games.svg'),
       dics: [
         {
           name: "Oxford Learner's Dictionaries",
@@ -215,7 +215,8 @@ export default {
   background-color: #f4f5f6;
   border-radius: 5px;
 }
-.dic-item a {
+.dic-item a, .dic-item a:hover {
   text-decoration: none;
+  color: unset;
 }
 </style>
