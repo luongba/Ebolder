@@ -184,11 +184,20 @@ Vue.component(
     require("./components/frontend/exam/ExamList.vue").default
 );
 
+Vue.component(
+    "exam-detail",
+    require("./components/frontend/exam/ExamDetail.vue").default
+);
+
 //frontend
 //header
 Vue.component(
     "header-component",
     require("./components/frontend/header.vue").default
+);
+Vue.component(
+    "main-header-component",
+    require("./components/frontend/MainHeader.vue").default
 );
 //footer
 Vue.component(

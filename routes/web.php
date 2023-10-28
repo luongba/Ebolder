@@ -82,6 +82,7 @@ Route::middleware(['checkLogin'])->group(function () {
     //exam
     Route::prefix('/exam')->name('exam.')->group(function () {
         Route::get('/', 'Admin\ExamController@renderExamList')->name('list');
+        Route::get('/{id}', 'Admin\ExamController@renderExamDetail')->name('detail');
         Route::get('/result/{id}', 'Admin\ExamController@renderResultView')->name('result');
     });
 

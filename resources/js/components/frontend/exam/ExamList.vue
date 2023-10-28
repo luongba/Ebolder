@@ -81,8 +81,7 @@ export default {
       this.show = value;
     },
     async handleClick(item) {
-      alert('clcik')
-     
+      window.location.href = `${$Api.baseUrl}/exam/${item.id}`;
     },
     async startExam() {
       if (this.currentClick !== null && !this.isExamDone) {
