@@ -313,7 +313,8 @@ class HomeController extends Controller
     public function historyPage(){
         $user = Auth::user();
         $history = ExamHistoryFinal::where('user_id', $user->id)->with('Exam')->orderBy('created_at', 'desc')->take(20)->get();
-        return view('pages.frontend.history', compact('history'));
+        $historyStudy = HistoryLearn::where('user_id', $user->id)->orderBy('created_at', 'desc')->take(20)->get();
+        return view('pages.frontend.history', compact('history', 'historyStudy'));
     }
     public function historyLearnPage(){
         $user = Auth::user();
