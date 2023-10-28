@@ -49,13 +49,10 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item>
-                  <span @click="learn()">Lịch sử học</span>
+                  <span @click="history()">History</span>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <span @click="history()">Lịch sử làm bài thi</span>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <span @click="logout()">Đăng xuất</span>
+                  <span @click="logout()">Logout</span>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
