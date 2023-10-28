@@ -137,7 +137,7 @@ export default {
 };
 </script>
 <style scoped>
->>> .el-timeline-item__timestamp {
+.el-timeline-item__timestamp {
   font-size: 16px;
   line-height: 1.2;
 }
