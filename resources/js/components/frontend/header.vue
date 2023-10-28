@@ -28,8 +28,8 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/tools" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
-                  Tools
+                <a href="/features" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
+                  Features
                 </a>
               </li>
             </ul>
@@ -90,4 +90,9 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+a, a:hover {
+  text-decoration: none;
+  color: unset;
+}
+</style>

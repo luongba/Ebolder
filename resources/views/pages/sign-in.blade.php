@@ -97,8 +97,6 @@
                                         </div>
 
                                         <div class="d-flex align-items-end flex-column">
-                                            <a href="{{route('recover-password')}}" class="btn-link">Recover
-                                                Password</a>
                                             <button type="submit" class="btn login-btn dev-submit-button w-100">Sign
                                                 in</button>
                                         </div>
