@@ -81,7 +81,7 @@
             <h2 class="text-[28px] xl:text-[42px] font-semibold leading-[120%] text-center my-[16px] xl:my-[48px]">
                 <p class="text-center">Why should you <br> study here?</p>
             </h2>
-            <div class="xl:w-[62.5%] w-[95%] bg-[#E8F9ED] mx-auto relative bg-blur-f
+            <div class="xl:w-[62.5%] w-[95%] bg-[#F7F9F9] mx-auto relative bg-blur-f
                 grid xl:grid-cols-2 grid-cols-1]">
                 <div class="border-r-2 border-[#E6E8EC]">
                     <div class="flex h-full justify-evenly flex-col py-8 px-8 md:px-[60px]">
@@ -100,21 +100,21 @@
                     <div class="border-b-2 border-[#E6E8EC] py-8 px-8 md:px-[60px] flex justify-between">
                         <div>
                             <p class="text-[20px] mt-4 font-semibold">Reality</p>
-                            <p>Suitable for people going to school or working</p>
+                            <p class="font-light text-[#777E90]">Suitable for people going to school or working</p>
                         </div>
                         <img :src="reality" />
                     </div>
                     <div class="border-b-2 border-[#E6E8EC] py-8 px-8 md:px-[60px] flex justify-between">
                         <div class="">
                             <p class="text-[20px] mt-4 font-semibold">Enough knowledge</p>
-                            <p>Understand sentence structure clearly</p>
+                            <p class="font-light text-[#777E90]">Understand sentence structure clearly</p>
                         </div>
                         <img :src="knowledge" />
                     </div>
                     <div class="py-8 px-8 md:px-[60px] flex justify-between">
                         <div class="">
                             <p class="text-[20px] mt-4 font-semibold">Follow the route</p>
-                            <p>The roadmap is designed by experienced teachers</p>
+                            <p class="font-light text-[#777E90]">The roadmap is designed by experienced teachers</p>
                         </div>
                         <img :src="route" />
                     </div>
@@ -144,7 +144,7 @@
                 <img :src="listening" />
             </div>
         </div>
-        <div class="md:mt-[100px] mt-[80px]">
+        <div class="md:mt-[100px] mt-[80px] xl:w-[62.5%] w-[95%] mx-auto  ">
             <footer-component />
         </div>
     </div>

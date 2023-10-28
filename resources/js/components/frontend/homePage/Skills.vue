@@ -2,14 +2,15 @@
     <div class="xl:w-[62.5%] w-[95%] mx-auto rounded-br-[16px] rounded-bl-[16px] shadow">
 
         <div class="w-full relative">
-            <div class="absolute right-0 top-[-13px] sm:top-[-40px] z-10 cursor-pointer" @click="openLink">
-                <img :src="startButton" class="hidden sm:block"/>
+            <div class="absolute right-0 top-[-13px] sm:top-[-40px] z-10 cursor-pointer" @click="handleNavigateToLearn">
+                <img :src="startButton" class="hidden sm:block" />
                 <img :src="startMobileButton" class="sm:hidden" />
             </div>
             <div class="flex border-b w-full">
                 <!-- flex-grow px-5 bg-white -->
-                <ul class=" px-3 sm:px-4 flex mb-0 list-none flex-wrap pt-2 sm:pt-3 bg-white flex-grow rounded-tl-[16px] rounded-tr-[16px]">
-                    <li class="-mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
+                <ul
+                    class=" px-3 sm:px-4 flex mb-0 list-none flex-wrap pt-2 sm:pt-3 bg-white flex-grow rounded-tl-[16px] rounded-tr-[16px]">
+                    <li class="cursor-pointer -mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
                         v-bind:class="{ 'border-0': openTab !== 1, 'border-b-4 border-[#2162FF]': openTab === 1 }">
                         <a class="text-xs font-bold uppercase sm:px-3 sm:py-3 leading-normal flex items-center justify-start "
                             v-on:click="toggleTabs(1)">
@@ -17,14 +18,14 @@
                             Study
                         </a>
                     </li>
-                    <li class="-mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
+                    <li class="cursor-pointer -mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
                         v-bind:class="{ 'border-0': openTab !== 2, 'border-b-4 border-[#2162FF]': openTab === 2 }">
                         <a class="text-xs font-bold uppercase sm:p-3 sm:p-3 leading-normal flex items-center"
                             v-on:click="toggleTabs(2)">
                             <GraduationCapSVG :color="openTab === 2 ? activeColor : inactiveIconColor" /> Exam
                         </a>
                     </li>
-                    <li class="-mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
+                    <li class="cursor-pointer -mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
                         v-bind:class="{ 'border-0': openTab !== 3, 'border-b-4 border-[#2162FF]': openTab === 3 }">
                         <a class="text-xs font-bold uppercase sm:px-3 sm:py-3 leading-normal flex items-center"
                             v-on:click="toggleTabs(3)">
@@ -40,22 +41,22 @@
             <div
                 class="relative flex flex-col min-w-0 break-words w-full mb-6 bg-white rounded-br-[16px] rounded-bl-[16px] rounded-tr-[16px]">
                 <div class="px-4 py-4 flex-auto">
-                    <div class="tab-content tab-space flex flex-row" 
-                    >
-                        <div 
-                            v-bind:class="{ 'hidden': openTab !== 1, 'block': openTab === 1 }" class=" pb-4"
-                            v-for="level in levels"
-                            :key="level.id"
-                        >
-                            <div class="rounded-lg px-3 py-2 bg-[#F4F5F6] w-fit me-3">
+                    <div class="tab-content tab-space flex flex-row cursor-pointer">
+                        <div v-bind:class="{
+                            'hidden': openTab !== 1, 'block': openTab === 1}" class=" pb-4" v-for="level in levels" :key="level.id"
+                            @click="handleSelectLevel(level)">
+                            <div class="rounded-lg px-3 py-2 w-fit me-3" v-bind:class="{'bg-[#3772ff1a] border-2 border-[#3772ff4d] text-[#2162FF]': selectedLevel?.name === level.name, 'bg-[#f4f5f6]': selectedLevel?.name !== level.name}">
                                 {{ level.name }}
                             </div>
                         </div>
                     </div>
-                    <div class="grid sm:grid-cols-7 gap-3 grid-cols-2">
+                    <div v-bind:class="{
+                            'hidden': openTab !== 1, 'block': openTab === 1}" 
+                        class="grid sm:grid-cols-7 gap-3 grid-cols-2 cursor-pointer">
                         <div v-for="skill in skills" :key="skill.skill"
                             class="border-3 px-2 py-3 rounded-[8px] flex items-center sm:flex-col"
-                            v-bind:class="{ 'bg-[#2162ff]': active.skill === skill.skill, 'bg-[#f4f5f6]': active.skill !== skill.skill }">
+                            v-bind:class="{ 'bg-[#2162ff]': selectedSkill === skill.skill, 'bg-[#f4f5f6]': selectedSkill !== skill.skill }"
+                            @click="handleSelectSkill(skill.skill)">
                             <component :is="skill.icon" :color="activeSkillColor(skill.skill)" />
                             <div :style="{ color: activeSkillColor(skill.skill) }">{{ skill.skill }}</div>
                         </div>
@@ -101,7 +102,6 @@ export default {
             activeColor: "#2162FF",
             inactiveIconColor: "#141416",
             inactiveSkillColor: "#f4f5f6",
-            active: { level: '1', skill: 'Grammar' },
             skills: [
                 { skill: 'Grammar', icon: GrammarSVG },
                 { skill: 'Pronunciation', icon: Pronunciation },
@@ -110,7 +110,9 @@ export default {
                 { skill: 'Speaking', icon: SpeakingSVG },
                 { skill: 'Reading', icon: ReadingSVG },
                 { skill: 'Writing', icon: WritingSVG },
-            ]
+            ],
+            selectedLevel: null,
+            selectedSkill: null
         }
     },
     methods: {
@@ -121,16 +123,20 @@ export default {
             this.openTab = tabNumber
         },
         activeSkillColor(skill) {
-            return this.active.skill === skill ? '#fff' : '#000';
+            return this.selectedSkill === skill ? '#fff' : '#000';
+        },
+        handleSelectLevel(level) {
+            this.selectedLevel = level;
+        },
+        handleSelectSkill(skill) {
+            this.selectedSkill = skill;
+        },
+        handleNavigateToLearn() {
+            if(!this.selectedLevel || !this.selectedSkill) return;
+            console.log();
+            window.location.href = `${$Api.baseUrl}/learn?levelName=${this.selectedLevel?.name}&levelId=${this.selectedLevel?.id}&skill=${this.selectedSkill}`;
         }
-
     },
-    // computed: {
-    //     activeSkillColor() {
-    //         console.log(this.active.skill)
-    //         return this.active.skill === 'grammar' ? "#fff" : "#141416"
-    //     }
-    // }
 }
 </script>
 <style>

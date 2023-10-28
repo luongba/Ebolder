@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full max-w-[85%] mx-auto">
+    <div class="w-full mx-auto">
         <div class="w-full grid grid-cols-1 xl:grid-cols-3 gap-8">
             <div>
                 <div class="flex items-center">

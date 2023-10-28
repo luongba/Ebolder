@@ -196,9 +196,14 @@ class HomeController extends Controller
         }
     }
 
-    public function learnPage()
+    public function learnPage(Request $request)
     {
-        return view('pages.frontend.learnpage');
+        if (isset($request->levelId)) {
+            $levelName = $request->levelName;
+            $skill = $request->skill;
+            $levelId =$request->levelId;
+            return view('pages.frontend.learnpage', compact(['levelName', 'skill', 'levelId']));
+        }
     }
 
 
