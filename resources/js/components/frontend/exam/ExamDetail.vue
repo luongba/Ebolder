@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper h-screen">
+    <div class="wrapper h-screen flex flex-column">
         <div class="sticky inset-x-0 top-0 bg-white z-50">
             <main-header-component :user="user" :breadcrumb="breadcrumb" :showTime="true"/>
         </div>
@@ -15,7 +15,7 @@
                     </button>
                     <!-- Sidebar Content -->
                     <!-- :onGetLessonDetail="getLessonDetail"  -->
-                    <div ref="content" class="bg-white overflow-hidden listLesson" :class="[open ? 'w-[350px]' : 'w-0']">
+                    <div ref="content" class="bg-white listLesson" :class="[open ? 'w-[350px]' : 'hidden w-0']">
                         <ExamDetailSkills v-model="open" :onGetExamBySkill="getExamBySkill"/>
                         <slot></slot>
                     </div>
