@@ -11,7 +11,7 @@
           <span class="w-[60%] overflow-hidden mr-2">{{ item.name }}</span>
           <div class="flex items-center">
             <div ref="play">
-              <el-button
+              <!-- <el-button
                 size="small"
                 type="success"
                 plain
@@ -19,9 +19,9 @@
                 class="text-[20px]"
                 circle
                 @click="
-                  playAudio(`${baseApi}/upload/audio/${item.audio}`, index)
+                  playAudio(`${baseApi}/upload/audio/${item.audio}`, index, item)
                 "
-              ></el-button>
+              ></el-button> -->
             </div>
             <div ref="pause" class="hidden">
               <el-button
@@ -185,8 +185,6 @@ export default {
       try {
         this.isLoading = true;
         const { data } = await baseRequest.get(`/admin/get-audio-listening?page_number=${this.page}`);
-        debugger
-
         if (data.status == 200) {
           this.isLoading = false;
           this.listAudio = data.data.data;
