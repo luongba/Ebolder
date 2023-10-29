@@ -25,7 +25,7 @@
                 <div class="rounded overflow-x-auto lesson">
                     <ExamDetailContent :content="examBySkill"/>
                 </div>
-                <div class="w-[350px] rounded  questions">
+                <div class="w-[350px] rounded overflow-auto questions">
                     <ExamDetailQuestions :questions="questions" :skill="skill"/>
                 </div>
             </div>

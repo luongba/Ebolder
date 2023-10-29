@@ -25,7 +25,7 @@
         <div class="rounded overflow-x-auto lesson">
           <Lesson :content="lessonContent"/>
         </div>
-        <div class="w-[350px] rounded  questions">
+        <div class="w-[350px] rounded overflow-auto questions">
           <Questions :questions="lessonQuestions"/>
         </div>
       </div>
