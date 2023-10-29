@@ -328,13 +328,13 @@ class ListenController extends Controller
                 "errorCode" => 0,
                 "message" => "Update question successfully!"
             ]);
-        } catch (\Throwable $th) {
-            Log::error($th);
+        } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Update question failed!"
+                "message" => $e->getMessage()
             ]);
         }
     }

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper h-screen">
+  <div class="wrapper h-screen flex flex-column">
     <div class="sticky inset-x-0 top-0 bg-white z-50">
       <header-component :user="user" />
     </div>
@@ -14,8 +14,9 @@
             </span>
           </button>
           <!-- Sidebar Content -->
-          <div ref="content" class="bg-white overflow-hidden listLesson" :class="[open ? 'w-[350px]' : 'w-0']">
-            <ListLesson :lessons="listLevel" :lessonType="lessonType" :levelName="levelName" v-model="open"
+            <div ref="content" class="bg-white  listLesson"
+            :class="[open ? 'w-[350px]' : 'w-0 hidden']">
+              <ListLesson :lessons="listLevel" :lessonType="lessonType" :levelName="levelName" v-model="open"
               :onGetLessonDetail="getLessonDetail" />
             <slot></slot>
           </div>
@@ -25,7 +26,7 @@
         <div class="rounded overflow-x-auto lesson">
           <Lesson :content="lessonContent" />
         </div>
-        <div class="w-[350px] rounded  questions">
+        <div class="w-[350px] rounded overflow-auto questions">
           <ListeningQuestions ref="listeningQuestions" :topics="lessonQuestions" v-if="this.lessonType == 'listening'"
             :onSubmit="submit" />
           <Questions :questions="lessonQuestions" :onSubmit="submit"/>

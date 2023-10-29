@@ -515,10 +515,6 @@ export default {
 
             isExam: data.data.status === 1 ? true : false,
           };
-          this.listTopicReading = data.data.reading_id;
-          this.listTopicListening = data.data.listening_id;
-          this.listTopicLesson = data.data.writing_id;
-          this.listTopicSpeaking = data.data.speaking_id;
           this.show = !this.show;
         }
       } catch (e) {

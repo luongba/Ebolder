@@ -43,6 +43,17 @@ class User extends Authenticatable
         return $this->belongsToMany('App\models\User\Role', 'user_role');
     }
 
+    public function HistoryLearn()
+    {
+        return $this->hasMany('App\models\HistoryLearn', 'user_id');
+    }
+
+    public function ExamHistoryFinal()
+    {
+        return $this->hasMany('App\models\Exam\ExamHistoryFinal', 'user_id');
+    }
+
+
     public function checkPermisionAccess($permisionCheck)
     {
         $roles = auth()->user()->roles;

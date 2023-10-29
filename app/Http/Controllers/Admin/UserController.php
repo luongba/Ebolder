@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRegister;
 use App\Http\Requests\UserUpdate;
@@ -12,7 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\models\Exam\ExamHistoryFinal;
 use App\models\HistoryLearn;
-
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -187,6 +189,19 @@ class UserController extends Controller
                 "status" => 500,
                 "errorCode" => 500,
                 "message" => "Lỗi máy chủ!"
+            ]);
+        }
+    }
+
+    public function downloadExcel(){
+        try {
+            return Excel::download(new UsersExport, 'users.xlsx');
+        }catch (\Exception $e){
+            Log::error($e);
+            return response()->json([
+                "status" => 500,
+                "errorCode" => 500,
+                "message" => "Error!"
             ]);
         }
     }

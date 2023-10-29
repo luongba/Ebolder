@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/loginApi', 'AuthController@loginApi')->name('auth.login-api');
 Route::get('/get-levels', 'Admin\LevelController@all')->name('get-levels');
+Route::get('/download-excel', 'Admin\UserController@downloadExcel')->name('download-excel');
 Route::middleware('auth:api')->group(function (){
     Route::get('/auth/user', 'AuthController@getUser')->name('auth.user');
     Route::prefix('/admin')->name('admin.')->group(function () {
