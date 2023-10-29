@@ -135,6 +135,13 @@ class ExamController extends Controller
         ->get();
         return view('pages.frontend.examList', compact('exams'));
     }
+
+    public function renderExamDetail($id)
+    {
+        return view('pages.frontend.examDetail', compact('id'));
+    }
+
+
     public function saveHistoryExam(Request $request){
         $exists = ExamHistoryFinal::where('exam_id',$request->exam_id)->where('user_id', $request->user_id)->first();
         if($request->status == 'create' && !$exists){

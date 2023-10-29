@@ -21,7 +21,7 @@
                     <li class="cursor-pointer -mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
                         v-bind:class="{ 'border-0': openTab !== 2, 'border-b-4 border-[#2162FF]': openTab === 2 }">
                         <a class="text-xs font-bold uppercase sm:p-3 sm:p-3 leading-normal flex items-center"
-                            v-on:click="toggleTabs(2)">
+                            v-on:click="navigatoToExam()">
                             <GraduationCapSVG :color="openTab === 2 ? activeColor : inactiveIconColor" /> Exam
                         </a>
                     </li>
@@ -116,8 +116,8 @@ export default {
         }
     },
     methods: {
-        openLink() {
-            window.location.href = `${$Api.baseUrl}/choose-action`;
+        navigatoToExam() {
+            window.location.href = `${$Api.baseUrl}/exam`;
         },
         toggleTabs(tabNumber) {
             this.openTab = tabNumber

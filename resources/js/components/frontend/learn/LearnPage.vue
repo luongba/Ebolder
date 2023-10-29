@@ -289,6 +289,7 @@ export default {
 @media only screen and (max-width: 900px) {
   .content {
     display: block;
+    margin-top: 2px;
   }
   .lesson {
     width: 100%;
@@ -310,6 +311,9 @@ export default {
     background: var(--color-white-100, #FFF);
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
     height: 96px;
+  }
+  .main {
+    display: block;
   }
 }
 </style>
