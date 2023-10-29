@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center py-2 md:py-[24px] px-4 justify-between relative z-10"
+    <div class="flex items-center py-2 md:py-[24px] px-4 justify-between relative z-10 border-b-2 header"
         style="font-family: lexend !important;">
         <div class="flex items-center cursor-pointer" @click="backToHome">
             <img src="/images/landing/logo.svg" alt="" />
@@ -8,7 +8,7 @@
                 <p class="whitespace-nowrap	">You’ll Have To Run Tomorrow.</p>
             </div>
             <img :src="home" @click="backToHome" class="home"/>
-            <div class="flex items-center justify-center px-4 py-3 rounded-[100px] bg-[#E6E8EC] breadscrumb">
+            <div class="flex items-center justify-center px-4 py-2 rounded-[100px] bg-[#E6E8EC] breadscrumb">
                 <div v-if="breadcrumb && breadcrumb.length" v-for="(item, index) in breadcrumb" :key="item.label"
                     class="flex items-center justify-center">
                     <img :src="item.icon" />
@@ -33,20 +33,17 @@
                             Sign in
                         </div>
                     </div>
-                    <el-dropdown trigger="click" v-if="user">
+                    <el-dropdown  trigger="click" @command="handleCommand" v-if="user">
                         <div class="flex items-center justify-center cursor-pointer">
                             <el-avatar shape="square"> {{ user ? user.name[0] : "" }} </el-avatar>
                         </div>
                         <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item>
-                                    <span @click="learn()">Lịch sử học</span>
+                            <el-dropdown-menu >
+                                <el-dropdown-item command="history">
+                                    History
                                 </el-dropdown-item>
-                                <el-dropdown-item>
-                                    <span @click="history()">Lịch sử làm bài thi</span>
-                                </el-dropdown-item>
-                                <el-dropdown-item>
-                                    <span @click="logout()">Đăng xuất</span>
+                                <el-dropdown-item command="logout">
+                                    Logout
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
@@ -75,6 +72,14 @@ export default {
 
     },
     methods: {
+        handleCommand(e) {
+            debugger
+            if(e === "history") {
+                window.location.href = "/history";
+            } else if(e === 'logout') {
+                window.location.href = "/logout";
+            }
+        },
         openLink() {
             window.location.href = `${$Api.baseUrl}/sign-in`;
         },
@@ -112,6 +117,9 @@ a,
 a:hover {
     text-decoration: none;
     color: unset;
+}
+.header {
+    border: 2px solid #F4F5F6
 }
 </style>
   

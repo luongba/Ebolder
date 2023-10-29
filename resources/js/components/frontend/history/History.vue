@@ -1,5 +1,8 @@
 <template>
   <div class="w-full h-[100vh] overflow-y-scroll">
+    <div class="sticky inset-x-0 top-0 bg-white z-50">
+      <main-header-component :user="user" :breadcrumb="breadcrumb"/>
+    </div>
     <div class="w-full mt-4">
       <div class="container mb-4">
         <p class="text-[24px]">History</p>
@@ -127,11 +130,15 @@
   </div>
 </template>
 <script>
+import ExamIcon from '../../../../../public/images/header/feature.svg';
 export default {
   props: ["data", "user", "history_study"],
   data() {
     return {
-      activeName: "Exam"
+      activeName: "Exam",
+      breadcrumb: [
+          {label: 'History', icon: ExamIcon},
+      ]
     };
   },
   computed: {},
