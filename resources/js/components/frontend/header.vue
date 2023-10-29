@@ -23,11 +23,6 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/learn" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
-                  Learn
-                </a>
-              </li>
-              <li class="nav-item">
                 <a href="/features" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
                   Features
                 </a>

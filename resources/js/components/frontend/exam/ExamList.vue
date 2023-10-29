@@ -1,7 +1,10 @@
 <template>
   <div class="w-full relative">
+    <div class="sticky inset-x-0 top-0 bg-white z-50">
+      <main-header-component :user="user" :breadcrumb="breadcrumb"/>
+    </div>
     <div class="container w-full content relative">
-      <div class="flex justify-between">
+      <div class="flex justify-between pt-3">
         <p class="text-[24px]">Exam List</p>
         <div>
           <el-input v-model="searchName" class="border-2" style="border-color: #2162FF; border-radius: 5px;" placeholder="Search"></el-input>
@@ -61,7 +64,7 @@
 </template>
   <script>
 import baseRequest from "../../../utils/baseRequest";
-
+import ExamIcon from '../../../../../public/images/header/exam.svg';
 export default {
   props: ["data", "user"],
   data() {
@@ -72,7 +75,10 @@ export default {
       isExamDone: false,
       activeName: "All",
       searchName: "",
-      filterData: null
+      filterData: null,
+      breadcrumb: [
+          {label: 'Exam', icon: ExamIcon},
+      ]
     };
   },
   components: {},

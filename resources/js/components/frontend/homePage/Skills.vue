@@ -94,6 +94,16 @@ export default {
         ReadingSVG,
         WritingSVG
     },
+    watch: {
+        "levels": {
+            handler(value) {
+                if(value) {
+                    this.selectedLevel.name = value[0].name
+                    this.selectedLevel.id = value[0].id
+                }
+            }
+        },
+    },
     data() {
         return {
             startButton: require('../../../../../public/images/landing/start.svg'),
@@ -111,8 +121,10 @@ export default {
                 { skill: 'Reading', icon: ReadingSVG },
                 { skill: 'Writing', icon: WritingSVG },
             ],
-            selectedLevel: null,
-            selectedSkill: null
+            selectedLevel: {
+                name: 'A2-B2',
+            },
+            selectedSkill: 'Grammar'
         }
     },
     methods: {

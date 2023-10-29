@@ -200,7 +200,6 @@ export default {
                 let response = await baseRequest.get(`/get-levels`);
                 if (response.data.status == 200) {
                     this.levels = response.data.data
-                    console.log(this.levels)
                 }
                 this.isLoading = false;
             } catch (error) {
