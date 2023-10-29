@@ -70,7 +70,8 @@ export default {
       lessonType: '',
       lessonContent: '',
       lessonQuestions: null,
-      levelName: ''
+      levelName: '',
+      begin: null,
     };
   },
   methods: {
@@ -137,12 +138,12 @@ export default {
     },
     async submit(correctAnswers, questionCount) {
       const requestParams = {
-        test_type: this.lessonType,
+        test_type: this.query.skill ?? '',
         topic_name: this.selectedLessonName,
         scores: `${correctAnswers}/${questionCount}`,
         level_id: this.levelId,
         no_exam: true,
-        completion_time: 0
+        completion_time: (Date.now() - this.begin) || 0
       }
       const loading = this.$loading({
         lock: true,
@@ -168,7 +169,7 @@ export default {
     this.lessonType = skill ? skill.toLowerCase() : '';
     this.levelId = levelId;
     this.levelName = levelName;
-
+    this.begin = Date.now();
     await this.getDetailLevel();
     await this.getLessonDetail(this.listLevel[0]?.id, this.listLevel[0]?.name)
   },

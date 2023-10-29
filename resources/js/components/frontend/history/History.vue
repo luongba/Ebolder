@@ -161,6 +161,11 @@ export default {
   padding: 16px;
   background-color: #f4f5f6;
 }
+.Grammar, .Grammar svg * {
+  color: #D35924;
+  fill: #D35924;
+  background-color: #edd6cc
+}
 .Reading , .Reading svg *{
   color: #3B1BBA;
   fill: #3B1BBA;
