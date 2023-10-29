@@ -137,7 +137,7 @@ export default {
     },
     async submit(correctAnswers, questionCount) {
       const requestParams = {
-        test_type: this.lessonType,
+        test_type: this.query.skill ?? '',
         topic_name: this.selectedLessonName,
         scores: `${correctAnswers}/${questionCount}`,
         level_id: this.levelId,
