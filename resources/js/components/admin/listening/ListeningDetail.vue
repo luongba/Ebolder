@@ -47,22 +47,6 @@
                         class="mr-2 text-[20px]"
                       ></el-button>
                     </el-tooltip>
-                    <div ref="play">
-                      <el-button
-                        size="small"
-                        type="success"
-                        plain
-                        icon="el-icon-video-play"
-                        class="text-[20px]"
-                        circle
-                        @click="
-                          playAudio(
-                            `${baseApi}/upload/audio/${itemAudio.audio}`,
-                            index
-                          )
-                        "
-                      ></el-button>
-                    </div>
                     <div ref="pause" class="hidden">
                       <el-button
                         size="small"
@@ -394,10 +378,6 @@
             id: this.detailTopic.id,
           });
           if (rs.data.status == 200) {
-            this.$message({
-              type: "success",
-              message: "Thay đổi trạng thái thành công!",
-            });
           }
         } catch (e) {
           console.log(e);
