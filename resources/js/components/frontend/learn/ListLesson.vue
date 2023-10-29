@@ -38,7 +38,7 @@
                     <div v-bind:class="{ 'hidden': openTab !== 1, 'block': openTab === 1 }" class=" pb-4 w-full">
                         <div class=" border-b-2 border-[#f4f5f6]" v-for="item in this.lessons" :key="item.id"
                             :class="{ 'bg-[#2162FF] text-white': selectedLessonId == item.id }"
-                            @click="getLessonDetail(item.id)">
+                            @click="getLessonDetail(item.id, item.name)">
                             <div class="p-4">
                                 <div class="flex flex-row items-center justify-between">
                                     <div class="flex flex-row">
@@ -98,8 +98,9 @@ export default {
         toggle() {
             this.$emit('input', !this.value);
         },
-        getLessonDetail(lessonId) {
-            this.onGetLessonDetail(lessonId);
+        getLessonDetail(lessonId, lessonName) {
+            this.onGetLessonDetail(lessonId, lessonName);
+            console.log(lessonId, lessonName);
             this.selectedLessonId = lessonId;
         }
     },
@@ -107,6 +108,7 @@ export default {
         lessons(newLessons) {
             if (newLessons && newLessons.length) {
                 this.selectedLessonId = newLessons[0]?.id;
+
             }
         }
     }

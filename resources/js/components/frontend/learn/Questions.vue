@@ -54,7 +54,7 @@
                 Next
                 <img :src="arrowRight" />
             </div>
-            <div v-show="selectedIndex == this.questions?.length - 1" class="button-next">
+            <div v-show="selectedIndex == this.questions?.length - 1" class="button-next" @click="submit">
                 Finish
                 <img :src="arrowRight" />
             </div>
@@ -66,13 +66,15 @@
 <script>
 
 export default {
-    props: ["questions"],
+    props: ["questions", "onSubmit"],
     data() {
         return {
             selectedIndex: 0,
             selectedQuestion: this.questions?.[0],
             selectedAnswerId: 0,
             selectedAnswers: {},
+            correctAnswers: {},
+            questionCount: 0,
             arrowLeft: require('../../../../../public/images/learn/arrow-left.svg'),
             arrowRight: require('../../../../../public/images/learn/arrow-right.svg')
         }
@@ -87,9 +89,18 @@ export default {
         },
         handleSelectAnswer(answerId, questionId) {
             this.selectedAnswerId = answerId;
-            if(answerId) this.$set(this.selectedAnswers, questionId, answerId);
+            const rightAnswer = this.selectedQuestion.right_answers.answer_id;
+
+            if(answerId) {
+                this.$set(this.selectedAnswers, questionId, answerId);
+                if (answerId == rightAnswer) {
+                    this.correctAnswers[questionId] = true;
+                } else {
+                    this.correctAnswers[questionId] = false;
+                }
+            }
             this.isQuestionAnswered(answerId, questionId)
-            console.log(this.isQuestionAnswered(answerId, questionId));
+            
         },
         handleQuestionWithInput(question) {
             if (!question?.includes("#")) return [question];
@@ -98,7 +109,11 @@ export default {
         },
         isQuestionAnswered(answerId, questionId) {
             return this.selectedAnswers[questionId] == answerId;
-        }
+        },
+        async submit() {
+            const correctAnswers = Object.values(this.correctAnswers).filter(val => val === true).length;
+            this.onSubmit(correctAnswers, this.questionCount);
+        },
     },
     watch: {
         questions(newQuestions) {
@@ -106,7 +121,9 @@ export default {
                 // reset data
                 this.selectedAnswers = {};
                 this.selectedIndex = 0;
+
                 this.selectedQuestion = newQuestions[this.selectedIndex];
+                this.questionCount = newQuestions.length;
             }
         }
     }

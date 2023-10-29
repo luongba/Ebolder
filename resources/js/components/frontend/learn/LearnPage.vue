@@ -14,19 +14,22 @@
             </span>
           </button>
           <!-- Sidebar Content -->
-          <div ref="content" class="bg-white  listLesson"
+            <div ref="content" class="bg-white  listLesson"
             :class="[open ? 'w-[350px]' : 'w-0 hidden']">
-            <ListLesson :lessons="listLevel" :lessonType="lessonType" :levelName="levelName" v-model="open" :onGetLessonDetail="getLessonDetail" />
+              <ListLesson :lessons="listLevel" :lessonType="lessonType" :levelName="levelName" v-model="open"
+              :onGetLessonDetail="getLessonDetail" />
             <slot></slot>
           </div>
         </div>
       </div>
       <div class="main">
         <div class="rounded overflow-x-auto lesson">
-          <Lesson :content="lessonContent"/>
+          <Lesson :content="lessonContent" />
         </div>
         <div class="w-[350px] rounded overflow-auto questions">
-          <Questions :questions="lessonQuestions"/>
+          <ListeningQuestions ref="listeningQuestions" :topics="lessonQuestions" v-if="this.lessonType == 'listening'"
+            :onSubmit="submit" />
+          <Questions :questions="lessonQuestions" :onSubmit="submit"/>
         </div>
       </div>
     </div>
@@ -38,13 +41,15 @@ import "./learn.css";
 import ListLesson from "./ListLesson.vue";
 import Lesson from './Lesson.vue';
 import Questions from './Questions.vue';
+import ListeningQuestions from './ListeningQuestions.vue';
 
 export default {
   props: ["user", "query"],
   components: {
     ListLesson,
     Lesson,
-    Questions
+    Questions,
+    ListeningQuestions
   },
 
   data() {
@@ -71,91 +76,6 @@ export default {
   methods: {
     toggle() {
       this.open = !this.open;
-    },
-    async checkPassedLevel() {
-      //   let temp = this.dataHistory;
-      this.listLevel.forEach((item) => {
-        let tongSoBaiThiDaHoanThanh = this.dataHistory.filter(
-          (itemHistory, id) => {
-            let score = itemHistory.scores;
-            score = score.split("/");
-            let toltalScore = (parseInt(score[0]) / parseInt(score[1])) * 100;
-            return (
-              itemHistory.level_id == item.id && toltalScore >= this.targetScore
-            );
-          }
-        );
-
-        let countVocabulary = item.vocabularies.length || 0;
-
-        let countGrammar = item.grammars.length || 0;
-
-        let countRead = item.reads.length || 0;
-
-        let countListen = item.listens.length || 0;
-
-        let tongSoBaiThi =
-          countVocabulary + countGrammar + countRead + countListen;
-        if (tongSoBaiThi === tongSoBaiThiDaHoanThanh.length) {
-          if (this.level < this.listLevel.length) {
-            this.level++;
-          }
-        }
-      });
-      if (this.level === 1) {
-        this.listLevel = this.listLevel.slice(0, this.level);
-      } else {
-        this.listLevel = this.listLevel.reverse().slice(0, this.level);
-      }
-    },
-    async getFullHistory() {
-      try {
-        let rs = await baseRequest.get(`/admin/get-full-history`);
-        if (rs.data.status == 200) {
-          this.dataHistory = rs.data.data;
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    checkPassExam(type, item) {
-      let temp = null;
-      switch (type) {
-        case "READ":
-          temp = "Reading";
-          break;
-        case "LISTEN":
-          temp = "Listening";
-          break;
-        case "VOCABULARY":
-          temp = "Vocabulary";
-          break;
-        case "GRAMMAR":
-          temp = "Grammar";
-          break;
-        case "PRONUNCIATION":
-          temp = "Pronunciation";
-          break;
-        case "WRITING":
-          temp = "Writing";
-          break;
-        default:
-          temp = "Lesson";
-      }
-      let dataArrTemp = this.dataHistory.filter(
-        (itemH) => itemH.level_id == this.levelId
-      );
-      let rs;
-      if (dataArrTemp.length > 0) {
-        rs = dataArrTemp.findIndex((itemHistory, id) => {
-          return (
-            itemHistory.test_type == temp && itemHistory.exam_id == item.id
-          );
-        });
-      } else {
-        rs = -1;
-      }
-      return rs != -1;
     },
     async getDetailLevel() {
       const loading = this.$loading({
@@ -186,8 +106,11 @@ export default {
         loading.close();
       }
     },
-    async getLessonDetail(lessonId) {
+    async getLessonDetail(lessonId, lessonName) {
+      
       this.selectedLessonId = lessonId;
+      this.selectedLessonName = lessonName;
+      console.log("----------------", lessonId);
       const loading = this.$loading({
         lock: true,
         text: "Loading",
@@ -197,17 +120,13 @@ export default {
       try {
         let rs = await baseRequest.get(`/admin/detail-topic-${this.lessonType}/${this.selectedLessonId}`);
         if (rs.data.status == 200) {
-          let data;
-          if(this.lessonType == 'listening') {
-            data = {
-              name: rs.data.data?.name,
-            }
+          if (this.lessonType == 'listening') {
+            this.lessonContent = rs.data.data;
+            this.lessonQuestions = rs.data.data['topic_audio_listen']
+
           } else {
-            data = rs.data.data;
-          }
-          if (data) {
-            this.lessonContent = data;
-            this.lessonQuestions = data[`question_${this.lessonType}`];
+            this.lessonContent = rs.data.data;
+            this.lessonQuestions = rs.data.data[`question_${this.lessonType}`];
           }
         }
       } catch (e) {
@@ -215,17 +134,43 @@ export default {
       } finally {
         loading.close();
       }
+    },
+    async submit(correctAnswers, questionCount) {
+      const requestParams = {
+        test_type: this.lessonType,
+        topic_name: this.selectedLessonName,
+        scores: `${correctAnswers}/${questionCount}`,
+        level_id: this.levelId,
+        no_exam: true,
+        completion_time: 0
+      }
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      try {
+        let rs = await baseRequest.post(`/admin/save-history`, requestParams);
+        if (rs.data.status == 200) {
+          
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        loading.close();
+      }
+      console.log(correctAnswers);
     }
   },
   async created() {
-    const {skill, levelId, levelName} = this.query;
+    const { skill, levelId, levelName } = this.query;
     this.lessonType = skill ? skill.toLowerCase() : '';
     this.levelId = levelId;
     this.levelName = levelName;
 
-    await this.getFullHistory();
     await this.getDetailLevel();
-    await this.getLessonDetail(this.listLevel[0]?.id)
+    await this.getLessonDetail(this.listLevel[0]?.id, this.listLevel[0]?.name)
   },
   mounted() {
   },
@@ -236,16 +181,19 @@ export default {
   .content {
     display: flex;
   }
-  .sidebar {
-  }
+
+  .sidebar {}
+
   .lesson {
     flex-grow: 1;
     margin: 0.75rem 2.25rem;
   }
+
   .questions {
     width: 350px;
     margin: 0.75rem 0.75rem 0.75rem 0;
   }
+
   .sidebarButton {
     border-radius: 0px 0px 24px 0px;
     border-right: 2px solid var(--color-base-200, #F4F5F6);
@@ -254,6 +202,7 @@ export default {
     padding: 0.75rem;
     height: fit-content;
   }
+
   .main {
     width: 100%;
     display: flex;
@@ -264,23 +213,27 @@ export default {
   .content {
     display: flex;
   }
-  .sidebarButton  {
+
+  .sidebarButton {
     border-radius: 0px 0px 24px 0px;
     border-right: 2px solid var(--color-base-200, #F4F5F6);
     background: var(--color-white-100, #FFF);
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
     height: 96px;
   }
+
   .main {
     width: 100%;
     display: flex;
     flex-direction: row;
     margin: 12px;
   }
+
   .sidebar {
     height: 100%;
     position: absolute;
   }
+
   .lesson {
     margin-right: 12px;
   }
@@ -291,30 +244,34 @@ export default {
     display: block;
     margin-top: 2px;
   }
+
   .lesson {
     width: 100%;
     flex-grow: 1;
     margin: 0;
     border-radius: unset !important;
   }
+
   .questions {
     width: 100%;
     border-radius: unset !important;
   }
+
   .sidebar {
     height: 100%;
     position: absolute;
   }
-  .sidebarButton  {
+
+  .sidebarButton {
     border-radius: 0px 0px 24px 0px;
     border-right: 2px solid var(--color-base-200, #F4F5F6);
     background: var(--color-white-100, #FFF);
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
     height: 96px;
   }
+
   .main {
     display: block;
   }
-}
-</style>
+}</style>
   
