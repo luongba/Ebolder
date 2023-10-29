@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper h-screen flex flex-column">
         <div class="sticky inset-x-0 top-0 bg-white z-50">
-            <main-header-component :user="user" :breadcrumb="breadcrumb" :showTime="true"/>
+            <main-header-component :user="user" :breadcrumb="breadcrumb" :showTime="true" />
         </div>
         <div class="w-full h-full overflow-hidden content">
             <div class="flex max-h-full w-[350px] overflow-x-auto sidebar">
@@ -16,17 +16,19 @@
                     <!-- Sidebar Content -->
                     <!-- :onGetLessonDetail="getLessonDetail"  -->
                     <div ref="content" class="bg-white listLesson" :class="[open ? 'w-[350px]' : 'hidden w-0']">
-                        <ExamDetailSkills v-model="open" :onGetExamBySkill="getExamBySkill"/>
+                        <ExamDetailSkills v-model="open" :onGetExamBySkill="getExamBySkill" />
                         <slot></slot>
                     </div>
                 </div>
             </div>
             <div class="main">
                 <div class="rounded overflow-x-auto lesson">
-                    <ExamDetailContent :content="examBySkill"/>
+                    <ExamDetailContent :content="examBySkill" />
                 </div>
                 <div class="w-[350px] rounded overflow-auto questions">
-                    <ExamDetailQuestions :questions="questions" :skill="skill"/>
+                    <ExamDetailListeningQuestions ref="listeningQuestions" :topics="questions"
+                        v-if="this.skill == 'listening'" :onSubmit="submit" />
+                    <ExamDetailQuestions :onSubmit="submit" :questions="questions" :skill="skill" v-if="this.skill != 'listening'" />
                 </div>
             </div>
         </div>
@@ -37,6 +39,7 @@
 import baseRequest from "../../../utils/baseRequest";
 import ExamDetailContent from "./ExamDetailContent.vue";
 import ExamDetailQuestions from './ExamDetailQuestions.vue';
+import ExamDetailListeningQuestions from './ExamDetailListeningQuestions.vue';
 import ExamDetailSkills from './ExamDetailSkills.vue';
 import ExamIcon from '../../../../../public/images/header/exam.svg';
 
@@ -46,7 +49,7 @@ export default {
         ExamDetailContent,
         ExamDetailQuestions,
         ExamDetailSkills,
-
+        ExamDetailListeningQuestions
     },
     data() {
         return {
@@ -58,7 +61,7 @@ export default {
             questions: null,
             skill: null,
             breadcrumb: [
-                {label: 'Exam', icon: ExamIcon},
+                { label: 'Exam', icon: ExamIcon },
             ]
         }
     },
@@ -78,7 +81,7 @@ export default {
                 if (rs.data.status == 200) {
                     const data = rs.data.data;
                     this.breadcrumb = this.getBreadcrumb(data.name);
-                    
+
                     if (data) {
                         this.data = {
                             reading: data?.reading_id,
@@ -96,14 +99,14 @@ export default {
         },
         async getExamBySkill(skill) {
             let s;
-            if(skill == 'Writing') {
+            if (skill == 'Writing') {
                 s = 'lesson'
             } else if (skill == 'Speaking') {
                 s = 'speak'
-            } else {s = skill.toLowerCase()}
+            } else { s = skill.toLowerCase() }
 
             this.skill = s;
-            
+
             const loading = this.$loading({
                 lock: true,
                 text: "Loading",
@@ -115,8 +118,13 @@ export default {
                 if (rs.data.status == 200) {
                     const data = rs.data.data;
                     if (data) {
-                        this.examBySkill = data;
-                        this.questions = data[`question_${s}`]
+                        if (this.skill == 'listening') {
+                            this.examBySkill = data;
+                            this.questions = data['topic_audio_listen']
+                        } else {
+                            this.examBySkill = data;
+                            this.questions = data[`question_${s}`]
+                        }
                     }
                 }
             } catch (e) {
@@ -124,12 +132,38 @@ export default {
             } finally {
                 loading.close();
             }
-            console.log(skill);
         },
         getBreadcrumb(label) {
             return [
-                ...this.breadcrumb, {label: label}
+                ...this.breadcrumb, { label: label }
             ]
+        },
+        async submit(correctAnswers, questionCount) {
+            const requestParams = {
+                test_type: this.skill,
+                scores: `${correctAnswers}/${questionCount}`,
+                no_exam: false,
+                completion_time: 0,
+                exam_id: this.param,
+                topic_name: this.examBySkill?.name || '',
+                level_id: 0
+            }
+            const loading = this.$loading({
+                lock: true,
+                text: "Loading",
+                spinner: "el-icon-loading",
+                background: "rgba(0, 0, 0, 0.7)",
+            });
+            try {
+                let rs = await baseRequest.post(`/admin/save-history`, requestParams);
+                if (rs.data.status == 200) {
+
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                loading.close();
+            }
         }
     },
     async created() {
@@ -231,6 +265,7 @@ export default {
         box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
         height: 96px;
     }
+
     .main {
         display: block;
     }
