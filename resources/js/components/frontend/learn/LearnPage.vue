@@ -29,7 +29,7 @@
         <div class="w-[350px] rounded overflow-auto questions">
           <ListeningQuestions ref="listeningQuestions" :topics="lessonQuestions" v-if="this.lessonType == 'listening'"
             :onSubmit="submit" />
-          <Questions :questions="lessonQuestions" :onSubmit="submit"/>
+          <Questions :questions="lessonQuestions" :onSubmit="submit" v-if="this.lessonType != 'listening'"/>
         </div>
       </div>
     </div>
@@ -96,7 +96,7 @@ export default {
             reading: rs.data.data?.reading,
             speaking: rs.data.data?.speak,
           };
-          console.log(data);
+          
           if (data) {
             this.listLevel = data[this.lessonType];
           }
@@ -111,7 +111,6 @@ export default {
       
       this.selectedLessonId = lessonId;
       this.selectedLessonName = lessonName;
-      console.log("----------------", lessonId);
       const loading = this.$loading({
         lock: true,
         text: "Loading",
@@ -161,7 +160,6 @@ export default {
       } finally {
         loading.close();
       }
-      console.log(correctAnswers);
     }
   },
   async created() {

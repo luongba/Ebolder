@@ -11,7 +11,7 @@
         </div>
         <div class="bg-blur-f mb-4">
             <audio id="audio-preview" class="w-full bg-transparent" controls disabled hidden>
-                <source :src="`https://dev.hoctienganh.pro.vn/upload/audio/1689845371_2. A2-B1-L1-HW-Task 2.mp3`"
+                <source :src="`${baseURl}/upload/audio/${this.selectedTopic?.audio}`"
                     type="audio/mpeg" />
             </audio>
             <div class="controls bg-[#E6E8EC] rounded px-3">
@@ -107,7 +107,6 @@ export default {
             selectedQuestion: this.questions?.[0],
             selectedAnswerId: 0,
             selectedAnswers: {},
-            selectedAnswersOfTopics: {},
             selectedTopic: this.topics?.[0],
             questions: null,
             arrowLeft: require('../../../../../public/images/learn/arrow-left.svg'),
@@ -251,9 +250,12 @@ export default {
                 this.newTopics && this.newTopics.forEach(topic => {
                     this.questionCount += topic.question_listening.length;
                 })
-                this.selectedTopic = newTopics[this.selectedIndex];
+                this.selectedTopic = newTopics[this.selectedTopicIndex];
             }
-
+        },
+        questions(newQuestions) {
+            this.selectedIndex = 0;
+            this.selectedQuestion = this.questions[this.selectedIndex];
         }
     }
 }
