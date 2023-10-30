@@ -106,6 +106,7 @@ export default {
             pronunciation: rs.data.data?.pronunciation,
             reading: rs.data.data?.reading,
             speaking: rs.data.data?.speak,
+            vocabulary: rs.data.data?.vocabulary,
           };
           
           if (data) {
