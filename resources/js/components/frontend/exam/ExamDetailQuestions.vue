@@ -18,7 +18,7 @@
                     <input v-else type="text"
                             class="
                                 mx-2
-                                text-white
+                                text
                                 border
                                 border-[#e6e8ec]
                                 outline-none
