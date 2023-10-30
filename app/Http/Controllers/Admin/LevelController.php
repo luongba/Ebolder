@@ -50,11 +50,17 @@ class LevelController extends Controller
     }
 
 
-    public function all() {
+    public function all(Request $request) {
         try {
-            $levels = Level::query()
-                ->orderBy('name', 'asc')
-                ->get();
+            if ($request->search) {
+                $search = strtolower($request->search);
+                $levels = Level::whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
+                    ->orderBy('name', 'asc')->get();
+            } else {
+                $levels = Level::query()
+                    ->orderBy('name', 'asc')
+                    ->get();
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

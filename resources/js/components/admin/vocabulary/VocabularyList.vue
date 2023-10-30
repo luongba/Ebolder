@@ -55,6 +55,18 @@
       </transition>
       <LoadingVue v-if="isLoading" />
 
+      <div class="grid grid-cols-1 gap-4">
+        <input class="
+              border
+              border-[#e6e8ec]
+              outline-none
+              rounded-md
+              w-[30%]
+              px-2
+              py-2
+              mb-2
+          " v-model="textSearch" placeholder="Search" > </input>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
@@ -157,6 +169,8 @@ export default {
       current: 1,
       pageSize: 1,
       perPage: 1,
+      textSearch: '',
+      timeOut: null
     };
   },
   computed: {},
@@ -250,7 +264,7 @@ export default {
     async getAllTopic() {
       try {
         this.isLoading = true;
-        let result = await baseRequest.get(`/admin/list-topic-vocabulary?page=${this.current}`);
+        let result = await baseRequest.get(`/admin/list-topic-vocabulary?search=${this.textSearch}&page=${this.current}`);
         if (result.data.status == 200) {
           this.isLoading = false;
           this.listTopic = result.data.data.data;
@@ -312,6 +326,17 @@ export default {
   created() {
     this.getAllTopic();
   },
+  watch: {
+    "textSearch": {
+      handler(value) {
+        this.current = 1;
+        clearTimeout(this.timeOut)
+        this.timeOut = setTimeout(async() => {
+            await this.getAllTopic()
+        }, 300);
+      }
+    }
+  }
 };
 </script>
 <style scoped>

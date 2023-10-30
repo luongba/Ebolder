@@ -6,7 +6,7 @@
             <div v-for="(item, index) in this.questions" :key="item.id"
                 class="rounded-full w-7 h-7 sm:w-10 sm:h-10 me-[11px] mb-[11px] sm:mb-[13px] sm:me-[13px] flex items-center justify-center font-semibold text-sm"
                 @click="handleSelectQuestion(index)"
-                :class="{ 'bg-[#2162FF] text-white': selectedIndex == index, 'bg-[#E6E8EC]': selectedIndex != index }">
+                :class="{ 'bg-[#2162FF] text-white': selectedIndex == index, 'bg-[#35509A] text-white': selectedIndex != index && questionDone.includes(item.id) }">
                 {{ index + 1 }}
             </div>
         </div>
@@ -18,7 +18,7 @@
                     <input v-else type="text"
                             class="
                                 mx-2
-                                text-white
+                                text
                                 border
                                 border-[#e6e8ec]
                                 outline-none
@@ -32,7 +32,7 @@
             </p>
         </div>
         <div class="flex-grow">
-            <div v-for="(answer, index) in selectedQuestion?.[`answer_${this.skill}`]" :key="index" class="rounded-[8px] border-2 p-3 mb-3"
+            <div v-for="(answer, index) in selectedQuestion?.[`answer_${this.skill}`]" :key="index" class="rounded-[8px] border-2 p-3 mb-3" v-show="selectedQuestion?.type == 1"
                 :class="{ 'border-[#2162FF]': isQuestionAnswered(answer?.id, selectedQuestion?.id)} "
                 @click="handleSelectAnswer(answer?.id, selectedQuestion?.id)">
                 <input type="radio" :id="`test${answer?.id}`" :value="answer?.id" :checked="isQuestionAnswered(answer?.id, selectedQuestion?.id)" />
@@ -74,6 +74,7 @@ export default {
             selectedAnswers: {},
             correctAnswers: {},
             questionCount: 0,
+            questionDone: [],
             arrowLeft: require('../../../../../public/images/learn/arrow-left.svg'),
             arrowRight: require('../../../../../public/images/learn/arrow-right.svg')
         }
@@ -99,6 +100,7 @@ export default {
                     this.correctAnswers[questionId] = false;
                 }
             }
+            this.questionDone.push(questionId)
             this.isQuestionAnswered(answerId, questionId)
         },
         handleQuestionWithInput(question) {
