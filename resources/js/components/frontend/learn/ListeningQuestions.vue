@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white h-full p-3 flex flex-column md:rounded">
-        <div class="font-bold text-2xl mb-4"> Topics</div>
+        <div class="font-bold text-xl mb-4"> Topics</div>
         <div class="flex flex-row flex-wrap mb-3 cursor-pointer">
             <div v-for="(item, index) in this.topics" :key="item.id"
                 class="rounded-full w-7 h-7 sm:w-10 sm:h-10 me-[11px] mb-[11px] sm:mb-[13px] sm:me-[13px] flex items-center justify-center font-semibold text-sm"
@@ -32,7 +32,7 @@
                 </button>
             </div>
         </div>
-        <div class="font-bold text-2xl mb-4"> Questions</div>
+        <div class="font-bold text-xl mb-4"> Questions</div>
         <div v-show="this.questions?.length > 0">
             <div class="flex flex-row flex-wrap mb-4 cursor-pointer">
                 <div v-for="(item, index) in this.questions" :key="item.id"

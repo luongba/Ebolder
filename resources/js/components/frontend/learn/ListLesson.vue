@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="text-xl sm:text-2xl font-bold flex flex-row justify-between px-4 py-4 sm:px-6 items-center"
+        <div class="text-xl font-bold flex flex-row justify-between px-4 py-4 sm:px-6 items-center"
             @click="toggle">
             Unit of {{ type }}
             <img :src="left" />
@@ -15,7 +15,7 @@
                         All
                     </a>
                 </li>
-                <li class="-mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
+                <!-- <li class="-mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
                     v-bind:class="{ 'border-0': openTab !== 2, 'border-b-2 border-[#2162FF]': openTab === 2 }">
                     <a class="text-xs font-bold uppercase sm:p-3 sm:p-3 leading-normal flex items-center"
                         v-on:click="toggleTabs(2)">
@@ -28,7 +28,7 @@
                         v-on:click="toggleTabs(3)">
                         Unexecuted
                     </a>
-                </li>
+                </li> -->
             </ul>
         </div>
         <div
@@ -46,7 +46,7 @@
                                             :class="{ 'bg-[#447bff]': selectedLessonId == item.id, 'bg-[#141416] ': selectedLessonId != item.id }">
                                             {{ levelName }}
                                         </div>
-                                        <div class="rounded p-1.5 w-fit me-[10px] font-bold text-sm uppercase flex flex-row items-center"
+                                        <div class="rounded p-1 w-fit me-[10px] font-bold text-sm uppercase flex flex-row items-center"
                                             :class="{ 'text-white bg-[#447bff]': selectedLessonId == item.id, 'text-[#2162FF] bg-[#D3E0FF]': selectedLessonId != item.id }">
                                             <BookFill class="me-2"
                                                 :color="selectedLessonId == item.id ? activeColor : inactiveColor" />
@@ -54,7 +54,7 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-row items-center">
-                                        <span class="text-xs text-[#777e90] me-4"> {{ `4/6` }}</span>
+                                        <!-- <span class="text-xs text-[#777e90] me-4"> {{ `4/6` }}</span> -->
                                         <img :src="highlighterWhite" v-show="selectedLessonId == item.id" />
                                         <img :src="item?.is_exam ? checked : unchecked"
                                             v-show="selectedLessonId != item.id" />

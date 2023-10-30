@@ -4,15 +4,15 @@
             <main-header-component :user="user" :breadcrumb="breadcrumb" :showTime="true" />
         </div>
         <div class="w-full h-full overflow-hidden content">
-            <div class="flex max-h-full w-[350px] overflow-x-auto sidebar">
+            <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
+                class="focus:outline-none transition-color duration-700 sidebarButton">
+                <span class="block transform origin-center font-bold">
+                    <img src="/images/learn/right.svg" alt="" />
+                </span>
+            </button>
+            <div class="flex max-h-full sidebar" :class="[!open ? 'hidden' : ' w-[350px] block']" >
                 <!-- Sidebar -->
                 <div class="flex w-full">
-                    <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
-                        class="focus:outline-none transition-color duration-700 sidebarButton">
-                        <span class="block transform origin-center font-bold">
-                            <img src="/images/learn/right.svg" alt="" />
-                        </span>
-                    </button>
                     <!-- Sidebar Content -->
                     <!-- :onGetLessonDetail="getLessonDetail"  -->
                     <div ref="content" class="bg-white listLesson" :class="[open ? 'w-[350px]' : 'hidden w-0']">
@@ -40,7 +40,7 @@ import baseRequest from "../../../utils/baseRequest";
 import ExamDetailContent from "./ExamDetailContent.vue";
 import ExamDetailQuestions from './ExamDetailQuestions.vue';
 import ExamDetailListeningQuestions from './ExamDetailListeningQuestions.vue';
-import ExamDetailSkills from './ExamDetailSkills.vue';
+import ExamDetailSkills from "./ExamDetailSkills.vue";
 import ExamIcon from '../../../../../public/images/header/exam.svg';
 
 export default {
@@ -53,7 +53,7 @@ export default {
     },
     data() {
         return {
-            open: true,
+            open: null,
             lessonContent: null,
             lessonQuestions: null,
             data: null,
@@ -63,6 +63,13 @@ export default {
             breadcrumb: [
                 { label: 'Exam', icon: ExamIcon },
             ]
+        }
+    },
+    watch: {
+        "open" : {
+            handler(value) {
+                localStorage.setItem('section-list-show', value ? 1 : 0)
+            }
         }
     },
     methods: {
@@ -168,6 +175,10 @@ export default {
     },
     async created() {
         await this.getExamDetail();
+    },
+    async mounted() {
+        let x = await localStorage.getItem('section-list-show')
+        this.open = Number(x)
     }
 }
 </script>

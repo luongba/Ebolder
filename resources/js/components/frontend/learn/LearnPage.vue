@@ -1,18 +1,19 @@
 <template>
   <div class="wrapper h-screen flex flex-column">
     <div class="sticky inset-x-0 top-0 bg-white z-50">
-      <header-component :user="user" />
+      <main-header-component :user="user" :breadcrumb="breadcrumb"/>
     </div>
     <div class="w-full h-full overflow-hidden content">
-      <div class="flex max-h-full w-[350px] overflow-auto sidebar">
+      <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
+        class="focus:outline-none transition-color duration-700 sidebarButton">
+        <span class="block transform origin-center font-bold">
+          <img src="/images/learn/right.svg" alt="" />
+        </span>
+      </button>
+      <div class="flex max-h-full sidebar" :class="[!open ? 'hidden' : ' w-[350px] block']" >
         <!-- Sidebar -->
-        <div class="flex w-full">
-          <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
-            class="focus:outline-none transition-color duration-700 sidebarButton">
-            <span class="block transform origin-center font-bold">
-              <img src="/images/learn/right.svg" alt="" />
-            </span>
-          </button>
+        <div class="flex w-full overflow-auto">
+          
           <!-- Sidebar Content -->
             <div ref="content" class="bg-white  listLesson"
             :class="[open ? 'w-[350px]' : 'w-0 hidden']">
@@ -42,7 +43,7 @@ import ListLesson from "./ListLesson.vue";
 import Lesson from './Lesson.vue';
 import Questions from './Questions.vue';
 import ListeningQuestions from './ListeningQuestions.vue';
-
+import ExamIcon from '../../../../../public/images/header/feature.svg';
 export default {
   props: ["user", "query"],
   components: {
@@ -72,8 +73,18 @@ export default {
       lessonQuestions: null,
       levelName: '',
       begin: null,
+      breadcrumb: [
+        { label: 'Study', icon: ExamIcon },
+      ]
     };
   },
+  watch: {
+    "open" : {
+        handler(value) {
+            localStorage.setItem('section-list-show', value ? 1 : 0)
+        }
+    }
+    },
   methods: {
     toggle() {
       this.open = !this.open;
@@ -167,12 +178,19 @@ export default {
     this.lessonType = skill ? skill.toLowerCase() : '';
     this.levelId = levelId;
     this.levelName = levelName;
+    this.breadcrumb = [... this.breadcrumb, {
+      label: levelName
+    }, {
+      label: skill
+    }]
     this.begin = Date.now();
     await this.getDetailLevel();
     await this.getLessonDetail(this.listLevel[0]?.id, this.listLevel[0]?.name)
   },
-  mounted() {
-  },
+  async mounted() {
+    let x = await localStorage.getItem('section-list-show')
+    this.open = Number(x)
+  }
 };
 </script>
 <style scoped>
