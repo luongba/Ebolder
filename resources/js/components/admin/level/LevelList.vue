@@ -2,6 +2,18 @@
   <div>
     <LoadingVue v-if="isLoading" />
     <div class="container">
+      <div class="grid grid-cols-1 gap-4">
+        <input class="
+              border
+              border-[#e6e8ec]
+              outline-none
+              rounded-md
+              w-[30%]
+              px-2
+              py-2
+              mb-2
+          " v-model="textSearch" placeholder="Search" > </input>
+      </div>
       <transition name="fade">
         <div class="w-full h-full" v-if="show">
           <div
@@ -348,6 +360,8 @@ export default {
       pageLesson: 1,
       pageSpeaking: 1,
       pagePronunciation: 1,
+      textSearch: '',
+      timeOut: null
     };
   },
   computed: {},
@@ -473,7 +487,7 @@ export default {
     async getAllLevel() {
       try {
         this.isLoading = true;
-        let rs = await baseRequest.get(`/get-levels`);
+        let rs = await baseRequest.get(`/get-levels?search=${this.textSearch}`);
         if (rs.data.status == 200) {
           this.listLevel = rs.data.data
             .map((item) => ({
@@ -743,6 +757,16 @@ export default {
     this.getAllTopicSpeaking()
     this.getAllTopicTalking()
   },
+  watch: {
+    "textSearch": {
+      handler(value) {
+        clearTimeout(this.timeOut)
+        this.timeOut = setTimeout(async() => {
+            await this.getAllLevel()
+        }, 300);
+      }
+    }
+  }
 };
 </script>
 <style scoped>

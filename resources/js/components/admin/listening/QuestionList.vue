@@ -2,6 +2,18 @@
   <div>
     <div class="container">
       <LoadingVue v-if="isLoading" />
+      <div class="grid grid-cols-1 gap-4">
+        <input class="
+              border
+              border-[#e6e8ec]
+              outline-none
+              rounded-md
+              w-[30%]
+              px-2
+              py-2
+              mb-2
+          " v-model="textSearch" placeholder="Search" > </input>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           class="bg-white shadow-sm flex items-center justify-between cursor-pointer py-4 px-4 text-[14px] font-semibold"
@@ -116,6 +128,8 @@ export default {
       isLoading: false,
       total : 0,
       page: 1,
+      textSearch: '',
+      timeOut: null
     };
   },
   computed: {},
@@ -184,7 +198,7 @@ export default {
     async getAllAudio() {
       try {
         this.isLoading = true;
-        const { data } = await baseRequest.get(`/admin/get-audio-listening?page_number=${this.page}`);
+        const { data } = await baseRequest.get(`/admin/get-audio-listening?search=${this.textSearch}&page_number=${this.page}`);
         if (data.status == 200) {
           this.isLoading = false;
           this.listAudio = data.data.data;
@@ -241,6 +255,17 @@ export default {
   created() {
     this.getAllAudio();
   },
+  watch: {
+    "textSearch": {
+        handler(value) {
+            this.page = 1;
+            clearTimeout(this.timeOut)
+            this.timeOut = setTimeout(async() => {
+                await this.getAllAudio()
+            }, 300);
+        }
+    }
+  }
 };
 </script>
 <style scoped>

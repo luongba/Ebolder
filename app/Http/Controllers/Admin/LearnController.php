@@ -58,7 +58,13 @@ class LearnController extends Controller
             if ($request->is_exam) {
                 $data = Learn::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
             } else {
-                $data = Learn::orderBy('id', 'DESC')->paginate(10);
+                if ($request->search) {
+                    $search = strtolower($request->search);
+                    $data = Learn::whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
+                        ->orderBy('id', 'DESC')->paginate(10);
+                } else {
+                    $data = Learn::orderBy('id', 'DESC')->paginate(10);
+                }
             }
             return response()->json([
                 "status" => 200,
