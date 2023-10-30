@@ -22,7 +22,7 @@
                         >
                 </VueCountdown>
             </div>
-            <nav class="relative flex flex-wrap items-center justify-between px-2 py-3">
+            <nav class="relative flex flex-wrap items-center justify-between px-2">
                 <div class="flex mx-auto flex-row items-center justify-between">
                     <div class="w-fit rounded-[100px] bg-white px-4 py-2 cursor-pointer" @click="openLink" v-show="!user">
                         <div class="text-lg leading-relaxed inline-block whitespace-nowrap	">
