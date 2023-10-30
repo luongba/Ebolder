@@ -24,13 +24,13 @@
         </div>
       </div>
       <div class="main">
-        <div class="rounded overflow-x-auto lesson">
-          <Lesson :content="lessonContent" />
+        <div class="rounded overflow-x-auto lesson flex-grow">
+          <Lesson :content="lessonContent" :lessonType="lessonType"/>
         </div>
         <div class="w-[350px] rounded overflow-auto questions">
           <ListeningQuestions ref="listeningQuestions" :topics="lessonQuestions" v-if="this.lessonType == 'listening'"
             :onSubmit="submit" />
-          <Questions :questions="lessonQuestions" :onSubmit="submit" v-if="this.lessonType != 'listening'"/>
+          <Questions :questions="lessonQuestions" :lessonType="lessonType" :onSubmit="submit" v-if="this.lessonType != 'listening'"/>
         </div>
       </div>
     </div>

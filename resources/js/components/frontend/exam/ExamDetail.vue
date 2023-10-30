@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="main">
-                <div class="rounded overflow-x-auto lesson">
+                <div class="rounded overflow-x-auto lesson flex-grow">
                     <ExamDetailContent :content="examBySkill" />
                 </div>
                 <div class="w-[350px] rounded overflow-auto questions">

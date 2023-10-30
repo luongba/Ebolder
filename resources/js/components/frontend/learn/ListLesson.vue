@@ -9,7 +9,7 @@
             <ul
                 class=" px-3 sm:px-4 flex mb-0 list-none flex-wrap pt-2 sm:pt-3 bg-white flex-grow rounded-tl-[16px] rounded-tr-[16px] border-b-2 border-[#F4F5F6]">
                 <li class="-mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
-                    v-bind:class="{ 'border-0': openTab !== 1, 'border-b-2 border-[#2162FF]': openTab === 1 }">
+                    v-bind:class="[ openTab !== 1 ? 'border-0' : `border-b-2 border-${lessonType}`]">
                     <a class="text-xs font-bold uppercase sm:px-3 sm:py-3 leading-normal flex items-center justify-start "
                         v-on:click="toggleTabs(1)">
                         All
@@ -36,18 +36,18 @@
             <div class="flex-auto">
                 <div class="tab-content tab-space flex">
                     <div v-bind:class="{ 'hidden': openTab !== 1, 'block': openTab === 1 }" class=" pb-4 w-full">
-                        <div class=" border-b-2 border-[#f4f5f6]" v-for="item in this.lessons" :key="item.id"
-                            :class="{ 'bg-[#2162FF] text-white': selectedLessonId == item.id }"
+                        <div class="border-b-2 border-[#f4f5f6]" v-for="item in this.lessons" :key="item.id"
+                            :class="[selectedLessonId == item.id ? [ `bg-${lessonType}`, 'text-white'] : '']"
                             @click="getLessonDetail(item.id, item.name)">
                             <div class="p-4">
                                 <div class="flex flex-row items-center justify-between">
                                     <div class="flex flex-row">
-                                        <div class="rounded p-1.5  w-fit me-[10px] font-bold text-sm text-white"
-                                            :class="{ 'bg-[#447bff]': selectedLessonId == item.id, 'bg-[#141416] ': selectedLessonId != item.id }">
+                                        <div class="rounded p-1.5  w-fit me-[10px] font-bold text-sm"
+                                            :class="[selectedLessonId == item.id ? `bg-${lessonType}-tag` : 'text-white bg-[#141416]' ]">
                                             {{ levelName }}
                                         </div>
                                         <div class="rounded p-1 w-fit me-[10px] font-bold text-sm uppercase flex flex-row items-center"
-                                            :class="{ 'text-white bg-[#447bff]': selectedLessonId == item.id, 'text-[#2162FF] bg-[#D3E0FF]': selectedLessonId != item.id }">
+                                            :class="[selectedLessonId == item.id ? `bg-${lessonType}-tag` : `text-[#2162FF] bg-${lessonType}-tag` ]">
                                             <BookFill class="me-2"
                                                 :color="selectedLessonId == item.id ? activeColor : inactiveColor" />
                                             {{ type }}
