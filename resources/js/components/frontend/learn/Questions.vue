@@ -1,65 +1,65 @@
 <template>
     <div class="bg-white p-3 flex flex-column md:rounded" style="min-height: 100%;">
         <div class="font-bold text-2xl mb-4"> Questions</div>
-        <div v-show="this.questions?.length > 0">
-        <div class="flex flex-row flex-wrap mb-4">
-            <div v-for="(item, index) in this.questions" :key="item.id"
-                class="rounded-full w-7 h-7 sm:w-10 sm:h-10 me-[11px] mb-[11px] sm:mb-[13px] sm:me-[13px] flex items-center justify-center font-semibold text-sm"
-                @click="handleSelectQuestion(index)"
-                :class="{ 'bg-[#2162FF] text-white': selectedIndex == index, 'bg-[#35509A] text-white': selectedIndex != index && questionDone.includes(item.id)
-                }">
-                {{ index + 1 }}
+        <div v-show="this.questions?.length > 0" class="flex flex-column flex-grow">
+            <div class="flex flex-row flex-wrap mb-4">
+                <div v-for="(item, index) in this.questions" :key="item.id"
+                    class="cursor-pointer rounded-full w-7 h-7 sm:w-10 sm:h-10 me-[11px] mb-[11px] sm:mb-[13px] sm:me-[13px] flex items-center justify-center font-semibold text-sm"
+                    @click="handleSelectQuestion(index)"
+                    :class="{ 'bg-[#2162FF] text-white': selectedIndex == index, 'bg-[#35509A] text-white': selectedIndex != index && questionDone.includes(item.id)
+                    }">
+                    {{ index + 1 }}
+                </div>
+            </div>
+            <div class="py-4 border-t border-[#e6e8ec]">
+                <p class="text-lg font-semibold mb-2">Question {{ selectedIndex + 1 }}</p>
+                <p class="font-semibold">
+                    <template v-for="(item, index) in handleQuestionWithInput(selectedQuestion?.question)">
+                        <span v-if="item !== '#'" :key="'span' + index">{{ item }}</span>
+                        <input v-else type="text"
+                                class="
+                                    mx-2
+                                    border
+                                    border-[#e6e8ec]
+                                    outline-none
+                                    rounded-md
+                                    w-[43px]
+                                    lg:w-[75px]
+                                    px-2
+                                    py-1
+                                " :key="'input' + index" />
+                    </template>
+                </p>
+            </div>
+            <!-- , 'border-[#E6E8EC]': isQuestionAnswered(answer?.id, selectedQuestion?.id) == false -->
+            <div class="flex-grow">
+                <div v-for="(answer, index) in selectedQuestion?.answers" :key="index" class="rounded-[8px] border-2 p-3 mb-3" v-show="selectedQuestion?.type == 1"
+                    :class="{ 'border-[#2162FF]': isQuestionAnswered(answer?.id, selectedQuestion?.id)} "
+                    @click="handleSelectAnswer(answer?.id, selectedQuestion?.id)">
+                    <input type="radio" :id="`test${answer?.id}`" :value="answer?.id" :checked="isQuestionAnswered(answer?.id, selectedQuestion?.id)" />
+                    <label class="text-lg font-semibold ml-1">
+                        {{ convertToCharacter(index) }}
+                    </label>
+                    <p class="font-light">{{ answer?.text }}</p>
+                </div>
+            </div>
+            <div class="w-full flex flex-row mt-4">
+                <div v-show="selectedIndex <= this.questions?.length - 1 && selectedIndex > 0" class="button-back"
+                    @click="handleSelectQuestion(selectedIndex - 1)">
+                    <img :src="arrowLeft" />
+                    Back
+                </div>
+                <div v-show="selectedIndex < this.questions?.length - 1" class="button-next"
+                    @click="handleSelectQuestion(selectedIndex + 1)">
+                    Next
+                    <img :src="arrowRight" />
+                </div>
+                <div v-show="selectedIndex == this.questions?.length - 1" class="button-next" @click="submit">
+                    Finish
+                    <img :src="arrowRight" />
+                </div>
             </div>
         </div>
-        <div class="py-4 border-t border-[#e6e8ec]">
-            <p class="text-lg font-semibold mb-2">Question {{ selectedIndex + 1 }}</p>
-            <p class="font-semibold">
-                <template v-for="(item, index) in handleQuestionWithInput(selectedQuestion?.question)">
-                    <span v-if="item !== '#'" :key="'span' + index">{{ item }}</span>
-                    <input v-else type="text"
-                            class="
-                                mx-2
-                                border
-                                border-[#e6e8ec]
-                                outline-none
-                                rounded-md
-                                w-[43px]
-                                lg:w-[75px]
-                                px-2
-                                py-1
-                            " :key="'input' + index" />
-                </template>
-            </p>
-        </div>
-        <!-- , 'border-[#E6E8EC]': isQuestionAnswered(answer?.id, selectedQuestion?.id) == false -->
-        <div class="flex-grow">
-            <div v-for="(answer, index) in selectedQuestion?.answers" :key="index" class="rounded-[8px] border-2 p-3 mb-3" v-show="selectedQuestion?.type == 1"
-                :class="{ 'border-[#2162FF]': isQuestionAnswered(answer?.id, selectedQuestion?.id)} "
-                @click="handleSelectAnswer(answer?.id, selectedQuestion?.id)">
-                <input type="radio" :id="`test${answer?.id}`" :value="answer?.id" :checked="isQuestionAnswered(answer?.id, selectedQuestion?.id)" />
-                <label class="text-lg font-semibold ml-1">
-                    {{ convertToCharacter(index) }}
-                </label>
-                <p class="font-light">{{ answer?.text }}</p>
-            </div>
-        </div>
-        <div class="w-full flex flex-row mt-4">
-            <div v-show="selectedIndex <= this.questions?.length - 1 && selectedIndex > 0" class="button-back"
-                @click="handleSelectQuestion(selectedIndex - 1)">
-                <img :src="arrowLeft" />
-                Back
-            </div>
-            <div v-show="selectedIndex < this.questions?.length - 1" class="button-next"
-                @click="handleSelectQuestion(selectedIndex + 1)">
-                Next
-                <img :src="arrowRight" />
-            </div>
-            <div v-show="selectedIndex == this.questions?.length - 1" class="button-next" @click="submit">
-                Finish
-                <img :src="arrowRight" />
-            </div>
-        </div>
-    </div>
     </div>
 </template>
 
