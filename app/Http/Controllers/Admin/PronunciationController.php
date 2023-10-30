@@ -78,7 +78,13 @@ class PronunciationController extends Controller
             if ($request->is_exam) {
                 $dataAll = Pronunciation::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
             } else {
-                $dataAll = Pronunciation::orderBy('id', 'DESC')->paginate(10);
+                if ($request->search) {
+                    $search = strtolower($request->search);
+                    $dataAll = Pronunciation::whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
+                        ->orderBy('id', 'DESC')->paginate(10);
+                } else {
+                    $dataAll = Pronunciation::orderBy('id', 'DESC')->paginate(10);
+                }
             }
             return response()->json([
                 "status" => 200,

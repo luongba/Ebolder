@@ -1,6 +1,18 @@
 <template>
   <div class="container">
     <LoadingVue v-if="isLoading" />
+    <div class="grid grid-cols-1 gap-4">
+        <input class="
+                    border
+                    border-[#e6e8ec]
+                    outline-none
+                    rounded-md
+                    w-[30%]
+                    px-2
+                    py-2
+                    mb-2
+                " v-model="textSearch" placeholder="Search" > </input>
+    </div>
     <transition name="fade">
       <div class="w-full h-full" v-if="show">
         <div
@@ -142,6 +154,8 @@ export default {
       page: 1,
       total: 0,
       page_size: 11,
+      textSearch: '',
+      timeOut: null
     };
   },
   computed: {},
@@ -194,7 +208,7 @@ export default {
     async getAllTopic() {
       try {
         this.isLoading = true;
-        let {data} = await baseRequest.get(`/admin/topic-list-listening?page=${this.page}&page_size=${this.page_size}`);
+        let {data} = await baseRequest.get(`/admin/topic-list-listening?search=${this.textSearch}&page=${this.page}&page_size=${this.page_size}`);
         if (data.status == 200) {
           data = data.data
           this.isLoading = false;
@@ -248,6 +262,17 @@ export default {
   created() {
     this.getAllTopic();
   },
+  watch: {
+      "textSearch": {
+          handler(value) {
+              this.page = 1;
+              clearTimeout(this.timeOut)
+              this.timeOut = setTimeout(async() => {
+                  await this.getAllTopic()
+              }, 300);
+          }
+      }
+  }
 };
 </script>
 <style scoped>

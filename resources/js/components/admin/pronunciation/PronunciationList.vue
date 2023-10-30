@@ -2,7 +2,18 @@
     <div>
         <div class="container">
             <LoadingVue v-if="isLoading" />
-
+            <div class="grid grid-cols-1 gap-4">
+                <input class="
+                            border
+                            border-[#e6e8ec]
+                            outline-none
+                            rounded-md
+                            w-[30%]
+                            px-2
+                            py-2
+                            mb-2
+                        " v-model="textSearch" placeholder="Search" > </input>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div
                     class="
@@ -107,7 +118,9 @@ export default {
             total: 1,
             current: 1,
             pageSize: 1,
-            perPage: 1,
+            perPage: 10,
+            textSearch: '',
+            timeOut: null
         };
     },
     computed: {},
@@ -153,7 +166,7 @@ export default {
         async getAllTopic() {
             try {
                 this.isLoading = true;
-                let rs = await baseRequest.get(`/admin/list-topic-pronunciation?page=${this.current}`);
+                let rs = await baseRequest.get(`/admin/list-topic-pronunciation?search=${this.textSearch}&page=${this.current}`);
                 if (rs.data.status == 200) {
                     this.isLoading = false;
                     this.total = rs.data.data.total;
@@ -218,6 +231,17 @@ export default {
     created() {
         this.getAllTopic();
     },
+    watch: {
+        "textSearch": {
+            handler(value) {
+                this.current = 1;
+                clearTimeout(this.timeOut)
+                this.timeOut = setTimeout(async() => {
+                    await this.getAllTopic()
+                }, 300);
+            }
+        }
+    }
 };
 </script>
 <style scoped>

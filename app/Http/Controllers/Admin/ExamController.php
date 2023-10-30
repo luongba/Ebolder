@@ -45,7 +45,13 @@ class ExamController extends Controller
     public function getAllExam(Request $request)
     {
         try {
-            $exam = Exam::all();
+            if ($request->search) {
+                $search = strtolower($request->search);
+                $exam = Exam::whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
+                    ->orderBy('name', 'asc')->get();
+            } else {
+                $exam = Exam::all();
+            }
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,

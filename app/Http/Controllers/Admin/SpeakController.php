@@ -25,7 +25,13 @@ class SpeakController extends Controller
             if ($request->is_exam) {
                 $data = Speak::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
             } else {
-                $data = Speak::orderBy('id', 'DESC')->paginate(10);
+                if ($request->search) {
+                    $search = strtolower($request->search);
+                    $data = Speak::whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
+                        ->orderBy('id', 'DESC')->paginate(10);
+                } else {
+                    $data = Speak::orderBy('id', 'DESC')->paginate(10);
+                }
             }
             return response()->json([
                 "status" => 200,
