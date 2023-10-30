@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <LoadingVue v-if="isLoading" />
-    <!-- <el-button @click="downloadExcel" type="primary" plain class="mb-1"
+    <el-button @click="downloadExcel" type="primary" plain class="mb-1"
       >Download Excel
-    </el-button> -->
+    </el-button>
     <el-table
       :data="tableData"
       style="max-width: 97%"
@@ -169,7 +169,6 @@ export default {
       }
     },
     async downloadExcel() {
-      // let rs = await baseRequest.get(`/admin/download-excel`);
       window.open(`${$Api.baseUrl}/api/download-excel`, '_blank');
     }
   },
