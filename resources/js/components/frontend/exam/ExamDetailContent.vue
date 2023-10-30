@@ -1,11 +1,11 @@
 <template>
-    <div class="bg-white px-[16px] py-[24px] md:rounded">
+    <div class="bg-white px-[16px] py-[24px] md:rounded" style="min-height: 100%;">
         <div class="flex unitName mb-4 px-3">
             <div class="rounded p-1.5 bg-[#D3E0FF] text-[#2162FF] w-fit me-[10px] font-bold text-sm uppercase flex flex-row">
                 <img :src="highlighter" />
                 DOING
             </div>
-            <div class="text-bold text-2xl">
+            <div class="text-bold text-xl">
                 {{ this.content?.name }}
             </div>
         </div>

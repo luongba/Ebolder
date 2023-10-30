@@ -3,17 +3,13 @@
         style="font-family: lexend !important;">
         <div class="flex items-center cursor-pointer" @click="backToHome">
             <img src="/images/landing/logo.svg" alt="" />
-            <div class="p-0 text-[16px] font-bold uppercase hidden md:block ml-2">
-                <p class="whitespace-nowrap	">If You Don’t Walk Today</p>
-                <p class="whitespace-nowrap	">You’ll Have To Run Tomorrow.</p>
-            </div>
             <img :src="home" @click="backToHome" class="home"/>
             <div class="flex items-center justify-center px-4 py-2 rounded-[100px] bg-[#E6E8EC] breadscrumb">
                 <div v-if="breadcrumb && breadcrumb.length" v-for="(item, index) in breadcrumb" :key="item.label"
                     class="flex items-center justify-center">
-                    <img :src="item.icon" />
+                    <img class="mr-3" :src="item.icon" />
                     {{ item?.label }}
-                    <img :src="right" v-show="index < breadcrumb.length - 1" />
+                    <img class="ml-2" :src="right" v-show="index < breadcrumb.length - 1" />
                 </div>
             </div>
         </div>

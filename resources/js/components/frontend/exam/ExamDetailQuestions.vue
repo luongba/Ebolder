@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white p-3 flex flex-column md:rounded min-h-full">
-        <div class="font-bold text-2xl mb-4"> Questions</div>
+        <div class="font-bold text-xl mb-4"> Questions</div>
         <div v-show="this.questions?.length > 0">
         <div class="flex flex-row flex-wrap mb-4">
             <div v-for="(item, index) in this.questions" :key="item.id"

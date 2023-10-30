@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="text-xl sm:text-2xl font-bold flex flex-row justify-between px-4 py-4 sm:px-6 items-center"
+        <div class="text-xl font-bold flex flex-row justify-between px-4 py-4 sm:px-6 items-center"
             @click="toggle">
             Sections
             <img :src="left" />
@@ -16,7 +16,7 @@
                             <div class="p-4">
                                 <div class="flex flex-row items-center justify-between">
                                     <div class="flex flex-row">
-                                        <div class="rounded p-1.5 w-fit me-[10px] font-bold text-sm uppercase flex flex-row items-center"
+                                        <div class="rounded p-1 w-fit me-[10px] font-bold text-sm uppercase flex flex-row items-center"
                                             :class="{ 'text-white bg-[#447bff]': selectedSkill == skill.skill, 'text-[#2162FF] bg-[#D3E0FF]': selectedSkill != skill.skill }">
                                             <component :is="skill.icon" :color="activeSkillColor(skill.skill)" class="me-3"/>
                                             {{ skill.skill.toUpperCase() }}
