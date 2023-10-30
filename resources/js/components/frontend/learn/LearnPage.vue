@@ -4,7 +4,7 @@
       <header-component :user="user" />
     </div>
     <div class="w-full h-full overflow-hidden content">
-      <div class="flex max-h-full w-[350px] overflow-x-auto sidebar">
+      <div class="flex max-h-full w-[350px] overflow-auto sidebar">
         <!-- Sidebar -->
         <div class="flex w-full">
           <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
