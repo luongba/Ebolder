@@ -10,6 +10,7 @@ use App\models\Learn\RightAnswerLesson;
 use App\models\Media\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LearnController extends Controller
 {
@@ -403,9 +404,11 @@ class LearnController extends Controller
                         "level" => $value['level'],
                         "type" => $value['type']
                     ]);
-                    QuestionLesson::whereId($value['id'])->first()->RightAnswerLesson()->update([
-                        "answer_id" => $value["answer"]
-                    ]);
+                    if ($value['answer']) {
+                        QuestionLesson::whereId($value['id'])->first()->RightAnswerLesson()->update([
+                            "answer_id" => $value["answer"]
+                        ]);
+                    }
                     QuestionLesson::whereId($value['id'])->first()->AnswerLesson()->delete();
                     foreach ($dataQuestion[$key]['dataAns'] as $keyAds => $valueAns) {
                         QuestionLesson::whereId($value['id'])->first()->AnswerLesson()
@@ -425,6 +428,7 @@ class LearnController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            Log::error($e);
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,

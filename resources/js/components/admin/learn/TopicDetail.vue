@@ -952,47 +952,7 @@ export default {
     async SaveQuestion(id, index) {
       let isCheck = this.validate("ruleFormData", "ruleFormItem");
       if (isCheck) {
-        try {
-          let data = this.dataQuestion.find((item) => {
-            return item.id == id;
-          });
-
-          let temp = {
-            learn_id: this.param,
-            right_answers: data.answer || "",
-            id: data.id || null,
-            question: data.question || "",
-            level: data.level,
-            type: data.type,
-            dataAns: data.dataAns.map((itemAns) => {
-              return {
-                id: itemAns.idAns || "",
-                question_id: itemAns.question_id || "",
-                text: itemAns.text || "",
-              };
-            }),
-          };
-          let result = await baseRequest.post(
-            `/admin/add-or-update-question-lesson`,
-            temp
-          );
-          if (result.data.status == 200) {
-            this.getDetailTopic();
-            this.closeEditQuestion(index);
-            this.$message({
-              type: "success",
-              message: "Edit success",
-            });
-          } else {
-            this.$message({
-              type: "error",
-              message: "Edit error",
-            });
-          }
-          // console.log(result);
-        } catch (e) {
-          console.log(e);
-        }
+        this.closeEditQuestion(index);
       }
     },
     customQuestion(text) {
@@ -1049,9 +1009,6 @@ export default {
             message: data.message,
             type: "success",
           });
-          setTimeout(() => {
-            window.location.href = `${$Api.baseUrl}/admin/lesson/topic-detail/${this.param}`;
-          }, 1000);
         } else {
           this.$message({
             message: data.message,

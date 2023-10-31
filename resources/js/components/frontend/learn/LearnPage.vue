@@ -3,11 +3,13 @@
     <div class="sticky inset-x-0 top-0 bg-white z-50">
       <main-header-component :user="user" :breadcrumb="breadcrumb"/>
     </div>
-    <div class="w-full h-full overflow-hidden content">
+    <div class="w-full h-full sm:overflow-hidden overflow-y-auto content content">
       <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
-        class="focus:outline-none transition-color duration-700 sidebarButton">
+        class="focus:outline-none transition-color duration-700 sidebarButton absolute">
         <span class="block transform origin-center font-bold">
-          <img src="/images/learn/right.svg" alt="" />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.46967 17.5303C8.17678 17.2374 8.17678 16.7626 8.46967 16.4697L12.9393 12L8.46967 7.53033C8.17678 7.23744 8.17678 6.76256 8.46967 6.46967C8.76256 6.17678 9.23744 6.17678 9.53033 6.46967L14.5303 11.4697C14.671 11.6103 14.75 11.8011 14.75 12C14.75 12.1989 14.671 12.3897 14.5303 12.5303L9.53033 17.5303C9.23744 17.8232 8.76256 17.8232 8.46967 17.5303Z" fill="#2162FF"/>
+          </svg>
         </span>
       </button>
       <div class="flex max-h-full sidebar" :class="[!open ? 'hidden' : ' w-[350px] block']" >
@@ -24,13 +26,13 @@
         </div>
       </div>
       <div class="main">
-        <div class="rounded overflow-x-auto lesson">
-          <Lesson :content="lessonContent" />
+        <div class="rounded overflow-x-auto lesson flex-grow">
+          <Lesson :content="lessonContent" :lessonType="lessonType"/>
         </div>
         <div class="w-[350px] rounded overflow-auto questions">
           <ListeningQuestions ref="listeningQuestions" :topics="lessonQuestions" v-if="this.lessonType == 'listening'"
             :onSubmit="submit" />
-          <Questions :questions="lessonQuestions" :onSubmit="submit" v-if="this.lessonType != 'listening'"/>
+          <Questions :questions="lessonQuestions" :lessonType="lessonType" :onSubmit="submit" v-if="this.lessonType != 'listening'"/>
         </div>
       </div>
     </div>

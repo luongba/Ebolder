@@ -3,9 +3,9 @@
         <div class="sticky inset-x-0 top-0 bg-white z-50">
             <main-header-component :user="user" :breadcrumb="breadcrumb" :showTime="true" />
         </div>
-        <div class="w-full h-full overflow-hidden content">
+        <div class="w-full h-full sm:overflow-hidden overflow-y-auto content">
             <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
-                class="focus:outline-none transition-color duration-700 sidebarButton">
+                class="focus:outline-none transition-color duration-700 sidebarButton absolute">
                 <span class="block transform origin-center font-bold">
                     <img src="/images/learn/right.svg" alt="" />
                 </span>
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="main">
-                <div class="rounded overflow-x-auto lesson">
+                <div class="rounded overflow-x-auto lesson flex-grow">
                     <ExamDetailContent :content="examBySkill" />
                 </div>
                 <div class="w-[350px] rounded overflow-auto questions">

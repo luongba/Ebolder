@@ -6,8 +6,7 @@
                 <div v-for="(item, index) in this.questions" :key="item.id"
                     class="cursor-pointer rounded-full w-7 h-7 sm:w-10 sm:h-10 me-[11px] mb-[11px] sm:mb-[13px] sm:me-[13px] flex items-center justify-center font-semibold text-sm"
                     @click="handleSelectQuestion(index)"
-                    :class="{ 'bg-[#2162FF] text-white': selectedIndex == index, 'bg-[#35509A] text-white': selectedIndex != index && questionDone[item.id]
-                    }">
+                    :class="[ selectedIndex != index && questionDone[item.id] ? 'bg-[#35509A] text-white': (selectedIndex == index ? `bg-${lessonType} text-white` : 'bg-[#E6E8EC]')]">
                     {{ index + 1 }}
                 </div>
             </div>
@@ -39,7 +38,7 @@
             <!-- , 'border-[#E6E8EC]': isQuestionAnswered(answer?.id, selectedQuestion?.id) == false -->
             <div class="flex-grow">
                 <div v-for="(answer, index) in selectedQuestion?.answers" :key="index" class="rounded-[8px] border-2 p-3 mb-3" v-show="selectedQuestion?.type == 1"
-                    :class="{ 'border-[#2162FF]': isQuestionAnswered(answer?.id, selectedQuestion?.id)} "
+                    :class="[isQuestionAnswered(answer?.id, selectedQuestion?.id) ? `border-${lessonType} radio-${lessonType}` : ''] "
                     @click="handleSelectAnswer(answer?.id, selectedQuestion?.id)">
                     <input type="radio" :id="`test${answer?.id}`" :value="answer?.id" :checked="isQuestionAnswered(answer?.id, selectedQuestion?.id)" />
                     <label class="text-lg font-semibold ml-1">
@@ -54,14 +53,21 @@
                     <img :src="arrowLeft" />
                     Back
                 </div>
-                <div v-show="selectedIndex < this.questions?.length - 1" class="button-next"
+                <div v-show="selectedIndex < this.questions?.length - 1" :class="[`button bg-${lessonType}-tag`]"
                     @click="handleSelectQuestion(selectedIndex + 1)">
                     Next
-                    <img :src="arrowRight" />
+                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9697 16.5303C13.6768 16.2374 13.6768 15.7626 13.9697 15.4697L17.4393 12L13.9697 8.53033C13.6768 8.23744 13.6768 7.76256 13.9697 7.46967C14.2626 7.17678 14.7374 7.17678 15.0303 7.46967L19.0303 11.4697C19.3232 11.7626 19.3232 12.2374 19.0303 12.5303L15.0303 16.5303C14.7374 16.8232 14.2626 16.8232 13.9697 16.5303Z" fill="#D35924"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M19.25 12C19.25 12.4142 18.9142 12.75 18.5 12.75L6.5 12.75C6.08579 12.75 5.75 12.4142 5.75 12C5.75 11.5858 6.08579 11.25 6.5 11.25L18.5 11.25C18.9142 11.25 19.25 11.5858 19.25 12Z" fill="#D35924"/>
+                    </svg>
+
                 </div>
-                <div v-show="selectedIndex == this.questions?.length - 1" class="button-next" @click="submit">
+                <div v-show="selectedIndex == this.questions?.length - 1" :class="[`button bg-${lessonType}-tag`]" @click="submit">
                     Finish
-                    <img :src="arrowRight" />
+                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9697 16.5303C13.6768 16.2374 13.6768 15.7626 13.9697 15.4697L17.4393 12L13.9697 8.53033C13.6768 8.23744 13.6768 7.76256 13.9697 7.46967C14.2626 7.17678 14.7374 7.17678 15.0303 7.46967L19.0303 11.4697C19.3232 11.7626 19.3232 12.2374 19.0303 12.5303L15.0303 16.5303C14.7374 16.8232 14.2626 16.8232 13.9697 16.5303Z" fill="#D35924"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M19.25 12C19.25 12.4142 18.9142 12.75 18.5 12.75L6.5 12.75C6.08579 12.75 5.75 12.4142 5.75 12C5.75 11.5858 6.08579 11.25 6.5 11.25L18.5 11.25C18.9142 11.25 19.25 11.5858 19.25 12Z" fill="#D35924"/>
+                    </svg>
                 </div>
             </div>
         </div>
@@ -71,7 +77,7 @@
 <script>
 
 export default {
-    props: ["questions", "onSubmit"],
+    props: ["questions", "onSubmit" , "lessonType"],
     data() {
         return {
             selectedIndex: 0,
@@ -182,11 +188,9 @@ export default {
 </script>
 
 <style>
-.button-next {
-    background-color: #3772ff1a;
+.button {
     border-radius: 8px;
     padding: 12px 16px;
-    color: #2162ff;
     font-size: 18px;
     display: flex;
     flex-direction: row;
