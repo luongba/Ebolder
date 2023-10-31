@@ -92,8 +92,8 @@ export default {
                     if (data) {
                         this.data = {
                             reading: data?.reading_id,
-                            speak: data?.speaking_id,
-                            lesson: data?.writing_id,
+                            speaking: data?.speaking_id,
+                            writing: data?.writing_id,
                             listening: data?.listening_id,
                         }
                     }
@@ -105,14 +105,7 @@ export default {
             }
         },
         async getExamBySkill(skill) {
-            let s;
-            if (skill == 'Writing') {
-                s = 'lesson'
-            } else if (skill == 'Speaking') {
-                s = 'speak'
-            } else { s = skill.toLowerCase() }
-
-            this.skill = s;
+            this.skill = skill ? skill.toLowerCase() : '';
 
             const loading = this.$loading({
                 lock: true,
@@ -121,17 +114,18 @@ export default {
                 background: "rgba(0, 0, 0, 0.7)",
             });
             try {
-                let rs = await baseRequest.get(`/admin/detail-topic-${s}/${this.data[s]}`);
+                let rs = await baseRequest.get(`/admin/detail-topic-${this.skill}/${this.data[this.skill]}`);
                 if (rs.data.status == 200) {
                     const data = rs.data.data;
-                    if (data) {
-                        if (this.skill == 'listening') {
-                            this.examBySkill = data;
-                            this.questions = data['topic_audio_listen']
-                        } else {
-                            this.examBySkill = data;
-                            this.questions = data[`question_${s}`]
-                        }
+                    if(data) {
+                    const formatedData = {
+                        listening: data.topic_audio_listen,
+                        speaking: data.question_speak,
+                        reading: data.question_reading,
+                        writing: data.question_lesson
+                    };
+                        this.examBySkill = data;
+                        this.questions = formatedData[this.skill]
                     }
                 }
             } catch (e) {

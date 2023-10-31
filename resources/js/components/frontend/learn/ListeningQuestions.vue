@@ -38,16 +38,19 @@
                 <div v-for="(item, index) in this.questions" :key="item.id"
                     class="rounded-full w-7 h-7 sm:w-10 sm:h-10 me-[11px] mb-[11px] sm:mb-[13px] sm:me-[13px] flex items-center justify-center font-semibold text-sm"
                     @click="handleSelectQuestion(index)"
-                    :class="{ 'bg-[#2162FF] text-white': selectedIndex == index, 'bg-[#35509A] text-white': selectedIndex != index && questionDone.includes(item.id) }">
+                    :class="{ 'bg-[#2162FF] text-white': selectedIndex == index, 'bg-[#35509A] text-white': selectedIndex != index && questionDone[item.id] }">
                     {{ index + 1 }}
                 </div>
             </div>
             <div class="py-4 border-t border-[#e6e8ec]">
                 <p class="text-lg font-semibold mb-2">Question {{ selectedIndex + 1 }}</p>
-                <p class="font-semibold">
-                    <template v-for="(item, index) in handleQuestionWithInput(selectedQuestion?.question)">
+                <p class="font-semibold" id="question">
+                    <span v-for="(item, index) in handleQuestionWithInput(selectedQuestion?.question)" :key="'div' + selectedQuestion?.id  + index">
                         <span v-if="item !== '#'" :key="'span' + index">{{ item }}</span>
-                        <input v-else type="text" class="
+                        <input v-else type="text" 
+                            @input="(event) => handleAnswerInput(event, selectedQuestion, index)"
+                            v-model="inputAnswerValues[`${index}${selectedQuestion?.id}`]"
+                            class="
                                 mx-2
                                 text
                                 border
@@ -58,8 +61,11 @@
                                 lg:w-[75px]
                                 px-2
                                 py-1
-                            " :key="'input' + index" />
-                    </template>
+                            " 
+                            :key="'input' + index"
+                            :id="'input' + selectedQuestion?.id + index"
+                            />
+                    </span>
                 </p>
             </div>
             <div class="flex-grow"  v-show="selectedQuestion?.type == 1">
@@ -114,7 +120,11 @@ export default {
             baseURl: $Api.baseUrl,
             correctAnswers: {},
             questionCount: 0,
-            questionDone: [],
+            questionDone: {},
+            inputAnswersByQuestion: {},
+            inputAnswers: {},
+            correctInputAnswers: {},
+            inputAnswerValues: {},
         }
     },
     methods: {
@@ -141,8 +151,36 @@ export default {
                     this.correctAnswers[questionId] = false;
                 }
             }
-            this.questionDone.push(questionId)
+            this.questionDone[questionId] = true;
             this.isQuestionAnswered(answerId, questionId)
+        },
+        handleAnswerInput(event, question, elementIndex) {
+            // get index of input
+            const inputIndex = this.findCollectionIndex(document.getElementById('question').getElementsByTagName('input'), event.target.id)
+            const answerId = question.answer_listening[inputIndex].answer_id;
+            const rightAnswer = question.answer_listening[inputIndex].text.toLowerCase().trim();
+            const inputText = event.target.value ? event.target.value.toLowerCase().trim() : '';
+            // store value of each input
+            this.$set(this.inputAnswerValues, `${elementIndex}${question.id}`, event.target.value)
+            
+            if(rightAnswer == inputText) {
+                this.correctInputAnswers[answerId] = true;
+            } else {
+                this.correctInputAnswers[answerId] = false;
+            }
+            if(event.target.value || event.target.value != '' ) {
+                this.questionDone[question.id] = true;
+            } else {
+                this.questionDone[question.id] = false;
+            }
+        },
+        findCollectionIndex(collectionsArray, targetId) {
+            for (let i = 0; i < collectionsArray.length; i++) {
+                if (collectionsArray[i].id === targetId) {
+                    return i;
+                }
+            }
+            return -1;
         },
         handleQuestionWithInput(question) {
             if (!question?.includes("#")) return [question];
@@ -175,7 +213,8 @@ export default {
         },
         async submit() {
             const correctAnswers = Object.values(this.correctAnswers).filter(val => val === true).length;
-            this.onSubmit(correctAnswers, this.questionCount);
+            const correctInputAnswers = Object.values(this.correctInputAnswers).filter(val => val === true).length;
+            this.onSubmit(correctAnswers + correctInputAnswers, this.questionCount);
         },
         customAudio() {
             const playerButton = document.querySelector(".player-button"),
@@ -248,17 +287,24 @@ export default {
             this.questionDone = [];
             this.selectedIndex = 0;
             this.selectedTopicIndex = 0;
-            this.questions = {}
+            // this.questions = {}
             if (newTopics && newTopics.length) {
-                this.newTopics && this.newTopics.forEach(topic => {
-                    this.questionCount += topic.question_listening.length;
-                })
                 this.selectedTopic = newTopics[this.selectedTopicIndex];
+                this.getAudioDetail(this.selectedTopic?.id);
             }
         },
         questions(newQuestions) {
             this.selectedIndex = 0;
             this.selectedQuestion = this.questions[this.selectedIndex];
+            if (newQuestions && newQuestions.length) {
+                newQuestions && newQuestions.forEach(question => {
+                    if(question.type == 2) {
+                        this.questionCount += question?.answer_listening?.length;
+                    } else {
+                        this.questionCount += 1
+                    }
+                })
+            }
         }
     }
 }

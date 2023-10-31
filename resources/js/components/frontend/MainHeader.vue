@@ -115,7 +115,6 @@ export default {
         },
     },
     created() {
-        console.log(this.breadcrumb);
     },
 };
 </script>
