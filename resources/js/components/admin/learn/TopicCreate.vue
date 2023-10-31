@@ -326,12 +326,12 @@
 
         <div class="mx-auto my-4 flex justify-center">
           <el-popover placement="right" trigger="click">
-            <p class="mb-2 text-[14px] text-bold">Dạng câu hỏi:</p>
+            <p class="mb-2 text-[14px] text-bold">Question Type:</p>
             <el-button type="primary" @click="pushQues(1)" round
-              >Chọn đáp án
+              >Choose Answer
             </el-button>
             <el-button type="primary" @click="pushQues(2)" round
-              >Điền vào chỗ trống
+              >Fill in the blank
             </el-button>
             <el-button
               type="success"
