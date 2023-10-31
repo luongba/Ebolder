@@ -244,6 +244,8 @@ export default {
         topics(newTopics) {
             // reset data
             this.selectedAnswers = {};
+            this.correctAnswers = {};
+            this.questionDone = [];
             this.selectedIndex = 0;
             this.selectedTopicIndex = 0;
             this.questions = {}
