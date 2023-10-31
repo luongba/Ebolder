@@ -23,7 +23,8 @@ class HomeController extends Controller
     public $data;
     public function home()
     {
-        return redirect()->route('admin.exam-list');
+        return view('pages.admin.dashbroad.index');
+        // return redirect()->route('admin.exam-list');
     }
 
     public function index()

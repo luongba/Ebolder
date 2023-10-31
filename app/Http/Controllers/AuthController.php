@@ -47,8 +47,10 @@ class AuthController extends Controller
             if(auth()->attempt($validate)){
                 $user = auth()->user();
                 $token = $user->createToken("hoctienganh")->accessToken;
-                if($user->is_admin == 1 || $user->is_admin == 2){
+                if($user->is_admin == 2){
                     return redirect(route('admin.exam-list'))->with('token', $token);
+                } else if($user->is_admin == 1){
+                    return redirect(route('admin.home'))->with('token', $token);
                 }
                 return redirect(route('home-page'))->with('token', $token);
             }else {
