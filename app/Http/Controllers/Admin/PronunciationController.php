@@ -299,7 +299,7 @@ class PronunciationController extends Controller
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thao tác thất bại !"
+                "message" => "Failed!"
             ]);
         }
     }

@@ -382,12 +382,12 @@
 
         <div class="my-4 w-full flex justify-between">
           <el-popover placement="right" width="400" trigger="click">
-            <p class="mb-2 text-[14px] text-bold">Dạng câu hỏi:</p>
+            <p class="mb-2 text-[14px] text-bold">Question Type:</p>
             <el-button type="primary" @click="pushQues(1)" round
-              >Chọn đáp án</el-button
+              >Choose Answer</el-button
             >
             <el-button type="primary" @click="pushQues(2)" round
-              >Điền vào chỗ trống</el-button
+              >Fill in the blank</el-button
             >
             <el-button
               type="success"

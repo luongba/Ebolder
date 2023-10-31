@@ -299,7 +299,7 @@ class ReadController extends Controller
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thao tác thất bại !"
+                "message" => "Failed!"
             ]);
         }
     }
@@ -376,7 +376,7 @@ class ReadController extends Controller
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
-                "message" => "thao tác thành công !"
+                "message" => "Successfully!"
             ]);
 
         } catch (\Exception $e) {
@@ -385,7 +385,7 @@ class ReadController extends Controller
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Thao tác thất bại !"
+                "message" => "Failed!"
             ]);
         }
 
