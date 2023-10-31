@@ -151,25 +151,29 @@ class LevelController extends Controller
                 ->with([
                     'Learn' => function($query) {
                         $query->select('learns.id', 'learns.name', 'learns.is_exam')
-                            ->withCount('QuestionLesson');
+                            ->withCount('QuestionLesson')
+                            ->orderBy('name', 'asc');
                     },
                 ])
                 ->with([
                     'Reading' => function($query) {
                         $query->select('readings.id', 'readings.name', 'readings.is_exam')
-                            ->withCount('QuestionReading');
+                            ->withCount('QuestionReading')
+                            ->orderBy('name', 'asc');
                     },
                 ])
                 ->with([
                     'Vocabulary' => function($query) {
                         $query->select('vocabularies.id', 'vocabularies.name', 'vocabularies.is_exam')
-                            ->withCount('QuestionVocabularyRelationship');
+                            ->withCount('QuestionVocabularyRelationship')
+                            ->orderBy('name', 'asc');
                     },
                 ])
                 ->with([
                     'Grammar' => function($query) {
                         $query->select('grammars.id', 'grammars.name', 'grammars.is_exam')
-                            ->withCount('QuestionGrammarRelationship');
+                            ->withCount('QuestionGrammarRelationship')
+                            ->orderBy('name', 'asc');
                     },
                 ])
                 ->with([
@@ -181,7 +185,8 @@ class LevelController extends Controller
                 ->with([
                     'Pronunciation' => function($query) {
                         $query->select('pronunciations.id', 'pronunciations.name', 'pronunciations.is_exam')
-                            ->withCount('QuestionPronunciation');
+                            ->withCount('QuestionPronunciation')
+                            ->orderBy('name', 'asc');
                     },
                 ])
                 ->with([
@@ -191,7 +196,7 @@ class LevelController extends Controller
                                 'TopicAudioListen' => function ($query) {
                                     $query->select('id')->withCount('questionListening');
                                 }
-                        ]);
+                        ])->orderBy('name', 'asc');
                     },
                 ])
                 ->first();

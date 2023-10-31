@@ -522,13 +522,36 @@ export default {
             valueSpeaking: data.data.speak.map((item) => item.id) || [],
             valueTalking: data.data.pronunciation.map((item) => item.id) || [],
           };
-          this.listTopicGrammar = data.data.grammar;
-          this.listTopicReading = data.data.vocabulary;
-          this.listTopicVocabulary = data.data.reading;
-          this.listTopicListening = data.data.listen;
-          this.listTopicLesson = data.data.learn;
-          this.listTopicSpeaking = data.data.speak;
-          this.listTopicTalking = data.data.pronunciation;
+          data.data.grammar.forEach((item) => {
+            if (!this.listTopicGrammar.some((existingItem) => existingItem.id === item.id)) {
+              this.listTopicGrammar.push(item);
+            }
+          });
+          data.data.vocabulary.forEach((item) => {
+            if (!this.listTopicVocabulary.some((existingItem) => existingItem.id === item.id)) {
+              this.listTopicVocabulary.push(item);
+            }
+          });
+          data.data.listen.forEach((item) => {
+            if (!this.listTopicListening.some((existingItem) => existingItem.id === item.id)) {
+              this.listTopicListening.push(item);
+            }
+          });
+          data.data.learn.forEach((item) => {
+            if (!this.listTopicLesson.some((existingItem) => existingItem.id === item.id)) {
+              this.listTopicLesson.push(item);
+            }
+          });
+          data.data.speak.forEach((item) => {
+            if (!this.listTopicSpeaking.some((existingItem) => existingItem.id === item.id)) {
+              this.listTopicSpeaking.push(item);
+            }
+          });
+          data.data.pronunciation.forEach((item) => {
+            if (!this.listTopicTalking.some((existingItem) => existingItem.id === item.id)) {
+              this.listTopicTalking.push(item);
+            }
+          });
           this.show = !this.show;
         }
       } catch (e) {
