@@ -100,7 +100,6 @@ export default {
         },
         getLessonDetail(lessonId, lessonName) {
             this.onGetLessonDetail(lessonId, lessonName);
-            console.log(lessonId, lessonName);
             this.selectedLessonId = lessonId;
         }
     },
