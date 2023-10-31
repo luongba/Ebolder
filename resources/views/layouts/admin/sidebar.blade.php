@@ -106,8 +106,14 @@
                     </a>
                     <ul class="mm-collapse">
                         @can('Listening_List')
+                            @php
+                                $isActiveTopicListening = request()->is(['admin/topic-listening-level-test', 
+                                'admin/detail-topic-listening/*']);
+                                $isActiveQuestionListening = request()->is(['admin/listening-level-test/question-list', 
+                                'admin/listening-level-test/question-edit/*']);
+                            @endphp
                             <li>
-                                <a class="{{ request()->is(['admin/topic-listening-level-test']) ? 'mm-active' : '' }}"
+                                <a class="{{ $isActiveTopicListening ? 'mm-active' : '' }}"
                                     href="{{ route('admin.topic-listening-list') }}">
                                     <i class="metismenu-icon fa-solid fa-laptop-file"></i>
                                     Topics Management
@@ -116,7 +122,7 @@
                         @endcan
                         @can('Question_Listening_List')
                             <li>
-                                <a class="{{ request()->is(['admin/listening-level-test/question-list']) ? 'mm-active' : '' }}"
+                                <a class="{{ $isActiveQuestionListening ? 'mm-active' : '' }}"
                                     href="{{ route('admin.listening-question-list') }}">
                                     <i class="metismenu-icon fa-solid fa-clipboard-question"></i>
                                     Question Management

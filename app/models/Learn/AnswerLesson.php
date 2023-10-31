@@ -8,5 +8,5 @@ class AnswerLesson extends Model
 {
     protected $guarded = [];
     protected $keyType = 'string';
-    protected $fillable = ["id", "question_id", "text", "answer_id"];
+    protected $fillable = ["id", "question_id", "text", "id_answer"];
 }
