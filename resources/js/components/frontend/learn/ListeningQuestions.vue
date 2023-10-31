@@ -49,7 +49,7 @@
                         <span v-if="item !== '#'" :key="'span' + index">{{ item }}</span>
                         <input v-else type="text" class="
                                 mx-2
-                                text-white
+                                text
                                 border
                                 border-[#e6e8ec]
                                 outline-none
@@ -62,8 +62,8 @@
                     </template>
                 </p>
             </div>
-            <div class="flex-grow">
-                <div v-for="(answer, index) in selectedQuestion?.answer_listening" :key="index" v-show="selectedQuestion?.type == 1"
+            <div class="flex-grow"  v-show="selectedQuestion?.type == 1">
+                <div v-for="(answer, index) in selectedQuestion?.answer_listening" :key="index"
                     class="rounded-[8px] border-2 p-3 mb-3"
                     :class="{ 'border-[#2162FF]': isQuestionAnswered(answer?.id, selectedQuestion?.id) }"
                     @click="handleSelectAnswer(answer?.id, selectedQuestion?.id)">

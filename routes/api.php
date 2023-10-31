@@ -90,7 +90,7 @@ Route::middleware('auth:api')->group(function (){
         Route::post('/add-question-to-topic-speak', 'Admin\SpeakController@addQuestionToTopic')->name('add-question-to-topic-speak');
         Route::post('/edit-topic-speak', 'Admin\SpeakController@editTopic')->name('edit-topic-speak');
         Route::post('/remove-question-from-topic-speak', 'Admin\SpeakController@removeQuestionFromTopic')->name('remove-question-from-topic-speak');
-        Route::get('/detail-topic-speak/{id}', 'Admin\SpeakController@detailTopicData')->name('detail-topic-speak');
+        Route::get('/detail-topic-speaking/{id}', 'Admin\SpeakController@detailTopicData')->name('detail-topic-speaking');
         Route::get('/list-topic-speak', 'Admin\SpeakController@ListTopic')->name('list-topic-speak');
         Route::post('/store-topic-speak', 'Admin\SpeakController@createTopic')->name('store-topic-speak');
         Route::post('/delete-topic-speak', 'Admin\SpeakController@deleteTopic')->name('delete-topic-speak');
@@ -132,7 +132,7 @@ Route::middleware('auth:api')->group(function (){
         Route::get('/list-topic-lesson', 'Admin\LearnController@ListTopic')->name('list-topic-lesson');
         Route::post('/delete-topic-lesson', 'Admin\LearnController@deleteTopic')->name('delete-topic-lesson');
         Route::post('/create-topic-lesson', 'Admin\LearnController@createTopicApi')->name('create-topic-lesson');
-        Route::get('/detail-topic-lesson/{id}', 'Admin\LearnController@detailTopicApi')->name('detail-topic-lesson');
+        Route::get('/detail-topic-writing/{id}', 'Admin\LearnController@detailTopicApi')->name('detail-topic-writing');
         Route::post('/add-or-update-question-lesson', 'Admin\LearnController@addQuestionSingle')->name('add-or-update-question-lesson');
         Route::post('/delete-question-lesson', 'Admin\LearnController@deleteQuestionData')->name('delete-question-lesson');
         Route::post('/update-question-lesson', 'Admin\LearnController@addQuestionMultiple')->name('update-question-lesson');

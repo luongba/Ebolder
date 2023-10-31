@@ -36,8 +36,8 @@
                 </p>
             </div>
             <!-- , 'border-[#E6E8EC]': isQuestionAnswered(answer?.id, selectedQuestion?.id) == false -->
-            <div class="flex-grow">
-                <div v-for="(answer, index) in selectedQuestion?.answers" :key="index" class="rounded-[8px] border-2 p-3 mb-3" v-show="selectedQuestion?.type == 1"
+            <div class="flex-grow" v-show="selectedQuestion?.type == 1">
+                <div v-for="(answer, index) in selectedQuestion?.answers" :key="index" class="rounded-[8px] border-2 p-3 mb-3" 
                     :class="[isQuestionAnswered(answer?.id, selectedQuestion?.id) ? `border-${lessonType} radio-${lessonType}` : ''] "
                     @click="handleSelectAnswer(answer?.id, selectedQuestion?.id)">
                     <input type="radio" :id="`test${answer?.id}`" :value="answer?.id" :checked="isQuestionAnswered(answer?.id, selectedQuestion?.id)" />
@@ -62,12 +62,10 @@
                     </svg>
 
                 </div>
-                <div v-show="selectedIndex == this.questions?.length - 1" :class="[`button bg-${lessonType}-tag`]" @click="submit">
+            </div>
+            <div class="w-full flex flex-row mt-4">
+                <div v-show="Object.keys(this.questionDone).length == this.questions?.length" :class="[`button bg-${lessonType}-tag`]" @click="submit">
                     Finish
-                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9697 16.5303C13.6768 16.2374 13.6768 15.7626 13.9697 15.4697L17.4393 12L13.9697 8.53033C13.6768 8.23744 13.6768 7.76256 13.9697 7.46967C14.2626 7.17678 14.7374 7.17678 15.0303 7.46967L19.0303 11.4697C19.3232 11.7626 19.3232 12.2374 19.0303 12.5303L15.0303 16.5303C14.7374 16.8232 14.2626 16.8232 13.9697 16.5303Z" fill="#D35924"/>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M19.25 12C19.25 12.4142 18.9142 12.75 18.5 12.75L6.5 12.75C6.08579 12.75 5.75 12.4142 5.75 12C5.75 11.5858 6.08579 11.25 6.5 11.25L18.5 11.25C18.9142 11.25 19.25 11.5858 19.25 12Z" fill="#D35924"/>
-                    </svg>
                 </div>
             </div>
         </div>
@@ -130,7 +128,6 @@ export default {
         handleAnswerInput(event, question, elementIndex) {
             // get index of input
             const inputIndex = this.findCollectionIndex(document.getElementById('question').getElementsByTagName('input'), event.target.id)
-
             const answerId = question.answers[inputIndex].answer_id;
             const rightAnswer = question.answers[inputIndex].text.toLowerCase().trim();
             const inputText = event.target.value ? event.target.value.toLowerCase().trim() : '';
