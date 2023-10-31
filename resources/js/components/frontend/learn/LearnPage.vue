@@ -137,7 +137,33 @@ export default {
           if (this.lessonType == 'listening') {
             this.lessonContent = rs.data.data;
             this.lessonQuestions = rs.data.data['topic_audio_listen']
-
+          } else if (this.lessonType == 'pronunciation') {
+            rs.data.data[`question_${this.lessonType}`].forEach(function(item) {
+                item.answers = item.answer_pronunciation;
+                delete item.answer_pronunciation;
+                item.right_answers = item.right_answer_pronunciation;
+                delete item.right_answer_pronunciation;
+            });
+            this.lessonContent = rs.data.data;
+            this.lessonQuestions = rs.data.data[`question_${this.lessonType}`];
+          } else if (this.lessonType == 'reading') {
+            rs.data.data[`question_${this.lessonType}`].forEach(function(item) {
+                item.answers = item.answer_reading;
+                delete item.answer_reading;
+                item.right_answers = item.right_answer_reading;
+                delete item.right_answer_reading;
+            });
+            this.lessonContent = rs.data.data;
+            this.lessonQuestions = rs.data.data[`question_${this.lessonType}`];
+          } else if (this.lessonType == 'writing') {
+            rs.data.data['question_lesson'].forEach(function(item) {
+                item.answers = item.answer_lesson;
+                delete item.answer_lesson;
+                item.right_answers = item.right_answer_lesson;
+                delete item.right_answer_lesson;
+            });
+            this.lessonContent = rs.data.data;
+            this.lessonQuestions = rs.data.data['question_lesson'];
           } else {
             this.lessonContent = rs.data.data;
             this.lessonQuestions = rs.data.data[`question_${this.lessonType}`];

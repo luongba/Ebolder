@@ -128,7 +128,6 @@ export default {
         handleAnswerInput(event, question, elementIndex) {
             // get index of input
             const inputIndex = this.findCollectionIndex(document.getElementById('question').getElementsByTagName('input'), event.target.id)
-
             const answerId = question.answers[inputIndex].answer_id;
             const rightAnswer = question.answers[inputIndex].text.toLowerCase().trim();
             const inputText = event.target.value ? event.target.value.toLowerCase().trim() : '';

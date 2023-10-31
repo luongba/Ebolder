@@ -13,7 +13,7 @@
         </div>
 
         <div class="border-t border-gray-300 w-full h-px"></div>
-        <div v-html="this.content?.description" class="text-[16px] p-3 max-w-[380px] sm:max-w-[764px] md:max-w-[900px]"></div>
+        <div v-html="this.content?.description || this.content?.content" class="text-[16px] p-3 max-w-[380px] sm:max-w-[764px] md:max-w-[900px]"></div>
     </div>
 </template>
 

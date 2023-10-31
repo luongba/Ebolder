@@ -861,7 +861,7 @@ export default {
     async getDetailTopic() {
       try {
         let rs = await baseRequest.get(
-          `/admin/detail-topic-lesson/${this.param}`
+          `/admin/detail-topic-writing/${this.param}`
         );
         let { data } = rs;
         if (data.status == 200) {
