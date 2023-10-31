@@ -11,7 +11,7 @@
       <el-table-column fixed label="Name" prop="name"> </el-table-column>
       <el-table-column label="Email" prop="email"> </el-table-column>
       <el-table-column label="Phone" prop="phone"> </el-table-column>
-      <el-table-column align="right">
+      <el-table-column align="right" width="300">
         <template slot="header" slot-scope="scope">
           <el-input
             v-model="search"
@@ -159,7 +159,7 @@ export default {
             phone: item.phone,
             is_admin: item.is_admin,
           }));
-          this.isAdmin = data?.data?.isAdmin;
+          this.isAdmin = data?.isAdmin;
           this.total = data?.data?.total;
           this.page = data?.data?.current_page;
           
