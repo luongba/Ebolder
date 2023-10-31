@@ -42,11 +42,11 @@
                             <div class="p-4">
                                 <div class="flex flex-row items-center justify-between">
                                     <div class="flex flex-row">
-                                        <div class="rounded p-1.5  w-fit me-[10px] font-bold text-sm"
+                                        <div class="rounded p-1.5  w-fit mr-2 font-bold text-sm"
                                             :class="[selectedLessonId == item.id ? `bg-${lessonType}-tag` : 'text-white bg-[#141416]' ]">
                                             {{ levelName }}
                                         </div>
-                                        <div class="rounded p-1 w-fit me-[10px] font-bold text-sm uppercase flex flex-row items-center"
+                                        <div class="rounded p-1 w-fit mr-2 font-bold text-sm uppercase flex flex-row items-center"
                                             :class="[selectedLessonId == item.id ? `bg-${lessonType}-tag` : `text-[#2162FF] bg-${lessonType}-tag` ]">
                                             <BookFill class="me-2"
                                                 :color="selectedLessonId == item.id ? activeColor : inactiveColor" />

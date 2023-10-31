@@ -16,7 +16,7 @@
                             <div class="p-4">
                                 <div class="flex flex-row items-center justify-between">
                                     <div class="flex flex-row">
-                                        <div class="rounded p-1 w-fit me-[10px] font-bold text-sm uppercase flex flex-row items-center"
+                                        <div class="rounded p-1 w-fit mr-2 font-bold text-sm uppercase flex flex-row items-center"
                                             :class="{ 'text-white bg-[#447bff]': selectedSkill == skill.skill, 'text-[#2162FF] bg-[#D3E0FF]': selectedSkill != skill.skill }">
                                             <component :is="skill.icon" :color="activeSkillColor(skill.skill)" class="me-3"/>
                                             {{ skill.skill.toUpperCase() }}
