@@ -22,7 +22,8 @@
             },
           ]"
         >
-          <el-input v-model="dynamicValidateForm.email"></el-input>
+          <el-input 
+          :disabled=true v-model="dynamicValidateForm.email"></el-input>
         </el-form-item>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4">
