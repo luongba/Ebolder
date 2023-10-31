@@ -31,8 +31,8 @@
                 </template>
             </p>
         </div>
-        <div class="flex-grow">
-            <div v-for="(answer, index) in selectedQuestion?.[`answer_${this.skill}`]" :key="index" class="rounded-[8px] border-2 p-3 mb-3" v-show="selectedQuestion?.type == 1"
+        <div class="flex-grow"  v-show="selectedQuestion?.type == 1">
+            <div v-for="(answer, index) in selectedQuestion?.[`answer_${this.skill}`]" :key="index" class="rounded-[8px] border-2 p-3 mb-3"
                 :class="{ 'border-[#2162FF]': isQuestionAnswered(answer?.id, selectedQuestion?.id)} "
                 @click="handleSelectAnswer(answer?.id, selectedQuestion?.id)">
                 <input type="radio" :id="`test${answer?.id}`" :value="answer?.id" :checked="isQuestionAnswered(answer?.id, selectedQuestion?.id)" />
