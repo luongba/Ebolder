@@ -322,9 +322,6 @@ class VocabularyController extends Controller
                 'description' => $request->contentReading,
                 'is_exam' => $request->is_exam,
             ]);
-            if (!$request->is_exam) {
-                LevelVocabulary::where('vocabulary_id', $request->id)->delete();
-            }
 
             $dataQuestion = ($request->dataQuestion);
             $questionVocab = $vocabulary->QuestionVocabulary()->get()->toArray();

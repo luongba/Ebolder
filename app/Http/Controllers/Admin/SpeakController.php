@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\models\Exam\Exam;
 use Illuminate\Http\Request;
 use App\models\Speak\AnswerSpeak;
 use App\models\Speak\LevelSpeak;
@@ -203,6 +204,14 @@ class SpeakController extends Controller
     public function deleteTopic(Request $request)
     {
         try {
+            $exam = Exam::where('speaking_id', $request->id)->first();
+            if ($exam) {
+                return [
+                    "status" => 400,
+                    "errorCode" => 400,
+                    "message" => "Topic cannot be deleted as there is an active exam using it."
+                ];
+            }
             $speak = Speak::find($request->id);
             $speak->QuestionSpeak()->detach();
             $speak->delete();
@@ -342,15 +351,20 @@ class SpeakController extends Controller
     {
         try {
             DB::beginTransaction();
+            $exam = Exam::where('speaking_id', $request->id)->first();
+            if ($exam && !$request->is_exam) {
+                return [
+                    "status" => 400,
+                    "errorCode" => 400,
+                    "message" => "There is an ongoing exam using this topic, so the exam status for this topic cannot be updated."
+                ];
+            }
             $speak = Speak::whereId($request->id)->first();
             $speak->update([
                 'name' => $request->name,
                 'description' => $request->description,
                 'is_exam' => $request->is_exam,
             ]);
-            if (!$request->is_exam) {
-                LevelSpeak::where('grammar_id', $request->id)->delete();
-            }
             $dataQuestion = ($request->dataQuestion);
             $questionList = $speak->QuestionSpeak()->get()->toArray();
             $toDelete = collect($questionList)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();

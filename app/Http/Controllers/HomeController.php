@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\models\Exam\Exam;
 use App\models\Grammar\Grammar;
 use App\models\Learn\ExamResult;
 use App\models\Learn\Learn;
@@ -358,14 +359,19 @@ class HomeController extends Controller
 
     public function updateStatusExam(Request $request){
         $data = app("App\\models\\{$request->model}\\{$request->class}");
+        if ($request->class == 'Listening') {
+            $exam = Exam::where('listening_id', $request->id)->first();
+            if ($exam && !$request->is_exam) {
+                return [
+                    "status" => 400,
+                    "errorCode" => 400,
+                    "message" => "There is an ongoing exam using this topic, so the exam status for this topic cannot be updated."
+                ];
+            }
+        }
         $data->whereId($request->id)->update([
             'is_exam' => $request->is_exam
         ]);
-        if (!$request->is_exam) {
-            if ($request->class == 'Listening') {
-                LevelListen::where('listening_id', $request->id)->delete();
-            }
-        }
         return response()->json([
             "status" => 200,
             "errorCode" => 0,

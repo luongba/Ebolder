@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\models\Exam\Exam;
 use App\models\Learn\AnswerLesson;
 use App\models\Learn\Learn;
 use App\models\Learn\QuestionLesson;
@@ -86,6 +87,14 @@ class LearnController extends Controller
     {
         try {
             DB::beginTransaction();
+            $exam = Exam::where('writing_id', $request->id)->first();
+            if ($exam) {
+                return [
+                    "status" => 400,
+                    "errorCode" => 400,
+                    "message" => "Topic cannot be deleted as there is an active exam using it."
+                ];
+            }
             $learn = Learn::whereId($request->id)->first();
             $learn->delete();
             $question = QuestionLesson::where('learn_id', $request->id)->get();
@@ -350,6 +359,14 @@ class LearnController extends Controller
     {
 
         try {
+            $exam = Exam::where('writing_id', $request->id)->first();
+            if ($exam && !$request->isExam) {
+                return [
+                    "status" => 400,
+                    "errorCode" => 400,
+                    "message" => "There is an ongoing exam using this topic, so the exam status for this topic cannot be updated."
+                ];
+            }
             $lesson = Learn::whereId($request->id)->first();
             $dataQuestion = ($request->dataQuestion);
             if ($request->has('file')) {

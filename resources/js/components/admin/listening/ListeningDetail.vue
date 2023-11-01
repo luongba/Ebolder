@@ -378,6 +378,12 @@
             id: this.detailTopic.id,
           });
           if (rs.data.status == 200) {
+          } else {
+            this.detailTopic.isExam = true;
+            this.$message({
+                type: "error",
+                message: rs.data.message,
+            });
           }
         } catch (e) {
           console.log(e);

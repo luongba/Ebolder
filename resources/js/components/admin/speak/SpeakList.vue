@@ -225,7 +225,7 @@ export default {
             } else {
               this.$message({
                 type: "error",
-                message: "Delete error",
+                message: rs.data.message,
               });
             }
           } catch (e) {
