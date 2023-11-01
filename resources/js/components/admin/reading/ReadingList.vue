@@ -126,39 +126,6 @@ export default {
     computed: {},
     watch: {},
     methods: {
-        async createTopic(formName) {
-            this.$refs[formName].validate(async (valid) => {
-                if (valid) {
-                    try {
-                        let rs = await baseRequest.post(
-                            `/admin/store-topic-vocabulary`,
-                            this.topicData
-                        );
-                        if (rs.data.status == 200) {
-                            this.getAllAudio();
-
-                            this.resetFeild();
-                            this.$message({
-                                type: "success",
-                                message: "Add successful topics",
-                            });
-                        } else {
-                            this.$message({
-                                type: "error",
-                                message: "Add error topics",
-                            });
-                        }
-                    } catch (e) {
-                        this.$message({
-                            type: "error",
-                            message: "Add error topics",
-                        });
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
         paginateClick(curentPage) {
             this.current = curentPage;
             this.getAllTopic();
@@ -211,7 +178,7 @@ export default {
                         } else {
                             this.$message({
                                 type: "error",
-                                message: "Delete error",
+                                message: rs.data.message,
                             });
                         }
                     } catch (e) {

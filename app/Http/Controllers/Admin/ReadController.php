@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\models\Exam\Exam;
 use App\models\Read\AnswerReading;
 use App\models\Read\LevelReading;
 use Illuminate\Http\Request;
@@ -104,6 +105,14 @@ class ReadController extends Controller
     public function deleteTopicApi(Request $request)
     {
         try {
+            $exam = Exam::where('reading_id', $request->id)->first();
+            if ($exam) {
+                return [
+                    "status" => 400,
+                    "errorCode" => 400,
+                    "message" => "Topic cannot be deleted as there is an active exam using it."
+                ];
+            }
             Reading::find($request->id)->delete();
             return response()->json([
                 "status" => 200,
@@ -116,7 +125,7 @@ class ReadController extends Controller
             return [
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Xóa topic thất bại !"
+                "message" => "Delete error !"
             ];
         }
     }
@@ -309,15 +318,20 @@ class ReadController extends Controller
     {
         try {
             DB::beginTransaction();
+            $exam = Exam::where('reading_id', $request->id)->first();
+            if ($exam && !$request->isExam) {
+                return [
+                    "status" => 400,
+                    "errorCode" => 400,
+                    "message" => "There is an ongoing exam using this topic, so the exam status for this topic cannot be updated."
+                ];
+            }
             $read = Reading::whereId($request->id)->first();
             $read->update([
                 "name" => $request->name,
                 "content" => $request->contentReading,
                 "is_exam" => $request->isExam
             ]);
-            if (!$request->isExam) {
-                LevelReading::where('reading_id', $request->id)->delete();
-            }
 
             $dataQuestion = ($request->dataQuestion);
             $questionRead = $read->QuestionReading()->get()->toArray();

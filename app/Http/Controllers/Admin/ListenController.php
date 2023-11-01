@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\models\Exam\Exam;
 use App\models\Listen\AnswerListening;
 use App\models\Listen\AudioListening;
 use App\models\Listen\Listening;
@@ -523,6 +524,14 @@ class ListenController extends Controller
     public function deleteTopic(Request $request)
     {
         try {
+            $exam = Exam::where('listening_id', $request->id)->first();
+            if ($exam) {
+                return [
+                    "status" => 400,
+                    "errorCode" => 400,
+                    "message" => "Topic cannot be deleted as there is an active exam using it."
+                ];
+            }
             $vocabulary = Listening::find($request->id);
             $vocabulary->TopicAudioListen()->detach();
             $vocabulary->delete();

@@ -315,9 +315,6 @@ class PronunciationController extends Controller
                 "content" => $request->content,
                 "is_exam" => $request->is_exam
             ]);
-            if (!$request->is_exam) {
-                LevelPronunciation::where('pronunciation_id', $request->id)->delete();
-            }
 
             $dataQuestion = ($request->dataQuestion);
             $questionPronun = $pronun->QuestionPronunciation()->get()->toArray();

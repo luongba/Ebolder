@@ -319,9 +319,6 @@ class GrammarController extends Controller
                 'description' => $request->description,
                 'is_exam' => $request->is_exam,
             ]);
-            if (!$request->is_exam) {
-                LevelGrammar::where('grammar_id', $request->id)->delete();
-            }
             $dataQuestion = ($request->dataQuestion);
             $questionVocab = $grammar->QuestionGrammar()->get()->toArray();
             $toDelete = collect($questionVocab)->whereNotIn('id', collect($dataQuestion)->pluck('id'))->all();
