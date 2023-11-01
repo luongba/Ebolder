@@ -53,7 +53,7 @@
           <div class="flex justify-center mt-5">
             <div class="border-2 px-5 py-3 rounded">
               <p class="text-center text-[14px]">Score</p>
-              <p  class="text-center text-[14px] rounded mt-2" style="background-color: #E6E8EC;">{{ scores }}</p>
+              <p  class="text-center text-[14px] rounded mt-2 px-2 font-bold" style="background-color: #E6E8EC;">{{ scores }}</p>
             </div>
           </div>
           <div class="flex justify-center mt-5 ">
