@@ -38,16 +38,18 @@
             <div v-for="(item, index) in this.questions" :key="item.id"
                 class="rounded-full w-7 h-7 sm:w-10 sm:h-10 me-[11px] mb-[11px] sm:mb-[13px] sm:me-[13px] flex items-center justify-center font-semibold text-sm"
                 @click="handleSelectQuestion(index)"
-                :class="{ 'bg-[#2162FF] text-white': selectedIndex == index, 'bg-[#35509A] text-white': selectedIndex != index && questionDone.includes(item.id) }">
+                :class="{ 'bg-[#2162FF] text-white': selectedIndex == index, 'bg-[#35509A] text-white': selectedIndex != index && questionDone[item.id] }">
                 {{ index + 1 }}
             </div>
         </div>
         <div class="py-4 border-t border-[#e6e8ec]">
             <p class="text-lg font-semibold mb-2">Question {{ selectedIndex + 1 }}</p>
-            <p class="font-semibold">
-                <template v-for="(item, index) in handleQuestionWithInput(selectedQuestion?.question)">
+            <p class="font-semibold"  id="question">
+                <span v-for="(item, index) in handleQuestionWithInput(selectedQuestion?.question)" :key="'div' + selectedQuestion?.id  + index">
                     <span v-if="item !== '#'" :key="'span' + index">{{ item }}</span>
                     <input v-else type="text"
+                            @input="(event) => handleAnswerInput(event, selectedQuestion, index)"
+                            v-model="inputAnswerValues[`${index}${selectedQuestion?.id}`]"
                             class="
                                 mx-2
                                 text
@@ -59,8 +61,11 @@
                                 lg:w-[75px]
                                 px-2
                                 py-1
-                            " :key="'input' + index" />
-                </template>
+                            " 
+                            :key="'input' + index"
+                            :id="'input' + selectedQuestion?.id + index"
+                            />
+                </span>
             </p>
         </div>
         <div class="flex-grow" v-show="selectedQuestion?.type == 1">
@@ -75,19 +80,17 @@
             </div>
         </div>
         <div class="w-full flex flex-row mt-4">
-            <div v-show="selectedTopicIndex <= this.topics?.length - 1 && selectedTopicIndex > 0" class="button-back"
-                @click="handleSelectTopic(selectedTopicIndex - 1)">
-                <img :src="arrowLeft" />
+            <div :class="{'button-active': selectedTopicIndex <= this.topics?.length - 1 && selectedTopicIndex > 0, 'button-inactive': selectedTopicIndex == 0 }"
+                @click="handleSelectTopic(selectedTopicIndex - 1, 'back')">
+                <Left :color="selectedTopicIndex <= this.topics?.length - 1 && selectedTopicIndex > 0 ? activeColor : inactiveColor"/>
                 Back
             </div>
-            <div v-show="selectedTopicIndex < this.topics?.length - 1" class="button-next"
-                @click="handleSelectTopic(selectedTopicIndex + 1)">
+            <div class="w-3"></div>
+            <div :class="{'button-active': selectedTopicIndex < this.topics?.length - 1, 'button-inactive': selectedTopicIndex >= this.topics?.length - 1}"
+                @click="handleSelectTopic(selectedTopicIndex + 1, 'next')"
+                >
                 Next
-                <img :src="arrowRight" />
-            </div>
-            <div v-show="selectedTopicIndex == this.topics?.length - 1" class="button-next" @click="submit">
-                Finish
-                <img :src="arrowRight" />
+                <Right :color="selectedTopicIndex < this.topics?.length - 1 ? activeColor : inactiveColor" />
             </div>
         </div>
     </div>
@@ -96,9 +99,15 @@
 
 <script>
 import baseRequest from "../../../utils/baseRequest";
+import Right from '../../../svg/Right.vue';
+import Left from '../../../svg/Left.vue';
 
 export default {
     props: ["topics", "skill", "onSubmit"],
+    components: {
+        Right,
+        Left
+    },
     data() {
         return {
             selectedIndex: 0,
@@ -110,8 +119,14 @@ export default {
             questions: null,
             baseURl: $Api.baseUrl,
             correctAnswers: {},
-            questionDone: [],
+            questionDone: {},
             questionCount: 0,
+            inputAnswersByQuestion: {},
+            inputAnswers: {},
+            correctInputAnswers: {},
+            inputAnswerValues: {},
+            activeColor: '#2162ff',
+            inactiveColor: '#141416',
             arrowLeft: require('../../../../../public/images/learn/arrow-left.svg'),
             arrowRight: require('../../../../../public/images/learn/arrow-right.svg')
         }
@@ -121,7 +136,10 @@ export default {
             this.selectedIndex = index;
             this.selectedQuestion = this.questions?.[this.selectedIndex];
         },
-        async handleSelectTopic(index) {
+        async handleSelectTopic(index, action) {
+            if (action == 'back' && this.selectedTopicIndex <= 0 || action == 'next' && this.selectedTopicIndex >= this.topics?.length - 1) {
+                return;
+            }
             this.selectedTopicIndex = index;
             this.selectedTopic = this.topics?.[this.selectedTopicIndex];
             await this.getAudioDetail(this.topics?.[this.selectedTopicIndex]?.id);
@@ -141,8 +159,38 @@ export default {
                     this.correctAnswers[questionId] = false;
                 }
             }
-            this.questionDone.push(questionId)
+            this.saveResult();
+            this.questionDone[questionId] = true;
             this.isQuestionAnswered(answerId, questionId)
+        },
+        handleAnswerInput(event, question, elementIndex) {
+            // get index of input
+            const inputIndex = this.findCollectionIndex(document.getElementById('question').getElementsByTagName('input'), event.target.id)
+            const answerId = question.answer_listening[inputIndex].answer_id;
+            const rightAnswer = question.answer_listening[inputIndex].text.toLowerCase().trim();
+            const inputText = event.target.value ? event.target.value.toLowerCase().trim() : '';
+            // store value of each input
+            this.$set(this.inputAnswerValues, `${elementIndex}${question.id}`, event.target.value)
+            
+            if(rightAnswer == inputText) {
+                this.correctInputAnswers[answerId] = true;
+            } else {
+                this.correctInputAnswers[answerId] = false;
+            }
+            if(event.target.value || event.target.value != '' ) {
+                this.questionDone[question.id] = true;
+            } else {
+                this.questionDone[question.id] = false;
+            }
+            this.saveResult();
+        },
+        findCollectionIndex(collectionsArray, targetId) {
+            for (let i = 0; i < collectionsArray.length; i++) {
+                if (collectionsArray[i].id === targetId) {
+                    return i;
+                }
+            }
+            return -1;
         },
         handleQuestionWithInput(question) {
             if (!question?.includes("#")) return [question];
@@ -173,10 +221,13 @@ export default {
                 loading.close();
             }
         },
-        async submit() {
+        saveResult() {
             const correctAnswers = Object.values(this.correctAnswers).filter(val => val === true).length;
-            this.onSubmit(correctAnswers, this.questionCount);
-            console.log('correctAnswers', correctAnswers, 'this.questionCount', this.questionCount);
+            const correctInputAnswers = Object.values(this.correctInputAnswers).filter(val => val === true).length;
+            const type = `result_${this.skill}`;
+            const result = `${correctAnswers + correctInputAnswers}/${this.questionCount}`;
+            
+            localStorage.setItem(type, result);
         },
         customAudio() {
             const playerButton = document.querySelector(".player-button"),
@@ -239,25 +290,36 @@ export default {
         }
     },
     watch: {
-        topics(newTopics) {
-            // reset data
-            this.selectedAnswers = {};
-            this.questionDone = [];
-            this.correctAnswers = {};
-            this.selectedIndex = 0;
-            this.selectedTopicIndex = 0;
-            this.questions = {}
-            if (newTopics && newTopics.length) {
-                newTopics && newTopics.forEach(topic => {
-                    this.questionCount += topic.question_listening?.length;
-                })
-                this.selectedTopic = newTopics[this.selectedTopicIndex];
-                
-            }
+        topics: {
+            handler(newTopics) {
+                // reset data
+                this.selectedAnswers = {};
+                this.questionDone = [];
+                this.correctAnswers = {};
+                this.selectedIndex = 0;
+                this.selectedTopicIndex = 0;
+                // this.questions = {}
+                if (newTopics && newTopics.length) {
+                    this.selectedTopic = newTopics[this.selectedTopicIndex];
+                    this.getAudioDetail(this.selectedTopic?.id);
+                    
+                }
+            },
+            immediate: true,
+            deep: true
         },
         questions(newQuestions) {
             this.selectedIndex = 0;
             this.selectedQuestion = this.questions[this.selectedIndex];
+            if (newQuestions && newQuestions.length) {
+                newQuestions && newQuestions.forEach(question => {
+                    if(question.type == 2) {
+                        this.questionCount += question?.answer_listening?.length;
+                    } else {
+                        this.questionCount += 1
+                    }
+                })
+            }
         }
     },
     mounted() {
@@ -267,7 +329,7 @@ export default {
 </script>
 
 <style>
-.button-next {
+.button-active {
     background-color: #3772ff1a;
     border-radius: 8px;
     padding: 12px 16px;
@@ -281,7 +343,7 @@ export default {
     cursor: pointer;
 }
 
-.button-back {
+.button-inactive {
     padding: 12px 16px;
     color: #141416;
     font-size: 18px;

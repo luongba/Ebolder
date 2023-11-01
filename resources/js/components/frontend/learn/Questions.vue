@@ -144,9 +144,6 @@ export default {
             } else {
                 this.questionDone[question.id] = false;
             }
-            // this.$set(this.inputAnswers, index, event.target.value ? event.target.value.toLowerCase().trim() : '')
-            // this.$set(this.inputAnswersByQuestion, question.id, this.inputAnswers)
-
         },
         findCollectionIndex(collectionsArray, targetId) {
             for (let i = 0; i < collectionsArray.length; i++) {
@@ -169,7 +166,7 @@ export default {
                 // reset data
                 this.selectedAnswers = {};
                 this.correctAnswers = {};
-                this.questionDone = [];
+                // this.questionDone = [];
                 this.selectedIndex = 0;
 
                 this.selectedQuestion = newQuestions[this.selectedIndex];
