@@ -18,9 +18,10 @@
                 <img :src="timer" />
                 <VueCountdown :auto-start="true" :time="timeWork" @progress="handleCountdownProgress">
                     <template slot-scope="props"
-                            >{{ props.minutes }}:{{ props.seconds <= 9 ? `0${props.seconds}` : props.seconds }} | Next</template
+                            >{{ props.minutes }}:{{ props.seconds <= 9 ? `0${props.seconds}` : props.seconds }} </template
                         >
                 </VueCountdown>
+                <div @click="finishExam" class="cursor-pointer">&nbsp | Finish </div>
             </div>
             <nav class="relative flex flex-wrap items-center justify-between px-2">
                 <div class="flex mx-auto flex-row items-center justify-between">
@@ -72,7 +73,7 @@ export default {
     components: {
         VueCountdown
     },
-    props: ["user", "breadcrumb", "showTime"],
+    props: ["user", "breadcrumb", "showTime", "onFinish"],
     data() {
         return {
             home: require('../../../../public/images/header/home.svg'),
@@ -85,7 +86,6 @@ export default {
     },
     methods: {
         handleCommand(e) {
-            debugger
             if(e === "history") {
                 window.location.href = "/history";
             } else if(e === 'logout') {
@@ -110,9 +110,12 @@ export default {
         handleCountdownProgress(data) {
             this.timerun = this.timeWork - data.totalMilliseconds + 1000;
             if (this.timerun === this.timeWork) {
-                this.submit();
+                this.finishExam();
             }
         },
+        finishExam() {
+            this.onFinish();
+        }
     },
     created() {
     },

@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper h-screen flex flex-column">
         <div class="sticky inset-x-0 top-0 bg-white z-50">
-            <main-header-component :user="user" :breadcrumb="breadcrumb" :showTime="true" />
+            <main-header-component :user="user" :breadcrumb="breadcrumb" :showTime="true" :onFinish="submit"/>
         </div>
         <div class="w-full h-full sm:overflow-hidden overflow-y-auto content">
             <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
@@ -16,7 +16,7 @@
                     <!-- Sidebar Content -->
                     <!-- :onGetLessonDetail="getLessonDetail"  -->
                     <div ref="content" class="bg-white listLesson" :class="[open ? 'w-[350px]' : 'hidden w-0']">
-                        <ExamDetailSkills v-model="open" :onGetExamBySkill="getExamBySkill" />
+                        <ExamDetailSkills v-model="open" :onGetExamBySkill="handleSelectedSkill" />
                         <slot></slot>
                     </div>
                 </div>
@@ -26,11 +26,20 @@
                     <ExamDetailContent :content="examBySkill" />
                 </div>
                 <div class="w-[350px] rounded overflow-auto questions">
-                    <ExamDetailListeningQuestions ref="listeningQuestions" :topics="questions"
-                        v-if="this.skill == 'listening'" :onSubmit="submit" />
-                    <ExamDetailQuestions :onSubmit="submit" :questions="questions" :skill="skill" v-if="this.skill != 'listening'" />
+                    <ExamDetailListeningQuestions 
+                        ref="listeningQuestions" 
+                        :topics="questions"
+                        v-if="this.skill == 'listening'" 
+                        :skill="skill" 
+                        />
+                    <ExamDetailQuestions :questions="questions" :skill="skill" v-if="this.skill != 'listening'"/>
                 </div>
             </div>
+            <VueCountdown :auto-start="true" :time="timeWork" @progress="handleCountdownProgress">
+                <template slot-scope="props"
+                    >{{ props.minutes }}:{{ props.seconds <= 9 ? `0${props.seconds}` : props.seconds }} </template
+                >
+            </VueCountdown>
         </div>
     </div>
 </template>
@@ -42,6 +51,7 @@ import ExamDetailQuestions from './ExamDetailQuestions.vue';
 import ExamDetailListeningQuestions from './ExamDetailListeningQuestions.vue';
 import ExamDetailSkills from "./ExamDetailSkills.vue";
 import ExamIcon from '../../../../../public/images/header/exam.svg';
+import VueCountdown from "@chenfengyuan/vue-countdown";
 
 export default {
     props: ["param", "user"],
@@ -49,7 +59,8 @@ export default {
         ExamDetailContent,
         ExamDetailQuestions,
         ExamDetailSkills,
-        ExamDetailListeningQuestions
+        ExamDetailListeningQuestions,
+        VueCountdown
     },
     data() {
         return {
@@ -62,7 +73,15 @@ export default {
             skill: null,
             breadcrumb: [
                 { label: 'Exam', icon: ExamIcon },
-            ]
+            ],
+            timeWork: 45 * 60 * 1000,
+            timerun: 0,
+            result: null,
+            content: null,
+            reading: {},
+            speaking: {},
+            writing: {},
+            listening: {},
         }
     },
     watch: {
@@ -105,8 +124,6 @@ export default {
             }
         },
         async getExamBySkill(skill) {
-            this.skill = skill ? skill.toLowerCase() : '';
-
             const loading = this.$loading({
                 lock: true,
                 text: "Loading",
@@ -114,40 +131,70 @@ export default {
                 background: "rgba(0, 0, 0, 0.7)",
             });
             try {
-                let rs = await baseRequest.get(`/admin/detail-topic-${this.skill}/${this.data[this.skill]}`);
+                let rs = await baseRequest.get(`/admin/detail-topic-${skill}/${this.data[skill]}`);
                 if (rs.data.status == 200) {
                     const data = rs.data.data;
                     if(data) {
-                    const formatedData = {
-                        listening: data.topic_audio_listen,
-                        speaking: data.question_speak,
-                        reading: data.question_reading,
-                        writing: data.question_lesson
-                    };
-                        this.examBySkill = data;
-                        this.questions = formatedData[this.skill]
+                        const formatedData = {
+                            name: data.name,
+                            description: data.description || data.content,
+                            listening: data.topic_audio_listen,
+                            speaking: data.question_speak,
+                            reading: data.question_reading,
+                            writing: data.question_lesson
+                        };
+                        return formatedData;
                     }
+                        return null;
                 }
             } catch (e) {
                 console.log(e);
             } finally {
                 loading.close();
             }
+        },
+        handleSelectedSkill(skill) {
+            this.skill = skill.toLowerCase();
+
+            if(skill == 'reading') {
+                const _data = JSON.parse(JSON.stringify(this.reading))
+                _data && _data?.['reading']?.forEach(question => {
+                    question.answers = question.answer_reading;
+                    delete question.answer_reading;
+                    question.right_answers = question.right_answer_reading;
+                    delete question.right_answer_reading;
+                })
+                this.questions = _data['reading'];
+            } else if (skill == 'listening') {
+                this.questions = this.listening['listening'];
+            } else if (skill == 'speaking') {
+                this.questions = this.speaking['speaking'];
+            } else if (skill == 'writing') {
+                this.questions = this.writing['writing'];
+            }
+            this.examBySkill = this[skill];
         },
         getBreadcrumb(label) {
             return [
                 ...this.breadcrumb, { label: label }
             ]
         },
-        async submit(correctAnswers, questionCount) {
-            const requestParams = {
-                test_type: this.skill,
-                scores: `${correctAnswers}/${questionCount}`,
-                no_exam: false,
-                completion_time: 0,
+        async submit() {
+            
+            const result_reading = localStorage.getItem('result_reading')
+            const result_listening = localStorage.getItem('result_listening')
+            const result_speaking = localStorage.getItem('result_speaking')
+            const result_writing = localStorage.getItem('result_writing')
+            
+            const requestHistoryFinalParams = {
                 exam_id: this.param,
-                topic_name: this.examBySkill?.name || '',
-                level_id: 0
+                result_reading: result_reading,
+                result_speaking: result_speaking,
+                result_listening: result_listening,
+                result_writing: result_writing,
+                user_id: this.user.id,
+                time: this.timerun,
+                status: 'create',
             }
             const loading = this.$loading({
                 lock: true,
@@ -156,19 +203,37 @@ export default {
                 background: "rgba(0, 0, 0, 0.7)",
             });
             try {
-                let rs = await baseRequest.post(`/admin/save-history`, requestParams);
+                const rs = await baseRequest.post(`/admin/save-exam-history-final`, requestHistoryFinalParams);
                 if (rs.data.status == 200) {
-
+                    //todo
                 }
             } catch (e) {
                 console.log(e);
             } finally {
                 loading.close();
             }
-        }
+        },
+        handleCountdownProgress(data) {
+            this.timerun = this.timeWork - data.totalMilliseconds + 1000;
+            if (this.timerun === this.timeWork) {
+                this.finishExam();
+            }
+        },
     },
     async created() {
-        await this.getExamDetail();
+        if(this.user) {
+            await this.getExamDetail();
+            
+            // const reading =  await this.getExamBySkill('reading');
+            // const listening = await this.getExamBySkill('listening');
+            // const speaking = await this.getExamBySkill('speaking');
+            // const writing = await this.getExamBySkill('writing');
+
+            // this.reading =  JSON.parse(JSON.stringify(reading))
+            // this.listening = JSON.parse(JSON.stringify(listening))
+            // this.speaking = JSON.parse(JSON.stringify(speaking))
+            // this.writing = JSON.parse(JSON.stringify(writing))
+        }
     },
     async mounted() {
         let x = await localStorage.getItem('section-list-show')

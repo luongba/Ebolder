@@ -81,7 +81,7 @@ export default {
         },
         getExamDetail(skill) {
             this.selectedSkill = skill
-            this.onGetExamBySkill(skill)
+            this.onGetExamBySkill(skill.toLowerCase())
         },
         activeSkillColor(skill) {
             return this.selectedSkill === skill ? '#fff' : '#2162FF';

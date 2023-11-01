@@ -58,7 +58,7 @@
                 Next
                 <img :src="arrowRight" />
             </div>
-            <div v-show="selectedIndex == this.questions?.length - 1" class="button-next" @click="submit">
+            <div v-show="selectedIndex == this.questions?.length - 1" class="button-next">
                 Finish
                 <img :src="arrowRight" />
             </div>
@@ -70,7 +70,7 @@
 <script>
 
 export default {
-    props: ["questions", "skill", "onSubmit"],
+    props: ["questions", "skill", "onSubmit", "value"],
     data() {
         return {
             selectedIndex: 0,
@@ -108,6 +108,7 @@ export default {
                     this.correctAnswers[questionId] = false;
                 }
             }
+            this.saveResult();
             this.questionDone[questionId] = true;
             this.isQuestionAnswered(answerId, questionId)
         },
@@ -130,6 +131,7 @@ export default {
             } else {
                 this.questionDone[question.id] = false;
             }
+            this.saveResult();
         },
         findCollectionIndex(collectionsArray, targetId) {
             for (let i = 0; i < collectionsArray.length; i++) {
@@ -147,20 +149,22 @@ export default {
         isQuestionAnswered(answerId, questionId) {
             return this.selectedAnswers[questionId] == answerId;
         },
-        async submit() {
+        saveResult() {
             const correctAnswers = Object.values(this.correctAnswers).filter(val => val === true).length;
             const correctInputAnswers = Object.values(this.correctInputAnswers).filter(val => val === true).length;
 
-            this.onSubmit(correctAnswers + correctInputAnswers, this.questionCount);
+            const type = `result_${this.skill}`;
+            const result = `${correctAnswers + correctInputAnswers}/${this.questionCount}`;
+            localStorage.setItem(type, result);
         },
     },
     watch: {
         questions(newQuestions) {
+            console.log('newQuestions', newQuestions);
             if (newQuestions && newQuestions.length) {
                 // reset data
                 this.selectedAnswers = {};
                 this.correctAnswers = {};
-                // this.questionDone = [];
                 this.selectedIndex = 0;
 
                 this.selectedQuestion = newQuestions[this.selectedIndex];
