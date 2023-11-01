@@ -48,18 +48,15 @@
             </div>
         </div>
         <div class="w-full flex flex-row mt-4">
-            <div v-show="selectedIndex <= this.questions?.length - 1 && selectedIndex > 0" class="button-back"
-                @click="handleSelectQuestion(selectedIndex - 1)">
+            <div :class="{'button-next': selectedIndex <= this.questions?.length - 1 && selectedIndex > 0, 'button-back': selectedIndex == 0 }"
+                @click="handleSelectQuestion(selectedIndex - 1, 'back')">
                 <img :src="arrowLeft" />
                 Back
             </div>
-            <div v-show="selectedIndex < this.questions?.length - 1" class="button-next"
-                @click="handleSelectQuestion(selectedIndex + 1)">
+            <div class="w-3"></div>
+            <div :class="{'button-next': selectedIndex < this.questions?.length - 1, 'button-back': selectedIndex == this.questions?.length - 1}"
+                @click="handleSelectQuestion(selectedIndex + 1, 'next')">
                 Next
-                <img :src="arrowRight" />
-            </div>
-            <div v-show="selectedIndex == this.questions?.length - 1" class="button-next">
-                Finish
                 <img :src="arrowRight" />
             </div>
         </div>
@@ -89,7 +86,10 @@ export default {
         }
     },
     methods: {
-        handleSelectQuestion(index) {
+        handleSelectQuestion(index, action) {
+            if (action == 'back' && this.selectedIndex <= 0 || action == 'next' && this.selectedIndex >= this.questions?.length - 1) {
+                return;
+            }
             this.selectedIndex = index;
             this.selectedQuestion = this.questions?.[this.selectedIndex];
         },
@@ -155,12 +155,13 @@ export default {
 
             const type = `result_${this.skill}`;
             const result = `${correctAnswers + correctInputAnswers}/${this.questionCount}`;
+            console.log('correctInputAnswers', correctInputAnswers);
+            console.log('this.questionCount', this.questionCount);
             localStorage.setItem(type, result);
         },
     },
     watch: {
         questions(newQuestions) {
-            console.log('newQuestions', newQuestions);
             if (newQuestions && newQuestions.length) {
                 // reset data
                 this.selectedAnswers = {};

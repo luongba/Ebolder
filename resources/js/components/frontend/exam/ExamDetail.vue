@@ -27,7 +27,6 @@
                 </div>
                 <div class="w-[350px] rounded overflow-auto questions">
                     <ExamDetailListeningQuestions 
-                        ref="listeningQuestions" 
                         :topics="questions"
                         v-if="this.skill == 'listening'" 
                         :skill="skill" 
@@ -79,9 +78,14 @@ export default {
             result: null,
             content: null,
             reading: {},
+            readingQuestionCount: 0,
             speaking: {},
+            speakingQuestionCout: 0,
             writing: {},
+            writingQuestionCount: 0,
             listening: {},
+            listeningQuestionCount: 0,
+            
         }
     },
     watch: {
@@ -123,7 +127,7 @@ export default {
                 loading.close();
             }
         },
-        async getExamBySkill(skill) {
+        async getReadingExam() {
             const loading = this.$loading({
                 lock: true,
                 text: "Loading",
@@ -131,21 +135,111 @@ export default {
                 background: "rgba(0, 0, 0, 0.7)",
             });
             try {
-                let rs = await baseRequest.get(`/admin/detail-topic-${skill}/${this.data[skill]}`);
+                let rs = await baseRequest.get(`/admin/detail-topic-reading/${this.data['reading']}`);
                 if (rs.data.status == 200) {
                     const data = rs.data.data;
                     if(data) {
                         const formatedData = {
                             name: data.name,
                             description: data.description || data.content,
-                            listening: data.topic_audio_listen,
-                            speaking: data.question_speak,
-                            reading: data.question_reading,
-                            writing: data.question_lesson
+                            data: data.question_reading,
                         };
-                        return formatedData;
+                        formatedData.data && formatedData.data.forEach(question => {
+                            question.answers = question.answer_reading;
+                            delete question.answer_reading;
+                            question.right_answers = question.right_answer_reading;
+                            delete question.right_answer_reading;
+                        })
+                        this.reading = formatedData
+                        this.readingQuestionCount = this.getQuestionCount(this.reading.data)
                     }
-                        return null;
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                loading.close();
+            }
+        },
+        async getListeningExam() {
+            const loading = this.$loading({
+                lock: true,
+                text: "Loading",
+                spinner: "el-icon-loading",
+                background: "rgba(0, 0, 0, 0.7)",
+            });
+            try {
+                let rs = await baseRequest.get(`/admin/detail-topic-listening/${this.data['listening']}`);
+                if (rs.data.status == 200) {
+                    const data = rs.data.data;
+                    if(data) {
+                        const formatedData = {
+                            name: data.name,
+                            description: data.description || data.content,
+                            data: data.topic_audio_listen,
+                        };
+                        this.listening = formatedData;
+                        this.listeningQuestionCount = this.getQuestionCount(this.listening.data)
+                    }
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                loading.close();
+            }
+        },
+        async getSpeakingExam() {
+            const loading = this.$loading({
+                lock: true,
+                text: "Loading",
+                spinner: "el-icon-loading",
+                background: "rgba(0, 0, 0, 0.7)",
+            });
+            try {
+                let rs = await baseRequest.get(`/admin/detail-topic-speaking/${this.data['speaking']}`);
+                if (rs.data.status == 200) {
+                    const data = rs.data.data;
+                    if(data) {
+                        const formatedData = {
+                            name: data.name,
+                            description: data.description || data.content,
+                            data: data.question_speak,
+                        };
+                        this.speaking = formatedData;
+                        this.speakingQuestionCout = this.getQuestionCount(this.speaking.data)
+                    }
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                loading.close();
+            }
+        },
+        async getWritingExam() {
+            const loading = this.$loading({
+                lock: true,
+                text: "Loading",
+                spinner: "el-icon-loading",
+                background: "rgba(0, 0, 0, 0.7)",
+            });
+            try {
+                let rs = await baseRequest.get(`/admin/detail-topic-writing/${this.data['writing']}`);
+                if (rs.data.status == 200) {
+                    const data = rs.data.data;
+                    if(data) {
+                        const formatedData = {
+                            name: data.name,
+                            description: data.description || data.content,
+                            data: data.question_lesson
+                        };
+                        formatedData.data && formatedData.data.forEach(question => {
+                            question.answers = question.answer_lesson;
+                            delete question.answer_lesson;
+                            question.right_answers = question.right_answer_lesson;
+                            delete question.right_answer_lesson;
+                        })
+                        this.writing = formatedData
+                        this.writingQuestionCount = this.getQuestionCount(this.writing.data)
+                    }
                 }
             } catch (e) {
                 console.log(e);
@@ -155,24 +249,42 @@ export default {
         },
         handleSelectedSkill(skill) {
             this.skill = skill.toLowerCase();
-
             if(skill == 'reading') {
-                const _data = JSON.parse(JSON.stringify(this.reading))
-                _data && _data?.['reading']?.forEach(question => {
-                    question.answers = question.answer_reading;
-                    delete question.answer_reading;
-                    question.right_answers = question.right_answer_reading;
-                    delete question.right_answer_reading;
-                })
-                this.questions = _data['reading'];
+                this.questions = this.reading.data;
+                this.examBySkill = {
+                    name: this.reading.name,
+                    description: this.reading.description,
+                }
             } else if (skill == 'listening') {
-                this.questions = this.listening['listening'];
+                this.questions = this.listening.data;
+                this.examBySkill = {
+                    name: this.listening.name,
+                    description: this.listening.description,
+                }
             } else if (skill == 'speaking') {
-                this.questions = this.speaking['speaking'];
+                this.questions = this.speaking.data;
+                this.examBySkill = {
+                    name: this.speaking.name,
+                    description: this.speaking.description,
+                }
             } else if (skill == 'writing') {
-                this.questions = this.writing['writing'];
+                this.questions = this.writing.data;
+                this.examBySkill = {
+                    name: this.writing.name,
+                    description: this.writing.description,
+                }
             }
-            this.examBySkill = this[skill];
+        },
+        getQuestionCount(questions) {
+            let count = 0;
+            questions && questions.forEach(question => {
+                    if(question.type == 2) {
+                        count += question.answers.length;
+                    } else {
+                        count += 1
+                    }
+                })
+            return count;
         },
         getBreadcrumb(label) {
             return [
@@ -188,10 +300,10 @@ export default {
             
             const requestHistoryFinalParams = {
                 exam_id: this.param,
-                result_reading: result_reading,
-                result_speaking: result_speaking,
-                result_listening: result_listening,
-                result_writing: result_writing,
+                result_reading: result_reading || `0/${this.readingQuestionCount}`,
+                result_speaking: result_speaking || `0/${this.speakingQuestionCout}`,
+                result_listening: result_listening || `0/${this.listeningQuestionCount}`,
+                result_writing: result_writing || `0/${this.writingQuestionCount}`,
                 user_id: this.user.id,
                 time: this.timerun,
                 status: 'create',
@@ -207,9 +319,14 @@ export default {
                 if (rs.data.status == 200) {
                     //todo
                 }
+                window.location.href = `${$Api.baseUrl}/exam`;
             } catch (e) {
                 console.log(e);
             } finally {
+                localStorage.removeItem('result_reading');
+                localStorage.removeItem('result_listening');
+                localStorage.removeItem('result_speaking');
+                localStorage.removeItem('result_writing');
                 loading.close();
             }
         },
@@ -224,20 +341,11 @@ export default {
         if(this.user) {
             await this.getExamDetail();
             
-            // const reading =  await this.getExamBySkill('reading');
-            // const listening = await this.getExamBySkill('listening');
-            // const speaking = await this.getExamBySkill('speaking');
-            // const writing = await this.getExamBySkill('writing');
-
-            // this.reading =  JSON.parse(JSON.stringify(reading))
-            // this.listening = JSON.parse(JSON.stringify(listening))
-            // this.speaking = JSON.parse(JSON.stringify(speaking))
-            // this.writing = JSON.parse(JSON.stringify(writing))
+            await this.getReadingExam();
+            await this.getListeningExam();
+            await this.getSpeakingExam();
+            await this.getWritingExam();
         }
-    },
-    async mounted() {
-        let x = await localStorage.getItem('section-list-show')
-        this.open = Number(x)
     }
 }
 </script>

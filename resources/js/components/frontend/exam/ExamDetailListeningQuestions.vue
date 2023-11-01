@@ -80,19 +80,17 @@
             </div>
         </div>
         <div class="w-full flex flex-row mt-4">
-            <div v-show="selectedTopicIndex <= this.topics?.length - 1 && selectedTopicIndex > 0" class="button-back"
-                @click="handleSelectTopic(selectedTopicIndex - 1)">
-                <img :src="arrowLeft" />
+            <div :class="{'button-active': selectedTopicIndex <= this.topics?.length - 1 && selectedTopicIndex > 0, 'button-inactive': selectedTopicIndex == 0 }"
+                @click="handleSelectTopic(selectedTopicIndex - 1, 'back')">
+                <Left :color="selectedTopicIndex <= this.topics?.length - 1 && selectedTopicIndex > 0 ? activeColor : inactiveColor"/>
                 Back
             </div>
-            <div v-show="selectedTopicIndex < this.topics?.length - 1" class="button-next"
-                @click="handleSelectTopic(selectedTopicIndex + 1)">
+            <div class="w-3"></div>
+            <div :class="{'button-active': selectedTopicIndex < this.topics?.length - 1, 'button-inactive': selectedTopicIndex >= this.topics?.length - 1}"
+                @click="handleSelectTopic(selectedTopicIndex + 1, 'next')"
+                >
                 Next
-                <img :src="arrowRight" />
-            </div>
-            <div v-show="selectedTopicIndex == this.topics?.length - 1" class="button-next">
-                Finish
-                <img :src="arrowRight" />
+                <Right :color="selectedTopicIndex < this.topics?.length - 1 ? activeColor : inactiveColor" />
             </div>
         </div>
     </div>
@@ -101,9 +99,15 @@
 
 <script>
 import baseRequest from "../../../utils/baseRequest";
+import Right from '../../../svg/Right.vue';
+import Left from '../../../svg/Left.vue';
 
 export default {
     props: ["topics", "skill", "onSubmit"],
+    components: {
+        Right,
+        Left
+    },
     data() {
         return {
             selectedIndex: 0,
@@ -121,6 +125,8 @@ export default {
             inputAnswers: {},
             correctInputAnswers: {},
             inputAnswerValues: {},
+            activeColor: '#2162ff',
+            inactiveColor: '#141416',
             arrowLeft: require('../../../../../public/images/learn/arrow-left.svg'),
             arrowRight: require('../../../../../public/images/learn/arrow-right.svg')
         }
@@ -130,7 +136,10 @@ export default {
             this.selectedIndex = index;
             this.selectedQuestion = this.questions?.[this.selectedIndex];
         },
-        async handleSelectTopic(index) {
+        async handleSelectTopic(index, action) {
+            if (action == 'back' && this.selectedTopicIndex <= 0 || action == 'next' && this.selectedTopicIndex >= this.topics?.length - 1) {
+                return;
+            }
             this.selectedTopicIndex = index;
             this.selectedTopic = this.topics?.[this.selectedTopicIndex];
             await this.getAudioDetail(this.topics?.[this.selectedTopicIndex]?.id);
@@ -281,19 +290,23 @@ export default {
         }
     },
     watch: {
-        topics(newTopics) {
-            // reset data
-            this.selectedAnswers = {};
-            this.questionDone = [];
-            this.correctAnswers = {};
-            this.selectedIndex = 0;
-            this.selectedTopicIndex = 0;
-            this.questions = {}
-            if (newTopics && newTopics.length) {
-                this.selectedTopic = newTopics[this.selectedTopicIndex];
-                this.getAudioDetail(this.selectedTopic?.id);
-                
-            }
+        topics: {
+            handler(newTopics) {
+                // reset data
+                this.selectedAnswers = {};
+                this.questionDone = [];
+                this.correctAnswers = {};
+                this.selectedIndex = 0;
+                this.selectedTopicIndex = 0;
+                // this.questions = {}
+                if (newTopics && newTopics.length) {
+                    this.selectedTopic = newTopics[this.selectedTopicIndex];
+                    this.getAudioDetail(this.selectedTopic?.id);
+                    
+                }
+            },
+            immediate: true,
+            deep: true
         },
         questions(newQuestions) {
             this.selectedIndex = 0;
@@ -316,7 +329,7 @@ export default {
 </script>
 
 <style>
-.button-next {
+.button-active {
     background-color: #3772ff1a;
     border-radius: 8px;
     padding: 12px 16px;
@@ -330,7 +343,7 @@ export default {
     cursor: pointer;
 }
 
-.button-back {
+.button-inactive {
     padding: 12px 16px;
     color: #141416;
     font-size: 18px;
