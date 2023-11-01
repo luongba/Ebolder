@@ -264,7 +264,6 @@ export default {
       try {
         this.isLoading = true;
         let rs = await baseRequest.get(`/admin/list-topic-grammar?search=${this.textSearch}&page=${this.current}`);
-        debugger
         if (rs.data.status == 200) {
           this.isLoading = false;
           this.listTopic = rs.data.data.data;

@@ -85,7 +85,6 @@ export default {
     },
     methods: {
         handleCommand(e) {
-            debugger
             if(e === "history") {
                 window.location.href = "/history";
             } else if(e === 'logout') {

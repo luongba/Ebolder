@@ -76,14 +76,14 @@ class ReadController extends Controller
     {
         try {
             if ($request->is_exam) {
-                $dataAll = Reading::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+                $dataAll = Reading::where('is_exam', 1)->orderBy('name', 'asc')->paginate(10);
             } else {
                 if ($request->search) {
                     $search = strtolower($request->search);
                     $dataAll = Reading::whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
-                        ->orderBy('id', 'DESC')->paginate(10);
+                        ->orderBy('name', 'asc')->paginate(10);
                 } else {
-                    $dataAll = Reading::orderBy('id', 'DESC')->paginate(10);
+                    $dataAll = Reading::orderBy('name', 'asc')->paginate(10);
                 }
             }
             return response()->json([

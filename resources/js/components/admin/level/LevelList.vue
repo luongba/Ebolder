@@ -552,6 +552,11 @@ export default {
               this.listTopicTalking.push(item);
             }
           });
+          data.data.reading.forEach((item) => {
+            if (!this.listTopicReading.some((existingItem) => existingItem.id === item.id)) {
+              this.listTopicReading.push(item);
+            }
+          });
           this.show = !this.show;
         }
       } catch (e) {
@@ -561,7 +566,7 @@ export default {
     async getAllTopicLesson() {
       try {
         // if (this.listTopicLesson.length < 10) {
-          let rs = await baseRequest.get(`/admin/list-topic-lesson?page=${this.pageLesson}&is_exam=true`);
+          let rs = await baseRequest.get(`/admin/list-topic-lesson?page=${this.pageLesson}`);
           if (rs.data.status == 200) {
             if (rs.data.data.data.length == 0) {
               this.isAtEndOfOptionsLesson = true;
@@ -584,7 +589,7 @@ export default {
     async getAllTopicVocabulary() {
       try {
         // if (this.listTopicVocabulary.length < 10) {
-          let rs = await baseRequest.get(`/admin/list-topic-vocabulary?page=${this.pageVocabulary}&is_exam=true`);
+          let rs = await baseRequest.get(`/admin/list-topic-vocabulary?page=${this.pageVocabulary}`);
           if (rs.data.status == 200) {
             if (rs.data.data.data.length == 0) {
               this.isAtEndOfOptionsVocabulary = true;
@@ -608,7 +613,7 @@ export default {
     async getAllTopicGrammar() {
       try {
         // if (this.listTopicGrammar.length < 10) {
-          let rs = await baseRequest.get(`/admin/list-topic-grammar?page=${this.pageGrammar}&is_exam=true`);
+          let rs = await baseRequest.get(`/admin/list-topic-grammar?page=${this.pageGrammar}`);
           if (rs.data.status == 200) {
             if (rs.data.data.data.length == 0) {
               this.isAtEndOfOptionsGammar = true;
@@ -630,7 +635,7 @@ export default {
     },
     async getAllTopicReading() {
       try {
-        let rs = await baseRequest.get(`/admin/list-topic-reading?page=${this.pageReading}&is_exam=true`);
+        let rs = await baseRequest.get(`/admin/list-topic-reading?page=${this.pageReading}`);
         if (rs.data.status == 200) {
           if (rs.data.data.data.length == 0) {
             this.isAtEndOfOptionsReading = true;
@@ -652,7 +657,7 @@ export default {
     async getAllTopicListening() {
       try {
           // if (this.listTopicListening.length < 10) {
-          let rs = await baseRequest.get(`/admin/topic-list-listening?page=${this.pageListening}&is_exam=true`);
+          let rs = await baseRequest.get(`/admin/topic-list-listening?page=${this.pageListening}`);
           if (rs.data.status == 200) {
             if (rs.data.data.data.length == 0) {
               this.isAtEndOfOptionsListening = true;
@@ -675,7 +680,7 @@ export default {
     async getAllTopicSpeaking() {
       try {
         // if (this.listTopicSpeaking.length < 10) {
-          let rs = await baseRequest.get(`/admin/list-topic-speak?page=${this.pageSpeaking}&is_exam=true`);
+          let rs = await baseRequest.get(`/admin/list-topic-speak?page=${this.pageSpeaking}`);
           if (rs.data.status == 200) {
             if (rs.data.data.data.length == 0) {
               this.isAtEndOfOptionsSpeaking = true;
@@ -697,7 +702,7 @@ export default {
     async getAllTopicTalking() {
       try {
         // if (this.listTopicTalking.length < 10) {
-          let rs = await baseRequest.get(`/admin/list-topic-pronunciation?page=${this.pagePronunciation}&is_exam=true`);
+          let rs = await baseRequest.get(`/admin/list-topic-pronunciation?page=${this.pagePronunciation}`);
           if (rs.data.status == 200) {
             if (rs.data.data.data.length == 0) {
               this.isAtEndOfOptionsPronuncation = true;
