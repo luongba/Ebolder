@@ -23,14 +23,14 @@ class VocabularyController extends Controller
     {
         try {
             if ($request->is_exam) {
-                $data = Vocabulary::where('is_exam', 1)->orderBy('id', 'DESC')->paginate(10);
+                $data = Vocabulary::where('is_exam', 1)->orderBy('name', 'asc')->paginate(10);
             } else {
                 if ($request->search) {
                     $search = strtolower($request->search); // Convert to lowercase
                     $data = Vocabulary::whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
-                        ->orderBy('id', 'DESC')->paginate(10);
+                        ->orderBy('name', 'asc')->paginate(10);
                 } else {
-                    $data = Vocabulary::orderBy('id', 'DESC')->paginate(10);
+                    $data = Vocabulary::orderBy('name', 'asc')->paginate(10);
                 }
             }
             return response()->json([
