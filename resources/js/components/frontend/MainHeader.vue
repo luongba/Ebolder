@@ -21,7 +21,7 @@
                             >{{ props.minutes }}:{{ props.seconds <= 9 ? `0${props.seconds}` : props.seconds }} </template
                         >
                 </VueCountdown>
-                <div @click="finishExam" class="cursor-pointer">&nbsp | Finish </div>
+                <div @click="handleExam" class="cursor-pointer">&nbsp | {{ action }} </div>
             </div>
             <nav class="relative flex flex-wrap items-center justify-between px-2">
                 <div class="flex mx-auto flex-row items-center justify-between">
@@ -73,16 +73,19 @@ export default {
     components: {
         VueCountdown
     },
-    props: ["user", "breadcrumb", "showTime", "onFinish"],
+    props: ["user", "breadcrumb", "showTime", "onFinish", "value"],
     data() {
         return {
             home: require('../../../../public/images/header/home.svg'),
             right: require('../../../../public/images/header/right.svg'),
-            timer: require('../../../../public/images/header/timer.svg'),
-            timeWork: 45 * 60 * 1000,
+            timer: require('../../../../public/images/header/timer-white.svg'),
+            timeWork: 0,
             timerun: 0,
+            action: null,
+            skills: [
+               'Listening', 'Speaking', 'Reading', 'Writing'
+            ]
         }
-
     },
     methods: {
         handleCommand(e) {
@@ -110,15 +113,35 @@ export default {
         handleCountdownProgress(data) {
             this.timerun = this.timeWork - data.totalMilliseconds + 1000;
             if (this.timerun === this.timeWork) {
-                this.finishExam();
+                this.onFinish();
             }
         },
-        finishExam() {
-            this.onFinish();
+        handleExam() {
+            const indexOfSkill = this.skills.findIndex(skill => skill.toLowerCase() == this.value);
+            if (indexOfSkill < this.skills.length - 1) {
+                this.$emit('handleExam', this.skills[indexOfSkill + 1].toLowerCase());
+            } else {
+                this.onFinish();
+            }
         }
     },
-    created() {
-    },
+    watch: {
+        value(newValue) {
+            const timeWorkMapping = {
+                'writing': 60 * 60 * 1000,
+                'listening': 40 * 60 * 1000,
+                'reading': 60 * 60 * 1000,
+            }
+            if(!newValue) return;
+            this.timeWork = timeWorkMapping[newValue];
+
+            if(newValue == 'writing') {
+                this.action = "Finish";
+            } else {
+                this.action = "Next";
+            }
+        }
+    }
 };
 </script>
 <style>

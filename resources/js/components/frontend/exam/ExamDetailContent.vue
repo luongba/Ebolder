@@ -6,12 +6,12 @@
                 DOING
             </div>
             <div class="text-bold text-xl">
-                {{ this.content?.name }}
+                {{ this.data?.name }}
             </div>
         </div>
 
         <div class="border-t border-gray-300 w-full h-px"></div>
-        <div v-html="this.content?.description" class="text-[16px] p-3 max-w-[380px] sm:max-w-[764px] md:max-w-[900px]"></div>
+        <div v-html="this.data?.description" class="text-[16px] p-3 max-w-[380px] sm:max-w-[764px] md:max-w-[900px]"></div>
     </div>
 </template>
 
@@ -20,9 +20,15 @@ export default {
     data() {
         return {
             highlighter: require('../../../../../public/images/learn/highlighter.svg'),
+            data: null
         }
     },
     props: ["content"],
+    watch: {
+        content (newContent) {
+            this.data = newContent
+        }
+    }
 }
 </script>
 <style>

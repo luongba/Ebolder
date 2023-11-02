@@ -1,7 +1,14 @@
 <template>
     <div class="wrapper h-screen flex flex-column">
         <div class="sticky inset-x-0 top-0 bg-white z-50">
-            <main-header-component :user="user" :breadcrumb="breadcrumb" :showTime="true" :onFinish="submit"/>
+            <main-header-component 
+                :user="user" 
+                :breadcrumb="breadcrumb" 
+                :showTime="true" 
+                :onFinish="submit"
+                v-model="skill"
+                @handleExam="handleSelectedSkill"
+            />
         </div>
         <div class="w-full h-full sm:overflow-hidden overflow-y-auto content">
             <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
@@ -14,9 +21,8 @@
                 <!-- Sidebar -->
                 <div class="flex w-full">
                     <!-- Sidebar Content -->
-                    <!-- :onGetLessonDetail="getLessonDetail"  -->
                     <div ref="content" class="bg-white listLesson" :class="[open ? 'w-[350px]' : 'hidden w-0']">
-                        <ExamDetailSkills v-model="open" :onGetExamBySkill="handleSelectedSkill" />
+                        <ExamDetailSkills v-model="open" ref="examDetailSkills" />
                         <slot></slot>
                     </div>
                 </div>
@@ -26,7 +32,7 @@
                     <ExamDetailContent :content="examBySkill" />
                 </div>
                 <div class="w-[350px] rounded overflow-auto questions">
-                    <ExamDetailListeningQuestions 
+                    <ExamDetailListeningQuestions
                         :topics="questions"
                         v-if="this.skill == 'listening'" 
                         :skill="skill" 
@@ -34,7 +40,7 @@
                     <ExamDetailQuestions :questions="questions" :skill="skill" v-if="this.skill != 'listening'"/>
                 </div>
             </div>
-            <VueCountdown :auto-start="true" :time="timeWork" @progress="handleCountdownProgress">
+            <VueCountdown :auto-start="true" :time="timeWork" @progress="handleCountdownProgress" v-show="false">
                 <template slot-scope="props"
                     >{{ props.minutes }}:{{ props.seconds <= 9 ? `0${props.seconds}` : props.seconds }} </template
                 >
@@ -248,6 +254,9 @@ export default {
             }
         },
         handleSelectedSkill(skill) {
+            if (this.$refs.examDetailSkills) {
+                this.$refs.examDetailSkills.getExamDetail(skill);
+            }
             this.skill = skill.toLowerCase();
             if(skill == 'reading') {
                 this.questions = this.reading.data;
@@ -338,14 +347,13 @@ export default {
         },
     },
     async created() {
-        if(this.user) {
             await this.getExamDetail();
-            
             await this.getReadingExam();
             await this.getListeningExam();
             await this.getSpeakingExam();
             await this.getWritingExam();
-        }
+
+            this.handleSelectedSkill('listening')
     }
 }
 </script>
