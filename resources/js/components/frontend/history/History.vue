@@ -32,11 +32,12 @@
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M13.0176 4.31344C13.2129 4.5087 13.2129 4.82528 13.0176 5.02055L12.0176 6.02055C11.8224 6.21581 11.5058 6.21581 11.3105 6.02055C11.1152 5.82528 11.1152 5.5087 11.3105 5.31344L12.3105 4.31344C12.5058 4.11818 12.8224 4.11818 13.0176 4.31344Z" fill="#141416"/>
                   </svg>
                   <div class="time">
-                    {{ item.time || '00:00:00'  }}
+                    {{ completion_time(item.time) || '00:00:00'  }}
                   </div>
                 </div>
               </div>
-              <p class="text-[16px] mt-3">{{ item.exam.name || ''}}</p>
+              <p class="text-[16px] mt-3">{{ item.exam?.name || ''}}</p>
+              <p class="text-[14px] mt-3 whitespace-nowrap">{{ created_at(item?.created_at) || ''}}</p>
             </div>
             <div class="flex w-100 items-center justify-start sm:justify-end mt-3 sm:mt-0" >
               <div class="grid grid-cols-2 gap-4">
@@ -150,9 +151,7 @@ export default {
       return $Helper.formatDateTime(time);
     },
   },
-  created() {
-    console.log(this.history_study);
-  },
+
 };
 </script>
 <style scoped>

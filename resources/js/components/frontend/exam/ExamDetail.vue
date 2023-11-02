@@ -50,7 +50,7 @@
                     </span>
                 </div>
                 <div class="text-5xl text-center w-100  mt-5 font-bold">
-                    {{ ((Date.now() - this.begin) / 1000 / 1000).toFixed(2) || 0 }}
+                    {{ completion_time((Date.now() - this.begin)) || 0 }}
                 </div>
                 <div class="text-xl text-center w-100 mt-2">
                     {{ new Date().toLocaleDateString()  }}
@@ -58,19 +58,19 @@
                 <div class="grid justify-center mt-5 gap-4 grid-cols-1 lg:grid-cols-4">
                     <div class="border-2 px-5 py-3 rounded">
                     <p class="text-center text-[14px]">Listening</p>
-                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_listening || "0/0" }}</p>
                     </div>
                     <div class="border-2 px-5 py-3 rounded">
                     <p class="text-center text-[14px]">Speaking</p>
-                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_speaking || "0/0" }}</p>
                     </div>
                     <div class="border-2 px-5 py-3 rounded">
                     <p class="text-center text-[14px]">Reading</p>
-                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_reading || "0/0" }}</p>
                     </div>
                     <div class="border-2 px-5 py-3 rounded">
                     <p class="text-center text-[14px]">Writing</p>
-                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_writing || "0/0" }}</p>
                     </div>
                 </div>
                 <div class="flex justify-center mt-5 ">
@@ -141,7 +141,7 @@ export default {
             writingQuestionCount: 0,
             listening: {},
             listeningQuestionCount: 0,
-            begin: null
+            begin: null,
             
         }
     },
@@ -153,6 +153,9 @@ export default {
         }
     },
     methods: {
+        completion_time(mili) {
+            return $Helper.millisToMinutesAndSeconds(mili);
+        },
         toggle() {
             this.open = !this.open;
         },
@@ -160,12 +163,6 @@ export default {
             return array.sort(() => Math.random() - 0.5); 
         },
         async getExamDetail() {
-            const loading = this.$loading({
-                lock: true,
-                text: "Loading",
-                spinner: "el-icon-loading",
-                background: "rgba(0, 0, 0, 0.7)",
-            });
             try {
                 let rs = await baseRequest.get(`/admin/get-detail-exam/${this.param}`);
                 if (rs.data.status == 200) {
@@ -183,17 +180,10 @@ export default {
                 }
             } catch (e) {
                 console.log(e);
-            } finally {
-                loading.close();
-            }
+                alert('Error')
+            } 
         },
         async getReadingExam() {
-            const loading = this.$loading({
-                lock: true,
-                text: "Loading",
-                spinner: "el-icon-loading",
-                background: "rgba(0, 0, 0, 0.7)",
-            });
             try {
                 let rs = await baseRequest.get(`/admin/detail-topic-reading/${this.data['reading']}`);
                 if (rs.data.status == 200) {
@@ -216,17 +206,10 @@ export default {
                 }
             } catch (e) {
                 console.log(e);
-            } finally {
-                loading.close();
+                alert('Error')
             }
         },
         async getListeningExam() {
-            const loading = this.$loading({
-                lock: true,
-                text: "Loading",
-                spinner: "el-icon-loading",
-                background: "rgba(0, 0, 0, 0.7)",
-            });
             try {
                 let rs = await baseRequest.get(`/admin/detail-topic-listening/${this.data['listening']}`);
                 if (rs.data.status == 200) {
@@ -243,17 +226,10 @@ export default {
                 }
             } catch (e) {
                 console.log(e);
-            } finally {
-                loading.close();
+                alert('Error')
             }
         },
         async getSpeakingExam() {
-            const loading = this.$loading({
-                lock: true,
-                text: "Loading",
-                spinner: "el-icon-loading",
-                background: "rgba(0, 0, 0, 0.7)",
-            });
             try {
                 let rs = await baseRequest.get(`/admin/detail-topic-speaking/${this.data['speaking']}`);
                 if (rs.data.status == 200) {
@@ -273,17 +249,10 @@ export default {
                 }
             } catch (e) {
                 console.log(e);
-            } finally {
-                loading.close();
+                alert('Error')
             }
         },
         async getWritingExam() {
-            const loading = this.$loading({
-                lock: true,
-                text: "Loading",
-                spinner: "el-icon-loading",
-                background: "rgba(0, 0, 0, 0.7)",
-            });
             try {
                 let rs = await baseRequest.get(`/admin/detail-topic-writing/${this.data['writing']}`);
                 if (rs.data.status == 200) {
@@ -306,8 +275,7 @@ export default {
                 }
             } catch (e) {
                 console.log(e);
-            } finally {
-                loading.close();
+                alert('Error')
             }
         },
         handleSelectedSkill(skill) {
@@ -371,9 +339,10 @@ export default {
                 result_listening: result_listening || `0/${this.listeningQuestionCount}`,
                 result_writing: result_writing || `0/${this.writingQuestionCount}`,
                 user_id: this.user.id,
-                time: this.timerun,
+                time: Date.now() - this.begin || 0, 
                 status: 'create',
             }
+            this.result = requestHistoryFinalParams;
             const loading = this.$loading({
                 lock: true,
                 text: "Loading",
@@ -382,13 +351,10 @@ export default {
             });
             try {
                 const rs = await baseRequest.post(`/admin/save-exam-history-final`, requestHistoryFinalParams);
-                if (rs.data.status == 200) {
-                    //todo
-                }
                 this.showResult = true;
-                // window.location.href = `${$Api.baseUrl}/exam`;
             } catch (e) {
                 console.log(e);
+                alert('Error')
             } finally {
                 localStorage.removeItem('result_reading');
                 localStorage.removeItem('result_listening');
@@ -405,18 +371,28 @@ export default {
         },
     },
     async created() {
+        const loading = this.$loading({
+            lock: true,
+            text: "Loading",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)",
+        });
         this.begin = Date.now();
         await this.getExamDetail();
         await this.getReadingExam();
         await this.getListeningExam();
         await this.getSpeakingExam();
         await this.getWritingExam();
-
         this.handleSelectedSkill('listening')
+        loading.close()
     },
     async mounted() {
         let x = await localStorage.getItem('section-list-show')
         this.open = Number(x)
+        localStorage.removeItem('result_reading');
+        localStorage.removeItem('result_listening');
+        localStorage.removeItem('result_speaking');
+        localStorage.removeItem('result_writing');
     }
 }
 </script>
