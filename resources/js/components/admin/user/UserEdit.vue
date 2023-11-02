@@ -75,9 +75,9 @@
         >
           <el-select
             v-model="dynamicValidateForm.roles"
-            multiple
             class="w-full"
             placeholder="Choose roles"
+            :disabled="dynamicValidateForm.roles == 1"
           >
             <el-option
               v-for="item in options"
@@ -124,6 +124,7 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
+          this.dynamicValidateForm.roles = [this.dynamicValidateForm.roles]
           try {
             let rs = await baseRequest.post(
               `/admin/update-user/${this.param}`,
@@ -187,7 +188,7 @@ export default {
             name: data.data.name || null,
             email: data.data.email || null,
             phone: data.data.phone || null,
-            roles: data.data.roles.map((item) => item.id),
+            roles: data.data.roles[0]?.id || 3,
           };
         }
       } catch (e) {

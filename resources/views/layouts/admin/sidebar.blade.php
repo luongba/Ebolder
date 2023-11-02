@@ -215,8 +215,12 @@
                 <li class="app-sidebar__heading">User</li>
             @endif
             @can('User_List')
+                @php
+                    $isActiveUser = request()->is(['admin/users',
+                    'admin/user/edit/*']);
+                @endphp
                 <li>
-                    <a class="{{ request()->is(['admin/users']) ? 'mm-active' : '' }}"
+                    <a class="{{ $isActiveUser ? 'mm-active' : '' }}"
                         href="{{ route('admin.user-list') }}">
                         <i class="metismenu-icon fa-regular fa-user"></i>
                         {{ Auth::user()->is_admin == 1 ? 'User management' : 'Test History' }}
@@ -225,8 +229,12 @@
                 </li>
             @endcan
             @can('Role_List')
+                @php
+                    $isActiveRole = request()->is(['admin/roles',
+                    'admin/role/edit/*']);
+                @endphp
                 <li>
-                    <a class="{{ request()->is(['admin/roles']) ? 'mm-active' : '' }}"
+                    <a class="{{ $isActiveRole ? 'mm-active' : '' }}"
                         href="{{ route('admin.role-list') }}">
                         <i class="metismenu-icon fa-solid fa-users"></i>
                         Role management

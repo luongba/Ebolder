@@ -93,11 +93,14 @@ class UserController extends Controller
             DB::beginTransaction();
             $validate = $request->validated();
             $user = User::whereId($id)->first()->update($validate);
+            User::where('id', $id)->update([
+                'is_admin' => $request->roles[0],
+            ]);
             $temp = [];
             foreach ( $request->roles as $item){
                 array_push($temp, $item);
             }
-                User::whereId($id)->first()->roles()->sync($temp);
+            User::whereId($id)->first()->roles()->sync($temp);
 
             DB::commit();
 
@@ -108,6 +111,7 @@ class UserController extends Controller
                 'message'=>'update success'
             ], 200);
         }catch(\Exception $e){
+            Log::error($e);
             DB::rollBack();
             return response()->json([
                 'status'=>500,
