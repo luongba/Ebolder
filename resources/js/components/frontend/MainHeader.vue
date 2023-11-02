@@ -78,7 +78,7 @@ export default {
         return {
             home: require('../../../../public/images/header/home.svg'),
             right: require('../../../../public/images/header/right.svg'),
-            timer: require('../../../../public/images/header/timer-white.svg'),
+            timer: require('../../../../public/images/header/timer.svg'),
             timeWork: 0,
             timerun: 0,
             action: null,
