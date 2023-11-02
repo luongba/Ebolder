@@ -15,13 +15,6 @@
             <el-table-column label="Description" prop="display_name">
             </el-table-column>
             <el-table-column align="right">
-                <template slot="header" slot-scope="scope">
-                    <el-input
-                        v-model="search"
-                        size="small"
-                        placeholder="Type to search"
-                    />
-                </template>
                 <template slot-scope="scope">
                     <el-button
                         size="mini"
@@ -106,9 +99,7 @@ export default {
                 let result = await baseRequest.get("/admin/get-all-role");
                 let { data } = result;
                 if (data.status == 200) {
-                    setTimeout(() => {
                     this.isLoading = false;
-                }, 1000);
                     this.tableData = data.data?.map((item) => ({
                         id: item.id,
                         name: item.name,

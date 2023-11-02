@@ -15,7 +15,6 @@
         <template slot="header" slot-scope="scope">
           <el-input
             v-model="search"
-            @change="handleSearch"
             size="small"
             placeholder="Type to search"
           />
@@ -49,6 +48,7 @@
             type="danger"
             @click="handleDelete(scope.$index, scope.row)"
             v-if="isAdmin"
+            :disabled="scope.row.is_admin == 1"
             >Delete
           </el-button>
         </template>
@@ -137,14 +137,6 @@ export default {
       this.page = page
       await this.getAllUser()
     },
-    handleSearch () {
-      this.page = 1;
-      this.total = 0;
-      clearTimeout(this.timeOut)
-      this.timeOut = setTimeout(async() => {
-          await this.getAllUser()
-      }, 300);
-    },
     async getAllUser() {
       try {
         this.isLoading = true;
@@ -175,5 +167,17 @@ export default {
   created() {
     this.getAllUser();
   },
+  watch: {
+    "search": {
+      handler(value) {
+        this.page = 1;
+        this.total = 0;
+        clearTimeout(this.timeOut)
+        this.timeOut = setTimeout(async() => {
+            await this.getAllUser()
+        }, 300);
+      }
+    }
+  }
 };
 </script>
