@@ -3,14 +3,14 @@
         <div class="sticky inset-x-0 top-0 bg-white z-50">
             <main-header-component :user="user" :breadcrumb="breadcrumb" :showTime="true" :onFinish="submit"/>
         </div>
-        <div v-show="!showResult" class="w-full h-full sm:overflow-hidden overflow-y-auto content">
+        <div v-show="!showResult" class="flex flex-row gap-4  w-full h-full sm:overflow-hidden overflow-y-auto content">
             <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
                 class="focus:outline-none transition-color duration-700 sidebarButton absolute">
                 <span class="block transform origin-center font-bold">
                     <img src="/images/learn/right.svg" alt="" />
                 </span>
             </button>
-            <div class="flex max-h-full sidebar z-10" :class="[!open ? 'hidden' : ' w-[350px] block']" >
+            <div class="flex max-h-full sidebar z-10" :class="[!open ? 'hidden' : 'max-w-[350px] block']" style="width: 90%;">
                 <!-- Sidebar -->
                 <div class="flex w-full">
                     <!-- Sidebar Content -->
@@ -21,79 +21,72 @@
                     </div>
                 </div>
             </div>
-            <div class="main">
-                <div class="rounded overflow-x-auto lesson flex-grow">
-                    <ExamDetailContent :content="examBySkill" />
-                </div>
-                <div class="w-[350px] rounded overflow-auto questions">
-                    <ExamDetailListeningQuestions 
-                        :topics="questions"
-                        v-if="this.skill == 'listening'" 
-                        :skill="skill" 
-                        />
-                    <ExamDetailQuestions :questions="questions" :skill="skill" v-if="this.skill != 'listening'"/>
-                </div>
+            <div :class="[`bg-white rounded overflow-x-auto lesson flex-grow mt-2 ${!open && 'ml-3'}`]" style="width: 50px;">
+                <ExamDetailContent :content="examBySkill" />
             </div>
-            <VueCountdown :auto-start="true" :time="timeWork" @progress="handleCountdownProgress">
-                <template slot-scope="props"
-                    >{{ props.minutes }}:{{ props.seconds <= 9 ? `0${props.seconds}` : props.seconds }} </template
-                >
-            </VueCountdown>
+            <div class="w-[350px] rounded overflow-y-auto  mt-2 questions">
+                <ExamDetailListeningQuestions 
+                    :topics="questions"
+                    v-if="this.skill == 'listening'" 
+                    :skill="skill" 
+                    />
+                <ExamDetailQuestions :questions="questions" :skill="skill" v-if="this.skill != 'listening'"/>
+            </div>
         </div>
         <div v-show="showResult" class="flex justify-center">
-        <div class="max-w-[736px] mt-5 bg-white min-h-fit p-4" style="width: 90%;">
-          <div class="flex">
-            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21.928 8.15607L14.5678 4.78861C13.7768 4.427 13.1289 4.26126 12.4961 4.27633C11.8633 4.26126 11.2154 4.427 10.4244 4.78861L3.06417 8.15607C2.53683 8.38961 2.26562 8.82655 2.26562 9.27103C2.26562 9.72304 2.53683 10.1524 3.06417 10.386L5.97963 11.7043L10.8689 9.4217C10.8387 9.36897 10.8237 9.32376 10.8237 9.27103C10.8237 8.72109 11.6599 8.32934 12.5187 8.32934C13.385 8.32934 14.2137 8.72109 14.2137 9.27103C14.2137 9.83604 13.385 10.2353 12.5187 10.2353C12.255 10.2353 11.9838 10.1976 11.7427 10.1223L7.15485 12.2618L10.4244 13.761C11.2154 14.1226 11.8633 14.2808 12.4961 14.2733C13.1289 14.2808 13.7768 14.1226 14.5678 13.761L21.928 10.386C22.4554 10.1449 22.7266 9.72304 22.7266 9.27103C22.7266 8.82655 22.4554 8.38961 21.928 8.15607ZM7.12472 13.4672V17.8743C8.43555 18.6577 10.2963 19.1324 12.4961 19.1324C16.9182 19.1324 19.9542 17.2264 19.9542 14.8759V12.5029L15.0273 14.7629C14.1158 15.1773 13.2871 15.3882 12.4961 15.3807C11.7126 15.3882 10.8764 15.1773 9.96484 14.7629L7.12472 13.4672ZM5.03795 12.5104V14.8759C5.03795 15.5314 5.38449 16.3073 6.00977 16.9702V12.9549L5.03795 12.5104ZM5.34682 19.6597V21.6109C5.34682 22.2512 5.76869 22.6731 6.40904 22.6731H6.72545C7.36579 22.6731 7.78013 22.2512 7.78013 21.6109V19.6597C7.78013 19.1625 7.53153 18.8009 7.12472 18.6577V17.8743C6.68778 17.6106 6.3111 17.3093 6.00977 16.9702V18.6577C5.60296 18.7934 5.34682 19.1625 5.34682 19.6597Z" fill="#2162FF"/>
-            </svg>
-            <span></span>
-          </div>
-          <div class="text-5xl text-center w-100  mt-5 font-bold">
-            {{ (Date.now() - this.begin) / 1000 / 1000  || 0 }}
-          </div>
-          <div class="text-xl text-center w-100 mt-2">
-            {{ new Date().toLocaleDateString()  }}
-          </div>
-          <div class="grid justify-center mt-5 gap-4 grid-cols-1 lg:grid-cols-4">
-            <div class="border-2 px-5 py-3 rounded">
-              <p class="text-center text-[14px]">Listening</p>
-              <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
+            <div class="max-w-[736px] mt-5 bg-white min-h-fit p-4" style="width: 90%;">
+                <div class="flex">
+                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.928 8.15607L14.5678 4.78861C13.7768 4.427 13.1289 4.26126 12.4961 4.27633C11.8633 4.26126 11.2154 4.427 10.4244 4.78861L3.06417 8.15607C2.53683 8.38961 2.26562 8.82655 2.26562 9.27103C2.26562 9.72304 2.53683 10.1524 3.06417 10.386L5.97963 11.7043L10.8689 9.4217C10.8387 9.36897 10.8237 9.32376 10.8237 9.27103C10.8237 8.72109 11.6599 8.32934 12.5187 8.32934C13.385 8.32934 14.2137 8.72109 14.2137 9.27103C14.2137 9.83604 13.385 10.2353 12.5187 10.2353C12.255 10.2353 11.9838 10.1976 11.7427 10.1223L7.15485 12.2618L10.4244 13.761C11.2154 14.1226 11.8633 14.2808 12.4961 14.2733C13.1289 14.2808 13.7768 14.1226 14.5678 13.761L21.928 10.386C22.4554 10.1449 22.7266 9.72304 22.7266 9.27103C22.7266 8.82655 22.4554 8.38961 21.928 8.15607ZM7.12472 13.4672V17.8743C8.43555 18.6577 10.2963 19.1324 12.4961 19.1324C16.9182 19.1324 19.9542 17.2264 19.9542 14.8759V12.5029L15.0273 14.7629C14.1158 15.1773 13.2871 15.3882 12.4961 15.3807C11.7126 15.3882 10.8764 15.1773 9.96484 14.7629L7.12472 13.4672ZM5.03795 12.5104V14.8759C5.03795 15.5314 5.38449 16.3073 6.00977 16.9702V12.9549L5.03795 12.5104ZM5.34682 19.6597V21.6109C5.34682 22.2512 5.76869 22.6731 6.40904 22.6731H6.72545C7.36579 22.6731 7.78013 22.2512 7.78013 21.6109V19.6597C7.78013 19.1625 7.53153 18.8009 7.12472 18.6577V17.8743C6.68778 17.6106 6.3111 17.3093 6.00977 16.9702V18.6577C5.60296 18.7934 5.34682 19.1625 5.34682 19.6597Z" fill="#2162FF"/>
+                    </svg>
+                    <span></span>
+                </div>
+                <div class="text-5xl text-center w-100  mt-5 font-bold">
+                    {{ (Date.now() - this.begin) / 1000 / 1000  || 0 }}
+                </div>
+                <div class="text-xl text-center w-100 mt-2">
+                    {{ new Date().toLocaleDateString()  }}
+                </div>
+                <div class="grid justify-center mt-5 gap-4 grid-cols-1 lg:grid-cols-4">
+                    <div class="border-2 px-5 py-3 rounded">
+                    <p class="text-center text-[14px]">Listening</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
+                    </div>
+                    <div class="border-2 px-5 py-3 rounded">
+                    <p class="text-center text-[14px]">Speaking</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
+                    </div>
+                    <div class="border-2 px-5 py-3 rounded">
+                    <p class="text-center text-[14px]">Reading</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
+                    </div>
+                    <div class="border-2 px-5 py-3 rounded">
+                    <p class="text-center text-[14px]">Writing</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-5 ">
+                    <a href="/" class="flex py-2 cursor-pointer justify-center" style="width: 50%">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5303 7.46967C10.8232 7.76256 10.8232 8.23744 10.5303 8.53033L7.06066 12L10.5303 15.4697C10.8232 15.7626 10.8232 16.2374 10.5303 16.5303C10.2374 16.8232 9.76256 16.8232 9.46967 16.5303L5.46967 12.5303C5.17678 12.2374 5.17678 11.7626 5.46967 11.4697L9.46967 7.46967C9.76256 7.17678 10.2374 7.17678 10.5303 7.46967Z" fill="#141416"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.25 12C5.25 11.5858 5.58579 11.25 6 11.25L18 11.25C18.4142 11.25 18.75 11.5858 18.75 12C18.75 12.4142 18.4142 12.75 18 12.75L6 12.75C5.58579 12.75 5.25 12.4142 5.25 12Z" fill="#141416"/>
+                    </svg>
+                    <span class="ml-2">
+                        Home
+                    </span>
+                    </a>
+                    <a  href="/history" :class="[`flex bg-[#2162FF] py-2 rounded cursor-pointer justify-center` ]" style="width: 50%">
+                    <span class="text-white mr-2">
+                        History
+                    </span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4697 16.5303C13.1768 16.2374 13.1768 15.7626 13.4697 15.4697L16.9393 12L13.4697 8.53033C13.1768 8.23744 13.1768 7.76256 13.4697 7.46967C13.7626 7.17678 14.2374 7.17678 14.5303 7.46967L18.5303 11.4697C18.8232 11.7626 18.8232 12.2374 18.5303 12.5303L14.5303 16.5303C14.2374 16.8232 13.7626 16.8232 13.4697 16.5303Z" fill="white"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M18.75 12C18.75 12.4142 18.4142 12.75 18 12.75L6 12.75C5.58579 12.75 5.25 12.4142 5.25 12C5.25 11.5858 5.58579 11.25 6 11.25L18 11.25C18.4142 11.25 18.75 11.5858 18.75 12Z" fill="white"/>
+                    </svg>
+                    </a>
+                </div>
             </div>
-            <div class="border-2 px-5 py-3 rounded">
-              <p class="text-center text-[14px]">Speaking</p>
-              <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
-            </div>
-            <div class="border-2 px-5 py-3 rounded">
-              <p class="text-center text-[14px]">Reading</p>
-              <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
-            </div>
-            <div class="border-2 px-5 py-3 rounded">
-              <p class="text-center text-[14px]">Writing</p>
-              <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">0/0</p>
-            </div>
-          </div>
-          <div class="flex justify-center mt-5 ">
-            <a href="/" class="flex py-2 cursor-pointer justify-center" style="width: 50%">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5303 7.46967C10.8232 7.76256 10.8232 8.23744 10.5303 8.53033L7.06066 12L10.5303 15.4697C10.8232 15.7626 10.8232 16.2374 10.5303 16.5303C10.2374 16.8232 9.76256 16.8232 9.46967 16.5303L5.46967 12.5303C5.17678 12.2374 5.17678 11.7626 5.46967 11.4697L9.46967 7.46967C9.76256 7.17678 10.2374 7.17678 10.5303 7.46967Z" fill="#141416"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.25 12C5.25 11.5858 5.58579 11.25 6 11.25L18 11.25C18.4142 11.25 18.75 11.5858 18.75 12C18.75 12.4142 18.4142 12.75 18 12.75L6 12.75C5.58579 12.75 5.25 12.4142 5.25 12Z" fill="#141416"/>
-              </svg>
-              <span class="ml-2">
-                Home
-              </span>
-            </a>
-            <a  href="/history" :class="[`flex bg-[#2162FF] py-2 rounded cursor-pointer justify-center` ]" style="width: 50%">
-              <span class="text-white mr-2">
-                History
-              </span>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.4697 16.5303C13.1768 16.2374 13.1768 15.7626 13.4697 15.4697L16.9393 12L13.4697 8.53033C13.1768 8.23744 13.1768 7.76256 13.4697 7.46967C13.7626 7.17678 14.2374 7.17678 14.5303 7.46967L18.5303 11.4697C18.8232 11.7626 18.8232 12.2374 18.5303 12.5303L14.5303 16.5303C14.2374 16.8232 13.7626 16.8232 13.4697 16.5303Z" fill="white"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M18.75 12C18.75 12.4142 18.4142 12.75 18 12.75L6 12.75C5.58579 12.75 5.25 12.4142 5.25 12C5.25 11.5858 5.58579 11.25 6 11.25L18 11.25C18.4142 11.25 18.75 11.5858 18.75 12Z" fill="white"/>
-              </svg>
-            </a>
-          </div>
         </div>
-    </div>
     </div>
 </template>
 
@@ -403,6 +396,10 @@ export default {
             await this.getSpeakingExam();
             await this.getWritingExam();
         }
+    },
+    async mounted() {
+        let x = await localStorage.getItem('section-list-show')
+        this.open = Number(x)
     }
 }
 </script>
@@ -413,17 +410,8 @@ export default {
         display: flex;
     }
 
-    .sidebar {}
 
-    .lesson {
-        flex-grow: 1;
-        margin: 0.75rem 2.25rem;
-    }
 
-    .questions {
-        width: 350px;
-        margin: 0.75rem 0.75rem 0.75rem 0;
-    }
 
     .sidebarButton {
         border-radius: 0px 0px 24px 0px;
@@ -465,21 +453,18 @@ export default {
         position: absolute;
     }
 
-    .lesson {
-        margin-right: 12px;
-    }
 }
 
 @media only screen and (max-width: 900px) {
     .content {
         display: block;
         margin-top: 2px;
+        overflow: auto !important;;
     }
-
     .lesson {
-        width: 100%;
+        width: 100% !important;
         flex-grow: 1;
-        margin: 0;
+        margin-left: 0px!important;
         border-radius: unset !important;
     }
 
