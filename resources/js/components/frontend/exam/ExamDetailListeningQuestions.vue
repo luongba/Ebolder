@@ -200,6 +200,9 @@ export default {
         isQuestionAnswered(answerId, questionId) {
             return this.selectedAnswers[questionId] == answerId;
         },
+        shuffle (array) {
+            return array.sort(() => Math.random() - 0.5); 
+        },
         async getAudioDetail(audioId) {
             const loading = this.$loading({
                 lock: true,
@@ -212,6 +215,9 @@ export default {
                 if (rs.data.status == 200) {
                     const data = rs.data.data;
                     if (data) {
+                        data?.question_listening && data?.question_listening.forEach(question => {
+                            question.answer_listening = this.shuffle(question.answer_listening);
+                        })
                         this.questions = data?.question_listening;
                     }
                 }
