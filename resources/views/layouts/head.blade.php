@@ -36,6 +36,9 @@
     
 </head>
 <style>
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
     @font-face {
         font-family: lexend;
         src: url('/fonts/Lexend/Lexend.ttf');
