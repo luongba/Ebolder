@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white px-[16px] py-[24px] md:rounded" style="min-height: 100%; min-width: fit-content;">
+    <div class="px-[16px] py-[24px] md:rounded" style="min-height: 100%; min-width: fit-content;">
         <div class="flex unitName mb-4 px-3">
             <div :class="[`rounded p-1.5 bg-${this.lessonType}-tag w-fit mr-2 font-bold text-sm uppercase flex flex-row`]">
                 <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
