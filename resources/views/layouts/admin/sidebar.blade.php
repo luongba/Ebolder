@@ -1,14 +1,16 @@
 <div class="scrollbar-sidebar">
     <div class="app-sidebar__inner" style="overflow-y: scroll; height: 100%">
         <ul class="vertical-nav-menu">
-            <li class="app-sidebar__heading">Exam</li>
-            <li class="mm-parent">
-                <a class="{{ request()->is(['admin/exam-administration']) ? 'mm-active' : '' }}"
-                   href="{{ route('admin.exam-list') }}">
-                    <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
-                    Exam Management
-                </a>
-            </li>
+            @can('Exam_List')
+                <li class="app-sidebar__heading">Exam</li>
+                <li class="mm-parent">
+                    <a class="{{ request()->is(['admin/exam-administration']) ? 'mm-active' : '' }}"
+                    href="{{ route('admin.exam-list') }}">
+                        <i class=" metismenu-icon fa-solid fa-chart-simple"></i>
+                        Exam Management
+                    </a>
+                </li>
+            @endcan
             @can('Level_List')
                 <li class="app-sidebar__heading">Levels</li>
                 <li class="mm-parent">
