@@ -161,6 +161,18 @@ export default {
   padding: 16px;
   background-color: #f4f5f6;
 }
+
+.Vocabulary, .Vocabulary svg * {
+  color: #3B1BBA;
+  fill: #3B1BBA;
+  background-color: #cad8f8
+}
+.Pronunciation, .Pronunciation svg * {
+  color: #3B1BBA;
+  fill: #3B1BBA;
+  background-color: #cad8f8
+}
+
 .Grammar, .Grammar svg * {
   color: #D35924;
   fill: #D35924;

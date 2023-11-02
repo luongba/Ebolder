@@ -12,7 +12,7 @@
           </svg>
         </span>
       </button>
-      <div class="flex max-h-full sidebar z-10" :class="[!open ? 'hidden' : ' w-[350px] block']" >
+      <div class="flex max-h-full sidebar z-10 border-r-2" :class="[!open ? 'hidden' : ' w-[350px] block']" >
         <!-- Sidebar -->
         <div class="flex w-full overflow-auto">
           
