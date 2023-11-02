@@ -1,7 +1,14 @@
 <template>
     <div class="wrapper h-screen flex flex-column">
         <div class="sticky inset-x-0 top-0 bg-white z-50">
-            <main-header-component :user="user" :breadcrumb="breadcrumb" :showTime="true" :onFinish="submit"/>
+            <main-header-component 
+                :user="user" 
+                :breadcrumb="breadcrumb" 
+                :showTime="true" 
+                :onFinish="submit"
+                v-model="skill"
+                @handleExam="handleSelectedSkill"
+            />
         </div>
         <div v-show="!showResult" class="flex flex-row gap-4  w-full h-full sm:overflow-hidden overflow-y-auto content">
             <button @click="toggle()" :class="[open ? 'hidden' : 'block']"
@@ -14,9 +21,8 @@
                 <!-- Sidebar -->
                 <div class="flex w-full">
                     <!-- Sidebar Content -->
-                    <!-- :onGetLessonDetail="getLessonDetail"  -->
                     <div ref="content" class="bg-white listLesson" :class="[open ? 'w-[350px]' : 'hidden w-0']">
-                        <ExamDetailSkills v-model="open" :onGetExamBySkill="handleSelectedSkill" />
+                        <ExamDetailSkills v-model="open" ref="examDetailSkills" />
                         <slot></slot>
                     </div>
                 </div>
@@ -35,14 +41,16 @@
         </div>
         <div v-show="showResult" class="flex justify-center">
             <div class="max-w-[736px] mt-5 bg-white min-h-fit p-4" style="width: 90%;">
-                <div class="flex">
+                <div class="flex items-center">
                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M21.928 8.15607L14.5678 4.78861C13.7768 4.427 13.1289 4.26126 12.4961 4.27633C11.8633 4.26126 11.2154 4.427 10.4244 4.78861L3.06417 8.15607C2.53683 8.38961 2.26562 8.82655 2.26562 9.27103C2.26562 9.72304 2.53683 10.1524 3.06417 10.386L5.97963 11.7043L10.8689 9.4217C10.8387 9.36897 10.8237 9.32376 10.8237 9.27103C10.8237 8.72109 11.6599 8.32934 12.5187 8.32934C13.385 8.32934 14.2137 8.72109 14.2137 9.27103C14.2137 9.83604 13.385 10.2353 12.5187 10.2353C12.255 10.2353 11.9838 10.1976 11.7427 10.1223L7.15485 12.2618L10.4244 13.761C11.2154 14.1226 11.8633 14.2808 12.4961 14.2733C13.1289 14.2808 13.7768 14.1226 14.5678 13.761L21.928 10.386C22.4554 10.1449 22.7266 9.72304 22.7266 9.27103C22.7266 8.82655 22.4554 8.38961 21.928 8.15607ZM7.12472 13.4672V17.8743C8.43555 18.6577 10.2963 19.1324 12.4961 19.1324C16.9182 19.1324 19.9542 17.2264 19.9542 14.8759V12.5029L15.0273 14.7629C14.1158 15.1773 13.2871 15.3882 12.4961 15.3807C11.7126 15.3882 10.8764 15.1773 9.96484 14.7629L7.12472 13.4672ZM5.03795 12.5104V14.8759C5.03795 15.5314 5.38449 16.3073 6.00977 16.9702V12.9549L5.03795 12.5104ZM5.34682 19.6597V21.6109C5.34682 22.2512 5.76869 22.6731 6.40904 22.6731H6.72545C7.36579 22.6731 7.78013 22.2512 7.78013 21.6109V19.6597C7.78013 19.1625 7.53153 18.8009 7.12472 18.6577V17.8743C6.68778 17.6106 6.3111 17.3093 6.00977 16.9702V18.6577C5.60296 18.7934 5.34682 19.1625 5.34682 19.6597Z" fill="#2162FF"/>
                     </svg>
-                    <span></span>
+                    <span>
+                        {{ examBySkill?.name }}
+                    </span>
                 </div>
                 <div class="text-5xl text-center w-100  mt-5 font-bold">
-                    {{ (Date.now() - this.begin) / 1000 / 1000  || 0 }}
+                    {{ ((Date.now() - this.begin) / 1000 / 1000).toFixed(2) || 0 }}
                 </div>
                 <div class="text-xl text-center w-100 mt-2">
                     {{ new Date().toLocaleDateString()  }}
@@ -303,6 +311,9 @@ export default {
             }
         },
         handleSelectedSkill(skill) {
+            if (this.$refs.examDetailSkills) {
+                this.$refs.examDetailSkills.getExamDetail(skill);
+            }
             this.skill = skill.toLowerCase();
             if(skill == 'reading') {
                 this.questions = this.reading.data;
@@ -374,6 +385,7 @@ export default {
                 if (rs.data.status == 200) {
                     //todo
                 }
+                this.showResult = true;
                 // window.location.href = `${$Api.baseUrl}/exam`;
             } catch (e) {
                 console.log(e);
@@ -394,14 +406,13 @@ export default {
     },
     async created() {
         this.begin = Date.now();
-        if(this.user) {
-            await this.getExamDetail();
-            
-            await this.getReadingExam();
-            await this.getListeningExam();
-            await this.getSpeakingExam();
-            await this.getWritingExam();
-        }
+        await this.getExamDetail();
+        await this.getReadingExam();
+        await this.getListeningExam();
+        await this.getSpeakingExam();
+        await this.getWritingExam();
+
+        this.handleSelectedSkill('listening')
     },
     async mounted() {
         let x = await localStorage.getItem('section-list-show')
@@ -415,9 +426,6 @@ export default {
     .content {
         display: flex;
     }
-
-
-
 
     .sidebarButton {
         border-radius: 0px 0px 24px 0px;
