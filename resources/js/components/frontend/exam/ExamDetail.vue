@@ -140,6 +140,7 @@ export default {
             writingQuestionCount: 0,
             listening: {},
             listeningQuestionCount: 0,
+            begin: null
             
         }
     },
@@ -393,6 +394,7 @@ export default {
         },
     },
     async created() {
+        this.begin = Date.now();
         if(this.user) {
             await this.getExamDetail();
             
