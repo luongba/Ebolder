@@ -148,6 +148,9 @@ export default {
         toggle() {
             this.open = !this.open;
         },
+        shuffle (array) {
+            return array.sort(() => Math.random() - 0.5); 
+        },
         async getExamDetail() {
             const loading = this.$loading({
                 lock: true,
@@ -194,7 +197,7 @@ export default {
                             data: data.question_reading,
                         };
                         formatedData.data && formatedData.data.forEach(question => {
-                            question.answers = question.answer_reading;
+                            question.answers = this.shuffle(question.answer_reading);
                             delete question.answer_reading;
                             question.right_answers = question.right_answer_reading;
                             delete question.right_answer_reading;
@@ -248,6 +251,9 @@ export default {
                 if (rs.data.status == 200) {
                     const data = rs.data.data;
                     if(data) {
+                        data.question_speak && data.question_speak.forEach(question => {
+                            question.answers = this.shuffle(question.answers);
+                        })
                         const formatedData = {
                             name: data.name,
                             description: data.description || data.content,
@@ -281,7 +287,7 @@ export default {
                             data: data.question_lesson
                         };
                         formatedData.data && formatedData.data.forEach(question => {
-                            question.answers = question.answer_lesson;
+                            question.answers = this.shuffle(question.answer_lesson);
                             delete question.answer_lesson;
                             question.right_answers = question.right_answer_lesson;
                             delete question.right_answer_lesson;
