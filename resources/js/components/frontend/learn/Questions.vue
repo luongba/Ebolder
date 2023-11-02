@@ -2,9 +2,9 @@
     <div class="bg-white p-3 flex flex-column md:rounded" style="min-height: 100%;">
         <div class="font-bold text-2xl mb-4"> Questions</div>
         <div v-show="this.questions?.length > 0" class="flex flex-column flex-grow">
-            <div class="flex flex-row flex-wrap mb-4">
+            <div class="flex flex-row flex-wrap mb-4 gap-3">
                 <div v-for="(item, index) in this.questions" :key="item.id"
-                    class="cursor-pointer rounded-full w-7 h-7 sm:w-10 sm:h-10 me-[11px] mb-[11px] sm:mb-[13px] sm:me-[13px] flex items-center justify-center font-semibold text-sm"
+                    class="cursor-pointer rounded-full w-7 h-7 sm:w-10 sm:h-10  flex items-center justify-center font-semibold text-sm"
                     @click="handleSelectQuestion(index)"
                     :class="[ selectedIndex != index && questionDone[item.id] ? 'bg-[#35509A] text-white': (selectedIndex == index ? `bg-${lessonType} text-white` : 'bg-[#E6E8EC]')]">
                     {{ index + 1 }}
