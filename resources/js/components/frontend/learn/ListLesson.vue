@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="text-xl font-bold flex flex-row justify-between px-4 py-4 sm:px-6 items-center"
+        <div class="text-xl font-bold flex flex-row justify-between px-4 py-4 sm:px-6 items-center border-b-2"
             @click="toggle">
             Unit of {{ type }}
             <img :src="left" />
