@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="flex flex-wrap py-2 items-center">
-            <div class="flex items-center justify-center px-3 h-[44px] rounded-[100px] bg-[#2162FF] text-white count-down" v-show="showTime">
+            <div class="flex items-center justify-center px-3 h-[44px] rounded-[100px] bg-[#2162FF] text-white count-down" v-show="showClock">
                 <img :src="timer" />
                 <VueCountdown :auto-start="true" :time="timeWork" @progress="handleCountdownProgress">
                     <template slot-scope="props"
@@ -80,6 +80,7 @@ export default {
             right: require('../../../../public/images/header/right.svg'),
             timer: require('../../../../public/images/header/timer.svg'),
             timeWork: 0,
+            showClock: this.showTime || false,
             timerun: 0,
             action: null,
             skills: [
@@ -121,6 +122,7 @@ export default {
             if (indexOfSkill < this.skills.length - 1) {
                 this.$emit('handleExam', this.skills[indexOfSkill + 1].toLowerCase());
             } else {
+                this.showClock = false
                 this.onFinish();
             }
         }

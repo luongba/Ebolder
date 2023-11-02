@@ -10,7 +10,7 @@
             <div class="flex-auto">
                 <div class="flex flex-column">
                         <div class=" border-b-2 border-[#f4f5f6]" v-for="skill in skills" :key="skill.skill"
-                            :class="{ 'bg-[#2162FF] text-white': selectedSkill == skill.skill.toLowerCase() }">
+                            :class="{ 'bg-[#2162FF] text-white ': selectedSkill == skill.skill.toLowerCase(), 'cursor-not-allowed': selectedSkill != skill.skill.toLowerCase() }">
                             <div class="p-4">
                                 <div class="flex flex-row items-center justify-between">
                                     <div class="flex flex-row">

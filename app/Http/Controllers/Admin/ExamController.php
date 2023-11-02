@@ -150,7 +150,7 @@ class ExamController extends Controller
 
     public function saveHistoryExam(Request $request){
         $exists = ExamHistoryFinal::where('exam_id',$request->exam_id)->where('user_id', $request->user_id)->first();
-        if($request->status == 'create' && !$exists){
+        if($request->status == 'create'){
             $history = ExamHistoryFinal::create([
                 "result_reading" => $request->result_reading,
                 "result_speaking"=> $request->result_speaking,

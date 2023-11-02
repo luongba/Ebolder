@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white h-full p-3 flex flex-column md:rounded">
+    <div class="bg-white p-3 flex flex-column md:rounded" style="min-height: 100%;">
         <div class="font-bold text-xl mb-4"> Topics</div>
         <div class="flex flex-row flex-wrap mb-3 cursor-pointer">
             <div v-for="(item, index) in this.topics" :key="item.id"
