@@ -149,5 +149,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('Talking_List', function ($user){
             return $user->checkPermisionAccess('Talking_List');
         });
+        Gate::define('Talking_Detail', function ($user){
+            return $user->checkPermisionAccess('Talking_Detail');
+        });
+        Gate::define('Talking_Create', function ($user){
+            return $user->checkPermisionAccess('Talking_Create');
+        });
     }
 }

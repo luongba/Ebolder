@@ -36,7 +36,7 @@
                 </el-form-item>
             </div>
 
-            <el-card class="box-card mb-4" shadow="hover" v-for="(permision, index) in permisions" :key="permision.id">
+            <el-card class="box-card mb-4" shadow="hover" v-for="(permision, index) in permisions" :key="permision.id" v-show="permisions.keyc_code !='Role'">
                 <div slot="header" class="clearfix">
                     <span>{{ permision.name }}</span>
                     <el-checkbox class="float-right" :indeterminate="isIndeterminate" v-model="checkAll[index].check"
@@ -165,7 +165,8 @@ export default {
                                     id: itemChild.id,
                                     name: itemChild.name,
                                 }
-                            ))
+                            )),
+                            key_code: item.key_code
                         }
                     ))
                     this.permisions.forEach((item, index) => {
@@ -195,6 +196,8 @@ export default {
                             }
                         })
                     })
+                    console.log(this.permisionItem);
+                    console.log(this.dynamicValidateForm.permisions);
                 }
             } catch (e) {
                 console.log(e);
