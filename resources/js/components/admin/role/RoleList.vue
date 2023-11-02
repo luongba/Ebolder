@@ -9,7 +9,7 @@
                         data.name.toLowerCase().includes(search.toLowerCase())
                 )
             "
-            style="width: 100%"
+            style="width: 97%"
         >
             <el-table-column label="Name" prop="name"> </el-table-column>
             <el-table-column label="Description" prop="display_name">
