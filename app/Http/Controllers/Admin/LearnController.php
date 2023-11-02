@@ -360,7 +360,7 @@ class LearnController extends Controller
 
         try {
             $exam = Exam::where('writing_id', $request->id)->first();
-            if ($exam && !$request->isExam) {
+            if ($exam && !$request->is_exam) {
                 return [
                     "status" => 400,
                     "errorCode" => 400,

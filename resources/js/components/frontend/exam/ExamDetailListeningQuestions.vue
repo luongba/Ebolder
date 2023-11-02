@@ -38,7 +38,7 @@
             <div v-for="(item, index) in this.questions" :key="item.id"
                 class="rounded-full w-7 h-7 sm:w-10 sm:h-10 me-[11px] mb-[11px] sm:mb-[13px] sm:me-[13px] flex items-center justify-center font-semibold text-sm"
                 @click="handleSelectQuestion(index)"
-                :class="{ 'bg-[#2162FF] text-white': selectedIndex == index, 'bg-[#35509A] text-white': selectedIndex != index && questionDone[item.id] }">
+                :class="[ selectedIndex != index && questionDone[item.id] ? 'bg-[#35509A] text-white': (selectedIndex == index ? `bg-[#2162FF] text-white` : 'bg-[#E6E8EC]')]">
                 {{ index + 1 }}
             </div>
         </div>
@@ -200,6 +200,9 @@ export default {
         isQuestionAnswered(answerId, questionId) {
             return this.selectedAnswers[questionId] == answerId;
         },
+        shuffle (array) {
+            return array.sort(() => Math.random() - 0.5); 
+        },
         async getAudioDetail(audioId) {
             const loading = this.$loading({
                 lock: true,
@@ -212,6 +215,9 @@ export default {
                 if (rs.data.status == 200) {
                     const data = rs.data.data;
                     if (data) {
+                        data?.question_listening && data?.question_listening.forEach(question => {
+                            question.answer_listening = this.shuffle(question.answer_listening);
+                        })
                         this.questions = data?.question_listening;
                     }
                 }

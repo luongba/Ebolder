@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white px-[16px] py-[24px] md:rounded" style="min-height: 100%; min-width: fit-content;">
+    <div class="px-[16px] py-[24px] md:rounded" style="min-height: 100%; min-width: fit-content;">
         <div class="flex unitName mb-4 px-3">
             <div class="rounded p-1.5 bg-[#D3E0FF] text-[#2162FF] w-fit mr-2 font-bold text-sm uppercase flex flex-row">
                 <img :src="highlighter" />
