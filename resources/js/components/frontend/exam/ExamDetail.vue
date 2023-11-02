@@ -10,7 +10,7 @@
                     <img src="/images/learn/right.svg" alt="" />
                 </span>
             </button>
-            <div class="flex max-h-full sidebar z-10" :class="[!open ? 'hidden' : 'max-w-[350px] block']" style="width: 90%;">
+            <div class="flex max-h-full sidebar z-10 border-r-2" :class="[!open ? 'hidden' : 'max-w-[350px] block']" style="width: 90%;">
                 <!-- Sidebar -->
                 <div class="flex w-full">
                     <!-- Sidebar Content -->
