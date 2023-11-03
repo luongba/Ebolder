@@ -117,6 +117,7 @@ export default {
             selectedAnswerId: 0,
             selectedAnswers: {},
             questions: null,
+            listQuestion: [],
             baseURl: $Api.baseUrl,
             correctAnswers: {},
             questionDone: {},
@@ -215,10 +216,15 @@ export default {
                 if (rs.data.status == 200) {
                     const data = rs.data.data;
                     if (data) {
-                        data?.question_listening && data?.question_listening.forEach(question => {
-                            question.answer_listening = this.shuffle(question.answer_listening);
-                        })
-                        this.questions = data?.question_listening;
+                        if (this.listQuestion.hasOwnProperty(audioId)) {
+                            this.questions = this.listQuestion[audioId];
+                        } else {
+                            data?.question_listening && data?.question_listening.forEach(question => {
+                                question.answer_listening = this.shuffle(question.answer_listening);
+                            })
+                            this.listQuestion[audioId] = data?.question_listening;
+                            this.questions = data?.question_listening;
+                        }
                     }
                 }
             } catch (e) {
