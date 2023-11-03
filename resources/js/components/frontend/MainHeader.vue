@@ -148,7 +148,7 @@ export default {
 </script>
 <style>
 @media only screen and (max-width: 900px) {
-    .home, .breadscrumb, .count-down  {
+    .home, .breadscrumb  {
         display: none;
     }
  }
