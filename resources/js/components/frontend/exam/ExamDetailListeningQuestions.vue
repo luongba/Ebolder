@@ -229,6 +229,7 @@ export default {
                             this.listQuestion[audioId] = data?.question_listening;
                             this.questions = data?.question_listening;
                         }
+                        this.$emit('update-content', audioId);
                     }
                 }
             } catch (e) {

@@ -208,6 +208,7 @@ export default {
                     if (data) {
                         this.questions = data?.question_listening;
                     }
+                    this.$emit('update-content', audioId || null);
                 }
             } catch (e) {
                 console.log(e);
@@ -234,7 +235,6 @@ export default {
                 </svg>
                     `;
             function toggleAudio() {
-                console.log(audio);
                 if (audio.paused) {
                     audio.play();
                     playerButton.innerHTML = pauseIcon;
@@ -284,8 +284,10 @@ export default {
     },
     watch: {
         selectedTopic() {
-            this.topics?.[0].file_type !== 'video' && this.$refs.audio?.load()
-            this.topics?.[0].file_type == 'video' && this.$refs.video?.load()
+            if (this.topics?.[0]) {
+                this.topics?.[0].file_type !== 'video' && this.$refs.audio?.load()
+                this.topics?.[0].file_type == 'video' && this.$refs.video?.load()
+            }
         },
         topics(newTopics) {
             // reset data
