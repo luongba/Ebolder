@@ -300,6 +300,9 @@ export default {
             if (newTopics && newTopics.length) {
                 this.selectedTopic = newTopics[this.selectedTopicIndex];
                 this.getAudioDetail(this.selectedTopic?.id);
+                newTopics.forEach(topic => {
+                    this.questionCount += topic?.question_listening?.length;
+                })
             } else {
                 this.selectedTopic = null
             }
@@ -307,15 +310,6 @@ export default {
         questions(newQuestions) {
             this.selectedIndex = 0;
             this.selectedQuestion = this.questions[this.selectedIndex];
-            if (newQuestions && newQuestions.length) {
-                newQuestions && newQuestions.forEach(question => {
-                    if(question.type == 2) {
-                        this.questionCount += question?.answer_listening?.length;
-                    } else {
-                        this.questionCount += 1
-                    }
-                })
-            }
         }
     }
 }

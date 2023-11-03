@@ -59,19 +59,19 @@
                 <div class="grid justify-center mt-5 gap-4 grid-cols-1 lg:grid-cols-4">
                     <div class="border-2 px-5 py-3 rounded">
                     <p class="text-center text-[14px]">Listening</p>
-                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_listening || "0/0" }}</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_listening }}</p>
                     </div>
                     <div class="border-2 px-5 py-3 rounded">
                     <p class="text-center text-[14px]">Speaking</p>
-                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_speaking || "0/0" }}</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_speaking }}</p>
                     </div>
                     <div class="border-2 px-5 py-3 rounded">
                     <p class="text-center text-[14px]">Reading</p>
-                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_reading || "0/0" }}</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_reading }}</p>
                     </div>
                     <div class="border-2 px-5 py-3 rounded">
                     <p class="text-center text-[14px]">Writing</p>
-                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_writing || "0/0" }}</p>
+                    <p  class="text-center text-[14px] rounded mt-2 w-fit mx-auto px-2 font-bold" style="background-color: #E6E8EC;">{{ result?.result_writing }}</p>
                     </div>
                 </div>
                 <div class="flex justify-center mt-5 ">
@@ -222,7 +222,7 @@ export default {
                             data: data.topic_audio_listen,
                         };
                         this.listening = formatedData;
-                        this.listeningQuestionCount = this.getQuestionCount(this.listening.data)
+                        this.listeningQuestionCount = this.getQuestionCount(this.listening.data, 'listening')
                     }
                 }
             } catch (e) {
@@ -310,8 +310,13 @@ export default {
                 }
             }
         },
-        getQuestionCount(questions) {
+        getQuestionCount(questions, type = '') {
             let count = 0;
+            if (type) {
+                questions && questions.forEach(question => {
+                    count += question.question_listening.length;
+                })
+            } else {
             questions && questions.forEach(question => {
                     if(question.type == 2) {
                         count += question.answers.length;
@@ -319,6 +324,7 @@ export default {
                         count += 1
                     }
                 })
+            }
             return count;
         },
         getBreadcrumb(label) {
@@ -340,7 +346,7 @@ export default {
                 result_listening: result_listening || `0/${this.listeningQuestionCount}`,
                 result_writing: result_writing || `0/${this.writingQuestionCount}`,
                 user_id: this.user.id,
-                time: Date.now() - this.begin || 0, 
+                time: Date.now() - this.begin || 0,
                 status: 'create',
             }
             this.result = requestHistoryFinalParams;
