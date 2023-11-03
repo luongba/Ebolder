@@ -16,7 +16,7 @@
                 <div class="my-2">
                   <el-statistic title="Test name">
                     <template slot="formatter">
-                      {{ item.exam.name }}
+                      {{ item?.exam?.name }}
                     </template>
                   </el-statistic>
                 </div>
@@ -26,7 +26,7 @@
                   <el-statistic title="Listening score">
                     <template slot="formatter">
                       <span class="text-green-500">{{
-                        item.result_listening || 'Trống'
+                        item?.result_listening || 'Empty'
                       }}</span>
                     </template>
                     <template slot="suffix">
@@ -42,7 +42,7 @@
                   <el-statistic title="Speaking score">
                     <template slot="formatter">
                       <span class="text-green-500">{{
-                        item.result_speaking || 'Trống'
+                        item?.result_speaking || 'Empty'
                       }}</span>
                     </template>
                     <template slot="suffix">
@@ -58,7 +58,7 @@
                   <el-statistic title="Reading score">
                     <template slot="formatter">
                       <span class="text-green-500">{{
-                        item.result_reading || 'Trống'
+                        item?.result_reading || 'Empty'
                       }}</span>
                     </template>
                     <template slot="suffix">
@@ -74,7 +74,7 @@
                   <el-statistic title="Writing score">
                     <template slot="formatter">
                       <span class="text-green-500">{{
-                        item.result_writing || 'Trống'
+                        item?.result_writing || 'Empty'
                       }}</span>
                     </template>
                     <template slot="suffix">
@@ -130,7 +130,7 @@ export default {
 };
 </script>
 <style scoped>
->>> .el-timeline-item__timestamp {
+.el-timeline-item__timestamp {
   font-size: 16px;
   line-height: 1.2;
 }
