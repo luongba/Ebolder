@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="flex items-center mt-3">
                                     <div class="flex items-center justify-center"  v-show="skill.timeWork">
-                                        <Timer :color="timerColor"/>
+                                        <Timer :color="selectedSkill == skill.skill.toLowerCase() ? '#fff' :timerColor"/>
                                         <VueCountdown
                                             :auto-start="false"
                                             :time="skill.timeWork" 
@@ -37,7 +37,8 @@
                                             :id="`${skill.skill.toLowerCase()}`"
                                             :ref="getCountdownRef(skill.skill)"
                                         >
-                                            <span slot-scope="props" class="text-sm	text-[#777E90]"
+                                            <span slot-scope="props"
+                                            :class="{ 'text-white text-sm': selectedSkill == skill.skill.toLowerCase(), 'text-sm text-[#777E90]': selectedSkill != skill.skill.toLowerCase() }"
                                                 >{{ props.hours }}:{{ props.minutes <= 9 ? `0${props.minutes}` : props.minutes }}:{{ props.seconds <= 9 ? `0${props.seconds}` : props.seconds }}</span
                                             >
                                         </VueCountdown>
