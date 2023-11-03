@@ -140,6 +140,7 @@
                 circle
                 size="small"
                 class="mr-2 text-[20px]"
+                @click="detailQuestion(item.idAudio)"
               ></el-button>
             </el-tooltip>
             <el-button
@@ -389,6 +390,9 @@
           console.log(e);
         }
       },
+      detailQuestion(id) {
+        open(`${this.ApiUrl}/admin/listening-level-test/question-edit/${id}`)
+      }
     },
   
     created() {
