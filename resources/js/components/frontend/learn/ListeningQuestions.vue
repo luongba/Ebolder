@@ -287,7 +287,7 @@ export default {
             this.questionDone = [];
             this.selectedIndex = 0;
             this.selectedTopicIndex = 0;
-            // this.questions = {}
+            this.questions = {}
             if (newTopics && newTopics.length) {
                 this.selectedTopic = newTopics[this.selectedTopicIndex];
                 this.getAudioDetail(this.selectedTopic?.id);
