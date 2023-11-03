@@ -179,7 +179,7 @@ export default {
             const timeWorkMapping = {
                 'writing': 60 * 60 * 1000,
                 'listening': 40 * 60 * 1000,
-                'reading': 60 * 60 * 1000,
+                'reading': 60 * 60 * 1000 + 1,
             }
             if (!newValue) return;
             this.timeWork = timeWorkMapping[newValue];
