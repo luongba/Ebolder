@@ -150,15 +150,19 @@ export default {
         handleCountdownProgress(data) {
             this.timerun = this.timeWork - data.totalMilliseconds + 1000;
             if (this.timerun === this.timeWork) {
-                this.handleExam();
+                this.handleExam(false);
             }
         },
-        handleExam() {
+        handleExam(isConfirm = true) {
             const indexOfSkill = this.skills.findIndex(skill => skill.toLowerCase() == this.value);
             if (indexOfSkill < this.skills.length - 1) {
                 this.$emit('handleExam', this.skills[indexOfSkill + 1].toLowerCase());
             } else {
-                this.handleToggle()
+                isConfirm && this.handleToggle()
+                if(!isConfirm) {
+                    this.showClock = false;
+                    this.onFinish();
+                }
             }
         },
         handleOk() {
@@ -168,7 +172,6 @@ export default {
         },
         handleToggle() {
             this.isOpen = !this.isOpen;
-            console.log('this.isOpen', this.isOpen);
         },
     },
     watch: {
