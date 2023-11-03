@@ -35,6 +35,7 @@
                     :topics="questions"
                     v-if="this.skill == 'listening'" 
                     :skill="skill" 
+                    @update-content="updateContent"
                     />
                 <ExamDetailQuestions :questions="questions" :skill="skill" v-if="this.skill != 'listening'"/>
             </div>
@@ -368,6 +369,10 @@ export default {
             if (this.timerun === this.timeWork) {
                 this.finishExam();
             }
+        },
+        updateContent(audioId) {
+            let newData = this.listening.data.find(item => item.id === audioId);
+            this.examBySkill.description = newData.content;
         },
     },
     async created() {

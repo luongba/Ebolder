@@ -29,7 +29,7 @@
         <Lesson :content="lessonContent" :lessonType="lessonType"/>
       </div>
       <div class="w-[350px] rounded overflow-auto questions mt-2">
-        <ListeningQuestions ref="listeningQuestions" :topics="lessonQuestions" v-if="this.lessonType == 'listening'"
+        <ListeningQuestions ref="listeningQuestions" :topics="lessonQuestions" v-if="this.lessonType == 'listening'" @update-content="updateContent"
           :onSubmit="submit" />
         <Questions :questions="lessonQuestions" :lessonType="lessonType" :onSubmit="submit" v-if="this.lessonType != 'listening'"/>
       </div>
@@ -243,7 +243,11 @@ export default {
       } finally {
         loading.close();
       }
-    }
+    },
+    updateContent(audioId) {
+      let newData = this.lessonQuestions.find(item => item.id === audioId);
+      this.lessonContent.description = newData.content;
+    },
   },
   async created() {
     const { skill, levelId, levelName } = this.query;
