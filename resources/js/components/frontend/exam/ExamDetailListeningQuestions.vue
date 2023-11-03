@@ -10,11 +10,15 @@
             </div>
         </div>
         <div class="bg-blur-f mb-4">
-            <audio id="audio-preview" class="w-full bg-transparent" controls disabled hidden>
+            <audio ref="audio" v-show="selectedTopic?.file_type !== 'video' && selectedTopic?.audio" class="w-full bg-transparent" controls>
                 <source :src="`${baseURl}/upload/audio/${this.selectedTopic?.audio}`"
                     type="audio/mpeg" />
             </audio>
-            <div class="controls bg-[#E6E8EC] rounded px-3">
+            <video ref="video" v-show="selectedTopic?.file_type == 'video' && selectedTopic?.audio" class="w-full bg-transparent" controls>
+                <source :src="`${baseURl}/upload/audio/${this.selectedTopic?.audio}`"
+                    type="video/mp4" />
+            </video>
+            <!-- <div class="controls bg-[#E6E8EC] rounded px-3">
                 <button class="player-button">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#FFF">
                         <path fill-rule="evenodd"
@@ -30,7 +34,7 @@
                             clip-rule="evenodd" />
                     </svg>
                 </button>
-            </div>
+            </div> -->
         </div>
         <div class="font-bold text-xl mb-4"> Questions</div>
         <div v-show="this.topics?.length > 0">
@@ -302,6 +306,10 @@ export default {
         }
     },
     watch: {
+        selectedTopic() {
+            this.selectedTopic?.file_type !== 'video' && this.$refs.audio?.load()
+            this.selectedTopic?.file_type == 'video' && this.$refs.video?.load()
+        },
         topics: {
             handler(newTopics) {
                 // reset data
@@ -315,6 +323,8 @@ export default {
                     this.selectedTopic = newTopics[this.selectedTopicIndex];
                     this.getAudioDetail(this.selectedTopic?.id);
                     
+                } else {
+                    this.selectedTopic = null
                 }
             },
             immediate: true,
@@ -335,7 +345,6 @@ export default {
         }
     },
     mounted() {
-        this.customAudio();
     },
 }
 </script>

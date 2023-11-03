@@ -281,7 +281,6 @@ export default {
         }
     },
     mounted() {
-        this.selectedTopic = this.topics?.[0]
     },
     watch: {
         selectedTopic() {
@@ -299,6 +298,8 @@ export default {
             if (newTopics && newTopics.length) {
                 this.selectedTopic = newTopics[this.selectedTopicIndex];
                 this.getAudioDetail(this.selectedTopic?.id);
+            } else {
+                this.selectedTopic = null
             }
         },
         questions(newQuestions) {
