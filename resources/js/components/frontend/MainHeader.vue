@@ -114,7 +114,7 @@ export default {
         handleCountdownProgress(data) {
             this.timerun = this.timeWork - data.totalMilliseconds + 1000;
             if (this.timerun === this.timeWork) {
-                this.onFinish();
+                this.handleExam();
             }
         },
         handleExam() {
