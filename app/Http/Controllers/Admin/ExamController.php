@@ -6,7 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\models\Exam\Exam;
 use App\models\Exam\ExamHistoryFinal;
+use App\models\Learn\Learn;
+use App\models\Listen\Listening;
+use App\models\Read\Reading;
+use App\models\Speak\Speak;
 use DB;
+use Illuminate\Support\Facades\Log;
+
 class ExamController extends Controller
 {
     public function index(){
@@ -70,13 +76,18 @@ class ExamController extends Controller
     {
         try {
             $exam = Exam::whereId($id)->first();
+            $exam->reading = Reading::whereId($exam->reading_id)->first();
+            $exam->speaking = Speak::whereId($exam->speaking_id)->first();
+            $exam->listening = Listening::whereId($exam->listening_id)->first();
+            $exam->writing = Learn::whereId($exam->writing_id)->first();
             return response()->json([
                 "status" => 200,
                 "errorCode" => 0,
                 "data"=> $exam,
                 "message" => "Created successfully!"
             ]);
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
+            Log::error($e);
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,

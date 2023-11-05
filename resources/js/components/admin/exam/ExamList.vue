@@ -520,15 +520,24 @@ export default {
           this.topicData = {
             name: data.data.name || null,
             valueListening: data.data.listening_id,
-            // valueVocabulary: data.data.vocabulary_id,
             valueReading: data.data.reading_id,
-            // valueGrammar: data.data.grammar_id,
             valueSpeaking: data.data.speaking_id,
             valueLesson: data.data.writing_id,
-            // valueTalking: data.data.pronunciation_id,
 
             isExam: data.data.status === 1 ? true : false,
           };
+          if (!this.listTopicLesson.some((existingItem) => existingItem.id === data.data.writing_id)) {
+            this.listTopicLesson.push(data.data.writing);
+          }
+          if (!this.listTopicReading.some((existingItem) => existingItem.id === data.data.reading_id)) {
+            this.listTopicReading.push(data.data.reading);
+          }
+          if (!this.listTopicListening.some((existingItem) => existingItem.id === data.data.listening_id)) {
+            this.listTopicListening.push(data.data.listening_id);
+          }
+          if (!this.listTopicSpeaking.some((existingItem) => existingItem.id === data.data.speaking_id)) {
+            this.listTopicSpeaking.push(data.data.speaking_id);
+          }
           this.show = !this.show;
         }
       } catch (e) {
