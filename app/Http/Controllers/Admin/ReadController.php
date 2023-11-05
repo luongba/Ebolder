@@ -308,7 +308,7 @@ class ReadController extends Controller
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Failed!"
+                "message" => $e->getMessage()
             ]);
         }
     }
@@ -399,7 +399,7 @@ class ReadController extends Controller
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
-                "message" => "Failed!"
+                "message" => $e->getMessage()
             ]);
         }
 
