@@ -398,7 +398,6 @@
           );
           let { data } = result;
           if (data.status == 200) {
-            this.isLoading = false;
             this.$message({
               message: data.message,
               type: "success",
@@ -414,6 +413,8 @@
           }
         } catch (error) {
           console.log("🚀 ~ ~ error", error);
+        } finally {
+          this.isLoading = false;
         }
       },
   

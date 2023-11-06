@@ -20,6 +20,7 @@
       </p>
     </div>
     <div class="container">
+      <LoadingVue v-if="isLoading" />
       <div class="flex justify-center">
         <span class="font-semibold text-[15px] mb-2 mr-2">Exam</span>
         <el-switch v-model="dataTopic.isExam"></el-switch>
@@ -303,7 +304,7 @@ import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 import { Input, Button, Select, Form } from "element-ui";
 import Editor from "@tinymce/tinymce-vue";
-
+import LoadingVue from "../loading/Loading.vue";
 export default {
   components: {
     StarRating,
@@ -312,6 +313,7 @@ export default {
     Select,
     Form,
     Editor,
+    LoadingVue
   },
   data() {
     return {
@@ -325,7 +327,7 @@ export default {
       alphabet: ["a", "b", "c", "d", "e", "f", "g", "h"],
       maxAns: 4,
       level: "Easy",
-
+      isLoading: false,
       rules: {
         name: [
           {
@@ -381,6 +383,7 @@ export default {
     },
     async createTopic() {
       try {
+        this.isLoading = true;
         let dataTemp = {
           name: this.dataTopic.name,
           contentReading: this.dataTopic.content,
@@ -408,6 +411,8 @@ export default {
         }
       } catch (error) {
         console.log("🚀 ~ ~ error", error);
+      } finally {
+        this.isLoading = false;
       }
     },
 
