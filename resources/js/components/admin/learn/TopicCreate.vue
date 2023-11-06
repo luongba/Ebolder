@@ -520,8 +520,8 @@ export default {
       let isCheck = this.validate("ruleFormData", "ruleFormItem");
       if (isCheck) {
         try {
+          this.isLoading = true;
           let formData = new FormData();
-
           let dataTemp = {
             name: this.dataTopic.name,
             is_exam: this.dataTopic.isExam ? 1 : 0,
@@ -569,6 +569,8 @@ export default {
           }
         } catch (error) {
           console.log("🚀 ~ ~ error", error);
+        } finally {
+          this.isLoading = false
         }
       }
     },

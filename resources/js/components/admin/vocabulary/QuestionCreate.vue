@@ -23,6 +23,7 @@
             </div>
         </div>
         <div class="container">
+            <LoadingVueCreate v-if="isLoading" />
             <div class="flex flex-col justify-center w-full items-center">
                 <el-form :model="topicData" :rules="rules" ref="ruleFormName" class="w-full">
                     <div class="my-2">
@@ -389,7 +390,7 @@ import baseRequest from "../../../utils/baseRequest";
 import StarRating from "vue-star-rating";
 import { Input, Button, Select, Form } from "element-ui";
 import Editor from "@tinymce/tinymce-vue";
-
+import LoadingVueCreate from "../loading/Loading.vue";
 export default {
     components: {
         StarRating,
@@ -398,6 +399,7 @@ export default {
         Select,
         Form,
         Editor,
+        LoadingVueCreate
     },
     data() {
         return {
@@ -405,7 +407,7 @@ export default {
             alphabet: ["a", "b", "c", "d", "e", "f", "g", "h"],
             maxAns: 4,
             level: "Easy",
-
+            isLoading: false,
             rules: {
                 name: [
                     {
@@ -441,7 +443,7 @@ export default {
             if (this.$refs[formNameItem] || this.$refs[formNameData] || this.$refs[ruleFormName]) {
                 let isCheck = true;
 
-                this.$refs[formNameItem].forEach((item) => {
+                this.$refs?.[formNameItem]?.forEach((item) => {
                     item.validate((valid) => {
                         if (!valid) {
                             isCheck = false;
@@ -452,12 +454,12 @@ export default {
                     });
                 });
                 if (
-                    this.dataQuestion[0].type == 2 &&
-                    this.dataQuestion.length == 1
+                    this.dataQuestion?.[0]?.type == 2 &&
+                    this.dataQuestion?.length == 1
                 ) {
                     return true;
                 } else {
-                    this.$refs[formNameData].forEach((item) => {
+                    this.$refs?.[formNameData]?.forEach((item) => {
                         item.validate((valid) => {
                             if (!valid) {
                                 isCheck = false;
@@ -525,6 +527,7 @@ export default {
             );
         },
         async createQuestion() {
+            this.isLoading = true;
             let isCheck = this.validate("ruleFormData", "ruleFormItem", "ruleFormName");
             if (isCheck) {
                 const requestData = {
@@ -553,6 +556,8 @@ export default {
                     }
                 } catch (error) {
                     console.log("🚀 ~ ~ error", error);
+                } finally {
+                    this.isLoading = false;
                 }
             }
         },

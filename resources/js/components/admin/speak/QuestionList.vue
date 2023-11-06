@@ -480,16 +480,12 @@ export default {
           `/admin/list-question-speak?take=${this.take}`
         );
         if (data.status == 200) {
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1000);
+          this.isLoading = false;
           this.count = data.count;
           this.dataQuestion = data.data;
         }
       } catch (error) {
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 1000);
+        this.isLoading = false;
         console.log(error);
       }
     },
