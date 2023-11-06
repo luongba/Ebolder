@@ -377,7 +377,7 @@ class ListenController extends Controller
                     $data = Listening::select('id', 'name', 'is_exam')->whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
                         ->orderBy('name', 'ASC')->paginate($request->page_size ?? 10);
                 } else {
-                    $data = Listening::select('id', 'name', 'is_exam')->query()->orderBy('name', 'ASC')->paginate($request->page_size ?? 10);
+                    $data = Listening::select('id', 'name', 'is_exam')->orderBy('name', 'ASC')->paginate($request->page_size ?? 10);
                 }
             }
             return response()->json([
@@ -387,6 +387,7 @@ class ListenController extends Controller
                 "message" => "Lấy danh sách topic thành công !"
             ]);
         } catch (\Exception $e) {
+            Log::error($e);
             return response()->json([
                 "status" => 400,
                 "errorCode" => 400,
