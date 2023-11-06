@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Writing
+ */
 class LearnController extends Controller
 {
     public function index()
@@ -53,19 +56,21 @@ class LearnController extends Controller
 //        }
 //    }
 
-
+    /**
+     * Writing
+     */
     public function ListTopic(Request $request)
     {
         try {
             if ($request->is_exam) {
-                $data = Learn::where('is_exam', 1)->orderBy('name', 'asc')->paginate(10);
+                $data = Learn::select('id', 'name', 'is_exam')->where('is_exam', 1)->orderBy('name', 'asc')->paginate(10);
             } else {
                 if ($request->search) {
                     $search = strtolower($request->search);
-                    $data = Learn::whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
+                    $data = Learn::select('id', 'name', 'is_exam')->whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
                         ->orderBy('name', 'asc')->paginate(10);
                 } else {
-                    $data = Learn::orderBy('name', 'asc')->paginate(10);
+                    $data = Learn::select('id', 'name', 'is_exam')->orderBy('name', 'asc')->paginate(10);
                 }
             }
             return response()->json([
@@ -83,6 +88,9 @@ class LearnController extends Controller
         }
     }
 
+    /**
+     * Writing
+     */
     public function deleteTopic(Request $request)
     {
         try {

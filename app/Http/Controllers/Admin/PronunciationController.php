@@ -76,14 +76,14 @@ class PronunciationController extends Controller
     {
         try {
             if ($request->is_exam) {
-                $dataAll = Pronunciation::where('is_exam', 1)->orderBy('name', 'asc')->paginate(10);
+                $dataAll = Pronunciation::select('id', 'name', 'is_exam')->where('is_exam', 1)->orderBy('name', 'asc')->paginate(10);
             } else {
                 if ($request->search) {
                     $search = strtolower($request->search);
-                    $dataAll = Pronunciation::whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
+                    $dataAll = Pronunciation::select('id', 'name', 'is_exam')->whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
                         ->orderBy('name', 'asc')->paginate(10);
                 } else {
-                    $dataAll = Pronunciation::orderBy('name', 'asc')->paginate(10);
+                    $dataAll = Pronunciation::select('id', 'name', 'is_exam')->orderBy('name', 'asc')->paginate(10);
                 }
             }
             return response()->json([
@@ -94,6 +94,7 @@ class PronunciationController extends Controller
 
             ]);
         } catch (\Exception $e) {
+            Log::info($e);
             return [
                 "status" => 400,
                 "errorCode" => 400,

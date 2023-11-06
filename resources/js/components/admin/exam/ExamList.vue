@@ -526,17 +526,17 @@ export default {
 
             isExam: data.data.status === 1 ? true : false,
           };
-          if (!this.listTopicLesson.some((existingItem) => existingItem.id === data.data.writing_id)) {
+          if (data.data.writing && !this.listTopicLesson.some((existingItem) => existingItem.id === data.data.writing_id)) {
             this.listTopicLesson.push(data.data.writing);
           }
-          if (!this.listTopicReading.some((existingItem) => existingItem.id === data.data.reading_id)) {
+          if (data.data.reading && !this.listTopicReading.some((existingItem) => existingItem.id === data.data.reading_id)) {
             this.listTopicReading.push(data.data.reading);
           }
-          if (!this.listTopicListening.some((existingItem) => existingItem.id === data.data.listening_id)) {
-            this.listTopicListening.push(data.data.listening_id);
+          if (data.data.listening && !this.listTopicListening.some((existingItem) => existingItem.id === data.data.listening_id)) {
+            this.listTopicListening.push(data.data.listening);
           }
-          if (!this.listTopicSpeaking.some((existingItem) => existingItem.id === data.data.speaking_id)) {
-            this.listTopicSpeaking.push(data.data.speaking_id);
+          if (data.data.speaking && !this.listTopicSpeaking.some((existingItem) => existingItem.id === data.data.speaking_id)) {
+            this.listTopicSpeaking.push(data.data.speaking);
           }
           this.show = !this.show;
         }
