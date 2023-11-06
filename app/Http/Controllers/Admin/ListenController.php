@@ -370,14 +370,14 @@ class ListenController extends Controller
         
         try {
             if ($request->is_exam) {
-                $data = Listening::where('is_exam', 1)->orderBy('name', 'ASC')->paginate($request->page_size ?? 10);
+                $data = Listening::select('id', 'name', 'is_exam')->where('is_exam', 1)->orderBy('name', 'ASC')->paginate($request->page_size ?? 10);
             } else {
                 if ($request->search) {
                     $search = strtolower($request->search);
-                    $data = Listening::whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
+                    $data = Listening::select('id', 'name', 'is_exam')->whereRaw('LOWER(name) LIKE ?', ['%' . $search . '%'])
                         ->orderBy('name', 'ASC')->paginate($request->page_size ?? 10);
                 } else {
-                    $data = Listening::query()->orderBy('name', 'ASC')->paginate($request->page_size ?? 10);
+                    $data = Listening::select('id', 'name', 'is_exam')->query()->orderBy('name', 'ASC')->paginate($request->page_size ?? 10);
                 }
             }
             return response()->json([
