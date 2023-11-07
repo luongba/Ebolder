@@ -54,10 +54,7 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-row items-center">
-                                        <!-- <span class="text-xs text-[#777e90] me-4"> {{ `4/6` }}</span> -->
                                         <img :src="highlighterWhite" v-show="selectedLessonId == item.id" />
-                                        <img :src="item?.is_exam ? checked : unchecked"
-                                            v-show="selectedLessonId != item.id" />
                                     </div>
                                 </div>
                                 <p class="pt-4"> {{ item.name }} </p>
