@@ -29,7 +29,7 @@
                         v-bind:class="{ 'border-0': openTab !== 3, 'border-b-4 border-[#2162FF]': openTab === 3 }">
                         <a class="text-xs font-bold uppercase sm:px-3 sm:py-3 leading-normal flex items-center"
                             v-on:click="navigatoToFeature()">
-                            <GameSVG :color="openTab === 3 ? activeColor : inactiveIconColor" /> Game
+                            <GameSVG :color="openTab === 3 ? activeColor : inactiveIconColor" /> Dictionary - Game
                         </a>
                     </li>
                 </ul>

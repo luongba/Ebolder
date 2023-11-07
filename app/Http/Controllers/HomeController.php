@@ -386,5 +386,24 @@ class HomeController extends Controller
         return view('pages.frontend.features');
     }
 
-
+    public function getUserLogin(Request $request) {
+        try {
+            $user = Auth::user();
+            return response()->json([
+                "status" => 200,
+                "errorCode" => 0,
+                "data" => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json([
+                "status" => 400,
+                "errorCode" => 0,
+            ]);
+        }
+    }
 }

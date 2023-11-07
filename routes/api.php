@@ -119,6 +119,7 @@ Route::middleware('auth:api')->group(function (){
         //Home
         Route::post('/save-history', 'HomeController@saveHistory')->name('save-hítory');
         Route::post('/save-exam-result', 'HomeController@saveExamResult')->name('save-examResult');
+        Route::get('/get-user-login', 'HomeController@getUserLogin')->name('get-user-login');
 
         //roles
         Route::get('/get-all-role', 'Admin\RoleController@getAllRole')->name('get-all-role');
