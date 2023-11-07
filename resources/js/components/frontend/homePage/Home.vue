@@ -34,7 +34,6 @@
                     </div>
                     <div class="flex justify-between items-center mt-12 cursor-pointer" @click="openLink">
                         <img :src="viewMore1" />
-                        <span class="flex ms-6"> View more <img :src="arrowRightBlack" /> </span>
                     </div>
                 </div>
                 <div
@@ -49,7 +48,6 @@
                     </div>
                     <div class="flex justify-between items-center mt-12 cursor-pointer" @click="openLink">
                         <img :src="viewMore2" />
-                        <span class="flex ms-6"> View more <img :src="arrowRightBlack" /> </span>
                     </div>
                 </div>
                 <div
@@ -62,7 +60,6 @@
                     </div>
                     <div class="flex justify-between items-center mt-12 cursor-pointer" @click="openLink">
                         <img :src="viewMore3" />
-                        <span class="flex ms-6"> View more <img :src="arrowRightBlack" /> </span>
                     </div>
                 </div>
             </div>
@@ -88,12 +85,6 @@
                         <h2 class="text-[38px] xl:text-[40px] font-semibold leading-[120%] text-start">
                             <p>Reality,<br> Enough knowledge, <br> Follow the route.</p>
                         </h2>
-                        <button @click="openLink" class="flex text-lg md:mt-12 mt-8 items-center">
-                            <div class="rounded-full bg-[#24B24C] p-1 w-fit me-3">
-                                <img :src="arrowLeft" />
-                            </div>
-                            Start now!
-                        </button>
                     </div>
                 </div>
                 <div class="flex flex-col">
@@ -131,12 +122,6 @@
                         <p>to learn</p>
                         <p>English!</p>
                     </h2>
-                    <button @click="openLink" class="flex text-lg md:mt-12 mt-8 items-center">
-                        <div class="rounded-full bg-[#24B24C] p-1 w-fit me-3">
-                            <img :src="arrowLeft" />
-                        </div>
-                        Start now!
-                    </button>
                 </div>
             </div>
             <div

@@ -9,25 +9,12 @@
                         <p class="whitespace-nowrap	">You’ll Have To Run Tomorrow.</p>
                     </div>
                 </div>
-                <p class=" desciption xl:text-base text-sm mt-4">© 2023. Nền tảng học tiếng anh hàng đầu Thái Nguyên</p>
 
                 
             </div>
             <div></div>
             <div class="whitespace-nowrap">
                 <div class="flex items-center text-base font-bold mb-2">Contact us</div>
-                <div class="sm:text-base text-sm">
-                    <p class="feature-label">
-                        0868978268
-                    </p>
-                    <p class="feature-label">
-                        Email: tnhoai.sfl@tnu.edu.vn
-                    </p>
-                    <p class="feature-label">
-                    Phường Tân Thịnh - Thành phố Thái Nguyên
-                </p>
-                    
-                </div>
             </div>
         </div>
         <div class="grid grid-cols-3 divide-x"></div>
