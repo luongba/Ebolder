@@ -25,7 +25,7 @@
                             <GraduationCapSVG :color="openTab === 2 ? activeColor : inactiveIconColor" /> Exam
                         </a>
                     </li>
-                    <li class="cursor-pointer -mb-px mr-2 last:mr-0 flex-auto text-center max-w-[84px] sm:max-w-[116px]"
+                    <li class="cursor-pointer -mb-px mr-2 last:mr-0 flex-auto text-center max-w-[125px] sm:max-w-[125px]"
                         v-bind:class="{ 'border-0': openTab !== 3, 'border-b-4 border-[#2162FF]': openTab === 3 }">
                         <a class="text-xs font-bold uppercase sm:px-3 sm:py-3 leading-normal flex items-center"
                             v-on:click="navigatoToFeature()">
