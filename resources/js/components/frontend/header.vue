@@ -12,13 +12,13 @@
         <div class="flex px-4 mx-auto flex-row items-center justify-between">
           <div class="flex items-center" id="example-navbar-info">
             <ul class="hidden sm:flex list-none ml-auto flex-row">
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <div class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
                   <a href="/">Home</a>
                 </div>
-              </li>
+              </li> -->
               <li class="nav-item">
-                <a href="/exam" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer">
+                <a href="/exam" class="px-3 py-2 flex items-center text-lg leading-snug hover:opacity-75 cursor-pointer ">
                   Exam
                 </a>
               </li>
@@ -84,7 +84,6 @@
   </div>
 </template>
 <script>
-import baseRequest from "../../utils/baseRequest";
 export default {
   props: ["user"],
   data() {
@@ -117,5 +116,10 @@ export default {
 a, a:hover {
   text-decoration: none;
   color: unset;
+}
+li.nav-item:hover {
+  color: white;
+  background: #2162ff;
+  border-radius: 30px;
 }
 </style>
