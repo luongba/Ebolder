@@ -18,14 +18,14 @@
         <el-switch v-model="dataTopic.isExam"></el-switch>
       </div>
       <div class="mb-4">
-        <el-form ref="ruleFormItem" :model="dataTopic" class="w-full">
+        <el-form ref="ruleFormName" :model="dataTopic" class="w-full">
           <el-form-item
             label="Name"
             prop="name"
             :rules="[
               {
                 required: true,
-                message: 'Please enter your answer',
+                message: 'Please enter name topic',
               },
             ]"
             class="w-full m-0"
@@ -577,10 +577,16 @@ export default {
         alphabet: this.alphabet[dataQues.dataAns.length].toUpperCase(),
       });
     },
-    validate(formNameItem, formNameData) {
-      if (this.$refs[formNameItem] && this.$refs[formNameData]) {
+    validate(formNameItem, formNameData, ruleFormName) {
+      if (this.$refs[formNameItem] ||  this.$refs[formNameData] || this.$refs[ruleFormName]) {
         let isCheck = true;
-
+        if (ruleFormName) {
+          this.$refs.ruleFormName.validate((valid) => {
+            if (!valid) {
+                isCheck = false
+            }
+          });
+        }
         this.$refs[formNameItem].forEach((item) => {
           item.validate((valid) => {
             if (!valid) {
@@ -733,35 +739,38 @@ export default {
       }
     },
     async saveChangeTopic() {
-      try {
-        let formData = new FormData();
+      let isCheck = this.validate("ruleFormData", "ruleFormItem", "ruleFormName");
+      if (isCheck) {
+        try {
+          let formData = new FormData();
 
-        let dataTemp = {
-          name: this.dataTopic.name,
-          is_exam: this.dataTopic.isExam,
-          content: this.dataTopic.content,
-          dataQuestion: this.dataQuestion,
-          id: this.param,
-        };
-        console.log(dataTemp);
-        let result = await baseRequest.post(
-          `/admin/update-question-pronunciation`,
-          dataTemp
-        );
-        let { data } = result;
-        if (data.status == 200) {
-          this.$message({
-            message: data.message,
-            type: "success",
-          });
-        } else {
-          this.$message({
-            message: data.message,
-            type: "error",
-          });
+          let dataTemp = {
+            name: this.dataTopic.name,
+            is_exam: this.dataTopic.isExam,
+            content: this.dataTopic.content,
+            dataQuestion: this.dataQuestion,
+            id: this.param,
+          };
+          console.log(dataTemp);
+          let result = await baseRequest.post(
+            `/admin/update-question-pronunciation`,
+            dataTemp
+          );
+          let { data } = result;
+          if (data.status == 200) {
+            this.$message({
+              message: data.message,
+              type: "success",
+            });
+          } else {
+            this.$message({
+              message: data.message,
+              type: "error",
+            });
+          }
+        } catch (error) {
+          console.log("🚀 ~ ~ error", error);
         }
-      } catch (error) {
-        console.log("🚀 ~ ~ error", error);
       }
     },
   },

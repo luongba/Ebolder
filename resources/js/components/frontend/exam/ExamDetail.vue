@@ -196,7 +196,7 @@ export default {
                             data: data.question_reading,
                         };
                         formatedData.data && formatedData.data.forEach(question => {
-                            question.answers = this.shuffle(question.answer_reading);
+                            question.answers = question.type == 1 ? this.shuffle(question.answer_reading) : question.answer_reading;
                             delete question.answer_reading;
                             question.right_answers = question.right_answer_reading;
                             delete question.right_answer_reading;
@@ -237,7 +237,7 @@ export default {
                     const data = rs.data.data;
                     if(data) {
                         data.question_speak && data.question_speak.forEach(question => {
-                            question.answers = this.shuffle(question.answers);
+                            question.answers = question.type == 1 ? this.shuffle(question.answers) : question.answers;
                         })
                         const formatedData = {
                             name: data.name,
@@ -265,7 +265,7 @@ export default {
                             data: data.question_lesson
                         };
                         formatedData.data && formatedData.data.forEach(question => {
-                            question.answers = this.shuffle(question.answer_lesson);
+                            question.answers = question.type ? this.shuffle(question.answer_lesson) : question.answer_lesson;
                             delete question.answer_lesson;
                             question.right_answers = question.right_answer_lesson;
                             delete question.right_answer_lesson;

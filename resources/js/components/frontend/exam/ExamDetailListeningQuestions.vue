@@ -224,7 +224,7 @@ export default {
                             this.questions = this.listQuestion[audioId];
                         } else {
                             data?.question_listening && data?.question_listening.forEach(question => {
-                                question.answer_listening = this.shuffle(question.answer_listening);
+                                question.answer_listening = question.type == 1 ? this.shuffle(question.answer_listening) : question.answer_listening;
                             })
                             this.listQuestion[audioId] = data?.question_listening;
                             this.questions = data?.question_listening;

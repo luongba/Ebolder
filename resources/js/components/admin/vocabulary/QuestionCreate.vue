@@ -104,7 +104,7 @@
                                 cursor-pointer
                             "
                             @click="deleteQues(data.id)"
-                            >Xóa</span
+                            >Delete</span
                         >
                     </div>
 
@@ -442,6 +442,13 @@ export default {
         validate(formNameItem, formNameData, ruleFormName) {
             if (this.$refs[formNameItem] || this.$refs[formNameData] || this.$refs[ruleFormName]) {
                 let isCheck = true;
+                if (ruleFormName) {
+                    this.$refs.ruleFormName.validate((valid) => {
+                        if (!valid) {
+                            isCheck = false
+                        }
+                    });
+                }
 
                 this.$refs?.[formNameItem]?.forEach((item) => {
                     item.validate((valid) => {
@@ -559,6 +566,8 @@ export default {
                 } finally {
                     this.isLoading = false;
                 }
+            } else {
+                this.isLoading = false;
             }
         },
         renderAnswer(data, index) {
