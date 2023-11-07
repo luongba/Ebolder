@@ -123,15 +123,15 @@ export default {
             questions: null,
             listQuestion: [],
             baseURl: $Api.baseUrl,
-            correctAnswers: {},
             questionDone: {},
             questionCount: 0,
             inputAnswersByQuestion: {},
             inputAnswers: {},
-            correctInputAnswers: {},
             inputAnswerValues: {},
             activeColor: '#2162ff',
             inactiveColor: '#141416',
+            results: {},
+            answerEachInputQuestion: {},
             arrowLeft: require('../../../../../public/images/learn/arrow-left.svg'),
             arrowRight: require('../../../../../public/images/learn/arrow-right.svg')
         }
@@ -156,12 +156,15 @@ export default {
             this.selectedAnswerId = answerId;
             const rightAnswer = this.selectedQuestion.right_answers.answer_id;
 
-            if(answerId) {
+            if (!this.results[questionId]) {
+                this.$set(this.results, questionId, {});
+            }
+            if (answerId) {
                 this.$set(this.selectedAnswers, questionId, answerId);
                 if (answerId == rightAnswer) {
-                    this.correctAnswers[questionId] = true;
+                    this.results[questionId][answerId] = true;
                 } else {
-                    this.correctAnswers[questionId] = false;
+                    this.results[questionId][answerId] = false;
                 }
             }
             this.saveResult();
@@ -174,14 +177,20 @@ export default {
             const answerId = question.answer_listening[inputIndex].answer_id;
             const rightAnswer = question.answer_listening[inputIndex].text.toLowerCase().trim();
             const inputText = event.target.value ? event.target.value.toLowerCase().trim() : '';
+            const questionId = question.id;
             // store value of each input
             this.$set(this.inputAnswerValues, `${elementIndex}${question.id}`, event.target.value)
             
-            if(rightAnswer == inputText) {
-                this.correctInputAnswers[answerId] = true;
-            } else {
-                this.correctInputAnswers[answerId] = false;
+            if (!this.results[questionId]) {
+                this.$set(this.results, questionId, {});
             }
+            
+            if(rightAnswer == inputText) {
+                this.results[questionId][answerId] = true;
+            } else {
+                this.results[questionId][answerId] = false;
+            }
+
             if(event.target.value || event.target.value != '' ) {
                 this.questionDone[question.id] = true;
             } else {
@@ -239,12 +248,20 @@ export default {
             }
         },
         saveResult() {
-            const correctAnswers = Object.values(this.correctAnswers).filter(val => val === true).length;
-            const correctInputAnswers = Object.values(this.correctInputAnswers).filter(val => val === true).length;
+            const _results = this.results && Object.keys(this.results).map(questionId => {
+                const answers = this.results[questionId];
+                if(Object.keys(answers).length < this.answerEachInputQuestion[questionId]) {
+                    return false;
+                } else {
+                    const isAllTrue =  answers && Object.values(answers)?.every(answer => answer == true);
+                    return isAllTrue
+                }
+            })
+            const correctAnswers = _results && _results.filter(val => val === true).length;
             const type = `result_${this.skill}`;
-            const result = `${correctAnswers + correctInputAnswers}/${this.questionCount}`;
-            
-            localStorage.setItem(type, result);
+            const score = `${correctAnswers}/${this.questionCount}`;
+
+            localStorage.setItem(type, score);
         },
         customAudio() {
             const playerButton = document.querySelector(".player-button"),
@@ -319,11 +336,17 @@ export default {
                 this.correctAnswers = {};
                 this.selectedIndex = 0;
                 this.selectedTopicIndex = 0;
+                this.questionCount = 0;
                 // this.questions = {}
                 if (newTopics && newTopics.length) {
                     this.selectedTopic = newTopics[this.selectedTopicIndex];
                     this.getAudioDetail(this.selectedTopic?.id);
-                    
+                    newTopics.forEach(topic => {
+                        topic.question_listening.forEach(q => {
+                            this.answerEachInputQuestion[q.id] = q.question.split("#").length - 1
+                        })
+                        this.questionCount += topic?.question_listening?.length;
+                    })
                 } else {
                     this.selectedTopic = null
                 }
@@ -334,15 +357,6 @@ export default {
         questions(newQuestions) {
             this.selectedIndex = 0;
             this.selectedQuestion = this.questions[this.selectedIndex];
-            if (newQuestions && newQuestions.length) {
-                newQuestions && newQuestions.forEach(question => {
-                    if(question.type == 2) {
-                        this.questionCount += question?.answer_listening?.length;
-                    } else {
-                        this.questionCount += 1
-                    }
-                })
-            }
         }
     },
     mounted() {

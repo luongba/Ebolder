@@ -82,13 +82,13 @@ export default {
             selectedQuestion: this.questions?.[0],
             selectedAnswerId: 0,
             selectedAnswers: {},
-            correctAnswers: {},
-            correctInputAnswers: {},
             inputAnswerValues: {},
             questionCount: 0,
             questionDone: {},
             inputAnswersByQuestion: {},
             inputAnswers: {},
+            answerEachInputQuestion: {},
+            results: {},
             arrowLeft: require('../../../../../public/images/learn/arrow-left.svg'),
             arrowRight: require('../../../../../public/images/learn/arrow-right.svg')
         }
@@ -105,12 +105,16 @@ export default {
             this.selectedAnswerId = answerId;
             const rightAnswer = this.selectedQuestion.right_answers.answer_id;
 
+            if (!this.results[questionId]) {
+                this.$set(this.results, questionId, {});
+            }
+
             if(answerId) {
                 this.$set(this.selectedAnswers, questionId, answerId);
                 if (answerId == rightAnswer) {
-                    this.correctAnswers[questionId] = true;
+                    this.results[questionId][answerId] = true;
                 } else {
-                    this.correctAnswers[questionId] = false;
+                    this.results[questionId][answerId] = false;
                 }
             }
             this.questionDone[questionId] = true;
@@ -131,14 +135,20 @@ export default {
             const answerId = question.answers[inputIndex].answer_id;
             const rightAnswer = question.answers[inputIndex].text.toLowerCase().trim();
             const inputText = event.target.value ? event.target.value.toLowerCase().trim() : '';
+            const questionId = question.id;
             // store value of each input
             this.$set(this.inputAnswerValues, `${elementIndex}${question.id}`, event.target.value)
             
-            if(rightAnswer == inputText) {
-                this.correctInputAnswers[answerId] = true;
-            } else {
-                this.correctInputAnswers[answerId] = false;
+            if (!this.results[questionId]) {
+                this.$set(this.results, questionId, {});
             }
+            
+            if(rightAnswer == inputText) {
+                this.results[questionId][answerId] = true;
+            } else {
+                this.results[questionId][answerId] = false;
+            }
+
             if(event.target.value || event.target.value != '' ) {
                 this.questionDone[question.id] = true;
             } else {
@@ -154,10 +164,17 @@ export default {
             return -1;
         },
         async submit() {
-            const correctAnswers = Object.values(this.correctAnswers).filter(val => val === true).length;
-            const correctInputAnswers = Object.values(this.correctInputAnswers).filter(val => val === true).length;
-
-            this.onSubmit(correctAnswers + correctInputAnswers, this.questionCount);
+            const _results = this.results && Object.keys(this.results).map(questionId => {
+                const answers = this.results[questionId];
+                if(Object.keys(answers).length < this.answerEachInputQuestion[questionId]) {
+                    return false;
+                } else {
+                    const isAllTrue =  answers && Object.values(answers)?.every(answer => answer == true);
+                    return isAllTrue
+                }
+            })
+            const correctAnswers = _results && _results.filter(val => val === true).length;
+            this.onSubmit(correctAnswers, this.questionCount);
         },
     },
     watch: {
@@ -166,16 +183,12 @@ export default {
                 // reset data
                 this.selectedAnswers = {};
                 this.correctAnswers = {};
-                // this.questionDone = [];
                 this.selectedIndex = 0;
 
                 this.selectedQuestion = newQuestions[this.selectedIndex];
                 newQuestions.forEach(question => {
-                    if(question.type == 2) {
-                        this.questionCount += question.answers.length;
-                    } else {
-                        this.questionCount += 1
-                    }
+                    this.answerEachInputQuestion[question.id] = question.question.split("#").length - 1;
+                    this.questionCount += 1
                 })
             }
         }

@@ -18,23 +18,6 @@
                 <source :src="`${baseURl}/upload/audio/${this.selectedTopic?.audio}`"
                     type="video/mp4" />
             </video>
-            <!-- <div class="controls bg-[#E6E8EC] rounded px-3">
-                <button class="player-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#FFF">
-                        <path fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <input type="range" class="timeline" max="100" value="0" disabled />
-                <button class="sound-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#FFF">
-                        <path fill-rule="evenodd"
-                            d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div> -->
         </div>
         <div class="font-bold text-xl mb-4"> Questions</div>
         <div v-show="this.questions?.length > 0">
@@ -122,13 +105,13 @@ export default {
             arrowLeft: require('../../../../../public/images/learn/arrow-left.svg'),
             arrowRight: require('../../../../../public/images/learn/arrow-right.svg'),
             baseURl: $Api.baseUrl,
-            correctAnswers: {},
             questionCount: 0,
             questionDone: {},
             inputAnswersByQuestion: {},
             inputAnswers: {},
-            correctInputAnswers: {},
             inputAnswerValues: {},
+            results: {},
+            answerEachInputQuestion: {}
         }
     },
     methods: {
@@ -147,14 +130,19 @@ export default {
         handleSelectAnswer(answerId, questionId) {
             const rightAnswer = this.selectedQuestion.right_answers.answer_id;
             this.selectedAnswerId = answerId;
+
+            if (!this.results[questionId]) {
+                this.$set(this.results, questionId, {});
+            }
             if (answerId) {
                 this.$set(this.selectedAnswers, questionId, answerId);
                 if (answerId == rightAnswer) {
-                    this.correctAnswers[questionId] = true;
+                    this.results[questionId][answerId] = true;
                 } else {
-                    this.correctAnswers[questionId] = false;
+                    this.results[questionId][answerId] = false;
                 }
             }
+
             this.questionDone[questionId] = true;
             this.isQuestionAnswered(answerId, questionId)
         },
@@ -164,14 +152,20 @@ export default {
             const answerId = question.answer_listening[inputIndex].answer_id;
             const rightAnswer = question.answer_listening[inputIndex].text.toLowerCase().trim();
             const inputText = event.target.value ? event.target.value.toLowerCase().trim() : '';
+            const questionId = question.id;
             // store value of each input
             this.$set(this.inputAnswerValues, `${elementIndex}${question.id}`, event.target.value)
+
+            if (!this.results[questionId]) {
+                this.$set(this.results, questionId, {});
+            }
             
             if(rightAnswer == inputText) {
-                this.correctInputAnswers[answerId] = true;
+                this.results[questionId][answerId] = true;
             } else {
-                this.correctInputAnswers[answerId] = false;
+                this.results[questionId][answerId] = false;
             }
+
             if(event.target.value || event.target.value != '' ) {
                 this.questionDone[question.id] = true;
             } else {
@@ -217,9 +211,17 @@ export default {
             }
         },
         async submit() {
-            const correctAnswers = Object.values(this.correctAnswers).filter(val => val === true).length;
-            const correctInputAnswers = Object.values(this.correctInputAnswers).filter(val => val === true).length;
-            this.onSubmit(correctAnswers + correctInputAnswers, this.questionCount);
+            const _results = this.results && Object.keys(this.results).map(questionId => {
+                const answers = this.results[questionId];
+                if(Object.keys(answers).length < this.answerEachInputQuestion[questionId]) {
+                    return false;
+                } else {
+                    const isAllTrue =  answers && Object.values(answers)?.every(answer => answer == true);
+                    return isAllTrue
+                }
+            })
+            const correctAnswers = _results && _results.filter(val => val === true).length;
+            this.onSubmit(correctAnswers, this.questionCount);
         },
         customAudio() {
             const playerButton = document.querySelector(".player-button"),
@@ -292,7 +294,6 @@ export default {
         topics(newTopics) {
             // reset data
             this.selectedAnswers = {};
-            this.correctAnswers = {};
             this.questionDone = [];
             this.selectedIndex = 0;
             this.selectedTopicIndex = 0;
@@ -301,6 +302,9 @@ export default {
                 this.selectedTopic = newTopics[this.selectedTopicIndex];
                 this.getAudioDetail(this.selectedTopic?.id);
                 newTopics.forEach(topic => {
+                    topic.question_listening.forEach(q => {
+                        this.answerEachInputQuestion[q.id] = q.question.split("#").length - 1
+                    })
                     this.questionCount += topic?.question_listening?.length;
                 })
             } else {
