@@ -2,7 +2,7 @@
   <div class="flex items-center py-2 md:py-[27px] justify-between relative z-10" style="font-family: lexend !important;">
     <div class="flex items-center cursor-pointer" @click="backToHome">
       <img src="/images/landing/logo.svg" alt="" />
-      <div class="p-0 text-[16px] font-bold uppercase hidden md:block ml-2">
+      <div class="p-0 text-[16px] font-bold uppercase hidden lg:block ml-2">
         <p class="whitespace-nowrap	">If You Don’t Walk Today</p>
         <p class="whitespace-nowrap	">You’ll Have To Run Tomorrow.</p>
       </div>
